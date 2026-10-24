@@ -7,8 +7,9 @@ w:framePr on the image paragraph and the caption paragraph, so Word merges
 them into one frame. Two forms are tested:
 
 - fig-right: one merged w:pPr per paragraph, in schema order.
-- fig-left: the frame goes in an extra w:pPr in front of the existing ones,
-  the form a Lua filter that prepends raw OpenXML would make.
+- fig-left: the frame goes in an extra w:pPr in front of the existing ones.
+  A filter that adds raw OpenXML puts it after Pandoc's own w:pPr instead,
+  so this is not that filter's order.
 """
 
 import re
@@ -30,6 +31,10 @@ def frame_pr(width_twips, side):
 
 def merged_ppr(ppr_block, frame):
     """Merge every w:pPr child into one w:pPr, with w:framePr after w:pStyle."""
+    known = {"pStyle", "spacing", "jc"}
+    found = set(re.findall(r"<w:(\w+)\b", ppr_block)) - {"pPr"}
+    if found - known:
+        sys.exit(f"unexpected w:pPr children: {sorted(found - known)}")
     style = re.search(r'<w:pStyle\b[^>]*/>', ppr_block)
     spacing = re.search(r'<w:spacing\b[^>]*/>', ppr_block)
     # The last w:jc wins, as Quarto's caption carries center then left.
@@ -62,7 +67,10 @@ def unwrap_figure(xml, fig_id, side, form):
     if not m:
         sys.exit(f"figure table {fig_id} not found")
     tbl = m.group(0)
-    cell = re.search(r"<w:tcPr\s*/>(.*)</w:tc>", tbl, re.S).group(1)
+    cell_match = re.search(r"<w:tcPr\s*/>(.*)</w:tc>", tbl, re.S)
+    if not cell_match:
+        sys.exit(f"figure table {fig_id} has no empty w:tcPr cell")
+    cell = cell_match.group(1)
     cx = int(re.search(r'<wp:extent cx="(\d+)"', cell).group(1))
     width_twips = cx // EMU_PER_TWIP
     frame = frame_pr(width_twips, side)

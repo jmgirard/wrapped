@@ -84,3 +84,32 @@ Record a yes-or-no answer, with evidence, to each wrap feasibility question S1 t
 - AC4 evidence (2026-10-24): the S4 entry records yes, from the user's answer at the Word look in this session: no repair prompt, and one frame with wrapped text for both figures. It names the candidate "Wrap figures in Word output with frames" for the LibreOffice and Google Docs check, and cites `spikes/s4/frame.py`. That row's detail in `cairn/ROADMAP.md` holds the check.
 - AC5 evidence (2026-10-24): the version entry names v1.9.36 as the earliest stable release whose tagged `output-typst.ts` has the loader, and v1.9.18 as the earliest pre-release tag. It cites the tags and `collectPackageSources`. The repo uses "release" and "pre-release" as separate terms (research page, Evidence snapshot), so "the earliest Quarto release" is v1.9.36. The DESIGN "Quarto version" paragraph states `>=1.9.36`.
 - Consistency gate (2026-10-24): `cairn_validate.py` exit 0, all checks passed. No principle changed, so `cairn_impact` skipped. Toolchain slot: no `_extensions/` exists, so no version marker to compare. The verify slot names no render command yet. The changelog slot is "none".
+- spawned: diff-bug, blame-history, prior-review, ripple
+- prior-review: no prior-review evidence.
+- diff-bug #1: S4 tested the frame `w:pPr` first, not the order a filter makes (after Pandoc's own `w:pPr`), so "a filter that prepends a raw `w:pPr` also works" overclaims — fix now (S4 entry, W4 cell, and `frame.py` docstring narrowed), and the order check goes to the candidate "Wrap figures in Word output with frames".
+- diff-bug #2: the README's `pdftoppm` step fails on a fresh clone because `out/` does not exist — fix now (`mkdir -p out` added).
+- diff-bug #3: the S1 probe only logged the carry and never moved the class, so "fallback is not needed" and D-001 overclaim — fix now (the probe now adds the class; HTML shows `wrap-right` on both cell figures; the LaTeX path is recorded as not tested in S1 and D-001), and the LaTeX test goes to the candidate "Wrap figures in HTML and LaTeX output".
+- diff-bug #4: `>=1.9.36` rests on the Typst loader alone, and nothing ran on 1.9.36 to 1.10.18 — fix now (DESIGN states that range is not tested).
+- diff-bug #5: the S2 record leaves out the Figure 2 caption running into the footer — fix now (recorded in S2), and the fix goes to the candidate "Wrap figures in HTML and LaTeX output".
+- diff-bug #6: the probe's carry is a global that a figureless wrap cell leaks to the next float — follow-up (candidate "Wrap figures in HTML and LaTeX output"; also noted in S1 and the probe comment).
+- diff-bug #7: `frame.py` fails with AttributeError on a missing empty `w:tcPr` and silently drops unknown `w:pPr` children — fix now (both now stop with a message; output XML unchanged, compared with `cmp`).
+- diff-bug #8: the percent-to-twips width conversion is not tested, because the frame width comes from `wp:extent` — fix now (recorded in S4).
+- diff-bug #9: the README leaves out R with knitr for S1 and network access for S3 — fix now.
+- diff-bug #10: AC5's "earliest Quarto release" has two readings (v1.9.18 pre-release or v1.9.36) — reject, false: the research page's Evidence snapshot uses "release" and "pre-release" as separate terms, so the criterion as written picks v1.9.36, and the entry names both versions.
+- diff-bug #11: the `spikes/.gitignore` patterns can hide a future committed PDF or HTML file — reject, style.
+- diff-bug #12: `wrapped.tex` uses public-style `\l_wrapped_*` names beside private functions — reject, style.
+- diff-bug #13: "corrected M001" on the DESIGN version line, where the old value was provisional, not wrong — fix now (removed).
+- diff-bug #14: `quarto add jmgirard/wrapped` finds no extension on `main` before or after this branch — follow-up (candidate "Wrap figures in HTML and LaTeX output", which adds `_extensions/`).
+- blame-history #1: the Typst and Word rows stay `[parked]` though S3 and S4 met their conditions — fix now, 2c9b7ea (both unparked).
+- blame-history #2: the W3 risk cell still says issue #15 breaks citations — fix now, 2c9b7ea.
+- blame-history #3: DESIGN still names the `#| wrap: right` fallback, and the choice not to use it has no D-entry — fix now, 2c9b7ea (DESIGN updated, D-001 added; D-001 narrowed after diff-bug #3 before merge).
+- blame-history #4: AC5 picks v1.9.36 without an amendment — reject, false (same ground as diff-bug #10).
+- blame-history #5: "No spike ran them yet" and the provenance line are stale — fix now, 2c9b7ea.
+- blame-history #6: the W4 risk cell is unchanged after S4 — fix now, 2c9b7ea (narrowed again after diff-bug #1).
+- blame-history #7: the spikes candidate row stays in Candidates while M001 is at review — reject, planned change: post-merge hygiene graduates the row.
+- blame-history #8: "corrected M001" in DESIGN is a history note in an architecture file — fix now (removed from both DESIGN lines; D-001 is cited instead).
+- ripple #1, #2, #3, #4, #5, #6, #8: the same stale lines as blame-history #1, #2, #3, #5, #6 and the HTML and LaTeX row's "Needs S1 and S2 answered" — fix now, 2c9b7ea.
+- ripple #7: the spikes candidate row — reject, planned change (same as blame-history #7).
+- ripple #9: the S3 and S4 evidence does not cover the planned `post-render` path — fix now, 2c9b7ea (both entries say so).
+- ripple #10: PROFILE's verify slot says there is no extension code and no fixture document — reject, false: `spikes/` holds neither extension code nor the fixture document, so the line still holds.
+- AC1 recheck (2026-10-24): after the S1 probe change, the reran probe output and the S1 entry still match AC1 for all four sources.

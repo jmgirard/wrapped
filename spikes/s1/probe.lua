@@ -38,7 +38,9 @@ return {
     end,
   },
   -- Second pass, top-down: carry a wrap class from a cell Div to the
-  -- FloatRefTarget nested inside it, to show the filter can reach it.
+  -- FloatRefTarget nested inside it and add it to the float's classes.
+  -- Spike only: a cell with a wrap class and no figure would hand its class
+  -- to the next float, so the real filter must scope the carry to the cell.
   {
     traverse = "topdown",
     Div = function(div)
@@ -50,7 +52,11 @@ return {
       io.stderr:write(string.format(
         "S1 topdown: FloatRefTarget %s gets cell class %s\n",
         float.identifier, pending_wrap or "none"))
-      pending_wrap = nil
+      if pending_wrap then
+        float.classes:insert(pending_wrap)
+        pending_wrap = nil
+        return float
+      end
     end,
   },
 }

@@ -33,8 +33,10 @@ release with notes from commit subjects. The version lives in
 `_extensions/wrapped/_extension.yml` and rises at release.
 
 **Quarto version.** `quarto-required: ">=1.9.36"`. Quarto 1.9.36 is the first
-stable release that loads Typst packages from an extension's `typst/packages`
-folder (`references/wrap-mechanisms.md`, open questions; corrected M001).
+stable release whose source has the loader for an extension's
+`typst/packages` folder (`references/wrap-mechanisms.md`, open questions).
+The spikes ran only on Quarto 1.10.19, so behavior on 1.9.36 to 1.10.18 is
+not tested.
 
 ### Planned syntax
 
@@ -62,8 +64,7 @@ Uncaptioned image: `![](logo.png){.wrap-right width="20%" fig-alt="Lab logo"}`.
 
 Figure from a code cell: `#| classes: wrap-right` beside `#| fig-cap:`. The
 class lands on the cell's enclosing div, not on the figure node, and the
-filter carries it to the figure (`references/wrap-mechanisms.md`, S1;
-corrected M001).
+filter carries it to the figure (`references/wrap-mechanisms.md`, S1; D-001).
 
 | Attribute | Values | Default | Notes |
 |---|---|---|---|
