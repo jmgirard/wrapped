@@ -6,6 +6,7 @@ fig-inner: wrap-right quarto-float quarto-figure quarto-figure-center anchored
 fig-cell: wrap-left quarto-float quarto-figure quarto-figure-center anchored
 (uncaptioned): wrapped-image wrap-right
 fig-plain: quarto-float quarto-figure quarto-figure-center anchored
+fig-after-table: quarto-float quarto-figure quarto-figure-center anchored
 fig-readme-md: wrap-right quarto-float quarto-figure quarto-figure-center anchored
 fig-readme-div: wrap-left quarto-float quarto-figure quarto-figure-center anchored
 (uncaptioned): wrapped-image wrap-right
@@ -100,7 +101,7 @@ Figure&nbsp;4: A figure from a knitr cell.
 <img class="img-fluid figure-img" src="plot.png">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-readme-md-caption-UUID">
-Figure&nbsp;6: Mean ratings by condition.
+Figure&nbsp;7: Mean ratings by condition.
 </figcaption>
 </figure>
 </div>
@@ -114,7 +115,7 @@ Figure&nbsp;6: Mean ratings by condition.
 <img class="img-fluid figure-img" src="plot.png">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-readme-div-caption-UUID">
-Figure&nbsp;7: Ratings by group.
+Figure&nbsp;8: Ratings by group.
 </figcaption>
 </figure>
 </div>
@@ -130,7 +131,7 @@ Figure&nbsp;7: Ratings by group.
 # wrap-group 9
 <div class="wrap-group">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code></pre></div><button class="code-copy-button" title="Copy to Clipboard"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code></pre></div><button class="code-copy-button" title="Copy to Clipboard"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-readme-cell" style="--wrap-width: 30%; --wrap-gap: 1em;">
 <figure class="quarto-float quarto-float-fig figure">
@@ -138,7 +139,7 @@ Figure&nbsp;7: Ratings by group.
 <img class="img-fluid figure-img" src="fixture_files/figure-html/fig-readme-cell-1.png">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-readme-cell-caption-UUID">
-Figure&nbsp;8: A scatter plot.
+Figure&nbsp;9: A scatter plot.
 </figcaption>
 </figure>
 </div>
@@ -154,7 +155,7 @@ Figure&nbsp;8: A scatter plot.
 <img class="img-fluid figure-img" data-wrap-gap="2em" src="plot.png">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-readme-gap-caption-UUID">
-Figure&nbsp;9: Mean ratings by condition.
+Figure&nbsp;10: Mean ratings by condition.
 </figcaption>
 </figure>
 </div>

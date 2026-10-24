@@ -22,6 +22,11 @@
 \includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{plot.png}
 \caption{\label{fig-plain}A figure with no wrap class.}
 \end{figure}%
+\caption{\label{tbl-cars}A table from a cell with a wrap class.}
+\begin{figure}
+\includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{plot.png}
+\caption{\label{fig-after-table}A figure after the table cell, with no
+\end{figure}%
 \begin{figure}
 \includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{plot.png}
 \caption{\label{fig-readme-md}Mean ratings by condition.}

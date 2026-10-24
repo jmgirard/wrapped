@@ -18,6 +18,10 @@
 #box(image("plot.png", width: 50.0%))
 <fig-plain>
 #figure([
+#figure([
+#box(image("plot.png", width: 50.0%))
+<fig-after-table>
+#figure([
 #box(image("plot.png", width: 40.0%))
 <fig-readme-md>
 #figure([

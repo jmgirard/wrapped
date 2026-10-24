@@ -74,9 +74,22 @@ The paragraph after the uncaptioned image wraps around it. Lorem ipsum dolor sit
 
 The figure above keeps its normal layout. See @fig-plain.
 
+## A cell with a table
+
+```{r}
+#| label: tbl-cars
+#| tbl-cap: "A table from a cell with a wrap class."
+#| classes: wrap-right
+knitr::kable(head(cars, 3))
+```
+
+![A figure after the table cell, with no wrap class.](plot.png){#fig-after-table width="50%"}
+
+The figure above keeps its normal layout. See @fig-after-table and @tbl-cars.
+
 ## README examples
 
-Each example in `README.md` appears here, with only ids and file names changed.
+Each figure example in `README.md` appears here, with only ids and file names changed. The `wrap-clear` example is in `stop-rule.qmd`, and the `wrapped:` example is in `defaults.qmd`.
 
 ![Mean ratings by condition.](plot.png){#fig-readme-md .wrap-right width="40%"}
 

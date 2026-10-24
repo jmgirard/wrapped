@@ -10,14 +10,15 @@ Support for PDF through LaTeX, PDF through Typst, and Word is planned.
 
 ## Install
 
-You need Quarto 1.9.36 or later. In the folder of your project, run:
+The extension asks for Quarto 1.9.36 or later, and it is tested with Quarto
+1.10.19. In the folder of your project, run:
 
 ```bash
 quarto add jmgirard/wrapped
 ```
 
-This command puts the extension in `_extensions/wrapped/`. Then add the
-filter to the document's YAML header:
+This command puts the extension under `_extensions/`. Then add the filter
+to the document's YAML header:
 
 ```yaml
 filters:
@@ -52,7 +53,8 @@ An image with no caption:
 ![](logo.png){.wrap-right width="20%" fig-alt="Lab logo"}
 ```
 
-A figure from a code cell. Put the class in `#| classes:`, and set the
+A figure from a code cell. Give the cell a `fig-` label and a `fig-cap`,
+so that Quarto makes a figure. Put the class in `#| classes:`, and set the
 width with `#| out-width:`:
 
 ````markdown
@@ -101,7 +103,8 @@ take the full width of the text column. The default breakpoint is `576px`.
 The figure wraps the paragraphs that follow it. Wrapping stops at the first
 block that is not a paragraph, and that block starts below the figure.
 Examples are a heading, a list, a table, a code block, a callout, another
-figure, and a horizontal rule.
+figure, and a horizontal rule. An image with no caption and no wrap class
+counts as a paragraph.
 
 To stop wrapping earlier, put an empty `wrap-clear` div after the last
 paragraph that you want beside the figure:

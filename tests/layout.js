@@ -1,8 +1,9 @@
 // Layout checks for wrapped figures, run in a browser on a rendered fixture.
 // Serve tests/ over HTTP, open a fixture's HTML, then run in the console:
 //   const m = await import("/layout.js"); m.report()
-// report() returns one entry per wrapped figure, per wrap group, and per
-// image inside a wrapped float, each with `ok` and the measured values.
+// report() returns one entry per wrapped figure, per wrap group that has a
+// block after it, and per image inside a wrapped float, each with `ok` and
+// the measured values.
 
 const TOL = 1; // px
 

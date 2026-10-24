@@ -7,10 +7,11 @@ Run from the repository root:
 
 Needs Quarto, R with knitr, and TinyTeX. Each render must exit with status
 0. Each snapshot under tests/_snapshots/ holds the parts of one render that
-the filter changes: for HTML, every .wrap-group fragment, the breakpoint
-style, and the classes of every figure; for the other formats, the
-extension's warnings and Quarto's figure markup. The script exits with
-status 1 on a failed render or a snapshot difference.
+the filter changes. For every format it holds the extension's warnings. For
+HTML it also holds the classes of every figure div, the breakpoint style,
+and every .wrap-group fragment. For PDF and Typst it also holds the figure
+lines of the kept .tex or .typ. For Word it holds the warnings only. The
+script exits with status 1 on a failed render or a snapshot difference.
 
 Layout (floats, widths, the stop rule) is checked in a browser with
 tests/layout.js, not here.

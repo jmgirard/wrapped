@@ -10,7 +10,7 @@
   display: flow-root;
 }
 
-/* Quarto gives a cell's output wrapper overflow: auto, which would contain
+/* Quarto gives a cell's output wrapper overflow-x: auto, which would contain
    the float of a wrapped cell figure and keep the text below it. */
 .wrap-group .cell-output-display {
   overflow: visible;

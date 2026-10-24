@@ -90,6 +90,7 @@ A document rendered to HTML with the extension installed shows body text beside 
 - 2026-10-24: T7 done. `README.md` covers install, the four forms, width and gap, document defaults, and the stop rule. A "README examples" section of `tests/fixture.qmd` holds each README example with only ids and file names changed. `quarto add <checkout> --no-prompt` in an empty scratch folder installed `_extensions/wrapped/`, and a `.wrap-right` figure there rendered with the class on its float.
 - 2026-10-24: added `tests/rtl.qmd` for the README note on physical sides (E14). In the browser at 1200 px, `.wrap-right` sat on the right and `.wrap-left` on the left, each with text beside it. `#| out-width: "30%"` on a knitr cell gave a 30% box.
 - 2026-10-24: Jupyter check by hand (throwaway venv, jupyter_core 5.9.1, matplotlib 3.11.2): a Jupyter cell figure with `#| classes: wrap-right` rendered with `wrap-right` on its float. A Jupyter cell with a class and no figure left the next figure without a wrap class.
+- 2026-10-24: claim audit found a bug. The cell carry counted table floats, but only figures used up the carry, so a wrapped table cell passed its class to the next figure. Every float now uses up the carry, a table float loses the wrap class, and a cell starts a group only when its figure wrapped. Regression case: "A cell with a table" in `tests/fixture.qmd`. With the pre-fix filter, `fixture.html` went red with `wrap-right` on `fig-after-table`.
 
 ## Decisions
 

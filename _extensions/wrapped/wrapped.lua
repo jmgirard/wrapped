@@ -64,9 +64,9 @@ local function take_from_images(blocks)
   return new, class, width
 end
 
--- Counts the figures inside a code cell. Inside a user filter, a figure in
--- a cell is a Div that Quarto marks as a FloatRefTarget, and a plain walk
--- does not call the FloatRefTarget handler.
+-- Counts the floats (figures and tables) inside a code cell. Inside a user
+-- filter, a float in a cell is a Div that Quarto marks as a FloatRefTarget,
+-- and a plain walk does not call the FloatRefTarget handler.
 local function count_floats(div)
   local n = 0
   div:walk({
@@ -85,8 +85,11 @@ local function read_meta(meta)
   end
 end
 
--- Custom ids of wrapped floats outside a code cell, for the grouping pass.
+-- Custom ids of wrapped floats outside a code cell, and the anchor tokens of
+-- cells whose figure wrapped, for the grouping pass.
 local wrapped_ids = {}
+local wrapped_cells = {}
+local next_token = 0
 
 -- The wrap class of a code cell, carried to the figures inside that cell.
 -- `remaining` counts those figures, so a cell with no figure carries nothing.
@@ -100,21 +103,31 @@ local function cell_div(div)
   strip_wrap(div.classes)
   local n = count_floats(div)
   if n > 0 then
-    carry = { class = c, remaining = n }
-    if is_html then div.classes:insert("wrap-anchor") end
+    next_token = next_token + 1
+    local token = tostring(next_token)
+    carry = { class = c, remaining = n, token = token }
+    if is_html then div.attributes["data-wrap-anchor"] = token end
   end
   return div
 end
 
 local function float_target(float)
-  if float.type ~= "Figure" then return nil end
-  local class = wrap_class(float.classes)
-  local from_cell = false
+  -- Every float of a wrapped cell uses up the carry, tables included, so
+  -- the carry never reaches a float after the cell.
+  local carried, token
   if carry and carry.remaining > 0 then
     carry.remaining = carry.remaining - 1
-    class = class or carry.class
-    from_cell = true
+    carried, token = carry.class, carry.token
   end
+  -- Only figures wrap. A table float keeps its normal layout, and Quarto
+  -- copies a cell's classes onto a table float, so the wrap class goes.
+  if float.type ~= "Figure" then
+    if not wrap_class(float.classes) then return nil end
+    strip_wrap(float.classes)
+    return float
+  end
+  local class = wrap_class(float.classes) or carried
+  local from_cell = carried ~= nil
   local content, img_class, img_width = take_from_images(float.content)
   float.content = content
   class = class or img_class
@@ -133,7 +146,9 @@ local function float_target(float)
   float.attributes["wrap-gap"] = nil
   float.classes:insert(class)
   float.attributes.style = style_for(width, gap)
-  if not from_cell then
+  if from_cell then
+    wrapped_cells[token] = true
+  else
     -- The grouping pass sees this float as a plain Div that Quarto marks
     -- with the same custom id, so it can find the float by that id.
     local node = float.__quarto_custom_node
@@ -184,9 +199,11 @@ local function group_blocks(blocks)
       else
         strip_wrap(img.classes)
       end
-    elseif b.t == "Div" and b.classes:includes("wrap-anchor") then
-      b.classes = b.classes:filter(function(c) return c ~= "wrap-anchor" end)
-      members = pandoc.List({ b })
+    elseif b.t == "Div" and b.attributes["data-wrap-anchor"] then
+      -- A wrapped cell starts a group only if one of its figures wrapped.
+      local token = b.attributes["data-wrap-anchor"]
+      b.attributes["data-wrap-anchor"] = nil
+      if wrapped_cells[token] then members = pandoc.List({ b }) end
     elseif b.t == "Div" and wrapped_ids[b.attributes.__quarto_custom_id or ""] then
       members = pandoc.List({ b })
     end
