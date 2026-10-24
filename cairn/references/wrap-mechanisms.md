@@ -196,7 +196,12 @@ Each spike answers one yes-or-no question. The fallback for a no follows it.
   - meander 0.4.4 was not tested, because both wrap-it answers are yes.
   - Raw Typst blocks around the figure and the paragraphs open and close the `wrap-content` call. Quarto renders the figure and the citations itself.
   - Typst refused the image path `../assets/plot.png`, outside the document's folder. Its error: "would escape the project root". The spike keeps its own copy of the image.
-- S4: Does Word open a docx with a raw frame `w:pPr` on the image paragraph, and show one merged frame? How do LibreOffice and Google Docs show it? If Word fails, version 1 ships without docx wrapping. Not yet tested (observed 2026-10-24).
+- S4: Does Word open a docx with a raw frame `w:pPr` on the image paragraph, and show one merged frame? How do LibreOffice and Google Docs show it? If Word fails, version 1 ships without docx wrapping. Answered yes for Word on 2026-10-24, from the user's look at a docx that `spikes/s4/frame.py` builds from `spikes/s4/s4.qmd` (Quarto 1.10.19):
+  - The script removes Quarto's one-cell figure table and puts the same `w:framePr` on the image paragraph and the caption paragraph.
+  - Word opened the file with no repair prompt.
+  - Right figure, one merged `w:pPr` in schema order: Word shows the image and caption in one frame on the right, with body text beside it.
+  - Left figure, the frame in an extra `w:pPr` before Quarto's own `w:pPr` elements: Word shows the same result on the left. So a filter that prepends a raw `w:pPr` also works in Word.
+  - LibreOffice and Google Docs were not checked. The candidate "Wrap figures in Word output with frames" holds that check.
 - Which Quarto version first loads Typst packages from an extension's `typst/packages` folder? The answer sets `quarto-required`. Answered 2026-10-24 from a quarto-cli clone:
   - The loader is `collectPackageSources` in `src/command/render/output-typst.ts`, which adds `join(ext.path, "typst/packages")` for each extension.
   - Tag v1.9.18 is the earliest tag whose `output-typst.ts` has `typst/packages`. It is a pre-release. The last tag of each minor release from v1.4 to v1.8 does not have it. No Typst-named file under `src` at v1.8.27 names the folder.

@@ -2,7 +2,7 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M001: Run the four wrap feasibility spikes
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** high
 - **Depends on:** —
 - **Driving RR:** —
@@ -46,7 +46,7 @@ Record a yes-or-no answer, with evidence, to each wrap feasibility question S1 t
 - [x] T1: S1 spike in `spikes/s1/`. Write a probe filter at `pre-quarto` that logs the classes and attributes of each `FloatRefTarget` and of each image. Render the four figure sources to HTML. For the Jupyter cell, create a venv in the session scratchpad, install `jupyter` there, and set `QUARTO_PYTHON` for that render only. Record AC1.
 - [x] T2: S2 spike in `spikes/s2/`. Put the `wrappedfigure` wrapper from the research page in a header include, and set `fig-env` and `fig-pos` on one figure. Render to PDF with `keep-tex: true`. Convert the figure page to an image with `pdftoppm` and read it. Record AC2.
 - [x] T3: S3 spike in `spikes/s3/`. Add a small `.bib` file and a raw Typst block that calls `wrap-content` from `@preview/wrap-it:0.1.1` with a citation in the wrapped text. Render in both citation modes and read the figure page. If either mode fails, repeat with `@preview/meander:0.4.4`. Record AC3.
-- [ ] T4: S4 spike in `spikes/s4/`. Write a filter or script that puts the same `w:framePr` on the image paragraph and the caption paragraph, and build the docx. Ask the user to open it in Word and report what Word shows. Record AC4.
+- [x] T4: S4 spike in `spikes/s4/`. Write a filter or script that puts the same `w:framePr` on the image paragraph and the caption paragraph, and build the docx. Ask the user to open it in Word and report what Word shows. Record AC4.
 - [x] T5: Read the quarto-cli tags and changelog for the `typst/packages` loader in `src/command/render/output-typst.ts`. Record AC5 and update the "Quarto version" paragraph of `cairn/DESIGN.md`.
 
 ## Work log
@@ -70,6 +70,9 @@ Record a yes-or-no answer, with evidence, to each wrap feasibility question S1 t
 - 2026-10-24: T3 done. S3: yes in both citation modes with wrap-it 0.1.1 on Typst 0.15.1, so meander was not tested. wrap-it issue #15 did not show here.
 - 2026-10-24: T5 done. The `typst/packages` loader first appears at tag v1.9.18, and the first stable release with it is v1.9.36. DESIGN now states `>=1.9.36`. A `git log -S` search in a partial clone ran about 40 minutes without finishing and was stopped; reading the file at each release tag replaced it.
 - 2026-10-24: T4 spike built (`spikes/s4/frame.py`). It frames two figures in two forms, one merged `w:pPr` and one extra `w:pPr`, so one Word look answers both. Waiting on the user's look in Word.
+- 2026-10-24: T4 done. The user reported that Word opened the framed docx cleanly and showed one frame with wrapped text for both figures, so S4 is yes in both XML forms.
+- 2026-10-24: claim audit: not owed — internal tier.
+- 2026-10-24: all tasks done. The verify slot names no automated command yet (PROFILE.md), so the evidence is the recorded answers. Status set to review.
 
 ## Decisions
 

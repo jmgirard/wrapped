@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-24 (scaffold: five candidates from SCOPE.md)_
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M001 | Run the four wrap feasibility spikes | in-progress | — | high | milestones/M001-wrap-spikes.md |
+| M001 | Run the four wrap feasibility spikes | review | — | high | milestones/M001-wrap-spikes.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
