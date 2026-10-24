@@ -2,7 +2,7 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M002: Wrap figures in HTML output
 
-- **Status:** review
+- **Status:** in-progress
 - **Priority:** high
 - **Depends on:** —
 - **Driving RR:** —
@@ -95,6 +95,7 @@ A document rendered to HTML with the extension installed shows body text beside 
 - 2026-10-24: claim audit re-read: all 9 corrections hold. The re-read found one comment above `local carry` made stale by the table fix, now corrected.
 - 2026-10-24: implement done. `python3 tests/verify.py` passes all 8 renders, and `cairn_validate` passes. Status set to review.
 - 2026-10-24: review checkpoint, findings not yet settled. The filter's `add_html_dependency` call no longer repeats the version, because Quarto validates only `name`. `_extension.yml` is again the one version marker, and the PROFILE release-walk says so. The diff-bug reviewer reads the branch at 49982e0, before this commit. verify has not run since this change.
+- 2026-10-24: review return 1: diff-bug #1, a load-bearing defect. In HTML the filter removes the image `width` from every figure, wrapped or not. The same return carries the other fix-now items of the Review section's pass 1: diff-bug #2, #3, #4, #6, #7, #8, #12, and (c)1 to (c)5, and ripple #3, #4, #10, and #11.
 
 ## Decisions
 
@@ -115,3 +116,39 @@ Consistency gate:
 - Version markers: `_extension.yml` and the `add_html_dependency` call in `wrapped.lua` both hold 0.1.0. The PROFILE release-walk did not name the second marker, as it requires for a change that adds one. It now names it (fix now, review side).
 - Verify render: `python3 tests/verify.py` matched all 8 renders, exit 0.
 - Changelog: the slot says "none", so no entry was read.
+
+Independent review, pass 1, on 49982e0:
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: the filter removes the image `width` from every figure in HTML, wrapped or not, because `take_from_images` runs before the no-class return. `fig-plain` and an unwrapped `out-width` cell lose their widths. — fix now, floor return (a load-bearing defect for every user of the filter)
+- diff-bug #2: a captioned image with no `#fig-` id (a Pandoc Figure) keeps its wrap class on the `<img>` and does not wrap, with no warning. `![Lab logo](logo.png){.wrap-right}` is a common spelling. — fix now
+- diff-bug #3: an image inside a link, two images in one paragraph, and an image in a tight list item keep the wrap class and do not wrap, with no warning. — fix now: warn for a wrap class that the filter cannot place (list items stay M003's E8)
+- diff-bug #4: a wrapped cell with no figure sets `found_wrap`, so the CSS loads and docx prints the fallback warning with nothing wrapped. — fix now
+- diff-bug #5: a wrapped cell with two figures floats both, side by side. — follow-up: candidate "Handle a wrapped cell with two figures"
+- diff-bug #6: a raw block such as an HTML comment right after the figure ends the group, so the text starts below the figure. — fix now
+- diff-bug #7: an invalid `width` such as `banana` goes into `--wrap-width` with no warning. — fix now: warn and use the default
+- diff-bug #8: a user `style` attribute on the float is overwritten. — fix now: keep it
+- diff-bug #9: dashboards probably do not wrap, because the group gets `html-fill-container` (flex). Not verified. — follow-up: candidate "Check wrapped figures in dashboards"
+- diff-bug #10: a change to the Quarto internals that the filter reads degrades with no error, losing the group or the cell wrap. — reject, false: no defect today, and the verify snapshots show such a change
+- diff-bug #11: a wrapped figure in a callout, div, or list wraps inside it, an end-of-document figure gets an empty group, and other classes are kept. — noted, no defect (contexts are M003's)
+- diff-bug #12: `tests/layout.js` gives NaN caption lines when line height is `normal`, and throws on a float with no image. — fix now
+- diff-bug (c)1: the PDF and Typst snapshots record Quarto's own `\includegraphics` and `#figure(` lines, which is dependency behavior. — fix now: record only the figure environments and labels
+- diff-bug (c)2: the HTML snapshots hold Quarto's figure markup and the lorem text, beyond what the filter changes. — fix now: record the filter's changes (classes, style, group members, image attributes)
+- diff-bug (c)3: the breakpoint style is compared byte for byte. — fix now: record the breakpoint value
+- diff-bug (c)4: the stop-rule, rtl, and margin snapshots and the README examples repeat code paths in the snapshot. — fix now: render those fixtures for the browser checks without a snapshot, with the README examples in their own fixture
+- diff-bug (c)5: no snapshot records the image attributes of unwrapped figures, which let #1 through. — fix now: the regression test for #1
+- blame-history #1: DESIGN and CLAUDE.md name `_extension.yml` as the one version marker, and `wrapped.lua` repeated the version. — fix now, fixed 5deb75c
+- blame-history #2: the first of two back-to-back wrapped figures floats alone, against D-003. — follow-up: held by M003 AC3
+- blame-history #3: a cell with several figures wraps every figure. — follow-up: candidate "Handle a wrapped cell with two figures"
+- prior-review #1: "(added by M002)" in PROFILE is a history note in a standing file. — fix now, fixed 5deb75c (the sentence is gone)
+- prior-review #2: the README does not say a knitr cell needs R with knitr. — reject, false: the extension needs no R, and Quarto states what an R cell needs
+- ripple #1: CLAUDE.md and DESIGN name one version marker, and the filter added a second. — fix now, fixed 5deb75c
+- ripple #2: the PROFILE release-walk named two markers but passes one to `cairn_versions.py`. — fix now, fixed 5deb75c
+- ripple #3: the ROADMAP candidate "Wrap figures in HTML and LaTeX output" still says the fixture becomes the verify command and that `quarto add` finds no extension. — fix now: narrow the row to what is left
+- ripple #4: DESIGN says "Not built yet", "No code yet", and no function families. — fix now: state the HTML filter as it is
+- ripple #5: PROFILE test-doctrine and the research page say the docx test reads `word/document.xml`, and the docx snapshot holds only the warning. — reject, false: that text describes the test once Word wraps, and nothing wraps in Word yet
+- ripple #6: a table with a wrap class prints no warning, against E5. — follow-up: held by M003 AC1
+- ripple #7: a lone wrapped figure floats in an empty group, against E6 and E7. — follow-up: held by M003 AC2 and AC3
+- ripple #8: a wrapped figure in a list, callout, or column layout wraps with no warning, against E3, E4, and E8. — follow-up: held by M003 AC1
+- ripple #9: M003's title overlaps the format fallback that M002 ships. — reject, false: M003's scope is contexts and M002's is formats
+- ripple #10: PROFILE init-detection says `_extension.yml` "arrives with the first code milestone". — fix now
+- ripple #11: the PROFILE consistency-gate line says only that the verify render finishes. — fix now: say that verify passes
