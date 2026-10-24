@@ -94,6 +94,7 @@ A document rendered to HTML with the extension installed shows body text beside 
 - 2026-10-24: claim audit: 75 claims read, 9 corrected — README.md, _extensions/wrapped/wrapped.lua, _extensions/wrapped/wrapped.css, tests/fixture.qmd, tests/verify.py, tests/layout.js
 - 2026-10-24: claim audit re-read: all 9 corrections hold. The re-read found one comment above `local carry` made stale by the table fix, now corrected.
 - 2026-10-24: implement done. `python3 tests/verify.py` passes all 8 renders, and `cairn_validate` passes. Status set to review.
+- 2026-10-24: review checkpoint, findings not yet settled. The filter's `add_html_dependency` call no longer repeats the version, because Quarto validates only `name`. `_extension.yml` is again the one version marker, and the PROFILE release-walk says so. The diff-bug reviewer reads the branch at 49982e0, before this commit. verify has not run since this change.
 
 ## Decisions
 

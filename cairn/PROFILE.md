@@ -48,12 +48,11 @@ tracking-rules. An extension is tested by rendering, not by calling functions:
   `release-walk`), because the version rises at release.
 
 ## release-walk
-The release procedure `/cairn-release` follows. The version markers are
-`version:` in `_extensions/wrapped/_extension.yml` and the `version` field of
-the `quarto.doc.add_html_dependency` call in `_extensions/wrapped/wrapped.lua`
-(added by M002). A later change can add the version to another file. If it
-does, that change names the file here. Every named marker holds the same
-version. The version rises at release (CLAUDE.md), so the
+The release procedure `/cairn-release` follows. The version marker is
+`version:` in `_extensions/wrapped/_extension.yml`. The filter's
+`add_html_dependency` call carries no version, so it is not a marker. A later
+change can add the version to another file. If it does, that change names the
+file here. Every named marker holds the same version. The version rises at release (CLAUDE.md), so the
 release-time arm is the usual path.
 Before step 1 of `/cairn-release`,
 run `git fetch --tags <base>` and read the remote default branch's tip:

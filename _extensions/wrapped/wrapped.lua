@@ -224,9 +224,9 @@ local function group_blocks(blocks)
 end
 
 local function add_html_assets()
+  -- No version here: `_extension.yml` holds the one version marker.
   quarto.doc.add_html_dependency({
     name = "wrapped",
-    version = "0.1.0",
     stylesheets = { "wrapped.css" },
   })
   -- A custom property cannot set a media query, so the breakpoint rule is
