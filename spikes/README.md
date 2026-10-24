@@ -12,3 +12,7 @@ Run each command from the spike's folder. Render output is not committed.
 - `s2/`: the LaTeX `wrappedfigure` wrapper. Run
   `quarto render s2.qmd --to pdf`, then read the pages with
   `pdftoppm -r 70 -png s2.pdf out/page`.
+- `s3/`: wrap-it with citations in the wrapped text. Run
+  `quarto render s3-wrapit.qmd --to typst` for Typst citations, and add
+  `-M citeproc:true` for Pandoc citations. The first render downloads
+  wrap-it 0.1.1 into Typst's package cache.

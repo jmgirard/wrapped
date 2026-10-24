@@ -190,7 +190,12 @@ Each spike answers one yes-or-no question. The fallback for a no follows it.
   - The PDF built with no LaTeX error. On page 1, the right figure and its two-line caption sit beside the two paragraphs that follow it, and the third paragraph runs full width. The left figure with `lines=12` sits beside the paragraph that follows it.
   - The code sketch above does not compile as written. The working wrapper calls `\wrapfigure` through two small helper functions. If `lines` is set, it builds the call with `\use:e`. See `spikes/s2/wrapped.tex`.
   - Known limit seen: the left figure's 12 narrowed lines ran past the page break, so page 2 starts with narrowed text and no figure.
-- S3: Does wrap-it render wrapped text that contains a citation? If no, test meander. If neither works, Typst keeps a normal figure when the wrapped text contains a citation. Not yet tested (observed 2026-10-24).
+- S3: Does wrap-it render wrapped text that contains a citation? If no, test meander. If neither works, Typst keeps a normal figure when the wrapped text contains a citation. Answered 2026-10-24 with Quarto 1.10.19 (Typst 0.15.1) and wrap-it 0.1.1, from `spikes/s3/s3-wrapit.qmd`:
+  - Quarto's default Typst citations: yes. Quarto writes `#cite(<smith2020>, form: "prose")` and `@smith2020[p.~3]` inside the `wrap-content` call. The PDF built with no error and shows both citations and the `@fig-right` link in the text beside the figure.
+  - `citeproc: true`: yes. Pandoc writes the citations as plain text, and the PDF shows them in the text beside the figure.
+  - meander 0.4.4 was not tested, because both wrap-it answers are yes.
+  - The spike opens and closes the `wrap-content` call with raw Typst blocks around the figure and the paragraphs, so Quarto renders the figure and the citations itself.
+  - Typst refused an image path outside the document's folder (`../assets/plot.png` "would escape the project root"), so the spike keeps its own copy of the image.
 - S4: Does Word open a docx with a raw frame `w:pPr` on the image paragraph, and show one merged frame? How do LibreOffice and Google Docs show it? If Word fails, version 1 ships without docx wrapping. Not yet tested (observed 2026-10-24).
 - Which Quarto version first loads Typst packages from an extension's `typst/packages` folder? The answer sets `quarto-required`. Not yet read (observed 2026-10-24).
 - How will Quarto 2 (quarto-dev/q2, a Rust rewrite in active development) treat Lua filter extensions? The Typst and docx paths depend on the shape of Quarto's rendered output, so they break first. Not yet known (observed 2026-10-24).

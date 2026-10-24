@@ -45,7 +45,7 @@ Record a yes-or-no answer, with evidence, to each wrap feasibility question S1 t
 
 - [x] T1: S1 spike in `spikes/s1/`. Write a probe filter at `pre-quarto` that logs the classes and attributes of each `FloatRefTarget` and of each image. Render the four figure sources to HTML. For the Jupyter cell, create a venv in the session scratchpad, install `jupyter` there, and set `QUARTO_PYTHON` for that render only. Record AC1.
 - [x] T2: S2 spike in `spikes/s2/`. Put the `wrappedfigure` wrapper from the research page in a header include, and set `fig-env` and `fig-pos` on one figure. Render to PDF with `keep-tex: true`. Convert the figure page to an image with `pdftoppm` and read it. Record AC2.
-- [ ] T3: S3 spike in `spikes/s3/`. Add a small `.bib` file and a raw Typst block that calls `wrap-content` from `@preview/wrap-it:0.1.1` with a citation in the wrapped text. Render in both citation modes and read the figure page. If either mode fails, repeat with `@preview/meander:0.4.4`. Record AC3.
+- [x] T3: S3 spike in `spikes/s3/`. Add a small `.bib` file and a raw Typst block that calls `wrap-content` from `@preview/wrap-it:0.1.1` with a citation in the wrapped text. Render in both citation modes and read the figure page. If either mode fails, repeat with `@preview/meander:0.4.4`. Record AC3.
 - [ ] T4: S4 spike in `spikes/s4/`. Write a filter or script that puts the same `w:framePr` on the image paragraph and the caption paragraph, and build the docx. Ask the user to open it in Word and report what Word shows. Record AC4.
 - [ ] T5: Read the quarto-cli tags and changelog for the `typst/packages` loader in `src/command/render/output-typst.ts`. Record AC5 and update the "Quarto version" paragraph of `cairn/DESIGN.md`.
 
@@ -67,6 +67,7 @@ Record a yes-or-no answer, with evidence, to each wrap feasibility question S1 t
 - 2026-10-24: implement started on branch m001-wrap-spikes.
 - 2026-10-24: T1 done. S1: the class reaches the float for markdown and div figures; for knitr and Jupyter cells it sits on the enclosing cell Div, and a top-down pass carries it. The Jupyter spike shows the existing PNG with `IPython.display.Image`, so the venv needs only `jupyter`, not matplotlib. Render output is ignored by `spikes/.gitignore`.
 - 2026-10-24: T2 done. S2: yes. Both wrapped figures render beside their text in the PDF (pages read with `pdftoppm`). The research-page sketch did not compile, so the spike's `wrapped.tex` holds the working form.
+- 2026-10-24: T3 done. S3: yes in both citation modes with wrap-it 0.1.1 on Typst 0.15.1, so meander was not tested. wrap-it issue #15 did not show here.
 
 ## Decisions
 
