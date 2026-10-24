@@ -185,7 +185,11 @@ Each spike answers one yes-or-no question. The fallback for a no follows it.
   - Jupyter cell with `#| classes: wrap-right` (jupyter 5.9.1 core, in a throwaway venv): no. Same as knitr. The class is on the enclosing `Div` `#cell-fig-jupyter` with class `cell`.
   - Uncaptioned image: the class is in `Image.classes`, and no float exists.
   - For both cell engines, a second filter pass used `traverse = "topdown"`. It saw the cell `Div` before the nested `FloatRefTarget`, so it can carry the class to the float. The `#| wrap: right` fallback is not needed.
-- S2: Does the `wrappedfigure` wrapper around `wrapfigure` work? If no, a `post-render` step rewrites the raw blocks. Not yet tested (observed 2026-10-24).
+- S2: Does the `wrappedfigure` wrapper around `wrapfigure` work? If no, a `post-render` step rewrites the raw blocks. Answered yes on 2026-10-24 with Quarto 1.10.19 and TinyTeX 2026 (LuaLaTeX), from `spikes/s2/s2.qmd` and its header file `spikes/s2/wrapped.tex`:
+  - Quarto writes `\begin{wrappedfigure}[side=r,width=0.4\linewidth]` with the `fig-pos` string unchanged, backslash included.
+  - The PDF built with no LaTeX error. On page 1, the right figure and its two-line caption sit beside the two paragraphs that follow it, and the third paragraph runs full width. The left figure with `lines=12` sits beside the paragraph that follows it.
+  - The code sketch above does not compile as written. The working wrapper calls `\wrapfigure` through two small helper functions and builds the call with `\use:e` when `lines` is set. See `spikes/s2/wrapped.tex`.
+  - Known limit seen: the left figure's 12 narrowed lines ran past the page break, so page 2 starts with narrowed text and no figure.
 - S3: Does wrap-it render wrapped text that contains a citation? If no, test meander. If neither works, Typst keeps a normal figure when the wrapped text contains a citation. Not yet tested (observed 2026-10-24).
 - S4: Does Word open a docx with a raw frame `w:pPr` on the image paragraph, and show one merged frame? How do LibreOffice and Google Docs show it? If Word fails, version 1 ships without docx wrapping. Not yet tested (observed 2026-10-24).
 - Which Quarto version first loads Typst packages from an extension's `typst/packages` folder? The answer sets `quarto-required`. Not yet read (observed 2026-10-24).

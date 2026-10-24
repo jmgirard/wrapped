@@ -9,3 +9,6 @@ Run each command from the spike's folder. Render output is not committed.
   `QUARTO_PYTHON` to a Python that has `jupyter`, then run
   `quarto render s1-jupyter.qmd --to html`. The probe writes `S1` lines to
   the terminal.
+- `s2/`: the LaTeX `wrappedfigure` wrapper. Run
+  `quarto render s2.qmd --to pdf`, then read the pages with
+  `pdftoppm -r 70 -png s2.pdf out/page`.
