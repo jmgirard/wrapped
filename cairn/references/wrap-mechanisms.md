@@ -140,7 +140,7 @@ The filter has two entry points:
 | E4 | Subfigure panel (`layout-ncol`) | Normal panel. One warning. |
 | E5 | `#tbl-` float with a wrap class | Normal table. One warning. |
 | E6 | Wrapped figure is the last block before a heading | No text to wrap. Normal figure, no warning. |
-| E7 | Two wrapped figures with no text between them | The second figure falls back. One warning. |
+| E7 | Two wrapped figures with no text between them | The first figure falls back with no warning, and the second wraps the text after it (corrected 2026-10-24, D-003). |
 | E8 | Wrapped figure inside a list, callout, column layout, or tabset | Normal figure. One warning. |
 | E9 | Text shorter than the figure | HTML and Word clear at the stop point. Typst wraps the text it has. LaTeX narrows the blocks that follow. |
 | E10 | Figure taller than the rest of the page | LaTeX and Typst move it to the next page. A test makes sure that the text before it leaves no gap. |
