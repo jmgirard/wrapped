@@ -1,0 +1,39 @@
+---
+title: "S1 probe: knitr engine"
+filters:
+  - at: pre-quarto
+    path: probe.lua
+---
+
+## Markdown image
+
+![Mean ratings by condition.](../assets/plot.png){#fig-md .wrap-right width="40%"}
+
+Body text after the markdown image.
+
+## Div figure
+
+::: {#fig-div .wrap-left width="35%"}
+![](../assets/plot.png)
+
+Div figure caption.
+:::
+
+Body text after the div figure.
+
+## Uncaptioned image
+
+![](../assets/plot.png){.wrap-right width="20%" fig-alt="A plot"}
+
+Body text after the uncaptioned image.
+
+## knitr cell
+
+```{r}
+#| label: fig-knitr
+#| fig-cap: "A knitr figure."
+#| classes: wrap-right
+plot(1:10)
+```
+
+Body text after the knitr figure.

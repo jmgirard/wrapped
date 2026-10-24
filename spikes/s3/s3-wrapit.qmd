@@ -1,0 +1,35 @@
+---
+title: "S3: wrap-it with a citation in the wrapped text"
+bibliography: refs.bib
+format:
+  typst:
+    keep-typ: true
+---
+
+```{=typst}
+#import "@preview/wrap-it:0.1.1": wrap-content
+```
+
+## Right wrap
+
+```{=typst}
+#wrap-content(align: top + right, column-gutter: 1em, [
+```
+
+![A right-wrapped figure.](plot.png){#fig-right width="2.5in"}
+
+```{=typst}
+], [
+```
+
+This paragraph holds a citation, @smith2020, and a cross-reference to @fig-right. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+A second paragraph with a parenthetical citation [@smith2020, p. 3]. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+```{=typst}
+])
+```
+
+Text after the wrap runs full width. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## References

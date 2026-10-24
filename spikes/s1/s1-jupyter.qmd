@@ -1,0 +1,19 @@
+---
+title: "S1 probe: Jupyter engine"
+jupyter: python3
+filters:
+  - at: pre-quarto
+    path: probe.lua
+---
+
+## Jupyter cell
+
+```{python}
+#| label: fig-jupyter
+#| fig-cap: "A Jupyter figure."
+#| classes: wrap-right
+from IPython.display import Image
+Image("../assets/plot.png")
+```
+
+Body text after the Jupyter figure.

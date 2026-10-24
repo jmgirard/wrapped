@@ -5,7 +5,7 @@ scope written before cairn. SCOPE.md came from a read-only read of quarto-cli
 `main` at 5b23163 (2026-10-23). It also used the typst/packages,
 ntjess/wrap-it, and Vanille-N/meander.typ repositories on GitHub.
 Pagination: none.
-Extraction: a 2026-10-24 snapshot, and quarto-cli, wrap-it, and meander move on independently. No spike tested these claims yet (observed 2026-10-24).
+Extraction: a 2026-10-24 snapshot, and quarto-cli, wrap-it, and meander move on independently. Spikes S1 to S4 tested the claims that "Open questions" names, in M001 (verified 2026-10-24). The other claims are not tested.
 
 **Scope.** This page records how each output format can wrap text around a
 figure, and which Quarto hook each path uses. It also records the edge cases,
@@ -31,8 +31,8 @@ source summary. It is a reference, not an authority. Status lives in
 |---|---|---|---|---|
 | W1 | HTML (html, revealjs, dashboard) | CSS `float` on `div.quarto-float`. Width and gap are CSS custom properties. A `.wrap-clear` div marks the stop point. No float below a breakpoint. | Quarto copies the float's classes to the outer `div.quarto-float`. | `quarto-figure-center` sets `text-align`. The lightbox extension wraps the image in a link. |
 | W2 | PDF through LaTeX | A `wrappedfigure` environment calls `wrapfigure` from `wrapfig`. The filter sets `fig-env="wrappedfigure"` and `fig-pos="side=r,width=0.4\linewidth"`. | Quarto writes `\begin{<fig-env>}[<fig-pos>]` and passes `fig-pos` unchanged. | Inside another environment, `wrapfigure` can lose its paragraph shape. |
-| W3 | PDF through Typst | `wrap-content(fixed, body, align: ...)` from wrap-it, bundled under `_extensions/wrapped/typst/packages/preview/wrap-it/0.1.1/`. | Quarto renders `#figure(...)<id>`. A `post-render` step puts it and the next paragraphs in one `wrap-content` call. | wrap-it issue #15: a citation in the wrapped text fails. |
-| W4 | Word (docx) | Word frames. The image paragraph and the caption paragraph get the same `w:framePr`, and Word merges them into one frame. | Quarto renders a one-cell table. Its cell `Div` has the figure ID. A `post-render` step unwraps it. | A second raw `w:pPr` on the image paragraph. |
+| W3 | PDF through Typst | `wrap-content(fixed, body, align: ...)` from wrap-it, bundled under `_extensions/wrapped/typst/packages/preview/wrap-it/0.1.1/`. | Quarto renders `#figure(...)<id>`. A `post-render` step puts it and the next paragraphs in one `wrap-content` call. | wrap-it issue #15: a citation in the wrapped text fails. S3 did not show it with wrap-it 0.1.1 on Typst 0.15.1 (corrected M001). |
+| W4 | Word (docx) | Word frames. The image paragraph and the caption paragraph get the same `w:framePr`, and Word merges them into one frame. | Quarto renders a one-cell table. Its cell `Div` has the figure ID. A `post-render` step unwraps it. | A second raw `w:pPr` on the image paragraph. S4 showed that Word accepts a frame in an extra first `w:pPr`. The order a filter makes is not tested (corrected M001). |
 | W5 | gfm, commonmark, pptx, epub, ipynb, JATS, ODT | The filter removes the wrap class and keeps a normal figure. It warns once per document. | None. | None. |
 
 Details by row:
@@ -66,7 +66,7 @@ Details by row:
 
 ## Code sketches
 
-These sketches come from SCOPE.md. No spike ran them yet.
+These sketches come from SCOPE.md. S2 ran the LaTeX sketch, and it did not compile as written. The working form is `spikes/s2/wrapped.tex`. No spike ran the other sketches as written (corrected M001).
 
 HTML stylesheet (W1):
 
@@ -178,9 +178,35 @@ The filter has two entry points:
 
 Each spike answers one yes-or-no question. The fallback for a no follows it.
 
-- S1: Does a `pre-quarto` filter see the wrap class on `FloatRefTarget`? This includes figures from knitr and Jupyter cells with `#| classes: wrap-right`. If no, the filter reads a `#| wrap: right` cell option instead. Not yet tested (observed 2026-10-24).
-- S2: Does the `wrappedfigure` wrapper around `wrapfigure` work? If no, a `post-render` step rewrites the raw blocks. Not yet tested (observed 2026-10-24).
-- S3: Does wrap-it render wrapped text that contains a citation? If no, test meander. If neither works, Typst keeps a normal figure when the wrapped text contains a citation. Not yet tested (observed 2026-10-24).
-- S4: Does Word open a docx with a raw frame `w:pPr` on the image paragraph, and show one merged frame? How do LibreOffice and Google Docs show it? If Word fails, version 1 ships without docx wrapping. Not yet tested (observed 2026-10-24).
-- Which Quarto version first loads Typst packages from an extension's `typst/packages` folder? The answer sets `quarto-required`. Not yet read (observed 2026-10-24).
+- S1: Does a `pre-quarto` filter see the wrap class on `FloatRefTarget`? This includes figures from knitr and Jupyter cells with `#| classes: wrap-right`. If no, the filter reads a `#| wrap: right` cell option instead. Answered 2026-10-24 with Quarto 1.10.19, from `spikes/s1/probe.lua` run on `spikes/s1/s1-knitr.qmd` and `spikes/s1/s1-jupyter.qmd`:
+  - Markdown image with `.wrap-right`: yes. The class is in `FloatRefTarget.classes`. The `width` attribute stays in the inner `Image.attributes`, and the `Image` keeps the class too.
+  - Div figure with `.wrap-left`: yes. The class is in `FloatRefTarget.classes`, and `width` is in `FloatRefTarget.attributes`.
+  - knitr cell with `#| classes: wrap-right`: no. The float has no classes. The class is on the enclosing `Div` with class `cell`. That div holds the code block and a `cell-output-display` div, and the float is inside the second div.
+  - Jupyter cell with `#| classes: wrap-right` (jupyter 5.9.1 core, in a throwaway venv): no. Same as knitr. The class is on the enclosing `Div` `#cell-fig-jupyter` with class `cell`.
+  - Uncaptioned image: the class is in `Image.classes`, and no float exists.
+  - For both cell engines, a second filter pass used `traverse = "topdown"`. It saw the cell `Div` before the nested `FloatRefTarget` and added the class to `FloatRefTarget.classes`. The HTML output then shows `wrap-right` on `div.quarto-float` for the knitr and the Jupyter figure. The LaTeX path for a moved class is not tested. The `#| wrap: right` fallback is not needed for HTML.
+  - The spike's carry is a global that only a float clears. A cell with a wrap class and no figure hands its class to the next float. The real filter must scope the carry to its own cell.
+- S2: Does the `wrappedfigure` wrapper around `wrapfigure` work? If no, a `post-render` step rewrites the raw blocks. Answered yes on 2026-10-24 with Quarto 1.10.19 and TinyTeX 2026 (LuaLaTeX), from `spikes/s2/s2.qmd` and its header file `spikes/s2/wrapped.tex`:
+  - Quarto writes `\begin{wrappedfigure}[side=r,width=0.4\linewidth]` with the `fig-pos` string unchanged, backslash included.
+  - The PDF built with no LaTeX error. On page 1, the right figure and its two-line caption sit beside the two paragraphs that follow it, and the third paragraph runs full width. The left figure with `lines=12` sits beside the paragraph that follows it.
+  - The code sketch above does not compile as written. The working wrapper calls `\wrapfigure` through two small helper functions. If `lines` is set, it builds the call with `\use:e`. See `spikes/s2/wrapped.tex`.
+  - Known limit seen: the left figure's 12 narrowed lines ran past the page break, so page 2 starts with narrowed text and no figure.
+  - The review found a second problem on page 1. The Figure 2 caption runs into the footer band and overlaps the page number's height.
+- S3: Does wrap-it render wrapped text that contains a citation? If no, test meander. If neither works, Typst keeps a normal figure when the wrapped text contains a citation. Answered 2026-10-24 with Quarto 1.10.19 (Typst 0.15.1) and wrap-it 0.1.1, from `spikes/s3/s3-wrapit.qmd`:
+  - Quarto's default Typst citations: yes. Quarto writes `#cite(<smith2020>, form: "prose")` and `@smith2020[p.~3]` inside the `wrap-content` call. The PDF built with no error and shows both citations and the `@fig-right` link in the text beside the figure.
+  - `citeproc: true`: yes. Pandoc writes the citations as plain text, and the PDF shows them in the text beside the figure.
+  - meander 0.4.4 was not tested, because both wrap-it answers are yes.
+  - Raw Typst blocks around the figure and the paragraphs open and close the `wrap-content` call. Quarto renders the figure and the citations itself. The planned `post-render` step that builds this call is not tested.
+  - Typst refused the image path `../assets/plot.png`, outside the document's folder. Its error: "would escape the project root". The spike keeps its own copy of the image.
+- S4: Does Word open a docx with a raw frame `w:pPr` on the image paragraph, and show one merged frame? How do LibreOffice and Google Docs show it? If Word fails, version 1 ships without docx wrapping. Answered yes for Word on 2026-10-24, from the user's look at a docx that `spikes/s4/frame.py` builds from `spikes/s4/s4.qmd` (Quarto 1.10.19):
+  - The script removes Quarto's one-cell figure table and puts the same `w:framePr` on the image paragraph and the caption paragraph. It edits the finished docx, so the planned `post-render` filter step is not tested. The frame width comes from the image's `wp:extent`, so the conversion from a percent width to twips is not tested.
+  - Word opened the file with no repair prompt.
+  - Right figure, one merged `w:pPr` in schema order: Word shows the image and caption in one frame on the right, with body text beside it.
+  - Left figure, the frame in an extra `w:pPr` before Quarto's own `w:pPr` elements: Word shows the same result on the left. So Word accepts a frame in an extra first `w:pPr`.
+  - A filter puts raw OpenXML after Pandoc's own `w:pPr`, so its frame `w:pPr` comes second or third. That order is not tested, and neither is whether the caption keeps its `ImageCaption` style. LibreOffice and Google Docs were not checked. The candidate "Wrap figures in Word output with frames" holds these checks.
+- Which Quarto version first loads Typst packages from an extension's `typst/packages` folder? The answer sets `quarto-required`. Answered 2026-10-24 from a quarto-cli clone:
+  - The loader is `collectPackageSources` in `src/command/render/output-typst.ts`, which adds `join(ext.path, "typst/packages")` for each extension.
+  - Tag v1.9.18 is the earliest tag whose `output-typst.ts` has `typst/packages`. It is a pre-release. The last tag of each minor release from v1.4 to v1.8 does not have it. No Typst-named file under `src` at v1.8.27 names the folder.
+  - The earliest stable release with the loader is v1.9.36 (2026-03-19), the first 1.9 release that GitHub does not mark as a pre-release.
+  - No changelog line names this feature. The nearest is quarto-cli#13486 in `news/changelog-1.9.md`, which bundles Typst template packages with `typst-gather`.
 - How will Quarto 2 (quarto-dev/q2, a Rust rewrite in active development) treat Lua filter extensions? The Typst and docx paths depend on the shape of Quarto's rendered output, so they break first. Not yet known (observed 2026-10-24).

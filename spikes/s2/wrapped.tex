@@ -1,0 +1,30 @@
+\usepackage{wrapfig}
+\ExplSyntaxOn
+\keys_define:nn { wrapped }
+  {
+    side .tl_set:N = \l_wrapped_side_tl,
+    side .initial:n = r,
+    width .tl_set:N = \l_wrapped_width_tl,
+    width .initial:n = 0.4\linewidth,
+    lines .tl_set:N = \l_wrapped_lines_tl,
+    lines .initial:n = ,
+  }
+\cs_new_protected:Npn \__wrapped_begin:nn #1#2 { \wrapfigure{#1}{#2} }
+\cs_new_protected:Npn \__wrapped_begin:nnn #1#2#3 { \wrapfigure[#1]{#2}{#3} }
+\NewDocumentEnvironment { wrappedfigure } { O{} }
+  {
+    \keys_set:nn { wrapped } { #1 }
+    \tl_if_empty:NTF \l_wrapped_lines_tl
+      { \exp_args:NVV \__wrapped_begin:nn \l_wrapped_side_tl \l_wrapped_width_tl }
+      {
+        \use:e
+          {
+            \exp_not:N \__wrapped_begin:nnn
+              { \exp_not:V \l_wrapped_lines_tl }
+              { \exp_not:V \l_wrapped_side_tl }
+              { \exp_not:V \l_wrapped_width_tl }
+          }
+      }
+  }
+  { \endwrapfigure }
+\ExplSyntaxOff

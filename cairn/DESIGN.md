@@ -32,8 +32,11 @@ install it with `quarto add jmgirard/wrapped`.
 release with notes from commit subjects. The version lives in
 `_extensions/wrapped/_extension.yml` and rises at release.
 
-**Quarto version.** Provisional `quarto-required: ">=1.9.0"`. A spike sets the
-final value (`references/wrap-mechanisms.md`, open questions).
+**Quarto version.** `quarto-required: ">=1.9.36"`. Quarto 1.9.36 is the first
+stable release whose source has the loader for an extension's
+`typst/packages` folder (`references/wrap-mechanisms.md`, open questions).
+The spikes ran only on Quarto 1.10.19, so behavior on 1.9.36 to 1.10.18 is
+not tested.
 
 ### Planned syntax
 
@@ -59,9 +62,9 @@ Mean ratings by condition.
 
 Uncaptioned image: `![](logo.png){.wrap-right width="20%" fig-alt="Lab logo"}`.
 
-Figure from a code cell: `#| classes: wrap-right` beside `#| fig-cap:`. If a
-spike shows that `classes` does not reach the figure node, the filter reads
-`#| wrap: right` instead.
+Figure from a code cell: `#| classes: wrap-right` beside `#| fig-cap:`. The
+class lands on the cell's enclosing div, not on the figure node, and the
+filter carries it to the figure (`references/wrap-mechanisms.md`, S1; D-001).
 
 | Attribute | Values | Default | Notes |
 |---|---|---|---|

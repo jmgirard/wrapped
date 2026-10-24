@@ -1,0 +1,9 @@
+*.html
+*.pdf
+*.docx
+*.tex
+!wrapped.tex
+*.typ
+*_files/
+.quarto/
+out/
