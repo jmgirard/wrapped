@@ -6,6 +6,11 @@ fig-inner: wrap-right quarto-float quarto-figure quarto-figure-center anchored
 fig-cell: wrap-left quarto-float quarto-figure quarto-figure-center anchored
 (uncaptioned): wrapped-image wrap-right
 fig-plain: quarto-float quarto-figure quarto-figure-center anchored
+fig-readme-md: wrap-right quarto-float quarto-figure quarto-figure-center anchored
+fig-readme-div: wrap-left quarto-float quarto-figure quarto-figure-center anchored
+(uncaptioned): wrapped-image wrap-right
+fig-readme-cell: wrap-right quarto-float quarto-figure quarto-figure-center anchored
+fig-readme-gap: wrap-left quarto-float quarto-figure quarto-figure-center anchored
 # breakpoint style
 <style>
 @media (max-width: 576px) {
@@ -86,4 +91,72 @@ Figure&nbsp;4: A figure from a knitr cell.
 <img alt="A small plot" class="img-fluid" src="plot.png">
 </div>
 <p>The paragraph after the uncaptioned image wraps around it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+# wrap-group 6
+<div class="wrap-group">
+<div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-readme-md" style="--wrap-width: 40%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-readme-md-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-readme-md-caption-UUID">
+Figure&nbsp;6: Mean ratings by condition.
+</figcaption>
+</figure>
+</div>
+<p>Text beside the markdown example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+# wrap-group 7
+<div class="wrap-group">
+<div class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" id="fig-readme-div" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-readme-div-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-readme-div-caption-UUID">
+Figure&nbsp;7: Ratings by group.
+</figcaption>
+</figure>
+</div>
+<p>Text beside the div example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+# wrap-group 8
+<div class="wrap-group">
+<div class="wrapped-image wrap-right" style="--wrap-width: 20%; --wrap-gap: 1em;">
+<img alt="Lab logo" class="img-fluid" src="plot.png">
+</div>
+<p>Text beside the uncaptioned example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+# wrap-group 9
+<div class="wrap-group">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code></pre></div><button class="code-copy-button" title="Copy to Clipboard"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-readme-cell" style="--wrap-width: 30%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-readme-cell-caption-UUID">
+<img class="img-fluid figure-img" src="fixture_files/figure-html/fig-readme-cell-1.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-readme-cell-caption-UUID">
+Figure&nbsp;8: A scatter plot.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Text beside the code cell example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+# wrap-group 10
+<div class="wrap-group">
+<div class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" id="fig-readme-gap" style="--wrap-width: 3in; --wrap-gap: 2em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-readme-gap-caption-UUID">
+<img class="img-fluid figure-img" data-wrap-gap="2em" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-readme-gap-caption-UUID">
+Figure&nbsp;9: Mean ratings by condition.
+</figcaption>
+</figure>
+</div>
+<p>Text beside the gap example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 </div>

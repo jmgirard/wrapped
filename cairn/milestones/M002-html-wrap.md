@@ -60,7 +60,7 @@ A document rendered to HTML with the extension installed shows body text beside 
 - [x] T4: The stop rule. After a wrapped figure, find the first block that is not a paragraph, and make it clear the float. Make an empty `.wrap-clear` div clear it.
 - [x] T5: The format fallback. For any format that is not HTML, remove the wrap classes, keep the normal figure, and print one warning per render that names the format.
 - [x] T6: Write `tests/fixture.qmd`, `tests/defaults.qmd`, `tests/margin.qmd`, and `tests/stop-rule.qmd`. Write `tests/verify.py` (Python standard library only). It renders each fixture and compares the wrapped-figure fragments of the HTML with committed snapshots. It exits with a non-zero status on a difference. Show it red on a planted change. Replace the `verify` slot in `cairn/PROFILE.md` with its command.
-- [ ] T7: Write `README.md` with the install command, the syntax for each form, the attributes, the metadata keys, the stop rule, and the formats that keep a normal figure. Run the `quarto add` check in a scratch folder. Check the Jupyter cell form once by hand in a throwaway venv in the session scratchpad, and record the result in the work log.
+- [x] T7: Write `README.md` with the install command, the syntax for each form, the attributes, the metadata keys, the stop rule, and the formats that keep a normal figure. Run the `quarto add` check in a scratch folder. Check the Jupyter cell form once by hand in a throwaway venv in the session scratchpad, and record the result in the work log.
 
 ## Work log
 
@@ -87,6 +87,9 @@ A document rendered to HTML with the extension installed shows body text beside 
 - 2026-10-24: T4 done. The `.wrap-group` gives the stop rule, so no clear divs are inserted. `tests/stop-rule.qmd` holds the 11 stop blocks of AC4, and at 1200 px each starts below its figure.
 - 2026-10-24: T5 done. PDF, Typst, and docx renders of `tests/fixture.qmd` exit with status 0 and print one fallback warning each. Outside HTML the filter removes only the wrap class, so a figure keeps its image width. The fixture sets `fig-format: png` for Typst, because knitr's SVG device needs X11 libraries that this machine lacks.
 - 2026-10-24: T6 done. `tests/verify.py` renders 7 fixture and format pairs and compares them with `tests/_snapshots/`. It sorts tag attributes, because Quarto writes a figure div's attributes in a changing order. It passed twice in a row. A planted defect (the cell carry ignoring the figure count) turned `fixture.html` red with `wrap-right` on `fig-plain`, and the revert passed. The PROFILE `verify` slot now names the script.
+- 2026-10-24: T7 done. `README.md` covers install, the four forms, width and gap, document defaults, and the stop rule. A "README examples" section of `tests/fixture.qmd` holds each README example with only ids and file names changed. `quarto add <checkout> --no-prompt` in an empty scratch folder installed `_extensions/wrapped/`, and a `.wrap-right` figure there rendered with the class on its float.
+- 2026-10-24: added `tests/rtl.qmd` for the README note on physical sides (E14). In the browser at 1200 px, `.wrap-right` sat on the right and `.wrap-left` on the left, each with text beside it. `#| out-width: "30%"` on a knitr cell gave a 30% box.
+- 2026-10-24: Jupyter check by hand (throwaway venv, jupyter_core 5.9.1, matplotlib 3.11.2): a Jupyter cell figure with `#| classes: wrap-right` rendered with `wrap-right` on its float. A Jupyter cell with a class and no figure left the next figure without a wrap class.
 
 ## Decisions
 

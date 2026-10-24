@@ -35,6 +35,7 @@ RENDERS = [
     ("margin", "html"),
     ("defaults", "html"),
     ("stop-rule", "html"),
+    ("rtl", "html"),
 ]
 
 WARNING = re.compile(r"wrapped: .*")

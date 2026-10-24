@@ -22,3 +22,20 @@
 \includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{plot.png}
 \caption{\label{fig-plain}A figure with no wrap class.}
 \end{figure}%
+\begin{figure}
+\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{plot.png}
+\caption{\label{fig-readme-md}Mean ratings by condition.}
+\end{figure}%
+\begin{figure}
+\pandocbounded{\includegraphics[keepaspectratio]{plot.png}}
+\caption{\label{fig-readme-div}Ratings by group.}
+\end{figure}%
+\includegraphics[width=0.2\linewidth,height=\textheight,keepaspectratio]{plot.png}
+\begin{figure}[H]
+\includegraphics[width=0.3\linewidth,height=\textheight,keepaspectratio]{fixture_files/figure-pdf/fig-readme-cell-1.pdf}
+\caption{\label{fig-readme-cell}A scatter plot.}
+\end{figure}%
+\begin{figure}
+\includegraphics[width=3in,height=\textheight,keepaspectratio]{plot.png}
+\caption{\label{fig-readme-gap}Mean ratings by condition.}
+\end{figure}%

@@ -17,3 +17,16 @@
 #figure([
 #box(image("plot.png", width: 50.0%))
 <fig-plain>
+#figure([
+#box(image("plot.png", width: 40.0%))
+<fig-readme-md>
+#figure([
+#box(image("plot.png"))
+<fig-readme-div>
+#box(image("plot.png", alt: "Lab logo", width: 20%))
+#figure([
+#box(image("fixture_files/figure-typst/fig-readme-cell-1.png", width: 30.0%))
+<fig-readme-cell>
+#figure([
+#box(image("plot.png", width: 3in))
+<fig-readme-gap>

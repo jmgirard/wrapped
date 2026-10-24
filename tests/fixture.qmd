@@ -73,3 +73,37 @@ The paragraph after the uncaptioned image wraps around it. Lorem ipsum dolor sit
 ![A figure with no wrap class.](plot.png){#fig-plain width="50%"}
 
 The figure above keeps its normal layout. See @fig-plain.
+
+## README examples
+
+Each example in `README.md` appears here, with only ids and file names changed.
+
+![Mean ratings by condition.](plot.png){#fig-readme-md .wrap-right width="40%"}
+
+Text beside the markdown example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+::: {#fig-readme-div .wrap-left width="35%"}
+![](plot.png)
+
+Ratings by group.
+:::
+
+Text beside the div example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+![](plot.png){.wrap-right width="20%" fig-alt="Lab logo"}
+
+Text beside the uncaptioned example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+```{r}
+#| label: fig-readme-cell
+#| fig-cap: "A scatter plot."
+#| classes: wrap-right
+#| out-width: "30%"
+plot(1:10)
+```
+
+Text beside the code cell example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+![Mean ratings by condition.](plot.png){#fig-readme-gap .wrap-left width="3in" wrap-gap="2em"}
+
+Text beside the gap example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
