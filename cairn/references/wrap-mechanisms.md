@@ -194,8 +194,8 @@ Each spike answers one yes-or-no question. The fallback for a no follows it.
   - Quarto's default Typst citations: yes. Quarto writes `#cite(<smith2020>, form: "prose")` and `@smith2020[p.~3]` inside the `wrap-content` call. The PDF built with no error and shows both citations and the `@fig-right` link in the text beside the figure.
   - `citeproc: true`: yes. Pandoc writes the citations as plain text, and the PDF shows them in the text beside the figure.
   - meander 0.4.4 was not tested, because both wrap-it answers are yes.
-  - The spike opens and closes the `wrap-content` call with raw Typst blocks around the figure and the paragraphs, so Quarto renders the figure and the citations itself.
-  - Typst refused an image path outside the document's folder (`../assets/plot.png` "would escape the project root"), so the spike keeps its own copy of the image.
+  - Raw Typst blocks around the figure and the paragraphs open and close the `wrap-content` call. Quarto renders the figure and the citations itself.
+  - Typst refused the image path `../assets/plot.png`, outside the document's folder. Its error: "would escape the project root". The spike keeps its own copy of the image.
 - S4: Does Word open a docx with a raw frame `w:pPr` on the image paragraph, and show one merged frame? How do LibreOffice and Google Docs show it? If Word fails, version 1 ships without docx wrapping. Not yet tested (observed 2026-10-24).
 - Which Quarto version first loads Typst packages from an extension's `typst/packages` folder? The answer sets `quarto-required`. Not yet read (observed 2026-10-24).
 - How will Quarto 2 (quarto-dev/q2, a Rust rewrite in active development) treat Lua filter extensions? The Typst and docx paths depend on the shape of Quarto's rendered output, so they break first. Not yet known (observed 2026-10-24).
