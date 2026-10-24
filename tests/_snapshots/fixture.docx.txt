@@ -1,0 +1,2 @@
+# warnings
+1x wrapped: docx output does not wrap figures yet, so wrapped figures render as normal figures.

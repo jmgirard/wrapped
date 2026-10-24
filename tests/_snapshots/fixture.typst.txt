@@ -1,0 +1,19 @@
+# warnings
+1x wrapped: typst output does not wrap figures yet, so wrapped figures render as normal figures.
+# typ
+#figure([
+#box(image("plot.png", width: 30.0%))
+<fig-md>
+#figure([
+#box(image("plot.png"))
+<fig-div>
+#figure([
+#box(image("plot.png", width: 35.0%))
+<fig-inner>
+#figure([
+#box(image("fixture_files/figure-typst/fig-cell-1.png"))
+<fig-cell>
+#box(image("plot.png", alt: "A small plot", width: 20%))
+#figure([
+#box(image("plot.png", width: 50.0%))
+<fig-plain>

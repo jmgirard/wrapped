@@ -14,13 +14,20 @@ A `v<version>` tag and a GitHub release mark the version for
 `quarto add jmgirard/wrapped@v<version>` and the releases page.
 
 ## verify
-Run by `/milestone-implement` (per task) and `/hotfix` (gate-lite). No
-automated verify yet: the repo has no extension code and no fixture document.
-The first milestone that adds code replaces this paragraph with its verify
-command. That command will render one fixture document to HTML, PDF through
-LaTeX, PDF through Typst, and docx. It will then compare the intermediate
-output with committed snapshots (`cairn/references/wrap-mechanisms.md`, "Test
-plan"). Until then, rely on the acceptance-criteria evidence.
+Run by `/milestone-implement` (per task) and `/hotfix` (gate-lite). From the
+repository root, run:
+
+```
+python3 tests/verify.py
+```
+
+It renders the fixtures under `tests/` to HTML, PDF through LaTeX, PDF
+through Typst, and docx. It compares the parts that the filter changes with
+the snapshots in `tests/_snapshots/`, and it exits with status 1 on a failed
+render or a difference. It needs Quarto, R with knitr, and TinyTeX. After an
+intended output change, run it with `--update` and review the snapshot diff.
+Layout is not in this command. Check it in a browser with `tests/layout.js`,
+as its header says.
 
 ## consistency-gate
 Toolchain tests that `/milestone-review` runs *in addition to* the universal

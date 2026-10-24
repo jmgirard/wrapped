@@ -1,0 +1,89 @@
+# warnings
+# figures
+fig-md: wrap-right quarto-float quarto-figure quarto-figure-left anchored
+fig-div: wrap-left quarto-float quarto-figure quarto-figure-center anchored
+fig-inner: wrap-right quarto-float quarto-figure quarto-figure-center anchored
+fig-cell: wrap-left quarto-float quarto-figure quarto-figure-center anchored
+(uncaptioned): wrapped-image wrap-right
+fig-plain: quarto-float quarto-figure quarto-figure-center anchored
+# breakpoint style
+<style>
+@media (max-width: 576px) {
+  .quarto-float.wrap-left, .quarto-float.wrap-right,
+  .wrapped-image.wrap-left, .wrapped-image.wrap-right {
+    float: none; width: auto; margin: 1em 0;
+  }
+}
+</style>
+# wrap-group 1
+<div class="wrap-group">
+<div class="wrap-right quarto-float quarto-figure quarto-figure-left anchored" data-fig-align="left" id="fig-md" style="--wrap-width: 30%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-md-caption-UUID">
+<img class="img-fluid quarto-figure quarto-figure-left figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-md-caption-UUID">
+Figure&nbsp;1: Mean ratings by condition.
+</figcaption>
+</figure>
+</div>
+<p>The paragraph after the figure wraps around it. See <a class="quarto-xref" href="#fig-md">Figure&nbsp;1</a>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+</div>
+# wrap-group 2
+<div class="wrap-group">
+<div class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" id="fig-div" style="--wrap-width: 3in; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-div-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-div-caption-UUID">
+Figure&nbsp;2: Ratings by group.
+</figcaption>
+</figure>
+</div>
+<p>The paragraph after the div figure wraps to its right. See <a class="quarto-xref" href="#fig-div">Figure&nbsp;2</a>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+</div>
+# wrap-group 3
+<div class="wrap-group">
+<div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-inner" style="--wrap-width: 35%; --wrap-gap: 2em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inner-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inner-caption-UUID">
+Figure&nbsp;3: A long caption that runs to two or more lines inside the figure box, because the box is narrow and the caption has many words in it.
+</figcaption>
+</figure>
+</div>
+<p>The paragraph after this figure wraps around it. See <a class="quarto-xref" href="#fig-inner">Figure&nbsp;3</a>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+</div>
+# wrap-group 4
+<div class="wrap-group">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code></pre></div><button class="code-copy-button" title="Copy to Clipboard"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" id="fig-cell" style="--wrap-width: 40%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cell-caption-UUID">
+<img class="img-fluid figure-img" src="fixture_files/figure-html/fig-cell-1.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cell-caption-UUID">
+Figure&nbsp;4: A figure from a knitr cell.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The paragraph after the cell figure wraps to its right. See <a class="quarto-xref" href="#fig-cell">Figure&nbsp;4</a>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+</div>
+# wrap-group 5
+<div class="wrap-group">
+<div class="wrapped-image wrap-right" style="--wrap-width: 20%; --wrap-gap: 1em;">
+<img alt="A small plot" class="img-fluid" src="plot.png">
+</div>
+<p>The paragraph after the uncaptioned image wraps around it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>

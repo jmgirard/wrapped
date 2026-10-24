@@ -1,0 +1,177 @@
+# warnings
+# figures
+fig-stop-1: wrap-right quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-2: wrap-left quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-3: wrap-right quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-4: wrap-left quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-5: wrap-right quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-6: wrap-left quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-7: wrap-right quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-8: wrap-left quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-plain: quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-9: wrap-right quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-10: wrap-left quarto-float quarto-figure quarto-figure-center anchored
+fig-stop-11: wrap-right quarto-float quarto-figure quarto-figure-center anchored
+# breakpoint style
+<style>
+@media (max-width: 576px) {
+  .quarto-float.wrap-left, .quarto-float.wrap-right,
+  .wrapped-image.wrap-left, .wrapped-image.wrap-right {
+    float: none; width: auto; margin: 1em 0;
+  }
+}
+</style>
+# wrap-group 1
+<div class="wrap-group">
+<div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-1" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-1-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-1-caption-UUID">
+Figure&nbsp;1: Stop-rule case 1.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 1.</p>
+</div>
+# wrap-group 2
+<div class="wrap-group">
+<div class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-2" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-2-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-2-caption-UUID">
+Figure&nbsp;2: Stop-rule case 2.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 2.</p>
+</div>
+# wrap-group 3
+<div class="wrap-group">
+<div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-3" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-3-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-3-caption-UUID">
+Figure&nbsp;3: Stop-rule case 3.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 3.</p>
+</div>
+# wrap-group 4
+<div class="wrap-group">
+<div class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-4" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-4-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-4-caption-UUID">
+Figure&nbsp;4: Stop-rule case 4.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 4.</p>
+</div>
+# wrap-group 5
+<div class="wrap-group">
+<div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-5" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-5-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-5-caption-UUID">
+Figure&nbsp;5: Stop-rule case 5.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 5.</p>
+</div>
+# wrap-group 6
+<div class="wrap-group">
+<div class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-6" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-6-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-6-caption-UUID">
+Figure&nbsp;6: Stop-rule case 6.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 6.</p>
+</div>
+# wrap-group 7
+<div class="wrap-group">
+<div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-7" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-7-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-7-caption-UUID">
+Figure&nbsp;7: Stop-rule case 7.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 7.</p>
+</div>
+# wrap-group 8
+<div class="wrap-group">
+<div class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-8" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-8-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-8-caption-UUID">
+Figure&nbsp;8: Stop-rule case 8.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 8.</p>
+</div>
+# wrap-group 9
+<div class="wrap-group">
+<div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-9" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-9-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-9-caption-UUID">
+Figure&nbsp;10: Stop-rule case 9.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 9.</p>
+</div>
+# wrap-group 10
+<div class="wrap-group">
+<div class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-10" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-10-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-10-caption-UUID">
+Figure&nbsp;11: Stop-rule case 10.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 10.</p>
+</div>
+# wrap-group 11
+<div class="wrap-group">
+<div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-stop-11" style="--wrap-width: 35%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stop-11-caption-UUID">
+<img class="img-fluid figure-img" src="plot.png">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stop-11-caption-UUID">
+Figure&nbsp;12: Stop-rule case 11.
+</figcaption>
+</figure>
+</div>
+<p>A short paragraph beside figure 11.</p>
+</div>

@@ -1,0 +1,24 @@
+# warnings
+1x wrapped: latex output does not wrap figures yet, so wrapped figures render as normal figures.
+# tex
+\begin{figure}
+\includegraphics[width=0.3\linewidth,height=\textheight,keepaspectratio]{plot.png}
+\caption{\label{fig-md}Mean ratings by condition.}
+\end{figure}%
+\begin{figure}
+\pandocbounded{\includegraphics[keepaspectratio]{plot.png}}
+\caption{\label{fig-div}Ratings by group.}
+\end{figure}%
+\begin{figure}
+\includegraphics[width=0.35\linewidth,height=\textheight,keepaspectratio]{plot.png}
+\caption{\label{fig-inner}A long caption that runs to two or more lines
+\end{figure}%
+\begin{figure}[H]
+\pandocbounded{\includegraphics[keepaspectratio]{fixture_files/figure-pdf/fig-cell-1.pdf}}
+\caption{\label{fig-cell}A figure from a knitr cell.}
+\end{figure}%
+\includegraphics[width=0.2\linewidth,height=\textheight,keepaspectratio]{plot.png}
+\begin{figure}
+\includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{plot.png}
+\caption{\label{fig-plain}A figure with no wrap class.}
+\end{figure}%
