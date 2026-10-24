@@ -2,14 +2,14 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M001: Run the four wrap feasibility spikes
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** high
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** internal — spike documents and a research page, and nothing reaches a user who installs the extension
-- **Branch/PR:** —
+- **Branch/PR:** m001-wrap-spikes
 
 ## Goal
 
@@ -43,7 +43,7 @@ Record a yes-or-no answer, with evidence, to each wrap feasibility question S1 t
 
 ## Tasks
 
-- [ ] T1: S1 spike in `spikes/s1/`. Write a probe filter at `pre-quarto` that logs the classes and attributes of each `FloatRefTarget` and of each image. Render the four figure sources to HTML. For the Jupyter cell, create a venv in the session scratchpad, install `jupyter` there, and set `QUARTO_PYTHON` for that render only. Record AC1.
+- [x] T1: S1 spike in `spikes/s1/`. Write a probe filter at `pre-quarto` that logs the classes and attributes of each `FloatRefTarget` and of each image. Render the four figure sources to HTML. For the Jupyter cell, create a venv in the session scratchpad, install `jupyter` there, and set `QUARTO_PYTHON` for that render only. Record AC1.
 - [ ] T2: S2 spike in `spikes/s2/`. Put the `wrappedfigure` wrapper from the research page in a header include, and set `fig-env` and `fig-pos` on one figure. Render to PDF with `keep-tex: true`. Convert the figure page to an image with `pdftoppm` and read it. Record AC2.
 - [ ] T3: S3 spike in `spikes/s3/`. Add a small `.bib` file and a raw Typst block that calls `wrap-content` from `@preview/wrap-it:0.1.1` with a citation in the wrapped text. Render in both citation modes and read the figure page. If either mode fails, repeat with `@preview/meander:0.4.4`. Record AC3.
 - [ ] T4: S4 spike in `spikes/s4/`. Write a filter or script that puts the same `w:framePr` on the image paragraph and the caption paragraph, and build the docx. Ask the user to open it in Word and report what Word shows. Record AC4.
@@ -64,6 +64,8 @@ Record a yes-or-no answer, with evidence, to each wrap feasibility question S1 t
 - 2026-10-24: criteria audit (reduced mode, internal tier, fresh Opus reader) returned 5 findings, all fixed by narrowing. AC1 and AC2 drop the clauses on how the evidence was made. AC1 allows "not tested" for Jupyter. AC4 drops "from the user's look" and names the row for the other apps. AC5 reads tagged source instead of claiming release behavior.
 - 2026-10-24: plan gate chose committed spike files under `spikes/` over spikes kept only in the scratchpad, because later milestones can rerun them and the fixture document can grow from them; falsified by `quarto add jmgirard/wrapped` copying or rendering `spikes/`.
 - 2026-10-24: plan gate chose raw Typst blocks in the S3 spike over a `post-render` filter, because S3 asks whether wrap-it can render a citation, not how the filter builds the call; falsified by the filter's output differing from the hand-written call in a way that changes citation rendering.
+- 2026-10-24: implement started on branch m001-wrap-spikes.
+- 2026-10-24: T1 done. S1: the class reaches the float for markdown and div figures; for knitr and Jupyter cells it sits on the enclosing cell Div, and a top-down pass carries it. The Jupyter spike shows the existing PNG with `IPython.display.Image`, so the venv needs only `jupyter`, not matplotlib. Render output is ignored by `spikes/.gitignore`.
 
 ## Decisions
 

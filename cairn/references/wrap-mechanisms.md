@@ -178,7 +178,13 @@ The filter has two entry points:
 
 Each spike answers one yes-or-no question. The fallback for a no follows it.
 
-- S1: Does a `pre-quarto` filter see the wrap class on `FloatRefTarget`? This includes figures from knitr and Jupyter cells with `#| classes: wrap-right`. If no, the filter reads a `#| wrap: right` cell option instead. Not yet tested (observed 2026-10-24).
+- S1: Does a `pre-quarto` filter see the wrap class on `FloatRefTarget`? This includes figures from knitr and Jupyter cells with `#| classes: wrap-right`. If no, the filter reads a `#| wrap: right` cell option instead. Answered 2026-10-24 with Quarto 1.10.19, from `spikes/s1/probe.lua` run on `spikes/s1/s1-knitr.qmd` and `spikes/s1/s1-jupyter.qmd`:
+  - Markdown image with `.wrap-right`: yes. The class is in `FloatRefTarget.classes`. The `width` attribute stays in the inner `Image.attributes`, and the `Image` keeps the class too.
+  - Div figure with `.wrap-left`: yes. The class is in `FloatRefTarget.classes`, and `width` is in `FloatRefTarget.attributes`.
+  - knitr cell with `#| classes: wrap-right`: no. The float has no classes. The class is in the classes of the enclosing `Div` with class `cell`, which holds the code block and a `cell-output-display` div that holds the float.
+  - Jupyter cell with `#| classes: wrap-right` (jupyter 5.9.1 core, in a throwaway venv): no. Same as knitr. The class is on the enclosing `Div` `#cell-fig-jupyter` with class `cell`.
+  - Uncaptioned image: the class is in `Image.classes`, and no float exists.
+  - For both cell engines, a second filter pass with `traverse = "topdown"` saw the cell `Div` before the nested `FloatRefTarget`, so it can carry the class to the float. The `#| wrap: right` fallback is not needed.
 - S2: Does the `wrappedfigure` wrapper around `wrapfigure` work? If no, a `post-render` step rewrites the raw blocks. Not yet tested (observed 2026-10-24).
 - S3: Does wrap-it render wrapped text that contains a citation? If no, test meander. If neither works, Typst keeps a normal figure when the wrapped text contains a citation. Not yet tested (observed 2026-10-24).
 - S4: Does Word open a docx with a raw frame `w:pPr` on the image paragraph, and show one merged frame? How do LibreOffice and Google Docs show it? If Word fails, version 1 ships without docx wrapping. Not yet tested (observed 2026-10-24).
