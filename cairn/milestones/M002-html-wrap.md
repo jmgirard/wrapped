@@ -2,14 +2,14 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M002: Wrap figures in HTML output
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** high
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — the first filter that users install from `main` with `quarto add jmgirard/wrapped`
-- **Branch/PR:** —
+- **Branch/PR:** m002-html-wrap
 
 ## Goal
 
@@ -54,9 +54,9 @@ A document rendered to HTML with the extension installed shows body text beside 
 
 ## Tasks
 
-- [ ] T1: Write `_extensions/wrapped/_extension.yml` with title, author, version 0.1.0, `quarto-required: ">=1.9.36"`, and the filter at `pre-quarto`. Load `wrapped.css` with `quarto.doc.add_html_dependency`.
-- [ ] T2: Parsing in `wrapped.lua`. Handle `FloatRefTarget` at the filter's top level. Carry a cell div's class in a `traverse = "topdown"` pass that scopes the carry to that cell (LESSONS, M001). Move a class from an inner image to its float (E1). Read `width` and `wrap-gap`, then the `wrapped:` metadata, then the defaults 40% and 1em. Remove the wrap class and the percent inline width from the inner image.
-- [ ] T3: HTML layout in `wrapped.css` and the filter. Set width and gap as CSS custom properties on the float. Float the uncaptioned image. Emit the breakpoint media query from the `breakpoint` value, since a custom property cannot set a media query. Make the float work on a page whose margin content turns the body into a CSS grid.
+- [x] T1: Write `_extensions/wrapped/_extension.yml` with title, author, version 0.1.0, `quarto-required: ">=1.9.36"`, and the filter at `pre-quarto`. Load `wrapped.css` with `quarto.doc.add_html_dependency`.
+- [x] T2: Parsing in `wrapped.lua`. Handle `FloatRefTarget` at the filter's top level. Carry a cell div's class in a `traverse = "topdown"` pass that scopes the carry to that cell (LESSONS, M001). Move a class from an inner image to its float (E1). Read `width` and `wrap-gap`, then the `wrapped:` metadata, then the defaults 40% and 1em. Remove the wrap class and the percent inline width from the inner image.
+- [x] T3: HTML layout in `wrapped.css` and the filter. Set width and gap as CSS custom properties on the float. Float the uncaptioned image. Emit the breakpoint media query from the `breakpoint` value, since a custom property cannot set a media query. Make the float work on a page whose margin content turns the body into a CSS grid.
 - [ ] T4: The stop rule. After a wrapped figure, find the first block that is not a paragraph, and make it clear the float. Make an empty `.wrap-clear` div clear it.
 - [ ] T5: The format fallback. For any format that is not HTML, remove the wrap classes, keep the normal figure, and print one warning per render that names the format.
 - [ ] T6: Write `tests/fixture.qmd`, `tests/defaults.qmd`, `tests/margin.qmd`, and `tests/stop-rule.qmd`. Write `tests/verify.py` (Python standard library only). It renders each fixture and compares the wrapped-figure fragments of the HTML with committed snapshots. It exits with a non-zero status on a difference. Show it red on a planted change. Replace the `verify` slot in `cairn/PROFILE.md` with its command.
@@ -78,6 +78,12 @@ A document rendered to HTML with the extension installed shows body text beside 
 - 2026-10-24: split into three milestones because the core passes the 7-criterion and 10-task tripwires. Each format is its own feature, as the roadmap already treats Typst and Word, so the three are not a feature series.
 - 2026-10-24: plan gate chose a standard-library Python verify script that compares fragments with snapshots, with layout read in the built-in browser at review. It rejected a headless browser in the test command, because that adds a dependency. A layout break that the snapshots pass and review misses would falsify the choice.
 - 2026-10-24: `_extension.yml` starts at version 0.1.0. The version stays unreleased until the user declares a release.
+- 2026-10-24: implement started on branch m002-html-wrap.
+- 2026-10-24: T1 to T3 done. Inside a user filter, a cell's figure is a Div marked `__quarto_custom_type=FloatRefTarget`, so the cell carry counts those Divs and applies only to that many floats. A float placed inside a new `pandoc.Div` vanished from the output, so the grouping pass finds a wrapped float by its `__quarto_custom_id` instead.
+- 2026-10-24: chose a `.wrap-group` div with `display: flow-root` around each wrapped figure and its paragraphs. It contains the float, which also gives the stop rule, and it keeps the float working on a margin page whose body is a CSS grid. Quarto's `overflow: auto` on `.cell-output-display` trapped the cell float, so the CSS sets it to visible inside a group.
+- 2026-10-24: a cell figure takes only an image width with a unit, because knitr writes the plot's pixel size as a unitless width. The README names `#| out-width:` for a cell figure's box width.
+- 2026-10-24: `tests/_extensions` is a symlink to `../_extensions`, because Quarto does not find the extension from a subfolder outside a project. `tests/layout.js` holds the browser checks for AC2 to AC4. `.claude/launch.json` (ignored) serves `tests/` on port 8791.
+- 2026-10-24: browser check at 1200 px: all five wrapped items in `tests/fixture.qmd` float, have text beside them, fill their box, and match their width and gap within 1 px. The margin page and the defaults fixture pass too. At 375 px nothing floats, and with `breakpoint: 800px` nothing floats at 700 px.
 
 ## Decisions
 

@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-24 (M001 done: spikes row graduated, Typst and Word
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M002 | Wrap figures in HTML output | planned | — | high | milestones/M002-html-wrap.md |
+| M002 | Wrap figures in HTML output | in-progress | — | high | milestones/M002-html-wrap.md |
 | M003 | Fall back in contexts that cannot wrap | planned | M002 | high | milestones/M003-context-fallbacks.md |
 | M004 | Wrap figures in LaTeX PDF output | planned | M002, M003 | high | milestones/M004-latex-wrap.md |
 | M001 | Run the four wrap feasibility spikes | done | — | high | milestones/archive/M001-wrap-spikes.md |
