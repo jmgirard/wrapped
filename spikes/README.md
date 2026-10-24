@@ -16,3 +16,6 @@ Run each command from the spike's folder. Render output is not committed.
   `quarto render s3-wrapit.qmd --to typst` for Typst citations, and add
   `-M citeproc:true` for Pandoc citations. The first render downloads
   wrap-it 0.1.1 into Typst's package cache.
+- `s4/`: Word frames. Run `quarto render s4.qmd --to docx`, then
+  `python3 -I frame.py s4.docx s4-framed.docx`, and open `s4-framed.docx`
+  in Word.

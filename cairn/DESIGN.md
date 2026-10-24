@@ -32,8 +32,9 @@ install it with `quarto add jmgirard/wrapped`.
 release with notes from commit subjects. The version lives in
 `_extensions/wrapped/_extension.yml` and rises at release.
 
-**Quarto version.** Provisional `quarto-required: ">=1.9.0"`. A spike sets the
-final value (`references/wrap-mechanisms.md`, open questions).
+**Quarto version.** `quarto-required: ">=1.9.36"`. Quarto 1.9.36 is the first
+stable release that loads Typst packages from an extension's `typst/packages`
+folder (`references/wrap-mechanisms.md`, open questions; corrected M001).
 
 ### Planned syntax
 

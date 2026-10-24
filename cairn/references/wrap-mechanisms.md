@@ -197,5 +197,9 @@ Each spike answers one yes-or-no question. The fallback for a no follows it.
   - Raw Typst blocks around the figure and the paragraphs open and close the `wrap-content` call. Quarto renders the figure and the citations itself.
   - Typst refused the image path `../assets/plot.png`, outside the document's folder. Its error: "would escape the project root". The spike keeps its own copy of the image.
 - S4: Does Word open a docx with a raw frame `w:pPr` on the image paragraph, and show one merged frame? How do LibreOffice and Google Docs show it? If Word fails, version 1 ships without docx wrapping. Not yet tested (observed 2026-10-24).
-- Which Quarto version first loads Typst packages from an extension's `typst/packages` folder? The answer sets `quarto-required`. Not yet read (observed 2026-10-24).
+- Which Quarto version first loads Typst packages from an extension's `typst/packages` folder? The answer sets `quarto-required`. Answered 2026-10-24 from a quarto-cli clone:
+  - The loader is `collectPackageSources` in `src/command/render/output-typst.ts`, which adds `join(ext.path, "typst/packages")` for each extension.
+  - Tag v1.9.18 is the earliest tag whose `output-typst.ts` has `typst/packages`. It is a pre-release. The last tag of each minor release from v1.4 to v1.8 does not have it, and no Typst-named file under `src` at v1.8.27 names the folder.
+  - The earliest stable release with the loader is v1.9.36 (2026-03-19), the first 1.9 release that GitHub does not mark as a pre-release.
+  - No changelog line names this feature. The nearest is quarto-cli#13486 in `news/changelog-1.9.md`, which bundles Typst template packages with `typst-gather`.
 - How will Quarto 2 (quarto-dev/q2, a Rust rewrite in active development) treat Lua filter extensions? The Typst and docx paths depend on the shape of Quarto's rendered output, so they break first. Not yet known (observed 2026-10-24).
