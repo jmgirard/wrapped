@@ -73,6 +73,7 @@ Record a yes-or-no answer, with evidence, to each wrap feasibility question S1 t
 - 2026-10-24: T4 done. The user reported that Word opened the framed docx cleanly and showed one frame with wrapped text for both figures, so S4 is yes in both XML forms.
 - 2026-10-24: claim audit: not owed — internal tier.
 - 2026-10-24: all tasks done. The verify slot names no automated command yet (PROFILE.md), so the evidence is the recorded answers. Status set to review.
+- 2026-10-24: step-7 approval: m001-wrap-spikes approved for merge
 
 ## Decisions
 
