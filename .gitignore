@@ -1,0 +1,9 @@
+/.quarto/
+**/*.quarto_ipynb
+.DS_Store
+.claude/
+
+# cairn
+cairn/references/sources/
+cairn/.merge-approved
+cairn/.merge-approved.pending
