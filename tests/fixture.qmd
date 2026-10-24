@@ -8,6 +8,7 @@ format:
     keep-tex: true
   typst:
     keep-typ: true
+    fig-format: png
   docx: default
 ---
 

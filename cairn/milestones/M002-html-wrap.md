@@ -58,7 +58,7 @@ A document rendered to HTML with the extension installed shows body text beside 
 - [x] T2: Parsing in `wrapped.lua`. Handle `FloatRefTarget` at the filter's top level. Carry a cell div's class in a `traverse = "topdown"` pass that scopes the carry to that cell (LESSONS, M001). Move a class from an inner image to its float (E1). Read `width` and `wrap-gap`, then the `wrapped:` metadata, then the defaults 40% and 1em. Remove the wrap class and the percent inline width from the inner image.
 - [x] T3: HTML layout in `wrapped.css` and the filter. Set width and gap as CSS custom properties on the float. Float the uncaptioned image. Emit the breakpoint media query from the `breakpoint` value, since a custom property cannot set a media query. Make the float work on a page whose margin content turns the body into a CSS grid.
 - [x] T4: The stop rule. After a wrapped figure, find the first block that is not a paragraph, and make it clear the float. Make an empty `.wrap-clear` div clear it.
-- [ ] T5: The format fallback. For any format that is not HTML, remove the wrap classes, keep the normal figure, and print one warning per render that names the format.
+- [x] T5: The format fallback. For any format that is not HTML, remove the wrap classes, keep the normal figure, and print one warning per render that names the format.
 - [ ] T6: Write `tests/fixture.qmd`, `tests/defaults.qmd`, `tests/margin.qmd`, and `tests/stop-rule.qmd`. Write `tests/verify.py` (Python standard library only). It renders each fixture and compares the wrapped-figure fragments of the HTML with committed snapshots. It exits with a non-zero status on a difference. Show it red on a planted change. Replace the `verify` slot in `cairn/PROFILE.md` with its command.
 - [ ] T7: Write `README.md` with the install command, the syntax for each form, the attributes, the metadata keys, the stop rule, and the formats that keep a normal figure. Run the `quarto add` check in a scratch folder. Check the Jupyter cell form once by hand in a throwaway venv in the session scratchpad, and record the result in the work log.
 
@@ -84,6 +84,8 @@ A document rendered to HTML with the extension installed shows body text beside 
 - 2026-10-24: a cell figure takes only an image width with a unit, because knitr writes the plot's pixel size as a unitless width. The README names `#| out-width:` for a cell figure's box width.
 - 2026-10-24: `tests/_extensions` is a symlink to `../_extensions`, because Quarto does not find the extension from a subfolder outside a project. `tests/layout.js` holds the browser checks for AC2 to AC4. `.claude/launch.json` (ignored) serves `tests/` on port 8791.
 - 2026-10-24: browser check at 1200 px: all five wrapped items in `tests/fixture.qmd` float, have text beside them, fill their box, and match their width and gap within 1 px. The margin page and the defaults fixture pass too. At 375 px nothing floats, and with `breakpoint: 800px` nothing floats at 700 px.
+- 2026-10-24: T4 done. The `.wrap-group` gives the stop rule, so no clear divs are inserted. `tests/stop-rule.qmd` holds the 11 stop blocks of AC4, and at 1200 px each starts below its figure.
+- 2026-10-24: T5 done. PDF, Typst, and docx renders of `tests/fixture.qmd` exit with status 0 and print one fallback warning each. Outside HTML the filter removes only the wrap class, so a figure keeps its image width. The fixture sets `fig-format: png` for Typst, because knitr's SVG device needs X11 libraries that this machine lacks.
 
 ## Decisions
 

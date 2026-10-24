@@ -43,7 +43,8 @@ local function style_for(width, gap)
 end
 
 -- Reads the wrap class and width from the images inside a float, and
--- removes both from each image, so the image fills the figure box.
+-- removes the class from each image. In HTML it also removes the width, so
+-- the image fills the figure box. Elsewhere the image keeps its width.
 local function take_from_images(blocks)
   local class, width
   local new = blocks:walk({
@@ -55,7 +56,7 @@ local function take_from_images(blocks)
       end
       if img.attributes.width then
         width = width or img.attributes.width
-        img.attributes.width = nil
+        if is_html then img.attributes.width = nil end
       end
       return img
     end,
@@ -125,11 +126,11 @@ local function float_target(float)
   if not class then return float end
   found_wrap = true
   strip_wrap(float.classes)
+  if not is_html then return float end
   local width = float.attributes.width or img_width
   local gap = float.attributes["wrap-gap"]
   float.attributes.width = nil
   float.attributes["wrap-gap"] = nil
-  if not is_html then return float end
   float.classes:insert(class)
   float.attributes.style = style_for(width, gap)
   if not from_cell then
