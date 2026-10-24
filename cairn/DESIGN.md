@@ -60,9 +60,10 @@ Mean ratings by condition.
 
 Uncaptioned image: `![](logo.png){.wrap-right width="20%" fig-alt="Lab logo"}`.
 
-Figure from a code cell: `#| classes: wrap-right` beside `#| fig-cap:`. If a
-spike shows that `classes` does not reach the figure node, the filter reads
-`#| wrap: right` instead.
+Figure from a code cell: `#| classes: wrap-right` beside `#| fig-cap:`. The
+class lands on the cell's enclosing div, not on the figure node, and the
+filter carries it to the figure (`references/wrap-mechanisms.md`, S1;
+corrected M001).
 
 | Attribute | Values | Default | Notes |
 |---|---|---|---|

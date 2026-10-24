@@ -5,7 +5,7 @@ scope written before cairn. SCOPE.md came from a read-only read of quarto-cli
 `main` at 5b23163 (2026-10-23). It also used the typst/packages,
 ntjess/wrap-it, and Vanille-N/meander.typ repositories on GitHub.
 Pagination: none.
-Extraction: a 2026-10-24 snapshot, and quarto-cli, wrap-it, and meander move on independently. No spike tested these claims yet (observed 2026-10-24).
+Extraction: a 2026-10-24 snapshot, and quarto-cli, wrap-it, and meander move on independently. Spikes S1 to S4 tested the claims that "Open questions" names, in M001 (verified 2026-10-24). The other claims are not tested.
 
 **Scope.** This page records how each output format can wrap text around a
 figure, and which Quarto hook each path uses. It also records the edge cases,
@@ -31,8 +31,8 @@ source summary. It is a reference, not an authority. Status lives in
 |---|---|---|---|---|
 | W1 | HTML (html, revealjs, dashboard) | CSS `float` on `div.quarto-float`. Width and gap are CSS custom properties. A `.wrap-clear` div marks the stop point. No float below a breakpoint. | Quarto copies the float's classes to the outer `div.quarto-float`. | `quarto-figure-center` sets `text-align`. The lightbox extension wraps the image in a link. |
 | W2 | PDF through LaTeX | A `wrappedfigure` environment calls `wrapfigure` from `wrapfig`. The filter sets `fig-env="wrappedfigure"` and `fig-pos="side=r,width=0.4\linewidth"`. | Quarto writes `\begin{<fig-env>}[<fig-pos>]` and passes `fig-pos` unchanged. | Inside another environment, `wrapfigure` can lose its paragraph shape. |
-| W3 | PDF through Typst | `wrap-content(fixed, body, align: ...)` from wrap-it, bundled under `_extensions/wrapped/typst/packages/preview/wrap-it/0.1.1/`. | Quarto renders `#figure(...)<id>`. A `post-render` step puts it and the next paragraphs in one `wrap-content` call. | wrap-it issue #15: a citation in the wrapped text fails. |
-| W4 | Word (docx) | Word frames. The image paragraph and the caption paragraph get the same `w:framePr`, and Word merges them into one frame. | Quarto renders a one-cell table. Its cell `Div` has the figure ID. A `post-render` step unwraps it. | A second raw `w:pPr` on the image paragraph. |
+| W3 | PDF through Typst | `wrap-content(fixed, body, align: ...)` from wrap-it, bundled under `_extensions/wrapped/typst/packages/preview/wrap-it/0.1.1/`. | Quarto renders `#figure(...)<id>`. A `post-render` step puts it and the next paragraphs in one `wrap-content` call. | wrap-it issue #15: a citation in the wrapped text fails. S3 did not show it with wrap-it 0.1.1 on Typst 0.15.1 (corrected M001). |
+| W4 | Word (docx) | Word frames. The image paragraph and the caption paragraph get the same `w:framePr`, and Word merges them into one frame. | Quarto renders a one-cell table. Its cell `Div` has the figure ID. A `post-render` step unwraps it. | A second raw `w:pPr` on the image paragraph. S4 showed that Word accepts it (corrected M001). |
 | W5 | gfm, commonmark, pptx, epub, ipynb, JATS, ODT | The filter removes the wrap class and keeps a normal figure. It warns once per document. | None. | None. |
 
 Details by row:
@@ -66,7 +66,7 @@ Details by row:
 
 ## Code sketches
 
-These sketches come from SCOPE.md. No spike ran them yet.
+These sketches come from SCOPE.md. S2 ran the LaTeX sketch, and it did not compile as written. The working form is `spikes/s2/wrapped.tex`. No spike ran the other sketches as written (corrected M001).
 
 HTML stylesheet (W1):
 
@@ -194,10 +194,10 @@ Each spike answers one yes-or-no question. The fallback for a no follows it.
   - Quarto's default Typst citations: yes. Quarto writes `#cite(<smith2020>, form: "prose")` and `@smith2020[p.~3]` inside the `wrap-content` call. The PDF built with no error and shows both citations and the `@fig-right` link in the text beside the figure.
   - `citeproc: true`: yes. Pandoc writes the citations as plain text, and the PDF shows them in the text beside the figure.
   - meander 0.4.4 was not tested, because both wrap-it answers are yes.
-  - Raw Typst blocks around the figure and the paragraphs open and close the `wrap-content` call. Quarto renders the figure and the citations itself.
+  - Raw Typst blocks around the figure and the paragraphs open and close the `wrap-content` call. Quarto renders the figure and the citations itself. The planned `post-render` step that builds this call is not tested.
   - Typst refused the image path `../assets/plot.png`, outside the document's folder. Its error: "would escape the project root". The spike keeps its own copy of the image.
 - S4: Does Word open a docx with a raw frame `w:pPr` on the image paragraph, and show one merged frame? How do LibreOffice and Google Docs show it? If Word fails, version 1 ships without docx wrapping. Answered yes for Word on 2026-10-24, from the user's look at a docx that `spikes/s4/frame.py` builds from `spikes/s4/s4.qmd` (Quarto 1.10.19):
-  - The script removes Quarto's one-cell figure table and puts the same `w:framePr` on the image paragraph and the caption paragraph.
+  - The script removes Quarto's one-cell figure table and puts the same `w:framePr` on the image paragraph and the caption paragraph. It edits the finished docx, so the planned `post-render` filter step is not tested.
   - Word opened the file with no repair prompt.
   - Right figure, one merged `w:pPr` in schema order: Word shows the image and caption in one frame on the right, with body text beside it.
   - Left figure, the frame in an extra `w:pPr` before Quarto's own `w:pPr` elements: Word shows the same result on the left. So a filter that prepends a raw `w:pPr` also works in Word.
