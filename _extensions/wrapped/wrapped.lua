@@ -91,8 +91,9 @@ local wrapped_ids = {}
 local wrapped_cells = {}
 local next_token = 0
 
--- The wrap class of a code cell, carried to the figures inside that cell.
--- `remaining` counts those figures, so a cell with no figure carries nothing.
+-- The wrap class of a code cell, carried to the floats inside that cell.
+-- `remaining` counts the cell's floats, figures and tables, so a cell with
+-- no float carries nothing. Only figures take the class.
 local carry = nil
 
 local function cell_div(div)
