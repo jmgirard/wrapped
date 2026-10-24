@@ -23,11 +23,11 @@ python3 tests/verify.py
 
 It renders the fixtures under `tests/` to HTML, PDF through LaTeX, PDF
 through Typst, and docx. It compares the parts that the filter changes with
-the snapshots in `tests/_snapshots/`, and it exits with status 1 on a failed
+the snapshots in `tests/_snapshots/`. It exits with status 1 on a failed
 render or a difference. It needs Quarto, R with knitr, and TinyTeX. After an
 intended output change, run it with `--update` and review the snapshot diff.
-Layout is not in this command. Check it in a browser with `tests/layout.js`,
-as its header says.
+Layout is not in this command. Measure it in a browser with
+`tests/layout.js`, as its header says.
 
 ## consistency-gate
 Toolchain tests that `/milestone-review` runs *in addition to* the universal
