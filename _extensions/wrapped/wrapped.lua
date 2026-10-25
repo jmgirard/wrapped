@@ -93,11 +93,21 @@ local function style_for(width, gap, where, existing)
   return style
 end
 
+-- True for a Div that stands for a Quarto float in a plain walk.
+local function is_float_div(div)
+  return div.attributes.__quarto_custom_type == "FloatRefTarget"
+end
+
 -- Reads the first wrap class, width, and wrap-gap of the images in a list
--- of blocks, and changes nothing.
+-- of blocks, and changes nothing. The images of a subfigure belong to the
+-- subfigure, not to its panel, so the walk skips nested floats.
 local function image_wrap(blocks)
   local class, width, gap
   blocks:walk({
+    traverse = "topdown",
+    Div = function(d)
+      if is_float_div(d) then return nil, false end
+    end,
     Image = function(img)
       class = class or wrap_class(img.classes)
       width = width or img.attributes.width
@@ -132,11 +142,6 @@ local function count_floats(div)
     end,
   })
   return n
-end
-
--- True for a Div that stands for a Quarto float in a plain walk.
-local function is_float_div(div)
-  return div.attributes.__quarto_custom_type == "FloatRefTarget"
 end
 
 -- Custom ids of floats whose next block is not a paragraph, from the

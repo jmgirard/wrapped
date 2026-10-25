@@ -35,6 +35,8 @@
 .wrapped-image img {
   width: 100%;
   height: auto;
+  /* revealjs caps every image at max-width: 95%. */
+  max-width: 100%;
 }
 
 .wrap-clear {

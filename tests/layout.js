@@ -60,7 +60,10 @@ function figureEntry(el) {
   const width = style.getPropertyValue("--wrap-width").trim();
   const gap = style.getPropertyValue("--wrap-gap").trim();
   entry.width = { set: width, expected: +resolve(width, group).toFixed(1), measured: +box.width.toFixed(1), column: +column.toFixed(1) };
-  const margin = parseFloat(side === "right" ? cs.marginLeft : cs.marginRight);
+  // The computed margin is in layout px, and the boxes are in screen px. A
+  // revealjs slide is scaled, so the margin is scaled to screen px too.
+  const scale = el.offsetWidth ? box.width / el.offsetWidth : 1;
+  const margin = +(parseFloat(side === "right" ? cs.marginLeft : cs.marginRight) * scale).toFixed(1);
   // A percent margin resolves against the containing block, the group.
   entry.gap = { set: gap, expected: +resolve(gap, group).toFixed(1), measured: margin };
   const line = firstLine(group);

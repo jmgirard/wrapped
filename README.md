@@ -4,8 +4,9 @@ wrapped is a Quarto filter extension. It lets body text flow beside a
 figure, to the left or right of it. The figure keeps its number, its
 caption, and its `@fig-` links.
 
-This version wraps figures in HTML output. In every other format, a wrapped
-figure renders as a normal figure, and the render prints one warning.
+This version wraps figures in HTML output, revealjs slides included. In
+every other format, a wrapped figure renders as a normal figure, and the
+render prints one warning.
 Support for PDF through LaTeX, PDF through Typst, and Word is planned.
 Dashboards are not tested yet.
 
@@ -113,6 +114,39 @@ paragraph that you want beside the figure:
 ```markdown
 ::: {.wrap-clear}
 :::
+```
+
+A wrapped figure with no paragraph right after it keeps its normal layout,
+and the render prints no warning. An example is a figure right before a
+heading. Of two wrapped figures in a row, the first keeps its normal layout,
+and the second wraps the paragraphs after it.
+
+## Where a figure keeps its normal layout
+
+In HTML, a wrapped figure in one of these places does not wrap. It keeps
+its normal layout, and the render prints one warning that names it.
+
+- The margin: a figure with the `.column-margin` class, a figure in a
+  `.column-margin` or `.aside` div, or a code cell with `#| column: margin`.
+  The figure stays in the margin.
+- A subfigure panel, such as a figure div with `layout-ncol`, or a
+  subfigure inside a panel.
+- A list, a callout, a `.columns` layout, or a tabset.
+
+A table, such as a `#tbl-` float, does not wrap either, and the render
+prints one warning that names it.
+
+## Slides
+
+In revealjs slides, a wrapped figure floats beside the paragraphs after it
+on the same slide, as on an HTML page:
+
+```markdown
+## Results
+
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width="40%"}
+
+Ratings rose in both conditions.
 ```
 
 ## Notes

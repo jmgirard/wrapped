@@ -7,6 +7,7 @@
 1x wrapped: the figure #fig-margin is in the margin, so it does not wrap.
 1x wrapped: the figure #fig-margin-cell is in the margin, so it does not wrap.
 1x wrapped: the figure #fig-panel is a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-sub-wrapped is in a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-tab is in a tabset, so it does not wrap.
 1x wrapped: the image plot.png is in a list, so it does not wrap.
 1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
@@ -19,6 +20,9 @@ fig-margin-cell: - style=-
 fig-panel: - style=-
 fig-panel-a: - style=-
 fig-panel-b: - style=-
+fig-plain-panel: - style=-
+fig-sub-wrapped: - style=-
+fig-sub-plain: - style=-
 tbl-wrapped: - style=-
 fig-list: - style=-
 fig-callout: - style=-
@@ -31,6 +35,8 @@ fig-second: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 fig-margin-cell-1.png: wrap=- style=- width=672
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-

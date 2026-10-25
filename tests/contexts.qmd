@@ -43,6 +43,18 @@ A subfigure panel.
 
 The paragraph after the panel. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+## E4: a wrapped subfigure in a panel with no wrap class
+
+::: {#fig-plain-panel layout-ncol="2"}
+![Panel C.](plot.png){#fig-sub-wrapped .wrap-right}
+
+![Panel D.](plot.png){#fig-sub-plain}
+
+A panel with no wrap class.
+:::
+
+The paragraph after the panel. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
 ## E5: a table float
 
 ::: {#tbl-wrapped .wrap-right}
