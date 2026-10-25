@@ -93,6 +93,7 @@ A document rendered to PDF through LaTeX with the extension installed shows body
 - 2026-10-25: re-audit: AC2 (full) — suggested "and no text overlaps it"; "which move to the next page" states a result, not a condition (reader: harmless, leave); the review's evidence line counts "figures 1–15" plus 16 and 17, while 15 figures wrap (PDF numbers include three unwrapped figures and the uncaptioned image has none); probes to plant (drop the clamp `\clearpage`, undo the group guard). Answered with no wording change: the overlap clause widens the promise and the audit decides toward the narrower one (no overlap shows on the fixture's 13 pages, and the README names overlap as a limit); the count is review evidence, which the re-review writes fresh; the criterion cites no plant.
 - 2026-10-25: amendment return: AC2 — "Lines of the paragraph right after it sit beside it on the same page, except for AC5's two figures, which move to the next page: lines of a later paragraph sit beside each of them on that page."
 - 2026-10-25: status → review.
+- 2026-10-25: step-7 approval: m004-latex-wrap approved for merge
 
 ## Decisions
 
