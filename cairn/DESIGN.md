@@ -42,8 +42,8 @@ not tested.
 
 ### Syntax
 
-HTML output, PDF through LaTeX, and PDF through Typst implement this syntax
-(corrected M005). Word keeps a normal figure until its milestone lands.
+HTML output, PDF through LaTeX, PDF through Typst, and Word implement this
+syntax (corrected M006).
 
 Captioned figure, image form:
 
@@ -101,9 +101,10 @@ second wraps.
 ## Function Families
 
 One filter, `_extensions/wrapped/wrapped.lua`, with the syntax above, its
-stylesheet `wrapped.css`, its LaTeX wrapper `wrapped.tex`, and a bundled
-copy of the Typst package wrap-it 0.1.1 under `typst/packages/` (D-004,
-corrected M005). Users reach it through `filters: - wrapped`.
+Word part `wrapped-docx.lua`, its stylesheet `wrapped.css`, its LaTeX
+wrapper `wrapped.tex`, and a bundled copy of the Typst package wrap-it 0.1.1
+under `typst/packages/` (D-004, corrected M006). Users reach it through
+`filters: - wrapped`.
 
 ## Conventions
 
@@ -130,7 +131,8 @@ None yet.
 ## Architecture
 
 The extension is `_extensions/wrapped/`. `_extension.yml` holds the one
-version marker and runs the filter at `pre-quarto`. The filter makes seven
+version marker, runs `wrapped.lua` at `pre-quarto`, and runs
+`wrapped-docx.lua` at `post-render` (corrected M006). The filter makes seven
 passes (corrected M003):
 
 1. It reads the `wrapped:` metadata and checks each length. In LaTeX it
@@ -160,7 +162,11 @@ passes (corrected M003):
    paragraphs, which make one `wrap-content(..., box(width: 100%)[figure],
    [paragraphs])` call. The width sets wrap-it's grid column. A percent of
    100% or more takes the default width with a warning. A code cell keeps
-   its code above the call (corrected M005).
+   its code above the call (corrected M005). In Word it groups as in HTML,
+   and the `.wrap-group` div's `data-wrap-frame` holds the frame's side,
+   width, and gap in twips. A percent is a share of the text width in the
+   reference doc's `w:sectPr`, or 6.5 in when it has no page size or
+   margins. Each image takes the frame width (corrected M006).
 6. It warns for a wrap class on an image or a div that it cannot place.
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
    wraps. In LaTeX it adds wrapfig and `wrapped.tex`, which defines
@@ -168,8 +174,16 @@ passes (corrected M003):
    `wrap-content` from `@preview/wrap-it:0.1.1`, which Quarto loads from the
    extension's `typst/packages` folder, and defines the helpers that turn a
    physical side into wrap-it's side in right-to-left text, read in context
-   (corrected M005). Elsewhere it prints
+   (corrected M005). Word needs nothing here. Elsewhere it prints
    one format warning.
+
+At `post-render`, `wrapped-docx.lua` turns each Word group into a frame. It
+removes Quarto's one-cell figure table, or turns a Pandoc `Figure` into its
+image and caption paragraphs, and puts the same `w:framePr` in a raw
+`w:pPr` on the image paragraph and each caption paragraph. Word reads the
+frame after Pandoc's and Quarto's own `w:pPr`. A clearing break,
+`<w:br w:type="textWrapping" w:clear="all"/>`, ends the group's last
+paragraph (corrected M006).
 
 The grouping pass finds a wrapped float by Quarto's internal
 `__quarto_custom_id` attribute. `tests/verify.py` shows a change there as a

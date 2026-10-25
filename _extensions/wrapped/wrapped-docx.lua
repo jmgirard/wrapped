@@ -34,6 +34,24 @@ local function frame_para(block, xml)
   return block
 end
 
+-- Pandoc writes a Figure (a captioned image with no #fig- id) as a one-cell
+-- table, and a frame in a table cell is not beside the body text. So the
+-- Figure becomes its image paragraphs and a caption paragraph in the
+-- ImageCaption style, as Pandoc styles it, in a div that keeps its id.
+local CAPTION_PR = '<w:pPr><w:pStyle w:val="ImageCaption"/></w:pPr>'
+
+local function figure_paras(fig)
+  local blocks = pandoc.Blocks({})
+  blocks:extend(fig.content)
+  local caption = pandoc.Inlines({ pandoc.RawInline("openxml", CAPTION_PR) })
+  for _, b in ipairs(fig.caption.long) do
+    if #caption > 1 then caption:insert(pandoc.Space()) end
+    caption:extend(b.content or {})
+  end
+  if #caption > 1 then blocks:insert(pandoc.Para(caption)) end
+  return pandoc.Div(blocks, pandoc.Attr(fig.identifier))
+end
+
 -- Frames every paragraph in a list of blocks, the paragraphs of a Pandoc
 -- Figure (its image and its caption) included.
 local function frame_blocks(blocks, xml)
@@ -41,8 +59,9 @@ local function frame_blocks(blocks, xml)
     if b.t == "Para" or b.t == "Plain" then
       blocks[i] = frame_para(b, xml)
     elseif b.t == "Figure" then
-      b.content = frame_blocks(b.content, xml)
-      b.caption.long = frame_blocks(b.caption.long, xml)
+      local div = figure_paras(b)
+      div.content = frame_blocks(div.content, xml)
+      blocks[i] = div
     end
   end
   return blocks

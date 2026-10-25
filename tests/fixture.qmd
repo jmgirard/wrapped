@@ -199,11 +199,20 @@ The div above does not wrap, and the render prints a warning for it.
 \clearpage
 ```
 
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## A long caption near the bottom of a page
 
 ```{=latex}
 % Moves the figure below near the bottom of the page.
 \vspace{0.6\textheight}
+```
+
+```{=openxml}
+<!-- Moves the figure below near the bottom of the page in Word: 0.6 of the 12960 twips of text height on a Letter page with 1 in margins. -->
+<w:p><w:pPr><w:spacing w:before="7776" w:after="0"/></w:pPr></w:p>
 ```
 
 ![A figure near the bottom of a page, with a caption that runs to three or more lines in its narrow box.](plot.png){#fig-bottom .wrap-right width="150px"}
@@ -216,11 +225,20 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 \clearpage
 ```
 
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## A figure too near the bottom of a page
 
 ```{=latex}
 % Moves the figure below too near the bottom of the page to fit there.
 \vspace{0.75\textheight}
+```
+
+```{=openxml}
+<!-- Moves the figure below too near the bottom of the page to fit there in Word: 0.75 of 12960 twips. -->
+<w:p><w:pPr><w:spacing w:before="9720" w:after="0"/></w:pPr></w:p>
 ```
 
 ![A figure that starts too near the bottom of a page.](plot.png){#fig-break .wrap-left}
@@ -237,11 +255,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor i
 \clearpage
 ```
 
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## A figure with wrap-lines too near the bottom of a page
 
 ```{=latex}
 % Moves the figure below too near the bottom of the page to fit there.
 \vspace{0.75\textheight}
+```
+
+```{=openxml}
+<w:p><w:pPr><w:spacing w:before="9720" w:after="0"/></w:pPr></w:p>
 ```
 
 ![A figure with wrap-lines that starts too near the bottom of a page.](plot.png){#fig-break-lines .wrap-right wrap-lines="12"}

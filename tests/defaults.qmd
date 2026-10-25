@@ -8,6 +8,7 @@ format:
     keep-tex: true
   typst:
     keep-typ: true
+  docx: default
 wrapped:
   width: 25%
   gap: 30px

@@ -9,6 +9,7 @@ format:
   typst:
     keep-typ: true
     fig-format: png
+  docx: default
 ---
 
 ## E3: a margin figure

@@ -1,4 +1,4 @@
-"""Render the wrapped fixtures and compare the output with committed snapshots.
+r"""Render the wrapped fixtures and compare the output with committed snapshots.
 
 Run from the repository root:
 
@@ -18,7 +18,13 @@ whether its image keeps a width. For Typst it also holds each
 wrap-content call's options, the figure label or image in its box and its
 alt text, the kind of each block beside the box ("p" for a paragraph), the
 number of citations there, and the number of calls it could not read. For Word
-it also holds each image's width from word/document.xml. A revealjs
+it also holds each image's width from word/document.xml, and each frame: its
+side, width, gap, and anchor, the figure bookmark open before it, whether
+each image fills the frame width and its alt text, whether each caption has
+the ImageCaption style, and the kind of each block after the frame up to the
+paragraph with the clearing break. It also counts framed paragraphs that are
+in no frame. The script first writes tests/reference-narrow.docx with
+tests/reference_narrow.py. A revealjs
 snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
 book project: its snapshot holds the HTML parts of each page under _book/,
 and the href of each cross-reference link. For a fixture in MARGIN_IDS, the
@@ -37,9 +43,12 @@ import re
 import shutil
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 import zipfile
 from html.parser import HTMLParser
 from pathlib import Path
+
+import reference_narrow
 
 TESTS = Path(__file__).resolve().parent
 SNAPSHOTS = TESTS / "_snapshots"
@@ -53,13 +62,17 @@ RENDERS = [
     ("defaults", "html", True),
     ("defaults", "pdf", True),
     ("defaults", "typst", True),
+    ("defaults", "docx", True),
+    ("docx-reference", "docx", True),
     ("meta-breakpoint", "html", True),
     ("meta-string", "html", True),
     ("contexts", "html", True),
     ("contexts", "pdf", True),
     ("contexts", "typst", True),
+    ("contexts", "docx", True),
     ("stop-rule", "pdf", True),
     ("stop-rule", "typst", True),
+    ("stop-rule", "docx", True),
     ("twocolumn", "pdf", True),
     ("twocolumn-list", "pdf", True),
     ("pdf-ua", "pdf", True),
@@ -315,11 +328,107 @@ def typ_summary(path):
     return "\n".join(lines)
 
 
+W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+WP = "{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}"
+PIC = "{http://schemas.openxmlformats.org/drawingml/2006/picture}"
+EMU_PER_TWIP = 635
+
+
+def docx_frame(p):
+    """The w:framePr of a paragraph with w:wrap="around", in any of its
+    w:pPr elements, or None."""
+    for ppr in p.findall(f"{W}pPr"):
+        frame = ppr.find(f"{W}framePr")
+        if frame is not None and frame.get(f"{W}wrap") == "around":
+            return frame
+    return None
+
+
+def docx_frames(body):
+    """Each frame in the body: consecutive top-level paragraphs with the same
+    w:framePr. Each frame records its side, width, and gap, the bookmark
+    open before it or its image's name, whether each image fills the frame
+    width, the image's alt text, each paragraph's style, and the kind of each
+    block after it up to and including the paragraph that holds the
+    clearing break ("p" for a paragraph)."""
+    lines = []
+    framed = 0
+    children = list(body)
+    # The bookmark that opens right before a frame, with no block between.
+    bookmark = None
+    i = 0
+    while i < len(children):
+        el = children[i]
+        if el.tag == f"{W}bookmarkStart":
+            bookmark = el.get(f"{W}name")
+            i += 1
+            continue
+        if el.tag == f"{W}bookmarkEnd":
+            i += 1
+            continue
+        frame = docx_frame(el) if el.tag == f"{W}p" else None
+        if frame is None:
+            bookmark = None
+            i += 1
+            continue
+        key = sorted(frame.attrib.items())
+        paras = []
+        while i < len(children) and children[i].tag in (f"{W}p", f"{W}bookmarkStart", f"{W}bookmarkEnd"):
+            f = docx_frame(children[i]) if children[i].tag == f"{W}p" else None
+            if children[i].tag == f"{W}p" and (f is None or sorted(f.attrib.items()) != key):
+                break
+            if f is not None:
+                paras.append(children[i])
+            i += 1
+        framed += len(paras)
+        width = int(frame.get(f"{W}w"))
+        parts = []
+        for p in paras:
+            extent = p.find(f".//{WP}extent")
+            if extent is not None:
+                name = Path(p.find(f".//{PIC}cNvPr").get("descr")).name
+                fills = abs(int(extent.get("cx")) - width * EMU_PER_TWIP) <= EMU_PER_TWIP
+                alt = p.find(f".//{WP}docPr").get("descr")
+                parts.append(f"image {name} fills={'yes' if fills else 'no'} alt={alt!r}")
+            else:
+                styles = [s.get(f"{W}val") for s in p.iter(f"{W}pStyle")]
+                parts.append(f"caption style={'ImageCaption' if 'ImageCaption' in styles else '-'}")
+        after = []
+        while i < len(children):
+            el = children[i]
+            i += 1
+            if el.tag in (f"{W}bookmarkStart", f"{W}bookmarkEnd", f"{W}sectPr"):
+                continue
+            if el.tag != f"{W}p":
+                after.append(el.tag.replace(W, ""))
+                continue
+            after.append("p")
+            if any(br.get(f"{W}clear") == "all" for br in el.iter(f"{W}br")):
+                after.append("clear")
+                break
+        side = frame.get(f"{W}xAlign")
+        gap = frame.get(f"{W}hSpace")
+        anchor = frame.get(f"{W}hAnchor")
+        lines.append(f"frame {side} w={width} gap={gap} anchor={anchor} | {bookmark or '-'} | "
+                     f"{'; '.join(parts)} | {', '.join(after)}")
+        bookmark = None
+    return lines, framed
+
+
 def docx_summary(path):
-    # The width Word shows for each image, in EMU, in document order.
+    # The width Word shows for each image, in EMU, in document order, then
+    # each frame.
     with zipfile.ZipFile(path) as docx:
         xml = docx.read("word/document.xml").decode("utf-8")
-    return "\n".join(f"image: cx={cx}" for cx in re.findall(r'<wp:extent cx="(\d+)"', xml))
+    lines = [f"image: cx={cx}" for cx in re.findall(r'<wp:extent cx="(\d+)"', xml)]
+    body = ET.fromstring(xml).find(f"{W}body")
+    lines.append("# frames")
+    frames, framed = docx_frames(body)
+    lines += frames
+    others = sum(1 for p in body.iter(f"{W}p") if docx_frame(p) is not None) - framed
+    if others:
+        lines.append(f"framed paragraphs outside a frame: {others}")
+    return "\n".join(lines)
 
 
 def render(fixture, fmt):
@@ -354,6 +463,8 @@ def summary(fixture, fmt, log):
 def main():
     update = "--update" in sys.argv[1:]
     SNAPSHOTS.mkdir(exist_ok=True)
+    # docx-reference.qmd reads this reference doc, which is not committed.
+    reference_narrow.main()
     failed = []
     for fixture, fmt, compare in RENDERS:
         name = f"{fixture}.{fmt}"
