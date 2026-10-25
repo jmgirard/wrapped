@@ -1,0 +1,5 @@
+# Chapter one
+
+![A wrapped figure in chapter one.](plot.png){#fig-book .wrap-right width="35%"}
+
+The paragraph after the figure wraps around it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

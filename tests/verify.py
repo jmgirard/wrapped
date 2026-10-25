@@ -9,13 +9,18 @@ Needs Quarto, R with knitr, and TinyTeX. Each render must exit with status
 0. A snapshot under tests/_snapshots/ records the parts of a render that
 show what the filter decided. For every format it holds the extension's
 warnings. For HTML it also holds the breakpoint value, the wrap class and
-style of every figure div and wrapped box, the wrap class, style, and width
+style of every figure or table div and wrapped box, the wrap class, style, and width
 of every image, and the members of every .wrap-group. Style declarations
 are sorted, so their order does not count. For PDF it also holds the kind
 and label of each figure environment, and for Typst the label of each
 #figure( call. Both say whether the figure's image keeps a width. For Word
-it also holds each image's width from word/document.xml. The script exits with status 1 on a failed
-render or a snapshot difference.
+it also holds each image's width from word/document.xml. A revealjs
+snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
+book project: its snapshot holds the HTML parts of each page under _book/,
+and the href of each cross-reference link. For a fixture in MARGIN_IDS, the
+script also renders a copy with no filters and records whether each named
+figure sits in the same column-margin container in both renders. The script
+exits with status 1 on a failed render or a snapshot difference.
 
 Some fixtures exist for the browser checks in tests/layout.js, which measure
 layout. Those fixtures are rendered here, so their HTML is current, and they
@@ -24,6 +29,7 @@ have no snapshot.
 
 import difflib
 import re
+import shutil
 import subprocess
 import sys
 import zipfile
@@ -42,6 +48,9 @@ RENDERS = [
     ("defaults", "html", True),
     ("meta-breakpoint", "html", True),
     ("meta-string", "html", True),
+    ("contexts", "html", True),
+    ("book", "html", True),
+    ("revealjs", "revealjs", True),
     ("margin", "html", False),
     ("stop-rule", "html", False),
     ("rtl", "html", False),
@@ -51,6 +60,7 @@ RENDERS = [
 WARNING = re.compile(r"\(W\) (wrapped: .*)")
 ANSI = re.compile(r"\x1b\[[0-9;]*m")
 WRAP_CLASSES = ("wrap-left", "wrap-right", "wrapped-image")
+FLOAT_IDS = ("fig-", "tbl-")
 
 
 def wrap_classes(classes):
@@ -81,7 +91,7 @@ class Decisions(HTMLParser):
 
     def describe(self, tag, attrs):
         classes = attrs.get("class") or ""
-        if tag == "div" and attrs.get("id", "").startswith("fig-"):
+        if tag == "div" and attrs.get("id", "").startswith(FLOAT_IDS):
             return attrs["id"]
         if tag == "div" and "wrapped-image" in classes.split():
             return "wrapped-image"
@@ -102,13 +112,14 @@ class Decisions(HTMLParser):
             self.in_group = True
             self.level = 0
         if tag == "img":
-            src = Path(attrs.get("src", "")).name
+            # revealjs puts the image path in data-src.
+            src = Path(attrs.get("src") or attrs.get("data-src", "")).name
             self.images.append(
                 f"{src}: wrap={wrap_classes(classes)} style={style_text(attrs.get('style'))} width={attrs.get('width', '-')}"
             )
         if tag != "div":
             return
-        if attrs.get("id", "").startswith("fig-") or "wrapped-image" in classes.split():
+        if attrs.get("id", "").startswith(FLOAT_IDS) or "wrapped-image" in classes.split():
             name = attrs.get("id", "(box)")
             self.figures.append(f"{name}: {wrap_classes(classes)} style={style_text(attrs.get('style'))}")
 
@@ -135,6 +146,73 @@ def html_summary(path):
     parts += ["# images"] + parser.images
     parts += ["# groups"] + [", ".join(members) for members in parser.groups]
     return "\n".join(parts)
+
+
+class MarginContainers(HTMLParser):
+    """Finds the nearest enclosing div with the column-margin class of each
+    element whose id is in `ids`."""
+
+    def __init__(self, ids):
+        super().__init__()
+        self.ids = ids
+        self.stack = []  # class lists of the open divs
+        self.found = {}
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if attrs.get("id") in self.ids:
+            margins = [c for c in self.stack if "column-margin" in c.split()]
+            self.found[attrs["id"]] = margins[-1] if margins else "(none)"
+        if tag == "div":
+            self.stack.append(attrs.get("class") or "")
+
+    def handle_endtag(self, tag):
+        if tag == "div" and self.stack:
+            self.stack.pop()
+
+
+def margin_containers(path, ids):
+    parser = MarginContainers(ids)
+    parser.feed(path.read_text(encoding="utf-8"))
+    return parser.found
+
+
+# Fixtures whose margin figures must sit in the same margin container as in
+# a render of the same file without the extension.
+MARGIN_IDS = {"contexts": ["fig-margin", "fig-aside", "fig-margin-cell"]}
+
+
+def margin_summary(fixture):
+    """Renders a copy of the fixture with no filters and compares the margin
+    container of each figure in MARGIN_IDS with the filtered render."""
+    ids = MARGIN_IDS[fixture]
+    plain = f"{fixture}-plain"
+    source = (TESTS / f"{fixture}.qmd").read_text(encoding="utf-8")
+    (TESTS / f"{plain}.qmd").write_text(re.sub(r"(?m)^filters:\n(  - .*\n)+", "", source), encoding="utf-8")
+    try:
+        code, log = render(plain, "html")
+        if code != 0:
+            return [f"(render without the extension exited with status {code})"]
+        want = margin_containers(TESTS / f"{plain}.html", ids)
+    finally:
+        (TESTS / f"{plain}.qmd").unlink()
+        (TESTS / f"{plain}.html").unlink(missing_ok=True)
+        shutil.rmtree(TESTS / f"{plain}_files", ignore_errors=True)
+    got = margin_containers(TESTS / f"{fixture}.html", ids)
+    lines = []
+    for i in ids:
+        with_ext, without = got.get(i, "(missing)"), want.get(i, "(missing)")
+        if with_ext == without:
+            lines.append(f"{i}: same as without the extension: {with_ext}")
+        else:
+            lines.append(f'{i}: with the extension "{with_ext}", without "{without}"')
+    return lines
+
+
+def xref_summary(path):
+    """The href of each cross-reference link in a rendered HTML page."""
+    hrefs = re.findall(r'<a href="([^"]*)" class="quarto-xref"', path.read_text(encoding="utf-8"))
+    return "\n".join(f"xref: {h}" for h in hrefs)
 
 
 def tex_summary(path):
@@ -168,7 +246,9 @@ def docx_summary(path):
 
 
 def render(fixture, fmt):
-    cmd = ["quarto", "render", f"{fixture}.qmd", "--to", fmt]
+    # A fixture that is a folder is a project, rendered whole.
+    target = fixture if (TESTS / fixture).is_dir() else f"{fixture}.qmd"
+    cmd = ["quarto", "render", target, "--to", fmt]
     result = subprocess.run(cmd, cwd=TESTS, capture_output=True, text=True)
     log = ANSI.sub("", result.stdout + result.stderr)
     return result.returncode, log
@@ -178,8 +258,13 @@ def summary(fixture, fmt, log):
     found = [m.group(1).strip() for m in WARNING.finditer(log)]
     warnings = sorted(set(found))
     parts = ["# warnings"] + [f"{found.count(w)}x {w}" for w in warnings]
-    if fmt == "html":
+    if (TESTS / fixture).is_dir():
+        for page in sorted((TESTS / fixture / "_book").glob("*.html")):
+            parts += [f"## {page.name}", html_summary(page), "# xrefs", xref_summary(page)]
+    elif fmt in ("html", "revealjs"):
         parts.append(html_summary(TESTS / f"{fixture}.html"))
+        if fixture in MARGIN_IDS:
+            parts += ["# margin containers"] + margin_summary(fixture)
     elif fmt == "pdf":
         parts += ["# tex", tex_summary(TESTS / f"{fixture}.tex")]
     elif fmt == "typst":

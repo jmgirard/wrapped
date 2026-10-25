@@ -1,0 +1,13 @@
+project:
+  type: book
+
+book:
+  title: "wrapped fixture: a two-chapter book"
+  chapters:
+    - index.qmd
+    - two.qmd
+
+filters:
+  - wrapped
+
+format: html

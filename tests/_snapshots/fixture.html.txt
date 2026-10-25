@@ -16,6 +16,7 @@ fig-inner: wrap-right style=--wrap-gap: 2em; --wrap-width: 35%
 fig-cell: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
 (box): wrapped-image wrap-right style=--wrap-gap: 1em; --wrap-width: 20%
 fig-plain: - style=-
+tbl-cars: - style=-
 fig-after-table: - style=-
 fig-unwrapped-cell: - style=-
 (box): wrapped-image wrap-right style=--wrap-gap: 2em; --wrap-width: 20%

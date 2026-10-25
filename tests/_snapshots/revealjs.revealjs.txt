@@ -1,0 +1,9 @@
+# warnings
+# breakpoint
+576px
+# figures
+fig-slide: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-slide, p

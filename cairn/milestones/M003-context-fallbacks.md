@@ -47,7 +47,7 @@ Wrapped figures render as the research page's edge cases E3 to E8, E13, and E15 
 
 - [x] T1: Context detection in `wrapped.lua`. Track the enclosing list, callout, column layout, tabset, aside, and margin block in the top-down pass. Detect subfigure panels and `#tbl-` floats. Remove the wrap class from each such float and print one warning that names its id. Leave the margin classes as Quarto sets them.
 - [x] T2: The next-block rule. When the block after a wrapped figure is not a paragraph, remove the wrap class with no warning.
-- [ ] T3: Write `tests/contexts.qmd`, a two-chapter book under `tests/book/`, and `tests/revealjs.qmd`. Add them to `tests/verify.py` with snapshots.
+- [x] T3: Write `tests/contexts.qmd`, a two-chapter book under `tests/book/`, and `tests/revealjs.qmd`. Add them to `tests/verify.py` with snapshots.
 - [ ] T4: Check the revealjs layout in the built-in browser and adjust `wrapped.css` for slides if needed. Update `README.md` with the contexts that keep a normal figure and with the revealjs case.
 
 ## Work log
@@ -60,6 +60,7 @@ Wrapped figures render as the research page's edge cases E3 to E8, E13, and E15 
 - 2026-10-25: started by /milestone-implement on branch m003-context-fallbacks.
 - 2026-10-25: T1 done. A `find_contexts` pre-pass marks floats in a list, callout, column layout, tabset, aside, margin block, or subfigure panel by custom id, because the float pass has no exit hook to track an enclosing block. The float pass also falls back for a table, a float's own margin class, and a `layout` attribute. Context warnings print in HTML only, like the other per-figure warnings. Choices: ordered lists count as lists; a captioned image with no id and a lone image in a context also fall back with a warning; the outermost context names the warning. The main fixture's snapshot gains the `#tbl-cars` warning (E5).
 - 2026-10-25: T2 done. A `find_no_text` pre-pass records floats and cell floats whose next block, past comments, is not a joining paragraph, and strips the class from a no-id figure or lone image there. It skips lists inside a code cell or float, where the figure is the last block by design (a first version broke the main fixture's cell figure). The contexts fixture gains a no-id figure and a lone image, each in a context and before a heading.
+- 2026-10-25: T3 done. `verify.py` now renders 14 fixtures: `contexts.html`, the `tests/book/` project (chapters `index.qmd` and `two.qmd`, with `_extensions` and `plot.png` links), and `revealjs.revealjs`. A folder fixture renders as a project and its snapshot lists each page plus xref hrefs. For `contexts`, the script renders a no-filter copy and records whether each E3 figure keeps the same column-margin container; all three do. Snapshots now list `tbl-` floats and read revealjs's `data-src`; the main fixture gains a `tbl-cars` line.
 
 ## Decisions
 
