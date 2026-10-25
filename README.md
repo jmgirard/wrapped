@@ -135,7 +135,9 @@ file or says that the figure has no id.
 
 - The margin: a figure with the `.column-margin` class, a figure in a
   `.column-margin` or `.aside` div, or a code cell with `#| column: margin`.
-  The figure stays in the margin.
+  The figure stays in the margin. In PDF through LaTeX, Quarto puts a
+  captioned image that has the `.column-margin` class and no `#fig-` id
+  in the body instead.
 - A subfigure panel, such as a figure div with `layout-ncol`, or a
   subfigure inside a panel.
 - A panel layout: a div or a code cell with `layout-ncol`, `layout-nrow`,
@@ -190,7 +192,8 @@ wrapfig has limits, and the extension keeps some of them:
   counts from the height of the figure. A heading, a list, a quote, a
   table, or a code block in those lines sits beside the figure, narrowed.
   If the text is shorter than the figure, the lines after it are narrowed
-  too.
+  too. A figure with no wrap class in those lines can overlap the wrapped
+  figure. A `wrap-clear` div does not stop wrapping in LaTeX.
 - A figure that does not fit at the bottom of a page moves to the start of
   a paragraph on the next page. The text before it fills the page.
 - If a page break comes while lines are still narrowed, the first lines on
@@ -200,8 +203,9 @@ wrapfig has limits, and the extension keeps some of them:
 - Figures in a row: when a wrapped figure starts while the text beside an
   earlier figure is still narrowed, the extension adds space, so the new
   figure starts below the earlier one. A figure that moved to the next page
-  waits for a paragraph. If the next wrapped figure comes first, the figure
-  that waits renders centered with no text beside it.
+  waits for a paragraph. A heading or the end of a callout does not take
+  it. If the next wrapped figure or the end of the document comes first,
+  the figure that waits renders centered with no text beside it.
 - In a two-column document, set with `classoption: twocolumn`, wrapped
   figures render as normal figures, and the render prints one warning.
 - A figure in a list keeps its normal layout, as in HTML.

@@ -16,7 +16,7 @@
 % out here, centered, with no text beside it. A wrap whose text is still
 % narrowed ends: the environment skips the lines still left beside the
 % earlier figure, and \WFclear ends the wrap. \WFclear ends it inside the
-% environment's group, so \wrapped@finale ends it again after the group.
+% environment's group, so \wrapped@afterenv ends it again after the group.
 \usepackage{wrapfig}
 \makeatletter
 \let\wrapped@colsep\relax
@@ -29,33 +29,44 @@
     \global\let\wrapped@colsep\relax
   \fi}
 \g@addto@macro\WF@startwrapping{\wrapped@restorecolsep}
-\g@addto@macro\WFclear{\wrapped@restorecolsep}
-\newcommand*\wrapped@endwrap{%
+% \WFclear as in wrapfig, but a figure that waits is centered. LaTeX runs
+% \WFclear at each \clearpage, the end of the document included.
+\renewcommand\WFclear{\par
   \ifvoid\WF@box\else
-    \par\vskip\intextsep
+    \vskip\intextsep
     \hbox to\linewidth{\hss\box\WF@box\hss}%
     \vskip\intextsep
-    \wrapped@restorecolsep
+    \let\everypar\WF@@everypar \everypar\expandafter{\the\WF@everypar}%
   \fi
+  \global\c@WF@wrappedlines\z@ \WF@finale
+  \wrapped@restorecolsep}
+\newcommand*\wrapped@endwrap{%
+  \ifvoid\WF@box\else \WFclear \fi
   \ifx\parshape\WF@fudgeparshape
     \par
     \@tempcnta\c@WF@wrappedlines \advance\@tempcnta\m@ne
     \vspace{\@tempcnta\baselineskip}%
     \WFclear
   \fi}
-\newcommand*\wrapped@finale{%
+% wrapfig runs \WF@startfloating after the environment's groups end. Before
+% it, \wrapped@afterenv ends an earlier wrap there and records that group
+% level for \WF@floathand below.
+\def\wrapped@level{0}
+\newcommand*\wrapped@afterenv{%
+  \xdef\wrapped@level{\the\currentgrouplevel}%
   \ifx\parshape\WF@fudgeparshape \WF@finale \fi}
-% A heading set with \@hangfrom, as LaTeX and KOMA headings are, is a
-% paragraph inside a group. A figure that wrapfig placed there would lose
-% its wrap when the group ends, and the text after the heading would run
-% over it. So a moved figure waits for the first paragraph after the
-% heading: \WF@floathand does nothing while the heading's paragraph starts.
+\let\wrapped@startfloating\WF@startfloating
+\def\WF@startfloating{\wrapped@afterenv\wrapped@startfloating}
+% A paragraph inside a group, such as a heading or the end of a callout,
+% can start where a moved figure waits. A figure that wrapfig placed there
+% would lose its wrap when the group ends, and the text after it would run
+% over the figure. So wrapfig places a moved figure only at a paragraph on
+% the group level where its environment ended.
 \let\wrapped@floathand\WF@floathand
-\let\wrapped@hangfrom\@hangfrom
-\def\@hangfrom#1{%
-  \let\WF@floathand\relax
-  \wrapped@hangfrom{#1}%
-  \let\WF@floathand\wrapped@floathand}
+\def\WF@floathand{%
+  \ifnum\currentgrouplevel=\wrapped@level\relax
+    \expandafter\wrapped@floathand
+  \fi}
 \makeatother
 \ExplSyntaxOn
 \tl_new:N \l__wrapped_side_tl
@@ -89,7 +100,6 @@
       }
   }
   {
-    \exp_after:wN \tex_aftergroup:D \cs:w wrapped@finale \cs_end:
     \endwrapfigure
     \use:c { wrapped@setcolsep } { \l__wrapped_gap_tl }
   }

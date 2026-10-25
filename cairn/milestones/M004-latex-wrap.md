@@ -2,7 +2,7 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M004: Wrap figures in LaTeX PDF output
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** high
 - **Depends on:** M002, M003
 - **Driving RR:** —
@@ -83,6 +83,12 @@ A document rendered to PDF through LaTeX with the extension installed shows body
 - 2026-10-25: re-audit: AC6 (full) — the fallback branch does not check alt text; "one extension warning" does not name the warning or the total; plant more `classoption` forms; README should say ua-1 gives no tags. Answered, no wording change (a third change would be a stop): both ua-2 items take the `wrappedfigure` branch with their alt text (`pdfinfo -struct` lists "A scatter plot of ten rising points" and "A small scatter plot"), so the fallback branch is not exercised; the snapshots pin each warning's exact text and count; plants `[a4paper, twocolumn]` and `twocolumn,10pt` each printed one two-column warning and kept `\begin{figure}`, and `onecolumn` wrapped with no warning; the README note goes in T5.
 - 2026-10-25: T4: the wrapped uncaptioned image takes its `fig-alt` as its description, so Pandoc writes `alt=`; without this its tag read "plot.png", as it does with no extension, because Quarto writes `fig-alt` only for figures. Fixtures `twocolumn`, `twocolumn-list`, `pdf-ua`, `pdf-ua1`, and PDF renders of `contexts` and `stop-rule` joined `verify.py` with snapshots (21 renders pass).
 - 2026-10-25: T5: README gains a "PDF through LaTeX" section (conversions, `wrap-lines`, ragged-right captions, the limits list, tagged PDF) and LaTeX mentions in the stop, context, and notes sections. Each limit was seen this session: stop-rule PDF pages show headings, lists, and quotes narrowed beside the figure and a heading narrowed after a page break; a probe with `wrap-lines="30"` ran narrowed lines onto the next page; the centered fallback showed in a fixture iteration. DESIGN's syntax note and architecture passes now name the LaTeX path.
+- 2026-10-25: claim audit: 81 claims read, 1 corrected — README.md
+- 2026-10-25: claim audit correction: in LaTeX, Quarto puts a captioned `.column-margin` image with no `#fig-` id in the body, with or without the extension; the README's margin bullet now says so.
+- 2026-10-25: defect found by the claim auditor and fixed: in stop-rule.pdf, a moved figure was placed at the end of a callout (a group), lost its wrap, and the next figure's text ran over it. The `\@hangfrom` patch is replaced by one guard: wrapfig places a moved figure only at a paragraph on the group level where `\WF@startfloating` ran, which covers headings and callouts. Re-rendered: the fixture places all 15 figures with only the two planted ones moving; stop-rule case 9 sits beside outer text with no overlap.
+- 2026-10-25: `\WFclear` is redefined to center a waiting figure, so the end-of-document dump matches the centered fallback; the ending of an earlier wrap moved from an `\aftergroup` (which fired one group early) into `\WF@startfloating`.
+- 2026-10-25: second auditor finding, not fixed (the LaTeX stop rule is Out): a figure with no wrap class in the narrowed lines overlaps the wrapped figure's caption (stop-rule case 8), and a `wrap-clear` div has no effect in LaTeX. README limits now say both; candidate row "Honor wrap-clear and figures in LaTeX" added.
+- 2026-10-25: all tasks done, `verify.py` 21 of 21 pass; status → review.
 
 ## Decisions
 
