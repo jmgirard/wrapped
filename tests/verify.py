@@ -14,7 +14,9 @@ of every image, and the members of every .wrap-group. Style declarations
 are sorted, so their order does not count. For PDF it also holds the kind,
 label, and options of each figure environment and the options of its
 \includegraphics, and for Typst the label of each #figure( call and
-whether its image keeps a width. For Word
+whether its image keeps a width. For Typst it also holds each
+wrap-content call's options, the figure label or image in its box, and
+one "p" for each paragraph beside the box. For Word
 it also holds each image's width from word/document.xml. A revealjs
 snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
 book project: its snapshot holds the HTML parts of each page under _book/,
@@ -245,15 +247,30 @@ def tex_summary(path):
     return "\n".join(lines)
 
 
+TYPST_WRAP = re.compile(
+    r"^#wrap-content\(([^\n]*), box\(width: 100%\)\[\n(.*?)^\], \[\n(.*?)^\]\)$", re.M | re.S
+)
+
+
 def typ_summary(path):
     # A body figure's #figure( call starts a line, unlike the one in Quarto's
     # template. Each call runs to the next one, and its label follows it.
-    chunks = re.split(r"^#figure\(", path.read_text(encoding="utf-8"), flags=re.M)[1:]
+    source = path.read_text(encoding="utf-8")
+    chunks = re.split(r"^#figure\(", source, flags=re.M)[1:]
     lines = []
     for chunk in chunks:
         label = re.search(r"^<((?:fig|tbl)-[\w-]+)>", chunk, re.M)
         width = re.search(r"image\([^)]*width:", chunk) is not None
         lines.append(f"figure: {label.group(1) if label else '-'} image-width={'yes' if width else 'no'}")
+    # The filter writes each wrap-content call as raw lines around the box
+    # content and the paragraphs, which Typst output separates by blank lines.
+    lines.append("# wraps")
+    for options, fixed, body in TYPST_WRAP.findall(source):
+        label = re.search(r"^<((?:fig|tbl)-[\w-]+)>", fixed, re.M)
+        image = re.search(r'image\("([^"]*)"', fixed)
+        box = label.group(1) if label else Path(image.group(1)).name if image else "-"
+        paras = ["p" for block in re.split(r"\n\s*\n", body) if block.strip()]
+        lines.append(f"{options} | {box} | {', '.join(paras)}")
     return "\n".join(lines)
 
 

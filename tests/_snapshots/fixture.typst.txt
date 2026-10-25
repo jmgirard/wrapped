@@ -1,8 +1,17 @@
 # warnings
-1x wrapped: typst output does not wrap figures yet, so wrapped figures render as normal figures.
+1x wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.
+1x wrapped: the div #note is not a figure, so it does not wrap.
+1x wrapped: the image plot.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the table #tbl-cars is not a figure, so it does not wrap.
+1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
+1x wrapped: width "clamp(150px, 30%, 400px)" on #fig-clamp is not a length that Typst can use, so it is 40%.
+1x wrapped: width "wide" on #logo is not a length or a percent, so it is 40%.
+1x wrapped: wrap-gap "2VMIN" on #fig-clamp is not a length that Typst can use, so it is 1em.
+1x wrapped: wrap-gap "wide" on #fig-bad-width is not a length or a percent, so it is 1em.
+1x wrapped: wrap-gap "wide" on plot.png is not a length or a percent, so it is 1em.
 # typ
 figure: fig-md image-width=yes
-figure: fig-div image-width=no
+figure: fig-div image-width=yes
 figure: fig-inner image-width=yes
 figure: fig-cell image-width=yes
 figure: fig-plain image-width=yes
@@ -11,11 +20,27 @@ figure: fig-after-table image-width=yes
 figure: fig-unwrapped-cell image-width=yes
 figure: - image-width=yes
 figure: fig-comment image-width=yes
-figure: fig-bad-width image-width=no
-figure: fig-styled image-width=no
-figure: fig-clamp image-width=no
+figure: fig-bad-width image-width=yes
+figure: fig-styled image-width=yes
+figure: fig-clamp image-width=yes
 figure: fig-raw image-width=yes
-figure: - image-width=no
+figure: - image-width=yes
 figure: fig-bottom image-width=yes
-figure: fig-break image-width=no
-figure: fig-break-lines image-width=no
+figure: fig-break image-width=yes
+figure: fig-break-lines image-width=yes
+# wraps
+align: top + right, columns: (1fr, 30%), column-gutter: 1em | fig-md | p, p
+align: top + left, columns: (3in, 1fr), column-gutter: 1em | fig-div | p, p
+align: top + right, columns: (1fr, 35%), column-gutter: 2em | fig-inner | p, p
+align: top + left, columns: (40%, 1fr), column-gutter: 1em | fig-cell | p, p
+align: top + right, columns: (1fr, 20%), column-gutter: 1em | plot.png | p, p
+align: top + right, columns: (1fr, 20%), column-gutter: 2em | plot.png | p, p
+align: top + right, columns: (1fr, 30%), column-gutter: 1em | fig-comment | p, p
+align: top + left, columns: (40%, 1fr), column-gutter: 1em | fig-bad-width | p, p
+align: top + right, columns: (1fr, 30%), column-gutter: 1em | fig-styled | p, p
+align: top + left, columns: (40%, 1fr), column-gutter: 1em | fig-clamp | p, p
+align: top + right, columns: (1fr, 30%), column-gutter: 1em | fig-raw | p
+align: top + left, columns: (40%, 1fr), column-gutter: 1em | plot.png | p, p
+align: top + right, columns: (1fr, 112.5pt), column-gutter: 1em | fig-bottom | p, p
+align: top + left, columns: (40%, 1fr), column-gutter: 1em | fig-break | p, p, p, p
+align: top + right, columns: (1fr, 40%), column-gutter: 1em | fig-break-lines | p, p, p, p
