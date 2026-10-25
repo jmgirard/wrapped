@@ -181,3 +181,37 @@ Consistency gate (pass 2):
 - Version markers: `_extension.yml` holds 0.1.0. The filter's `add_html_dependency` call carries no version, which matches the PROFILE release-walk.
 - Verify: `python3 tests/verify.py` passed all 9 renders (5 compared with snapshots, 4 rendered for the browser checks).
 - Changelog: the slot says "none".
+
+Independent review, pass 2, on 166651f:
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: the comment rule lets a raw block such as `<!-- a --><div>BLOCK</div><!-- b -->` into a group. — fix now
+- diff-bug #2: `breakpoint: 50%` writes an invalid media query, so figures never stop floating, with no warning. — fix now: a breakpoint takes no percent
+- diff-bug #3: a wrapped cell whose plot is not a float (no `fig-` label) loses its class with no warning. — fix now: warn in HTML
+- diff-bug #4: `wrapped:` given as a string is ignored with no warning. — fix now
+- diff-bug #5: the length check rejects valid CSS (`10PX`, `vmin`, `vmax`, `calc()`, `min()`, `clamp()`). — fix now
+- diff-bug #6: an invalid `wrapped:` key warns even when no figure wraps. — reject, false: a warning about invalid metadata is wanted in any document
+- diff-bug #7: the warning says "a figure with no id" for a captioned image with a non-`fig-` id. — fix now
+- diff-bug #8: a plain `::: {.wrap-right}` div that is not a figure keeps its class and does not wrap, with no warning. — fix now: warn in HTML
+- diff-bug #9: below the breakpoint, a 20% image fills the column. — reject, planned change: DESIGN's stylesheet and the README state `width: auto` there
+- diff-bug (c)1: the breakpoint regex depends on selector order. — fix now
+- diff-bug (c)2: the PDF and Typst snapshots list unwrapped figures, which run Quarto's own path. — reject, false: each entry records the filter's non-HTML decision for that figure (class removed, width kept, or left alone), which differs between wrapped and unwrapped figures
+- diff-bug (c)3: `typ_summary` reads labels, not `#figure(` calls, so it does not check AC6's Typst output. — fix now: one entry per `#figure(` call
+- diff-bug (c)4: the warning regex is not tied to Quarto's `(W)` prefix. — fix now
+- diff-bug (c)5: the custom-property strings are compared byte for byte, so a reorder fails. — fix now: compare sorted declarations
+- diff-bug (c)6: `tests/layout.js` resolves a percent gap against the float, not its containing block. — fix now
+- diff-bug (c)7: the `# images` section repeats one line per wrapped float. — reject, false: each line records one figure's image (no wrap class, no percent width), the per-figure fact AC2 needs
+- blame-history #1: the first of two back-to-back wrapped figures floats alone, against D-003, and no row covers it. — follow-up: held by M003 AC3, a planned milestone
+- blame-history #2: no snapshot checks that a figure keeps its width outside HTML, which M002 changed, and PROFILE test-doctrine names the docx `word/document.xml`. — fix now: the PDF and Typst entries record whether the image keeps a width, and the docx snapshot records each image's extent
+- blame-history #3: DESIGN Known issues says "None yet" while candidate rows hold defects. — reject, false: Known issues holds accepted limitations with no fix planned, and these rows are planned work
+- blame-history #4: revealjs takes the HTML path with no warning, while M003 holds E15. — follow-up: held by M003 AC5, which checks the revealjs result
+- blame-history #5: LESSONS lacks this milestone's lessons. — noted: lessons are captured at post-merge hygiene
+- prior-review #1: the cell carry could still leak if the float count and the traversal disagree. Not reproduced. — fix now: every cell div resets the carry
+- ripple #1: the research page's planned layout names post-render entries and two entry points. — reject, false: that section is the plan for all formats, and the post-render entry comes with Typst and Word
+- ripple #2: the research page's test plan says snapshots hold the kept `.tex`, `.typ`, and `word/document.xml`. — fix now: correct the test plan line
+- ripple #3: PROFILE test-doctrine names the docx `word/document.xml`, and the docx snapshot held only warnings. — fix now, with blame-history #2
+- ripple #4: the test plan says the fixture holds a `@citation`, and it does not. — follow-up: the citation case belongs to the candidate "Wrap figures in Typst PDF output"
+- ripple #5: the README says this version wraps HTML output, and the dashboard row says dashboards likely do not wrap. — fix now: the README says dashboards are not tested
+- ripple #6: DESIGN says figures stop floating "below" the breakpoint, and the CSS uses `max-width`. — fix now
+- ripple #7: DESIGN keeps the heading "Planned syntax". — fix now
+- ripple #8: the research page's W1 stylesheet sketch differs from `wrapped.css`. — fix now: name the working stylesheet
+- ripple #9: E3, E4, E5, and E8 promise one warning, and the filter prints none. — follow-up: held by M003 AC1
