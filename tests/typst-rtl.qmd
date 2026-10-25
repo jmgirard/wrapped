@@ -1,0 +1,21 @@
+---
+title: "wrapped fixture: a right-to-left Typst document"
+filters:
+  - wrapped
+format:
+  typst:
+    keep-typ: true
+lang: he
+---
+
+## Physical sides
+
+![A figure with the right class in a right-to-left document.](plot.png){#fig-rtl-right .wrap-right width="30%"}
+
+The paragraph after this figure flows beside it, and the figure stays on the right. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## The left side
+
+![A figure with the left class in a right-to-left document.](plot.png){#fig-rtl-left .wrap-left width="30%"}
+
+The paragraph after this figure flows beside it, and the figure stays on the left. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

@@ -1,3 +1,7 @@
 # warnings
 # tex
 wrappedfigure: fig-defaults [side=right,width=0.25\linewidth,gap=22.5pt] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-pica [side=left,width=0.3\linewidth,gap=2pc] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-upper [side=right,width=2in,gap=1ex] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-unitless [side=left,width=225pt,gap=22.5pt] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-height [side=right,width=0.2\linewidth,gap=22.5pt] image=[width=\linewidth,height=2in,keepaspectratio]

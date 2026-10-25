@@ -4,10 +4,10 @@ wrapped is a Quarto filter extension. It lets body text flow beside a
 figure, to the left or right of it. The figure keeps its number, its
 caption, and its `@fig-` links.
 
-This version wraps figures in HTML output, revealjs slides included, and
-in PDF through LaTeX. In every other format, a wrapped figure renders as a
-normal figure, and the render prints one warning.
-Support for PDF through Typst and Word is planned.
+This version wraps figures in HTML output, revealjs slides included, in
+PDF through LaTeX, and in PDF through Typst. In every other format, a
+wrapped figure renders as a normal figure, and the render prints one
+warning. Support for Word is planned.
 Dashboards are not tested yet.
 
 ## Install
@@ -117,18 +117,19 @@ paragraph that you want beside the figure:
 ```
 
 A wrapped figure with no paragraph right after it keeps its normal layout.
-An example is a figure right before a heading. In HTML and LaTeX the
-render prints no warning for such a figure. The places in the next section are the
+An example is a figure right before a heading. In HTML, LaTeX, and Typst
+the render prints no warning for such a figure. The places in the next section are the
 exception. Of two wrapped figures in a row, the first keeps its
 normal layout, and the second wraps the paragraphs after it.
 
 In PDF through LaTeX, wrapping stops only in part, and a `wrap-clear` div
-does nothing. See [PDF through LaTeX](#pdf-through-latex).
+does nothing. See [PDF through LaTeX](#pdf-through-latex). In PDF through
+Typst, wrapping stops as in HTML, and a `wrap-clear` div works.
 
 ## Where a figure keeps its normal layout
 
-In HTML and in PDF through LaTeX, a wrapped figure in one of these places
-does not wrap. It keeps
+In HTML, in PDF through LaTeX, and in PDF through Typst, a wrapped figure
+in one of these places does not wrap. It keeps
 its normal layout, and the render prints one warning for it. The warning
 names the figure's id. If the figure has no id, the warning names its image
 file or says that the figure has no id.
@@ -220,14 +221,60 @@ Quarto's default document class fails, so set a class such as
 `documentclass: article`. In such a PDF, each wrapped figure and wrapped
 image keeps its `fig-alt` text as its alt text.
 
+## PDF through Typst
+
+In PDF through Typst, the extension puts each wrapped figure and the
+paragraphs after it in a `wrap-content` call from the Typst package wrap-it
+0.1.1. The extension ships its own copy of wrap-it, so the render does not
+download it. Citations and `@fig-` links in the text beside the figure
+work.
+
+The `width` and `wrap-gap` values change to Typst lengths:
+
+- A percent is that share of the text width.
+- A `px` length, or a number with no unit, is 0.75 `pt` for each `px`, so
+  `200px` is `150pt`. A `pc` length is 12 `pt` for each `pc`.
+- A length in `pt`, `mm`, `cm`, `in`, or `em` stays as it is, with its unit
+  in lowercase.
+- Any other unit, such as `ex`, `vw`, or `rem`, and a `calc()`, `min()`,
+  `max()`, or `clamp()` value print a warning, and the document default
+  applies.
+
+A percent of 100% or more leaves no room for the text in Typst, so it
+prints a warning. A figure's own width then takes the document default.
+A `wrapped: width` of 100% or more takes the built-in 40%.
+
+The `wrap-lines` attribute does nothing in Typst. Typst does not use an
+image's `height` in a wrapped figure. The image fills the box width and
+keeps its shape, and the render prints a warning.
+
+The sides stay physical in right-to-left text. Typst sets that direction
+from the document's `lang`, such as `lang: he`, or from a raw Typst
+`#set text(dir: rtl)`. Quarto does not pass `dir: rtl` to Typst.
+
+wrap-it has limits:
+
+- wrap-it puts the figure and the text beside it in one box, and the box
+  does not break across pages. If the box does not fit at the bottom of a
+  page, it moves to the next page. The rest of the page before it stays
+  blank.
+- When the text is longer than the figure, wrap-it breaks a paragraph at
+  the word where the figure ends. The rest of that paragraph starts on a
+  new line below the figure and runs the full width.
+- wrap-it issue #1 reports that first-line indents change in wrapped text.
+  The extension does not test this case.
+
+Tagged PDF: with `pdf-standard: ua-1`, each wrapped figure and wrapped
+image keeps its `fig-alt` text as its alt text.
+
 ## Notes
 
 - A captioned image with no `#fig-` id wraps too. In HTML it has no figure
-  number. In PDF through LaTeX, Quarto numbers it.
+  number. In PDF through LaTeX and Typst, Quarto numbers it.
 - An image inside a link, or beside other content in its paragraph, does
-  not wrap. In HTML and LaTeX the render prints a warning for it.
-- In HTML and LaTeX, a `width` or `wrap-gap` value that is not a length or a
-  percent prints a warning, and the document default applies.
+  not wrap. In HTML, LaTeX, and Typst the render prints a warning for it.
+- In HTML, LaTeX, and Typst, a `width` or `wrap-gap` value that is not a
+  length or a percent prints a warning, and the document default applies.
 - The sides are physical. In a right-to-left document, `.wrap-right` still
   puts the figure on the right.
 - A long caption wraps inside the figure box.

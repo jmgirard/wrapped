@@ -6,9 +6,11 @@
 -- figures that keep a normal layout: those in a context that cannot wrap,
 -- such as a list or the margin, and those with no paragraph after them.
 -- LaTeX output puts each wrapped figure in the wrappedfigure environment of
--- wrapped.tex, which calls wrapfig. A two-column LaTeX document and every
--- other format keep a normal figure. A figure with no wrap class is left as
--- it is in every format.
+-- wrapped.tex, which calls wrapfig. Typst output puts each wrapped figure
+-- and the paragraphs of its group in a wrap-content call from the bundled
+-- wrap-it package. A two-column LaTeX document and every other format keep
+-- a normal figure. A figure with no wrap class is left as it is in every
+-- format.
 
 local SIDES = { ["wrap-left"] = "left", ["wrap-right"] = "right" }
 
@@ -29,17 +31,19 @@ local is_html = quarto.doc.is_format("html:js")
 -- PDF through LaTeX. Beamer is a separate format and keeps a normal figure.
 -- The first pass sets is_latex to false for a two-column document.
 local is_latex = FORMAT == "latex"
+-- PDF through Typst.
+local is_typst = FORMAT == "typst"
 local two_column = false
 -- found_wrap: a figure or image carries a wrap class, so a format that
 -- cannot wrap prints its one warning. placed: a figure or image wraps, so
--- the document needs the stylesheet or the LaTeX environment.
+-- the document needs the stylesheet, the LaTeX environment, or wrap-it.
 local found_wrap = false
 local placed = false
 
 -- True in a format that wraps, which prints a warning for each figure that
 -- keeps its normal layout.
 local function wraps()
-  return is_html or is_latex
+  return is_html or is_latex or is_typst
 end
 
 -- CSS units that a width, gap, or breakpoint may use, in lowercase.
@@ -138,6 +142,73 @@ local function checked_tex_length(value, fallback, what, where)
   return tex_length(fallback)
 end
 
+-- Lengths that Typst reads as written: absolute units and em.
+local TYPST_UNITS = { pt = true, mm = true, cm = true, ["in"] = true, em = true }
+
+-- Returns the Typst length for a CSS length from css_length, or nil when
+-- Typst has no such length. A percent stays a percent. A px length is 0.75
+-- pt for each px, as in CSS, and a pc length is 12 pt. Typst reads units
+-- only in lowercase.
+local function typst_length(length)
+  local num, unit = length:match("^(%d*%.?%d+)(%a*%%?)$")
+  if not num then return nil end
+  if unit == "%" then return num .. "%" end
+  unit = unit:lower()
+  if unit == "px" then return tex_number(tonumber(num) * 0.75) .. "pt" end
+  if unit == "pc" then return tex_number(tonumber(num) * 12) .. "pt" end
+  if TYPST_UNITS[unit] then return num .. unit end
+  return nil
+end
+
+-- Returns the Typst length for a value, or the Typst length of `fallback`
+-- with a warning when the value is not a length that Typst can use.
+local function checked_typst_length(value, fallback, what, where)
+  local length = checked_length(value, fallback, what, where)
+  local typ = typst_length(length)
+  if typ then return typ end
+  quarto.log.warning(string.format(
+    'wrapped: %s "%s" on %s is not a length that Typst can use, so it is %s.',
+    what, length, where, fallback))
+  return typst_length(fallback)
+end
+
+-- True for a Typst percent of 100% or more. A box that wide leaves wrap-it
+-- no room for the text. At 100% the text runs one word to a line outside
+-- the text area, and above 100% part of it drops from the page.
+local function typst_too_wide(length)
+  local n = length:match("^(%d*%.?%d+)%%$")
+  return n ~= nil and tonumber(n) >= 100
+end
+
+-- The opening of a wrap-content call, which takes the figure box as its
+-- first argument. The width sets the box's grid column, where a percent is
+-- a share of the text width. Set on the box itself, a percent would be a
+-- share of the box's own measured column. wrap-it's grid follows the text
+-- direction, so the helpers in TYPST_HEADER turn the physical side into
+-- the side wrap-it reads, in context.
+local function typst_open(class, width, gap, where)
+  local side = SIDES[class]
+  local w = checked_typst_length(width, options.width, "width", where)
+  if typst_too_wide(w) then
+    quarto.log.warning(string.format(
+      'wrapped: width "%s" on %s leaves no room for text in Typst, so it is %s.',
+      w, where, options.width))
+    w = typst_length(options.width)
+  end
+  return string.format(
+    "#context wrap-content(align: top + wrapped-side(%s), columns: wrapped-columns(%s, %s), column-gutter: %s, box(width: 100%%)[",
+    side, side, w, checked_typst_length(gap, options.gap, "wrap-gap", where))
+end
+
+-- The Typst header: the wrap-it import and the side helpers. Typst takes a
+-- text's direction from `dir`, or from its language when `dir` is auto, and
+-- these are the languages that Typst sets right to left.
+local TYPST_HEADER = [[
+#import "@preview/wrap-it:0.1.1": wrap-content
+#let wrapped-rtl() = text.dir == rtl or (text.dir == auto and text.lang in ("ar", "dv", "fa", "he", "ks", "pa", "ps", "sd", "ug", "ur", "yi"))
+#let wrapped-side(side) = if wrapped-rtl() { if side == right { left } else { right } } else { side }
+#let wrapped-columns(side, width) = if wrapped-side(side) == right { (1fr, width) } else { (width, 1fr) }]]
+
 -- The custom properties for a wrapped box, followed by any style the user
 -- set on it.
 local function style_for(width, gap, where, existing)
@@ -186,14 +257,24 @@ end
 -- Cleans an image in a wrapped figure, so the image fills the figure box.
 -- HTML removes the width. LaTeX sets the width to the box width. An image
 -- with a height keeps it and loses its width, so Pandoc fits the image in
--- the box width and the height and keeps its shape. Elsewhere the image
--- keeps its width.
+-- the box width and the height and keeps its shape. Typst sets the width to
+-- the box width and removes the height, because Typst does not fit an image
+-- with a height in the box: an image wider than the box is cut off at its
+-- edges. Elsewhere the image keeps its width.
 local function clean_image(img)
   drop_wrap(img)
   if is_html then
     img.attributes.width = nil
   elseif is_latex then
     img.attributes.width = (img.attributes.height == nil) and "100%" or nil
+  elseif is_typst then
+    if img.attributes.height then
+      quarto.log.warning(string.format(
+        "wrapped: Typst does not use the height of the image %s in a wrapped figure, so the image fills the box width.",
+        pandoc.utils.stringify(img.src)))
+    end
+    img.attributes.width = "100%"
+    img.attributes.height = nil
   end
   return img
 end
@@ -396,13 +477,14 @@ local function names_two_column(classoption)
   return false
 end
 
--- In LaTeX, a metadata width or gap that LaTeX cannot use, such as 50vw,
--- gives way to the default with a warning.
-local function tex_default(key, what)
-  if tex_length(options[key]) then return end
+-- In LaTeX and Typst, a metadata width or gap that the format cannot use,
+-- such as 50vw, gives way to the default with a warning. `convert` is
+-- tex_length or typst_length, and `name` names the format.
+local function format_default(key, what, convert, name)
+  if convert(options[key]) then return end
   quarto.log.warning(string.format(
-    'wrapped: %s "%s" in the wrapped metadata is not a length that LaTeX can use, so it is %s.',
-    what, options[key], DEFAULTS[key]))
+    'wrapped: %s "%s" in the wrapped metadata is not a length that %s can use, so it is %s.',
+    what, options[key], name, DEFAULTS[key]))
   options[key] = DEFAULTS[key]
 end
 
@@ -423,8 +505,17 @@ local function read_meta(meta)
   options.breakpoint = checked_length(m.breakpoint, DEFAULTS.breakpoint, "breakpoint",
     "the wrapped metadata", true)
   if is_latex then
-    tex_default("width", "width")
-    tex_default("gap", "gap")
+    format_default("width", "width", tex_length, "LaTeX")
+    format_default("gap", "gap", tex_length, "LaTeX")
+  elseif is_typst then
+    format_default("width", "width", typst_length, "Typst")
+    format_default("gap", "gap", typst_length, "Typst")
+    if typst_too_wide(typst_length(options.width)) then
+      quarto.log.warning(string.format(
+        'wrapped: width "%s" in the wrapped metadata leaves no room for text in Typst, so it is %s.',
+        options.width, DEFAULTS.width))
+      options.width = DEFAULTS.width
+    end
   end
 end
 
@@ -433,6 +524,10 @@ end
 local wrapped_ids = {}
 local wrapped_cells = {}
 local next_token = 0
+
+-- In Typst, the opening of each wrapped float's wrap-content call, by the
+-- float's custom id, cell floats included.
+local typst_opens = {}
 
 -- The wrap class of a code cell, carried to the floats inside that cell.
 -- `remaining` counts the cell's floats, figures and tables, so a cell with
@@ -456,7 +551,7 @@ local function cell_div(div)
     next_token = next_token + 1
     local token = tostring(next_token)
     carry = { class = c, remaining = n, token = token }
-    if is_html then div.attributes["data-wrap-anchor"] = token end
+    if is_html or is_typst then div.attributes["data-wrap-anchor"] = token end
   end
   return div
 end
@@ -517,8 +612,14 @@ local function float_target(float)
     float.attributes["fig-pos"] = tex_options(class, width, gap, lines, "#" .. float.identifier)
     return float
   end
-  float.classes:insert(class)
-  float.attributes.style = style_for(width, gap, "#" .. float.identifier, float.attributes.style)
+  if is_typst then
+    if custom_id then
+      typst_opens[custom_id] = typst_open(class, width, gap, "#" .. float.identifier)
+    end
+  else
+    float.classes:insert(class)
+    float.attributes.style = style_for(width, gap, "#" .. float.identifier, float.attributes.style)
+  end
   if carried then
     wrapped_cells[token] = true
   else
@@ -554,8 +655,9 @@ local function figure_block(fig)
     fig.attributes["fig-pos"] = tex_options(class, width, gap, lines, where)
     return fig, false
   end
-  local box = pandoc.Div({ fig }, pandoc.Attr("", { "wrapped-image", class },
-    { style = style_for(width, gap, where, nil) }))
+  local attrs = is_typst and { ["data-wrap-open"] = typst_open(class, width, gap, where) }
+    or { style = style_for(width, gap, where, nil) }
+  local box = pandoc.Div({ fig }, pandoc.Attr("", { "wrapped-image", class }, attrs))
   return box, false
 end
 
@@ -584,6 +686,22 @@ local function wrapped_image_div(img)
   img.attributes["wrap-lines"] = nil
   return pandoc.Div({ pandoc.Plain({ img }) }, pandoc.Attr("", { "wrapped-image", class },
     { style = style_for(width, gap, pandoc.utils.stringify(img.src), nil) }))
+end
+
+-- In Typst, an image with no caption goes in a .wrapped-image box that the
+-- grouping pass opens into a wrap-content call. As in LaTeX, an image with
+-- fig-alt and no description takes fig-alt as its description.
+local function wrapped_image_typst(img)
+  local class = wrap_class(img.classes)
+  local open = typst_open(class, img.attributes.width, img.attributes["wrap-gap"],
+    pandoc.utils.stringify(img.src))
+  clean_image(img)
+  local alt = img.attributes["fig-alt"]
+  if alt and #img.caption == 0 then
+    img.caption = pandoc.Inlines(alt)
+  end
+  return pandoc.Div({ pandoc.Plain({ img }) }, pandoc.Attr("", { "wrapped-image", class },
+    { ["data-wrap-open"] = open }))
 end
 
 -- In LaTeX, an image with no caption goes in a raw wrappedfigure. The image
@@ -671,9 +789,49 @@ local function find_no_text(doc)
   })
 end
 
+-- In Typst, a group's blocks as one wrap-content call: the figure in the
+-- box of the first argument, and the paragraphs in the second, as raw
+-- blocks around them (spike S3). A .wrapped-image box gives up its
+-- content. A code cell keeps its code and other output above the call,
+-- and gives its wrapped floats to the box.
+local function typst_group(members)
+  local first = members[1]
+  local before, fixed = pandoc.Blocks({}), pandoc.Blocks({})
+  local open
+  if first.classes:includes("wrapped-image") then
+    open = first.attributes["data-wrap-open"]
+    fixed:extend(first.content)
+  elseif first.classes:includes("cell") then
+    first.content = first.content:walk({
+      Div = function(d)
+        local o = typst_opens[d.attributes.__quarto_custom_id or ""]
+        if not (is_float_div(d) and o) then return nil end
+        open = open or o
+        fixed:insert(d)
+        return {}
+      end,
+    })
+    before:insert(first)
+  else
+    open = typst_opens[first.attributes.__quarto_custom_id]
+    fixed:insert(first)
+  end
+  -- A .wrapped-image div that the filter did not make has no opening, so
+  -- its group keeps its blocks as they are.
+  if not open then return members end
+  local out = before
+  out:insert(pandoc.RawBlock("typst", open))
+  out:extend(fixed)
+  out:insert(pandoc.RawBlock("typst", "], ["))
+  for i = 2, #members do out:insert(members[i]) end
+  out:insert(pandoc.RawBlock("typst", "])"))
+  return out
+end
+
 -- Groups each wrapped figure with the paragraphs after it. The group stops
 -- at the first block that is not a paragraph (the stop rule). The group's
--- CSS contains its float, so the stop block starts below the figure.
+-- CSS contains its float, so the stop block starts below the figure. In
+-- Typst the group is a wrap-content call instead.
 local function group_blocks(blocks)
   local out = pandoc.List()
   local i = 1
@@ -686,6 +844,9 @@ local function group_blocks(blocks)
       if is_html then
         placed = true
         members = pandoc.List({ wrapped_image_div(img) })
+      elseif is_typst then
+        placed = true
+        members = pandoc.List({ wrapped_image_typst(img) })
       elseif is_latex then
         placed = true
         out:extend(wrapped_image_tex(img))
@@ -711,7 +872,11 @@ local function group_blocks(blocks)
         members:insert(blocks[i])
         i = i + 1
       end
-      out:insert(pandoc.Div(members, pandoc.Attr("", { "wrap-group" })))
+      if is_typst then
+        out:extend(typst_group(members))
+      else
+        out:insert(pandoc.Div(members, pandoc.Attr("", { "wrap-group" })))
+      end
     else
       out:insert(b)
       i = i + 1
@@ -778,6 +943,11 @@ local function finish(doc)
     if placed then
       quarto.doc.use_latex_package("wrapfig")
       quarto.doc.include_file("in-header", "wrapped.tex")
+    end
+  elseif is_typst then
+    -- Quarto loads the package from the extension's typst/packages folder.
+    if placed then
+      quarto.doc.include_text("in-header", TYPST_HEADER)
     end
   elseif two_column and found_wrap then
     quarto.log.warning(

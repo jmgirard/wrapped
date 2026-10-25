@@ -14,7 +14,10 @@ of every image, and the members of every .wrap-group. Style declarations
 are sorted, so their order does not count. For PDF it also holds the kind,
 label, and options of each figure environment and the options of its
 \includegraphics, and for Typst the label of each #figure( call and
-whether its image keeps a width. For Word
+whether its image keeps a width. For Typst it also holds each
+wrap-content call's options, the figure label or image in its box and its
+alt text, the kind of each block beside the box ("p" for a paragraph), the
+number of citations there, and the number of calls it could not read. For Word
 it also holds each image's width from word/document.xml. A revealjs
 snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
 book project: its snapshot holds the HTML parts of each page under _book/,
@@ -49,16 +52,23 @@ RENDERS = [
     ("fixture", "docx", True),
     ("defaults", "html", True),
     ("defaults", "pdf", True),
+    ("defaults", "typst", True),
     ("meta-breakpoint", "html", True),
     ("meta-string", "html", True),
     ("contexts", "html", True),
     ("contexts", "pdf", True),
+    ("contexts", "typst", True),
     ("stop-rule", "pdf", True),
+    ("stop-rule", "typst", True),
     ("twocolumn", "pdf", True),
     ("twocolumn-list", "pdf", True),
     ("pdf-ua", "pdf", True),
     ("pdf-ua1", "pdf", True),
     ("tex-options", "pdf", True),
+    ("typst-break", "typst", True),
+    ("typst-ua", "typst", True),
+    ("typst-rtl", "typst", True),
+    ("typst-options", "typst", True),
     ("book", "html", True),
     ("revealjs", "revealjs", True),
     ("margin", "html", False),
@@ -245,15 +255,63 @@ def tex_summary(path):
     return "\n".join(lines)
 
 
+TYPST_WRAP_START = re.compile(r"^#context wrap-content\(", re.M)
+TYPST_WRAP = re.compile(
+    r"^#context wrap-content\(([^\n]*), box\(width: 100%\)\[\n(.*?)^\], \[\n(.*?)^\]\)$", re.M | re.S
+)
+# Typst calls that Pandoc and Quarto write as blocks. Any other text, inline
+# calls such as #strike[ or #footnote[ included, starts a paragraph.
+TYPST_BLOCKS = (
+    "#block", "#figure", "#table", "#grid", "#Skylighting", "#wrap-content", "#context",
+    "#callout", "#quote", "#line(", "#pagebreak", "#v(", "#align(", "#pad(", "#columns(",
+)
+
+
+def typ_block_kind(block):
+    if block.startswith("="):
+        return "heading"
+    if block.startswith(("- ", "+ ")) or re.match(r"\d+\. ", block):
+        return "list"
+    if block.startswith("/ "):
+        return "terms"
+    if block.startswith("```"):
+        return "code"
+    if block.startswith(TYPST_BLOCKS):
+        return "block"
+    return "p"
+
+
 def typ_summary(path):
     # A body figure's #figure( call starts a line, unlike the one in Quarto's
-    # template. Each call runs to the next one, and its label follows it.
-    chunks = re.split(r"^#figure\(", path.read_text(encoding="utf-8"), flags=re.M)[1:]
+    # template. Each chunk runs to the next call, and the figure's label is
+    # the first one in it. The figure's content ends before its `kind:` line.
+    source = path.read_text(encoding="utf-8")
+    chunks = re.split(r"^#figure\(", source, flags=re.M)[1:]
     lines = []
     for chunk in chunks:
         label = re.search(r"^<((?:fig|tbl)-[\w-]+)>", chunk, re.M)
-        width = re.search(r"image\([^)]*width:", chunk) is not None
+        content = chunk.split("\nkind: ", 1)[0]
+        width = re.search(r"image\([^)]*width:", content) is not None
         lines.append(f"figure: {label.group(1) if label else '-'} image-width={'yes' if width else 'no'}")
+    # The filter writes each wrap-content call as raw lines around the box
+    # content and the paragraphs, which Typst output separates by blank lines.
+    # Each block beside the box is named by its kind, and a count of
+    # citations follows. A call that the pattern cannot read is counted.
+    lines.append("# wraps")
+    calls = TYPST_WRAP.findall(source)
+    for options, fixed, body in calls:
+        label = re.search(r"^<((?:fig|tbl)-[\w-]+)>", fixed, re.M)
+        image = re.search(r'image\("([^"]*)"', fixed)
+        box = label.group(1) if label else Path(image.group(1)).name if image else "-"
+        alt_text = re.search(r'image\([^)]*alt: "([^"]*)"', fixed)
+        alt = f'alt="{alt_text.group(1)}"' if alt_text else "no-alt"
+        blocks = [typ_block_kind(b.strip()) for b in re.split(r"\n\s*\n", body) if b.strip()]
+        # A narrative citation is a #cite( call, and a bracketed one is @key.
+        cites = len(re.findall(r"#cite\(|(?<![\w.@])@[\w:-]+", body))
+        lines.append(f"{options} | {box} {alt} | {', '.join(blocks)} | cites={cites}")
+    unread = len(TYPST_WRAP_START.findall(source)) - len(calls)
+    if unread:
+        lines.append(f"unread wrap-content calls: {unread}")
     return "\n".join(lines)
 
 
