@@ -62,7 +62,9 @@ The paragraph after the table. Lorem ipsum dolor sit amet, consectetur adipiscin
 
   The paragraph after the figure in the list item. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-- A second item.
+- ![](plot.png){.wrap-left width="20%"}
+
+  The paragraph after an image with no caption in the list item. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## E8: a callout
 
@@ -82,7 +84,9 @@ The paragraph after the figure in the column. Lorem ipsum dolor sit amet, consec
 :::
 
 ::: {.column width="50%"}
-The other column.
+![A captioned image with no id in the column.](plot.png){.wrap-left}
+
+The paragraph after the captioned image with no id in the column.
 :::
 ::::
 
@@ -103,6 +107,14 @@ The other tab.
 ## E6: a figure before a heading
 
 ![A figure before a heading.](plot.png){#fig-before-heading .wrap-right}
+
+### A captioned image with no id before a heading
+
+![A captioned image with no id before a heading.](plot.png){.wrap-right}
+
+### An image with no caption before a heading
+
+![](plot.png){.wrap-left width="20%"}
 
 ## E7: two figures in a row
 

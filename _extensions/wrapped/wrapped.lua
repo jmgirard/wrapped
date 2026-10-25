@@ -139,6 +139,10 @@ local function is_float_div(div)
   return div.attributes.__quarto_custom_type == "FloatRefTarget"
 end
 
+-- Custom ids of floats whose next block is not a paragraph, from the
+-- next-block pass.
+local no_text = {}
+
 -- Why a float keeps its normal layout, as "is in a list", by the float's
 -- custom id. The float pass gives each such float with a wrap class a
 -- normal layout and a warning.
@@ -328,11 +332,15 @@ local function float_target(float)
     or context_of_float[custom_id or ""]
     or margin_context(float.classes)
     or (layout and "is a subfigure panel")
-  if context then
+  -- A figure with no paragraph after it keeps a normal figure with no
+  -- warning (the next-block rule).
+  if context or no_text[custom_id or ""] then
     float.content = float.content:walk({ Image = drop_wrap })
     float.attributes["wrap-gap"] = nil
-    context_warning(string.format("the %s #%s",
-      float.type == "Figure" and "figure" or "table", float.identifier), context)
+    if context then
+      context_warning(string.format("the %s #%s",
+        float.type == "Figure" and "figure" or "table", float.identifier), context)
+    end
     return float
   end
   float.content = clean_images(float.content)
@@ -418,6 +426,56 @@ local function joins_group(block)
   if block.t == "Para" then return lone_wrapped_image(block) == nil end
   return block.t == "RawBlock" and block.format:match("html") ~= nil
     and is_comment(block.text)
+end
+
+-- True when the first block after blocks[i] that is not a comment is a
+-- paragraph that joins a group.
+local function text_follows(blocks, i)
+  for j = i + 1, #blocks do
+    if not joins_group(blocks[j]) then return false end
+    if blocks[j].t == "Para" then return true end
+  end
+  return false
+end
+
+-- The next-block rule. A wrapped figure whose next block is not a
+-- paragraph has no text to wrap, so it keeps a normal figure with no
+-- warning. A float or a code cell has its floats recorded for the float
+-- pass. A captioned image with no id, or an image with no caption, loses
+-- its wrap class here. Runs before the float pass, on the blocks as written.
+local function no_text_blocks(blocks)
+  for i, b in ipairs(blocks) do
+    if not text_follows(blocks, i) then
+      if b.t == "Div" and (is_float_div(b) or b.classes:includes("cell")) then
+        pandoc.Blocks({ b }):walk({
+          Div = function(d)
+            if is_float_div(d) then no_text[d.attributes.__quarto_custom_id] = true end
+          end,
+        })
+      elseif b.t == "Figure" and (wrap_class(b.classes) or image_wrap(b.content)) then
+        found_wrap = true
+        strip_wrap(b.classes)
+        b.content = b.content:walk({ Image = drop_wrap })
+        blocks[i] = b
+      elseif lone_wrapped_image(b) then
+        found_wrap = true
+        blocks[i] = b:walk({ Image = drop_wrap })
+      end
+    end
+  end
+  return blocks
+end
+
+-- Applies the next-block rule to every list of blocks except those inside
+-- a code cell or a float, where a figure is the last block by design.
+local function find_no_text(doc)
+  return doc:walk({
+    traverse = "topdown",
+    Blocks = no_text_blocks,
+    Div = function(div)
+      if is_float_div(div) or div.classes:includes("cell") then return nil, false end
+    end,
+  })
 end
 
 -- Groups each wrapped figure with the paragraphs after it. The group stops
@@ -527,6 +585,7 @@ end
 return {
   { Meta = read_meta },
   { Pandoc = find_contexts },
+  { Pandoc = find_no_text },
   {
     traverse = "topdown",
     Div = cell_div,
