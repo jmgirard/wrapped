@@ -123,3 +123,15 @@ Evidence gathered 2026-10-25 on branch head cb530ea, Quarto 1.10.19, `main` at b
 - ripple #4: `tests/fixture.qmd` prose at `#fig-clamp` names only LaTeX — fix now, with a LaTeX page check
 - ripple #5: the Typst candidate row still asks for the citation — reject, planned change: step 9 hygiene graduates the row
 - ripple #6: the W2 and W4 rows name `post-render` fallbacks — reject, false: they describe planned LaTeX and Word paths, still accurate as plans
+- Fix-now items of pass 1 landed in 5c56778 and 12bd0fc (T6): diff-bug #1 to #5 and #7 (alt part), blame-history #1 and #2, prior-review #1 to #4, ripple #1 to #4.
+
+Pass 2 evidence, 2026-10-25, head 12bd0fc, `main` at bd9a291 (unchanged).
+
+- AC1 (pass 2): fixture Typst render exit 0, import present, no "yet" warning; 15 calls for 15 HTML groups, each matching in box content and paragraphs; `align: top + wrapped-side(<side>)` names the figure's side; the new summary names no non-paragraph block and no unread call.
+- AC2 (pass 2): caches emptied as in pass 1; planted marker 15 lines, removed 0; bundled file restored to blob 3312efb, cache restored, tree clean.
+- AC3 (pass 2): page images 1 to 8 are pixel-identical (md5) to pass 1 except page 6, whose `#fig-clamp` prose changed; page 6 read again, each figure beside its text and each next block below it.
+- AC4 (pass 2): box 129.6 pt of 432 pt = 30.00%; the conversions in the snapshots are unchanged in value (the call form now reads `wrapped-columns(<side>, <width>)`); verify green.
+- AC5 (pass 2): page 1 text line 4 "Smith and J. Doe [1]"; typst-break page 1 holds neither the caption nor the group's first paragraph, page 2 holds both; page images identical to pass 1.
+- AC6 (pass 2): `pdfinfo -struct` lists both Figure alt texts.
+- AC7 (pass 2): stop-rule 11 calls and contexts 1 call match their HTML groups; warnings equal to HTML (0 and 14).
+- Gate (pass 2): `cairn_validate.py` all checks passed; `tests/verify.py` "all 29 renders pass" at 12bd0fc; version marker unchanged at 0.1.0; changelog "none".
