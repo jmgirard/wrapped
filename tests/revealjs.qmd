@@ -1,0 +1,12 @@
+---
+title: "wrapped fixture: revealjs"
+filters:
+  - wrapped
+format: revealjs
+---
+
+## A wrapped figure on a slide
+
+![A wrapped figure on a slide.](plot.png){#fig-slide .wrap-right width="40%"}
+
+The paragraph after the figure sits beside it on the slide. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

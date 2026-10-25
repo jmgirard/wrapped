@@ -1,0 +1,63 @@
+# warnings
+1x wrapped: a figure with no id is in a column layout, so it does not wrap.
+1x wrapped: a figure with no id is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-aside is in an aside, so it does not wrap.
+1x wrapped: the figure #fig-callout is in a callout, so it does not wrap.
+1x wrapped: the figure #fig-column is in a column layout, so it does not wrap.
+1x wrapped: the figure #fig-layout-cell is in a panel layout, so it does not wrap.
+1x wrapped: the figure #fig-list is in a list, so it does not wrap.
+1x wrapped: the figure #fig-margin is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-margin-cell is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-panel is a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-sub-wrapped is in a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-tab is in a tabset, so it does not wrap.
+1x wrapped: the image plot.png is in a list, so it does not wrap.
+1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
+# breakpoint
+576px
+# figures
+fig-margin: - style=-
+fig-aside: - style=-
+fig-margin-cell: - style=-
+fig-panel: - style=-
+fig-panel-a: - style=-
+fig-panel-b: - style=-
+fig-plain-panel: - style=-
+fig-sub-wrapped: - style=-
+fig-sub-plain: - style=-
+fig-layout-cell: - style=-
+tbl-wrapped: - style=-
+fig-list: - style=-
+fig-callout: - style=-
+fig-column: - style=-
+fig-tab: - style=-
+fig-before-heading: - style=-
+fig-first: - style=-
+fig-second: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
+# images
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+fig-margin-cell-1.png: wrap=- style=- width=672
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=width:20.0% width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=width:20.0% width=-
+plot.png: wrap=- style=width:30.0% width=-
+plot.png: wrap=- style=- width=-
+# groups
+fig-second, p, p
+# margin containers
+fig-margin: same as without the extension: no-row-height column-margin column-container
+fig-aside: same as without the extension: no-row-height column-margin column-container
+fig-margin-cell: same as without the extension: no-row-height column-margin column-container

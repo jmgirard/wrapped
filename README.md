@@ -4,8 +4,9 @@ wrapped is a Quarto filter extension. It lets body text flow beside a
 figure, to the left or right of it. The figure keeps its number, its
 caption, and its `@fig-` links.
 
-This version wraps figures in HTML output. In every other format, a wrapped
-figure renders as a normal figure, and the render prints one warning.
+This version wraps figures in HTML output, revealjs slides included. In
+every other format, a wrapped figure renders as a normal figure, and the
+render prints one warning.
 Support for PDF through LaTeX, PDF through Typst, and Word is planned.
 Dashboards are not tested yet.
 
@@ -115,6 +116,45 @@ paragraph that you want beside the figure:
 :::
 ```
 
+A wrapped figure with no paragraph right after it keeps its normal layout.
+An example is a figure right before a heading. In HTML the render prints
+no warning for such a figure. The places in the next section are the
+exception. Of two wrapped figures in a row, the first keeps its
+normal layout, and the second wraps the paragraphs after it.
+
+## Where a figure keeps its normal layout
+
+In HTML, a wrapped figure in one of these places does not wrap. It keeps
+its normal layout, and the render prints one warning for it. The warning
+names the figure's id. If the figure has no id, the warning names its image
+file or says that the figure has no id.
+
+- The margin: a figure with the `.column-margin` class, a figure in a
+  `.column-margin` or `.aside` div, or a code cell with `#| column: margin`.
+  The figure stays in the margin.
+- A subfigure panel, such as a figure div with `layout-ncol`, or a
+  subfigure inside a panel.
+- A panel layout: a div or a code cell with `layout-ncol`, `layout-nrow`,
+  or `layout`.
+- A list, a callout, a `.columns` layout, or a tabset.
+
+A table float does not wrap either, and the render prints one warning that
+names it. A `#tbl-` div or a code cell with a `tbl-` label makes a table
+float.
+
+## Slides
+
+In revealjs slides, a wrapped figure floats beside the paragraphs after it
+on the same slide, as on an HTML page:
+
+```markdown
+## Results
+
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width="40%"}
+
+Ratings rose in both conditions.
+```
+
 ## Notes
 
 - A captioned image with no `#fig-` id wraps too. It has no figure number.
@@ -125,4 +165,5 @@ paragraph that you want beside the figure:
 - The sides are physical. In a right-to-left document, `.wrap-right` still
   puts the figure on the right.
 - A long caption wraps inside the figure box.
-- A page with margin content, such as `.column-margin`, still wraps.
+- If a page has margin content, such as a `.column-margin` note, a figure
+  in the body of the page still wraps.

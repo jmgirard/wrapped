@@ -1,9 +1,12 @@
 -- wrapped: wrap body text around figures marked .wrap-left or .wrap-right.
 --
--- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output
--- floats each wrapped figure inside a .wrap-group div that also holds the
--- paragraphs after it. Every other format keeps a normal figure. A figure
--- with no wrap class is left as it is in every format.
+-- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output,
+-- revealjs included, floats each wrapped figure inside a .wrap-group div
+-- that also holds the paragraphs after it. Two passes first find the
+-- figures that keep a normal layout: those in a context that cannot wrap,
+-- such as a list or the margin, and those with no paragraph after them.
+-- Every other format keeps a normal figure. A figure with no wrap class is
+-- left as it is in every format.
 
 local SIDES = { ["wrap-left"] = "left", ["wrap-right"] = "right" }
 
@@ -21,7 +24,11 @@ local options = {
 }
 
 local is_html = quarto.doc.is_format("html:js")
+-- found_wrap: a figure or image carries a wrap class, so a format that
+-- cannot wrap prints its one warning. placed: an HTML figure or image
+-- wraps, so the page needs the stylesheet.
 local found_wrap = false
+local placed = false
 
 -- CSS units that a width, gap, or breakpoint may use, in lowercase.
 local UNITS = {
@@ -93,11 +100,21 @@ local function style_for(width, gap, where, existing)
   return style
 end
 
+-- True for a Div that stands for a Quarto float in a plain walk.
+local function is_float_div(div)
+  return div.attributes.__quarto_custom_type == "FloatRefTarget"
+end
+
 -- Reads the first wrap class, width, and wrap-gap of the images in a list
--- of blocks, and changes nothing.
+-- of blocks, and changes nothing. The images of a subfigure belong to the
+-- subfigure, not to its panel, so the walk skips nested floats.
 local function image_wrap(blocks)
   local class, width, gap
   blocks:walk({
+    traverse = "topdown",
+    Div = function(d)
+      if is_float_div(d) then return nil, false end
+    end,
     Image = function(img)
       class = class or wrap_class(img.classes)
       width = width or img.attributes.width
@@ -134,6 +151,154 @@ local function count_floats(div)
   return n
 end
 
+-- Custom ids of floats whose next block is not a paragraph, from the
+-- next-block pass.
+local no_text = {}
+
+-- Why a float keeps its normal layout, as "is in a list", by the float's
+-- custom id. The float pass gives each such float with a wrap class a
+-- normal layout and a warning.
+local context_of_float = {}
+
+-- Returns the context that a margin class names, or nil.
+local function margin_context(classes)
+  if classes:includes("column-margin") then return "is in the margin" end
+  if classes:includes("aside") then return "is in an aside" end
+  return nil
+end
+
+-- Returns the context that a block sets for the blocks inside it, or nil.
+-- A code cell with `column: margin` carries the column-margin class.
+local function block_context(block)
+  if block.t == "BulletList" or block.t == "OrderedList" then return "is in a list" end
+  if block.t ~= "Div" then return nil end
+  local kind = block.attributes.__quarto_custom_type
+  if kind == "Callout" then return "is in a callout" end
+  if kind == "Tabset" or block.classes:includes("panel-tabset") then return "is in a tabset" end
+  if block.classes:includes("columns") or block.classes:includes("column") then
+    return "is in a column layout"
+  end
+  -- A div or a code cell with a layout attribute lays out its content in a
+  -- grid of panels.
+  local attrs = block.attributes
+  if attrs["layout-ncol"] or attrs["layout-nrow"] or attrs.layout then
+    return "is in a panel layout"
+  end
+  return margin_context(block.classes)
+end
+
+-- A context warning, printed in HTML only. Other formats print the one
+-- format warning instead.
+local function context_warning(subject, context)
+  if is_html then
+    quarto.log.warning(string.format("wrapped: %s %s, so it does not wrap.", subject, context))
+  end
+end
+
+-- Removes the wrap class and wrap-gap from an image, and keeps its width.
+local function drop_wrap(img)
+  strip_wrap(img.classes)
+  img.attributes["wrap-gap"] = nil
+  return img
+end
+
+-- Records the floats in a list of blocks, subfloats included, by custom id.
+local function record_floats(blocks, context)
+  blocks:walk({
+    Div = function(d)
+      local id = d.attributes.__quarto_custom_id
+      if is_float_div(d) and id then
+        context_of_float[id] = context_of_float[id] or context
+      end
+    end,
+  })
+end
+
+-- Records each float in a context's blocks, and gives each wrapped figure
+-- or image there a normal layout with a warning. A float warns later, in
+-- the float pass, where its own id is known.
+local function mark_context(blocks, context)
+  return blocks:walk({
+    traverse = "topdown",
+    Div = function(div)
+      if not is_float_div(div) then return nil end
+      record_floats(pandoc.Blocks({ div }), context)
+      return nil, false
+    end,
+    Figure = function(fig)
+      if not (wrap_class(fig.classes) or image_wrap(fig.content)) then return nil end
+      found_wrap = true
+      strip_wrap(fig.classes)
+      fig.content = fig.content:walk({ Image = drop_wrap })
+      context_warning(fig.identifier ~= "" and ("the figure #" .. fig.identifier)
+        or "a figure with no id", context)
+      return fig, false
+    end,
+    Image = function(img)
+      if not wrap_class(img.classes) then return nil end
+      found_wrap = true
+      context_warning("the image " .. pandoc.utils.stringify(img.src), context)
+      return drop_wrap(img)
+    end,
+  })
+end
+
+-- Finds the lists, callouts, column layouts, panel layouts, tabsets,
+-- asides, margin blocks, and subfigure panels, outermost first, and marks
+-- what is inside each one. A float that holds other floats is a subfigure
+-- panel. A captioned image with no id, or an image, with its own margin
+-- class is in the margin too. A float's own margin class is read in the
+-- float pass.
+local function find_contexts(doc)
+  local function mark(block)
+    if block.t == "Div" and is_float_div(block) then
+      local inner = pandoc.Blocks({})
+      block.content:walk({
+        Div = function(d) if is_float_div(d) then inner:insert(d) end end,
+      })
+      local id = block.attributes.__quarto_custom_id
+      if #inner > 0 and id then
+        context_of_float[id] = context_of_float[id] or "is a subfigure panel"
+        record_floats(inner, "is in a subfigure panel")
+      end
+      return nil, false
+    end
+    local context = block_context(block)
+    if not context then return nil end
+    if block.t == "Div" then
+      block.content = mark_context(block.content, context)
+    else
+      for i, item in ipairs(block.content) do
+        block.content[i] = mark_context(item, context)
+      end
+    end
+    return block, false
+  end
+  local function own_margin(fig)
+    local context = margin_context(fig.classes)
+    fig.content:walk({
+      Image = function(img) context = context or margin_context(img.classes) end,
+    })
+    if not context then return nil end
+    return mark_context(pandoc.Blocks({ fig }), context), false
+  end
+  doc.blocks = doc.blocks:walk({
+    traverse = "topdown",
+    Div = mark,
+    BulletList = mark,
+    OrderedList = mark,
+    Figure = own_margin,
+    Image = function(img)
+      local context = margin_context(img.classes)
+      if not (context and wrap_class(img.classes)) then return nil end
+      found_wrap = true
+      context_warning("the image " .. pandoc.utils.stringify(img.src), context)
+      return drop_wrap(img)
+    end,
+  })
+  return doc
+end
+
 local function read_meta(meta)
   local m = meta.wrapped
   if m == nil then return end
@@ -156,7 +321,8 @@ local next_token = 0
 
 -- The wrap class of a code cell, carried to the floats inside that cell.
 -- `remaining` counts the cell's floats, figures and tables, so a cell with
--- no float carries nothing. Only figures take the class.
+-- no float carries nothing. Only figures wrap: a table float that takes the
+-- class keeps its normal layout.
 local carry = nil
 
 local function cell_div(div)
@@ -188,18 +354,33 @@ local function float_target(float)
     carry.remaining = carry.remaining - 1
     carried, token = carry.class, carry.token
   end
-  -- Only figures wrap. A table float keeps its normal layout, and Quarto
-  -- copies a cell's classes onto a table float, so the wrap class goes.
-  if float.type ~= "Figure" then
-    if not wrap_class(float.classes) then return nil end
-    strip_wrap(float.classes)
-    return float
-  end
   local img_class, img_width, img_gap = image_wrap(float.content)
   local class = wrap_class(float.classes) or carried or img_class
   if not class then return nil end
-  found_wrap = true
+  if float.type == "Figure" then found_wrap = true end
   strip_wrap(float.classes)
+  -- Only figures wrap. A table float keeps its normal layout, and Quarto
+  -- copies a cell's classes onto a table float, so the wrap class goes.
+  -- A figure in a context keeps its normal layout too.
+  local node = float.__quarto_custom_node
+  local custom_id = node and node.attributes and node.attributes.__quarto_custom_id
+  local layout = float.attributes["layout-ncol"] or float.attributes["layout-nrow"]
+    or float.attributes.layout
+  local context = (float.type ~= "Figure" and "is not a figure")
+    or context_of_float[custom_id or ""]
+    or margin_context(float.classes)
+    or (layout and "is a subfigure panel")
+  -- A figure with no paragraph after it keeps a normal figure with no
+  -- warning (the next-block rule).
+  if context or no_text[custom_id or ""] then
+    float.content = float.content:walk({ Image = drop_wrap })
+    float.attributes["wrap-gap"] = nil
+    if context then
+      local noun = ({ Figure = "figure", Table = "table" })[float.type] or "float"
+      context_warning(string.format("the %s #%s", noun, float.identifier), context)
+    end
+    return float
+  end
   float.content = clean_images(float.content)
   if not is_html then return float end
   -- knitr writes the plot's pixel size as a unitless image width. That is
@@ -213,14 +394,13 @@ local function float_target(float)
   float.attributes["wrap-gap"] = nil
   float.classes:insert(class)
   float.attributes.style = style_for(width, gap, "#" .. float.identifier, float.attributes.style)
+  placed = true
   if carried then
     wrapped_cells[token] = true
   else
     -- The grouping pass sees this float as a plain Div that Quarto marks
     -- with the same custom id, so it can find the float by that id.
-    local node = float.__quarto_custom_node
-    local id = node and node.attributes and node.attributes.__quarto_custom_id
-    if id then wrapped_ids[id] = true end
+    if custom_id then wrapped_ids[custom_id] = true end
   end
   return float
 end
@@ -242,6 +422,7 @@ local function figure_block(fig)
   fig.attributes.width = nil
   fig.attributes["wrap-gap"] = nil
   local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
+  placed = true
   local box = pandoc.Div({ fig }, pandoc.Attr("", { "wrapped-image", class },
     { style = style_for(width, gap, where, nil) }))
   return box, false
@@ -287,6 +468,57 @@ local function joins_group(block)
     and is_comment(block.text)
 end
 
+-- True when the first block after blocks[i] that is not a comment is a
+-- paragraph that joins a group.
+local function text_follows(blocks, i)
+  for j = i + 1, #blocks do
+    if not joins_group(blocks[j]) then return false end
+    if blocks[j].t == "Para" then return true end
+  end
+  return false
+end
+
+-- The next-block rule. A wrapped figure whose next block is not a
+-- paragraph has no text to wrap, so it keeps a normal figure with no
+-- warning. A float or a code cell has its floats recorded for the float
+-- pass. A captioned image with no id, or an image with no caption, loses
+-- its wrap class here. Runs before the float pass, on the blocks as written.
+local function no_text_blocks(blocks)
+  for i, b in ipairs(blocks) do
+    if not text_follows(blocks, i) then
+      if b.t == "Div" and (is_float_div(b) or b.classes:includes("cell")) then
+        pandoc.Blocks({ b }):walk({
+          Div = function(d)
+            local id = d.attributes.__quarto_custom_id
+            if is_float_div(d) and id then no_text[id] = true end
+          end,
+        })
+      elseif b.t == "Figure" and (wrap_class(b.classes) or image_wrap(b.content)) then
+        found_wrap = true
+        strip_wrap(b.classes)
+        b.content = b.content:walk({ Image = drop_wrap })
+        blocks[i] = b
+      elseif lone_wrapped_image(b) then
+        found_wrap = true
+        blocks[i] = b:walk({ Image = drop_wrap })
+      end
+    end
+  end
+  return blocks
+end
+
+-- Applies the next-block rule to every list of blocks except those inside
+-- a code cell or a float, where a figure is the last block by design.
+local function find_no_text(doc)
+  return doc:walk({
+    traverse = "topdown",
+    Blocks = no_text_blocks,
+    Div = function(div)
+      if is_float_div(div) or div.classes:includes("cell") then return nil, false end
+    end,
+  })
+end
+
 -- Groups each wrapped figure with the paragraphs after it. The group stops
 -- at the first block that is not a paragraph (the stop rule). The group's
 -- CSS contains its float, so the stop block starts below the figure.
@@ -300,6 +532,7 @@ local function group_blocks(blocks)
     if img then
       found_wrap = true
       if is_html then
+        placed = true
         members = pandoc.List({ wrapped_image_div(img) })
       else
         strip_wrap(img.classes)
@@ -380,10 +613,9 @@ local function add_html_assets()
 end
 
 local function finish(doc)
-  if not found_wrap then return nil end
   if is_html then
-    add_html_assets()
-  else
+    if placed then add_html_assets() end
+  elseif found_wrap then
     quarto.log.warning(string.format(
       "wrapped: %s output does not wrap figures yet, so wrapped figures render as normal figures.",
       FORMAT))
@@ -393,6 +625,8 @@ end
 
 return {
   { Meta = read_meta },
+  { Pandoc = find_contexts },
+  { Pandoc = find_no_text },
   {
     traverse = "topdown",
     Div = cell_div,

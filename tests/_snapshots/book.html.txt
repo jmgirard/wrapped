@@ -1,0 +1,20 @@
+# warnings
+## index.html
+# breakpoint
+576px
+# figures
+fig-book: wrap-right style=--wrap-gap: 1em; --wrap-width: 35%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-book, p
+# xrefs
+
+## two.html
+# breakpoint
+(none)
+# figures
+# images
+# groups
+# xrefs
+xref: index.html#fig-book
