@@ -65,6 +65,7 @@ Wrapped figures render as the research page's edge cases E3 to E8, E13, and E15 
 - 2026-10-25: delegation: claim audit to a fresh Opus reader. It could not open the local server in the browser pane, so the `layout.js` scale comment rests on its code read and on this session's browser run (gap 40 to 36 px after the change).
 - 2026-10-25: claim audit: 54 claims read, 3 corrected — README.md, tests/verify.py
 - 2026-10-25: all tasks done; verify passes (14 renders). Status set to review.
+- 2026-10-25: step-7 approval: m003-context-fallbacks approved for merge
 
 ## Decisions
 
