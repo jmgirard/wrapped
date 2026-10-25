@@ -136,3 +136,26 @@ Pass 2 evidence, 2026-10-25, head 12bd0fc, `main` at bd9a291 (unchanged).
 - AC7 (pass 2): stop-rule 11 calls and contexts 1 call match their HTML groups; warnings equal to HTML (0 and 14).
 - Gate (pass 2): `cairn_validate.py` all checks passed; `tests/verify.py` "all 29 renders pass" at 12bd0fc; version marker unchanged at 0.1.0; changelog "none".
 - spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1 (pass 2): widths of 90% to 99.9%, or a 50% width with a 50% gap, set the text a few words to a line beside the figure with no warning — reject, false as a defect: the width asked for is honored and all text renders, as a float of that width does in HTML; only 100% and above lose text, and that warns
+- diff-bug #2 (pass 2): the summary called paragraphs that open with `#strike[`, `#super[`, `#footnote[`, and similar inline calls "block" — fix now: a block is now named only by a known block form
+- diff-bug #3 (pass 2): the citation count missed the bracketed `@key` form — fix now
+- diff-bug #4 (pass 2): a term list, an ordered list from 3, and a plain code block read as "p"; a call in a table cell is indented and not counted — summary kinds: fix now; a wrapped figure in a table cell or a definition list wraps in Typst — follow-up: absorbed into the candidate "Fall back in other margin and list forms"
+- diff-bug #5 (pass 2): `width="0%"` gives an empty box with no warning — follow-up: new candidate "Warn when a figure width is zero" (HTML takes the same value)
+- diff-bug #6 (pass 2): the `wrapped-` helper names could clash with a user's own Typst names — reject, false: no clash observed; the `wrapped-` prefix is the extension's namespace, as with `.wrap-group` and `.wrapped-image` in HTML
+- ripple #1 (pass 2): the `verify.py` docstring still says one "p" per paragraph — fix now
+- ripple #2 (pass 2): the W3 row's citation risk reads unqualified — reject, false: the row already says S3 did not show it (corrected M001)
+- ripple #3 (pass 2): README says Typst takes the direction from `lang` only, while the helper also reads `text.dir` — fix now
+- ripple #4 (pass 2): `fixture.qmd` prose says Figures 16 and 17 start too near a page bottom, which only the raw LaTeX `\vspace` makes true — reject, planned change: AC3 carves out the near-bottom figures for Typst, `typst-break.qmd` holds the Typst case, and editing those paragraphs would move M004's tuned LaTeX placement
+- ripple #5, #6 (pass 2): repeats of pass-1 ripple #5 and #6 — same dispositions
+- blame-history #1 (pass 2), prior-review #5 (pass 2): the LaTeX page-1 recheck is not in the pass-2 evidence — reject, false: it ran at T6 (work log): `main` and the branch put Figures 1 to 17 on the same pages, and page 1 matched; the bibliography adds a references section at the end of each format
+- blame-history #2 (pass 2): D-004 says Quarto 1.9.36 loads the package while DESIGN says 1.9.36 to 1.10.18 are untested — reject, false: D-004 rests on the loader's presence in the 1.9.36 source, and DESIGN states the runtime test scope; both hold
+- blame-history #3 (pass 2): Typst drops a height that LaTeX keeps, with no D-entry — reject, planned change: pass 1 settled it with a warning and a README line; it is a Typst limit, not a cross-cutting choice
+- blame-history #4 (pass 2): `image-width` now reads yes for wrapped figures and no longer sets wrapped apart from fallback — reject, false: the field records whether the image keeps a width, and a wrapped image now fills its box with `width: 100%`; the wraps section records which figures wrap
+- blame-history #5 (pass 2): "a `wrap-clear` div works" in Typst rests on the stop rule, not on CSS — reject, false: the claim is about the result, which `stop-rule.typst.txt` case 11 shows
+- blame-history #6 (pass 2): the Jupyter cell form is untested in Typst — reject, planned change: D-002 keeps Jupyter out of the test command
+- prior-review #1 (pass 2): the summary records only that alt text is present — fix now: it records the text
+- prior-review #2 (pass 2): code fences read as "p" — fix now, with diff-bug #2
+- prior-review #3 (pass 2): no snapshot pins the right-to-left sides — reject, planned change: the profile keeps layout out of the verify command; pass-2 check: `typst-rtl.pdf` puts the right figure's caption at x 396 to 517 and the left figure's at x 95 to 214
+- prior-review #4 (pass 2): `--update` can still write an empty wraps section — reject, false as a defect: `--update` rewrites every snapshot by design, the compare run fails on such a loss, and the snapshot's git diff shows it
+- prior-review #6 (pass 2): two figures in one cell — repeat, follow-up row as in pass 1
+- prior-review #7 (pass 2): same as ripple #1 — fix now
