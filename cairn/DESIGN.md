@@ -17,7 +17,9 @@ install it with `quarto add jmgirard/wrapped`.
   its number, caption, and `@fig-` links.
 - Wrap text around an uncaptioned image.
 - Use one width value for all formats.
-- In a format or context that cannot wrap, keep a normal figure and warn once.
+- In a format or context that cannot wrap, keep a normal figure and warn
+  once: once for each render in a format, and once for each figure in a
+  context (corrected M003).
 
 **Non-goals for version 1.**
 
@@ -89,6 +91,11 @@ block, callout, or horizontal rule. An empty `::: {.wrap-clear}` div stops it
 earlier. HTML, Typst, and Word enforce the rule. LaTeX enforces it only in
 part, because `wrapfigure` measures its own height.
 
+Next-block rule (D-003): a wrapped figure whose next block is not a
+paragraph has no text to wrap, so it keeps a normal figure with no warning.
+Of two wrapped figures in a row, the first keeps a normal figure and the
+second wraps.
+
 ## Function Families
 
 One filter, `_extensions/wrapped/wrapped.lua`, with the syntax above and its
@@ -119,19 +126,28 @@ None yet.
 ## Architecture
 
 The extension is `_extensions/wrapped/`. `_extension.yml` holds the one
-version marker and runs the filter at `pre-quarto`. The filter makes five
-passes:
+version marker and runs the filter at `pre-quarto`. The filter makes seven
+passes (corrected M003):
 
 1. It reads the `wrapped:` metadata and checks each length.
-2. In a top-down pass, it carries a code cell's wrap class to that cell's
-   floats, moves an image's class to its float, and sets the box width and
-   gap as CSS custom properties. A captioned image with no id gets a
+2. It finds the contexts that cannot wrap: lists, callouts, column layouts,
+   panel layouts, tabsets, asides, margin blocks, and subfigure panels. It
+   records each float there by its custom id, and it removes the wrap class
+   from a captioned image with no id or an image there, with a warning.
+3. It applies the next-block rule: it records each float with no paragraph
+   after it, and removes the wrap class from such a captioned image with no
+   id or image.
+4. In a top-down pass, it carries a code cell's wrap class to that cell's
+   floats and moves an image's class to its float. A float that step 2 or
+   3 recorded, a table, or a float with a margin class or a layout
+   attribute keeps its normal layout. Each other float gets its box width
+   and gap as CSS custom properties. A captioned image with no id gets a
    `.wrapped-image` box.
-3. It groups each wrapped figure with the paragraphs after it in a
+5. It groups each wrapped figure with the paragraphs after it in a
    `.wrap-group` div. The group's `display: flow-root` gives the stop rule.
-4. It warns for a wrap class on an image it cannot place.
-5. In HTML it adds the stylesheet and the breakpoint rule. Elsewhere it
-   prints one format warning.
+6. It warns for a wrap class on an image or a div that it cannot place.
+7. In HTML it adds the stylesheet and the breakpoint rule when a figure
+   wraps. Elsewhere it prints one format warning.
 
 The grouping pass finds a wrapped float by Quarto's internal
 `__quarto_custom_id` attribute. `tests/verify.py` shows a change there as a

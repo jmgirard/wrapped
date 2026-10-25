@@ -11,6 +11,12 @@ format: html
 
 The paragraph after the margin figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+## E3: a captioned image with no id in the margin
+
+![A margin figure with no id.](plot.png){.column-margin .wrap-right}
+
+The paragraph after the margin figure with no id. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ## E3: a figure in an aside
 
 ::: {.aside}
@@ -54,6 +60,16 @@ A panel with no wrap class.
 :::
 
 The paragraph after the panel. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## E4: a layout div that is not a float
+
+::: {layout-ncol="2"}
+![A figure in a layout cell.](plot.png){#fig-layout-cell .wrap-right}
+
+The paragraph in the second layout cell.
+:::
+
+The paragraph after the layout. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## E5: a table float
 

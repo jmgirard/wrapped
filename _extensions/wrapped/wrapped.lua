@@ -1,9 +1,12 @@
 -- wrapped: wrap body text around figures marked .wrap-left or .wrap-right.
 --
--- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output
--- floats each wrapped figure inside a .wrap-group div that also holds the
--- paragraphs after it. Every other format keeps a normal figure. A figure
--- with no wrap class is left as it is in every format.
+-- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output,
+-- revealjs included, floats each wrapped figure inside a .wrap-group div
+-- that also holds the paragraphs after it. Two passes first find the
+-- figures that keep a normal layout: those in a context that cannot wrap,
+-- such as a list or the margin, and those with no paragraph after them.
+-- Every other format keeps a normal figure. A figure with no wrap class is
+-- left as it is in every format.
 
 local SIDES = { ["wrap-left"] = "left", ["wrap-right"] = "right" }
 
@@ -21,7 +24,11 @@ local options = {
 }
 
 local is_html = quarto.doc.is_format("html:js")
+-- found_wrap: a figure or image carries a wrap class, so a format that
+-- cannot wrap prints its one warning. placed: an HTML figure or image
+-- wraps, so the page needs the stylesheet.
 local found_wrap = false
+local placed = false
 
 -- CSS units that a width, gap, or breakpoint may use, in lowercase.
 local UNITS = {
@@ -171,6 +178,12 @@ local function block_context(block)
   if block.classes:includes("columns") or block.classes:includes("column") then
     return "is in a column layout"
   end
+  -- A div or a code cell with a layout attribute lays out its content in a
+  -- grid of panels.
+  local attrs = block.attributes
+  if attrs["layout-ncol"] or attrs["layout-nrow"] or attrs.layout then
+    return "is in a panel layout"
+  end
   return margin_context(block.classes)
 end
 
@@ -193,8 +206,8 @@ end
 local function record_floats(blocks, context)
   blocks:walk({
     Div = function(d)
-      if is_float_div(d) then
-        local id = d.attributes.__quarto_custom_id
+      local id = d.attributes.__quarto_custom_id
+      if is_float_div(d) and id then
         context_of_float[id] = context_of_float[id] or context
       end
     end,
@@ -230,9 +243,12 @@ local function mark_context(blocks, context)
   })
 end
 
--- Finds the lists, callouts, column layouts, tabsets, asides, margin
--- blocks, and subfigure panels, outermost first, and marks what is inside
--- each one. A float that holds other floats is a subfigure panel.
+-- Finds the lists, callouts, column layouts, panel layouts, tabsets,
+-- asides, margin blocks, and subfigure panels, outermost first, and marks
+-- what is inside each one. A float that holds other floats is a subfigure
+-- panel. A captioned image with no id, or an image, with its own margin
+-- class is in the margin too. A float's own margin class is read in the
+-- float pass.
 local function find_contexts(doc)
   local function mark(block)
     if block.t == "Div" and is_float_div(block) then
@@ -240,12 +256,12 @@ local function find_contexts(doc)
       block.content:walk({
         Div = function(d) if is_float_div(d) then inner:insert(d) end end,
       })
-      if #inner > 0 then
-        local id = block.attributes.__quarto_custom_id
+      local id = block.attributes.__quarto_custom_id
+      if #inner > 0 and id then
         context_of_float[id] = context_of_float[id] or "is a subfigure panel"
         record_floats(inner, "is in a subfigure panel")
       end
-      return nil
+      return nil, false
     end
     local context = block_context(block)
     if not context then return nil end
@@ -258,11 +274,27 @@ local function find_contexts(doc)
     end
     return block, false
   end
+  local function own_margin(fig)
+    local context = margin_context(fig.classes)
+    fig.content:walk({
+      Image = function(img) context = context or margin_context(img.classes) end,
+    })
+    if not context then return nil end
+    return mark_context(pandoc.Blocks({ fig }), context), false
+  end
   doc.blocks = doc.blocks:walk({
     traverse = "topdown",
     Div = mark,
     BulletList = mark,
     OrderedList = mark,
+    Figure = own_margin,
+    Image = function(img)
+      local context = margin_context(img.classes)
+      if not (context and wrap_class(img.classes)) then return nil end
+      found_wrap = true
+      context_warning("the image " .. pandoc.utils.stringify(img.src), context)
+      return drop_wrap(img)
+    end,
   })
   return doc
 end
@@ -289,7 +321,8 @@ local next_token = 0
 
 -- The wrap class of a code cell, carried to the floats inside that cell.
 -- `remaining` counts the cell's floats, figures and tables, so a cell with
--- no float carries nothing. Only figures take the class.
+-- no float carries nothing. Only figures wrap: a table float that takes the
+-- class keeps its normal layout.
 local carry = nil
 
 local function cell_div(div)
@@ -324,7 +357,7 @@ local function float_target(float)
   local img_class, img_width, img_gap = image_wrap(float.content)
   local class = wrap_class(float.classes) or carried or img_class
   if not class then return nil end
-  found_wrap = true
+  if float.type == "Figure" then found_wrap = true end
   strip_wrap(float.classes)
   -- Only figures wrap. A table float keeps its normal layout, and Quarto
   -- copies a cell's classes onto a table float, so the wrap class goes.
@@ -343,8 +376,8 @@ local function float_target(float)
     float.content = float.content:walk({ Image = drop_wrap })
     float.attributes["wrap-gap"] = nil
     if context then
-      context_warning(string.format("the %s #%s",
-        float.type == "Figure" and "figure" or "table", float.identifier), context)
+      local noun = ({ Figure = "figure", Table = "table" })[float.type] or "float"
+      context_warning(string.format("the %s #%s", noun, float.identifier), context)
     end
     return float
   end
@@ -361,6 +394,7 @@ local function float_target(float)
   float.attributes["wrap-gap"] = nil
   float.classes:insert(class)
   float.attributes.style = style_for(width, gap, "#" .. float.identifier, float.attributes.style)
+  placed = true
   if carried then
     wrapped_cells[token] = true
   else
@@ -388,6 +422,7 @@ local function figure_block(fig)
   fig.attributes.width = nil
   fig.attributes["wrap-gap"] = nil
   local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
+  placed = true
   local box = pandoc.Div({ fig }, pandoc.Attr("", { "wrapped-image", class },
     { style = style_for(width, gap, where, nil) }))
   return box, false
@@ -454,7 +489,8 @@ local function no_text_blocks(blocks)
       if b.t == "Div" and (is_float_div(b) or b.classes:includes("cell")) then
         pandoc.Blocks({ b }):walk({
           Div = function(d)
-            if is_float_div(d) then no_text[d.attributes.__quarto_custom_id] = true end
+            local id = d.attributes.__quarto_custom_id
+            if is_float_div(d) and id then no_text[id] = true end
           end,
         })
       elseif b.t == "Figure" and (wrap_class(b.classes) or image_wrap(b.content)) then
@@ -496,6 +532,7 @@ local function group_blocks(blocks)
     if img then
       found_wrap = true
       if is_html then
+        placed = true
         members = pandoc.List({ wrapped_image_div(img) })
       else
         strip_wrap(img.classes)
@@ -576,10 +613,9 @@ local function add_html_assets()
 end
 
 local function finish(doc)
-  if not found_wrap then return nil end
   if is_html then
-    add_html_assets()
-  else
+    if placed then add_html_assets() end
+  elseif found_wrap then
     quarto.log.warning(string.format(
       "wrapped: %s output does not wrap figures yet, so wrapped figures render as normal figures.",
       FORMAT))

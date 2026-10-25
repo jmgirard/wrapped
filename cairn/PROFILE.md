@@ -21,8 +21,9 @@ repository root, run:
 python3 tests/verify.py
 ```
 
-It renders the fixtures under `tests/` to HTML, PDF through LaTeX, PDF
-through Typst, and docx. It compares the parts that the filter changes with
+It renders the fixtures under `tests/` to HTML, revealjs, PDF through
+LaTeX, PDF through Typst, and docx, and the book project under `tests/book/`
+to HTML. It compares the parts that the filter changes with
 the snapshots in `tests/_snapshots/`. It exits with status 1 on a failed
 render or a difference. It needs Quarto, R with knitr, and TinyTeX. After an
 intended output change, run it with `--update` and review the snapshot diff.

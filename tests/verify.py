@@ -23,9 +23,9 @@ column-margin div around each named figure has the same classes in both
 renders. The script exits with status 1 on a failed render or a snapshot
 difference.
 
-Some fixtures exist for the browser checks in tests/layout.js, which measure
-layout. Those fixtures are rendered here, so their HTML is current, and they
-have no snapshot.
+Some fixtures exist only for the browser checks in tests/layout.js, which
+measure layout. Those fixtures are rendered here, so their HTML is current,
+and they have no snapshot.
 """
 
 import difflib
@@ -189,7 +189,12 @@ def margin_summary(fixture):
     ids = MARGIN_IDS[fixture]
     plain = f"{fixture}-plain"
     source = (TESTS / f"{fixture}.qmd").read_text(encoding="utf-8")
-    (TESTS / f"{plain}.qmd").write_text(re.sub(r"(?m)^filters:\n(  - .*\n)+", "", source), encoding="utf-8")
+    stripped = re.sub(r"(?m)^filters:\n(  - .*\n)+", "", source)
+    # A copy that still names the filter would compare the extension with
+    # itself, so every line would read "same".
+    if stripped == source:
+        return ["(the filters block was not removed from the copy)"]
+    (TESTS / f"{plain}.qmd").write_text(stripped, encoding="utf-8")
     try:
         code, log = render(plain, "html")
         if code != 0:
