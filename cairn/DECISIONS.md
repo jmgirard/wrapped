@@ -40,3 +40,15 @@ a figure, so it keeps a normal figure with no warning, as E6 does for a
 figure before a heading. The second figure has paragraphs after it, so it
 wraps them. The user chose this at the plan's question set over keeping E7
 as written and over a fallback for both figures.
+
+### D-004: Bundle wrap-it 0.1.1 for PDF through Typst
+
+2026-10-25, plan of M005. The user allowed this dependency at the plan's
+question set. The extension ships a copy of the Typst package wrap-it 0.1.1,
+with its license, under `_extensions/wrapped/typst/packages/preview/`, and
+Quarto 1.9.36 or later loads it from there. Typst has no built-in way to wrap
+text around a figure. Spike S3 showed that wrap-it renders a citation and a
+`@fig-` link in the text beside a figure. A bundled copy needs no download at
+render time. wrap-it's Unlicense allows the copy. meander was the other
+choice. It lays out whole pages, so it does not fit a figure placed between
+two blocks.
