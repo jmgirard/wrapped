@@ -2,14 +2,14 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M006: Wrap figures in Word output with frames
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** high
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes the docx that users get from a wrapped figure
-- **Branch/PR:** —
+- **Branch/PR:** m006-word-wrap
 
 ## Goal
 
@@ -51,7 +51,7 @@ A document rendered to Word with the extension installed shows body text beside 
 
 ## Tasks
 
-- [ ] T1: Test the frame position that a filter makes. In a `post-render` entry, remove the fixture's figure table for `#fig-md` and add a raw `w:pPr` with a `w:framePr` after Pandoc's and Quarto's own `w:pPr` on the image and caption paragraphs. Open the docx in Word through AppleScript, export a PDF, and read its page image: does Word read the frame from that position and keep the caption style? Do this first: a no changes the approach. Try a `w:framePr` merged into Quarto's raw caption `w:pPr` next. If Word reads no frame on the image paragraph from any position a filter can write, stop: the goal is wrong.
+- [x] T1: Test the frame position that a filter makes. In a `post-render` entry, remove the fixture's figure table for `#fig-md` and add a raw `w:pPr` with a `w:framePr` after Pandoc's and Quarto's own `w:pPr` on the image and caption paragraphs. Open the docx in Word through AppleScript, export a PDF, and read its page image: does Word read the frame from that position and keep the caption style? Do this first: a no changes the approach. Try a `w:framePr` merged into Quarto's raw caption `w:pPr` next. If Word reads no frame on the image paragraph from any position a filter can write, stop: the goal is wrong.
 - [ ] T2: Add docx to `wraps()`. At `post-render`, for each wrapped float, captioned image with no id, and uncaptioned image (code cells included), remove the one-cell table and put the frame on the image and caption paragraphs. Keep the `fig-` bookmark, the `ImageCaption` style, and the `fig-alt` text. Set the image width to the frame width. Group the paragraphs after it as the HTML grouping does, and end the wrap at the stop point, for example with `<w:br w:type="textWrapping" w:clear="all"/>`.
 - [ ] T3: Convert width and gap for docx by AC4's rule. Read the text width from the `w:sectPr` of `PANDOC_WRITER_OPTIONS.reference_doc` with `pandoc.zip`, and measure the width Word shows when it has no `w:pgSz` or `w:pgMar`. Apply the metadata defaults, and make the context, next-block, and unplaced warnings print in docx. Add a docx format to `tests/stop-rule.qmd`, `tests/contexts.qmd`, and `tests/defaults.qmd`. Add `tests/docx-reference.qmd` with `tests/reference-narrow.docx`.
 - [ ] T4: Add `{=openxml}` spacing to `tests/fixture.qmd` so one frame starts within its own height of a page's bottom edge. Add the docx renders of the fixture, defaults, stop-rule, contexts, and docx-reference fixtures to `tests/verify.py`, and record in the docx snapshot each frame's `w:w`, `w:hSpace`, `w:xAlign`, members, and the blocks after it. Make page images of Word's PDF export and of LibreOffice's (`brew install --cask libreoffice`). Write the Word section of `README.md` with each app's result, the default text width, and the frame limits, and update the DESIGN syntax line that says Word keeps a normal figure.
@@ -70,6 +70,8 @@ A document rendered to Word with the extension installed shows body text beside 
 - 2026-10-25: plan gate chose a `post-render` filter entry over raw OpenXML at `pre-quarto`, because Pandoc assigns image relationship ids, so the image must stay a Pandoc Image, and only after Quarto's renderer exists the one-cell table to unwrap; falsified by Quarto's docx table not reaching `post-render` as a Pandoc Table.
 - 2026-10-25: plan gate chose reading the reference doc's `w:sectPr` for the text width over a fixed 6.5 in, because `PANDOC_WRITER_OPTIONS.reference_doc` and `pandoc.zip` exist in Pandoc 3.10 (probed 2026-10-25) and a custom reference doc changes the margins; falsified by Word showing a text width that differs from the `w:sectPr` values.
 - 2026-10-25: criteria audit (full mode, fresh Opus reader): 11 findings, all taken with the narrower wording. AC4: Quarto's default reference doc has no `w:pgSz` or `w:pgMar`, so the default text width is the one Word shows; the domain is AC1's figures; 28% to 32%; percents at or below 0% or at 100% or more take the default; `rem` and `ex` named; the reference-doc fixture is named and varies page width and margins. AC5 allows one warning per value AC4 rejects (`1ex` in defaults), counts warnings, and names "keeps a normal layout in HTML". AC1 says "carries" for alt text, which is new behavior, places the frame in one of the `w:pPr`, matches within each figure and by document order. AC2 counts only `w:wrap="around"` frames, since contexts has Quarto row-break frames. AC3 promises no repair dialog and a page-bottom frame (T4 spacing). AC6 drops the conversion step and names each differing figure. The harness criterion became part of T4.
+- 2026-10-25: implement started on branch m006-word-wrap.
+- 2026-10-25: T1 done: a scratch `post-render` filter unwrapped `#fig-md`'s table and added a raw `w:pPr` with the `w:framePr` after Pandoc's `w:pPr` (image) and after Pandoc's and Quarto's (caption). Word 16, driven by AppleScript, opened it with no dialog and exported a PDF: image and caption sit in one right frame with text beside it, and the caption keeps its italic `ImageCaption` look. Page is Letter; `PANDOC_WRITER_OPTIONS.reference_doc` is nil without a `reference-doc` and the path otherwise, and a group Div's data attribute reaches `post-render`.
 
 ## Decisions
 
