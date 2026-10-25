@@ -2,6 +2,7 @@
 1x wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.
 1x wrapped: the div #note is not a figure, so it does not wrap.
 1x wrapped: the image plot.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the table #tbl-cars is not a figure, so it does not wrap.
 1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
 1x wrapped: width "wide" on #logo is not a length or a percent, so it is 40%.
 1x wrapped: wrap-gap "wide" on #fig-bad-width is not a length or a percent, so it is 1em.

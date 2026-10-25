@@ -1,0 +1,115 @@
+---
+title: "wrapped fixture: contexts that keep a normal figure"
+filters:
+  - wrapped
+format: html
+---
+
+## E3: a margin figure
+
+![A margin figure.](plot.png){#fig-margin .column-margin .wrap-right}
+
+The paragraph after the margin figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## E3: a figure in an aside
+
+::: {.aside}
+![An aside figure.](plot.png){#fig-aside .wrap-right}
+:::
+
+The paragraph after the aside. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## E3: a margin cell
+
+```{r}
+#| label: fig-margin-cell
+#| fig-cap: "A margin cell figure."
+#| column: margin
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the margin cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## E4: a subfigure panel
+
+::: {#fig-panel .wrap-right layout-ncol="2"}
+![Panel A.](plot.png){#fig-panel-a}
+
+![Panel B.](plot.png){#fig-panel-b}
+
+A subfigure panel.
+:::
+
+The paragraph after the panel. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## E5: a table float
+
+::: {#tbl-wrapped .wrap-right}
+| Condition | Mean |
+|-----------|------|
+| A         | 3.1  |
+| B         | 4.2  |
+
+A wrapped table.
+:::
+
+The paragraph after the table. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## E8: a list item
+
+- ![A list figure.](plot.png){#fig-list .wrap-right}
+
+  The paragraph after the figure in the list item. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+- A second item.
+
+## E8: a callout
+
+::: {.callout-note}
+![A callout figure.](plot.png){#fig-callout .wrap-right}
+
+The paragraph after the figure in the callout. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+
+## E8: a column layout
+
+:::: {.columns}
+::: {.column width="50%"}
+![A column figure.](plot.png){#fig-column .wrap-right}
+
+The paragraph after the figure in the column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+
+::: {.column width="50%"}
+The other column.
+:::
+::::
+
+## E8: a tabset
+
+::: {.panel-tabset}
+### Tab A
+
+![A tabset figure.](plot.png){#fig-tab .wrap-right}
+
+The paragraph after the figure in the tab. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+### Tab B
+
+The other tab.
+:::
+
+## E6: a figure before a heading
+
+![A figure before a heading.](plot.png){#fig-before-heading .wrap-right}
+
+## E7: two figures in a row
+
+![The first of two figures.](plot.png){#fig-first .wrap-left width="30%"}
+
+![The second of two figures.](plot.png){#fig-second .wrap-right width="30%"}
+
+The paragraph after the second figure sits beside it. See @fig-first and @fig-second. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.

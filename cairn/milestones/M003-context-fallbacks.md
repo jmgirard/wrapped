@@ -2,14 +2,14 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M003: Fall back in contexts that cannot wrap
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** high
 - **Depends on:** M002
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes what users see for wrapped figures in margins, lists, callouts, tables, books, and slides
-- **Branch/PR:** —
+- **Branch/PR:** m003-context-fallbacks
 
 ## Goal
 
@@ -45,7 +45,7 @@ Wrapped figures render as the research page's edge cases E3 to E8, E13, and E15 
 
 ## Tasks
 
-- [ ] T1: Context detection in `wrapped.lua`. Track the enclosing list, callout, column layout, tabset, aside, and margin block in the top-down pass. Detect subfigure panels and `#tbl-` floats. Remove the wrap class from each such float and print one warning that names its id. Leave the margin classes as Quarto sets them.
+- [x] T1: Context detection in `wrapped.lua`. Track the enclosing list, callout, column layout, tabset, aside, and margin block in the top-down pass. Detect subfigure panels and `#tbl-` floats. Remove the wrap class from each such float and print one warning that names its id. Leave the margin classes as Quarto sets them.
 - [ ] T2: The next-block rule. When the block after a wrapped figure is not a paragraph, remove the wrap class with no warning.
 - [ ] T3: Write `tests/contexts.qmd`, a two-chapter book under `tests/book/`, and `tests/revealjs.qmd`. Add them to `tests/verify.py` with snapshots.
 - [ ] T4: Check the revealjs layout in the built-in browser and adjust `wrapped.css` for slides if needed. Update `README.md` with the contexts that keep a normal figure and with the revealjs case.
@@ -56,6 +56,9 @@ Wrapped figures render as the research page's edge cases E3 to E8, E13, and E15 
 - 2026-10-24: question set: back-to-back wrapped figures — the first falls back with no warning and the second wraps (D-003). The research page's E7 row is corrected to match.
 - 2026-10-24: criteria audit: see the M002 work log. The fixes here name the float's id, compare the margin container with a render without the extension, add the knitr margin cell, and fix the revealjs viewport.
 - 2026-10-24: a context fallback warns once for each float and names its id. A format fallback (M002) warns once for each render. The research page's "One warning" for each edge case and "warns once per document" for W5 support this reading.
+
+- 2026-10-25: started by /milestone-implement on branch m003-context-fallbacks.
+- 2026-10-25: T1 done. A `find_contexts` pre-pass marks floats in a list, callout, column layout, tabset, aside, margin block, or subfigure panel by custom id, because the float pass has no exit hook to track an enclosing block. The float pass also falls back for a table, a float's own margin class, and a `layout` attribute. Context warnings print in HTML only, like the other per-figure warnings. Choices: ordered lists count as lists; a captioned image with no id and a lone image in a context also fall back with a warning; the outermost context names the warning. The main fixture's snapshot gains the `#tbl-cars` warning (E5).
 
 ## Decisions
 
