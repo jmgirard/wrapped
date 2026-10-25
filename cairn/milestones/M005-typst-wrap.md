@@ -135,3 +135,4 @@ Pass 2 evidence, 2026-10-25, head 12bd0fc, `main` at bd9a291 (unchanged).
 - AC6 (pass 2): `pdfinfo -struct` lists both Figure alt texts.
 - AC7 (pass 2): stop-rule 11 calls and contexts 1 call match their HTML groups; warnings equal to HTML (0 and 14).
 - Gate (pass 2): `cairn_validate.py` all checks passed; `tests/verify.py` "all 29 renders pass" at 12bd0fc; version marker unchanged at 0.1.0; changelog "none".
+- spawned: diff-bug, blame-history, prior-review, ripple
