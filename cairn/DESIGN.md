@@ -42,8 +42,8 @@ not tested.
 
 ### Syntax
 
-HTML output and PDF through LaTeX implement this syntax (corrected M004).
-The other formats keep a normal figure until their milestones land.
+HTML output, PDF through LaTeX, and PDF through Typst implement this syntax
+(corrected M005). Word keeps a normal figure until its milestone lands.
 
 Captioned figure, image form:
 
@@ -100,8 +100,10 @@ second wraps.
 
 ## Function Families
 
-One filter, `_extensions/wrapped/wrapped.lua`, with the syntax above and its
-stylesheet `wrapped.css`. Users reach it through `filters: - wrapped`.
+One filter, `_extensions/wrapped/wrapped.lua`, with the syntax above, its
+stylesheet `wrapped.css`, its LaTeX wrapper `wrapped.tex`, and a bundled
+copy of the Typst package wrap-it 0.1.1 under `typst/packages/` (D-004,
+corrected M005). Users reach it through `filters: - wrapped`.
 
 ## Conventions
 
@@ -148,14 +150,22 @@ passes (corrected M003):
    no id gets a `.wrapped-image` box. In LaTeX, each other float and
    captioned image gets `fig-env="wrappedfigure"` and a `fig-pos` that
    holds its side, width, gap, and line count as LaTeX values (corrected
-   M004).
+   M004). In Typst, each other float records the opening of its
+   `wrap-content` call by its custom id, and a captioned image with no id
+   gets a `.wrapped-image` box that holds that opening (corrected M005).
 5. In HTML it groups each wrapped figure with the paragraphs after it in a
    `.wrap-group` div. The group's `display: flow-root` gives the stop rule.
-   In LaTeX it puts an image with no caption in a raw `wrappedfigure`.
+   In LaTeX it puts an image with no caption in a raw `wrappedfigure`. In
+   Typst it writes each group as raw Typst blocks around the figure and the
+   paragraphs, which make one `wrap-content(..., box(width: 100%)[figure],
+   [paragraphs])` call. The width sets wrap-it's grid column. A code cell
+   keeps its code above the call (corrected M005).
 6. It warns for a wrap class on an image or a div that it cannot place.
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
    wraps. In LaTeX it adds wrapfig and `wrapped.tex`, which defines
-   `wrappedfigure` over wrapfig's floating placements. Elsewhere it prints
+   `wrappedfigure` over wrapfig's floating placements. In Typst it imports
+   `wrap-content` from `@preview/wrap-it:0.1.1`, which Quarto loads from the
+   extension's `typst/packages` folder (corrected M005). Elsewhere it prints
    one format warning.
 
 The grouping pass finds a wrapped float by Quarto's internal
