@@ -4,10 +4,10 @@ wrapped is a Quarto filter extension. It lets body text flow beside a
 figure, to the left or right of it. The figure keeps its number, its
 caption, and its `@fig-` links.
 
-This version wraps figures in HTML output, revealjs slides included. In
-every other format, a wrapped figure renders as a normal figure, and the
-render prints one warning.
-Support for PDF through LaTeX, PDF through Typst, and Word is planned.
+This version wraps figures in HTML output, revealjs slides included, and
+in PDF through LaTeX. In every other format, a wrapped figure renders as a
+normal figure, and the render prints one warning.
+Support for PDF through Typst and Word is planned.
 Dashboards are not tested yet.
 
 ## Install
@@ -122,9 +122,13 @@ no warning for such a figure. The places in the next section are the
 exception. Of two wrapped figures in a row, the first keeps its
 normal layout, and the second wraps the paragraphs after it.
 
+In PDF through LaTeX, wrapping stops only in part. See
+[PDF through LaTeX](#pdf-through-latex).
+
 ## Where a figure keeps its normal layout
 
-In HTML, a wrapped figure in one of these places does not wrap. It keeps
+In HTML and in PDF through LaTeX, a wrapped figure in one of these places
+does not wrap. It keeps
 its normal layout, and the render prints one warning for it. The warning
 names the figure's id. If the figure has no id, the warning names its image
 file or says that the figure has no id.
@@ -155,13 +159,67 @@ on the same slide, as on an HTML page:
 Ratings rose in both conditions.
 ```
 
+## PDF through LaTeX
+
+In PDF through LaTeX, the extension puts each wrapped figure in a
+`wrapfigure` from the LaTeX package wrapfig. If your TeX distribution does
+not have wrapfig, install it, for example with `tlmgr install wrapfig`.
+
+The `width` and `wrap-gap` values change to LaTeX lengths:
+
+- A percent is that share of the text width, so `40%` is `0.4\linewidth`.
+- A `px` length is 0.75 `pt` for each `px`, so `200px` is `150pt`.
+- A length in `pt`, `pc`, `in`, `cm`, `mm`, `em`, or `ex` stays as it is.
+- Any other CSS unit, such as `vw` or `rem`, and a `calc()`, `min()`,
+  `max()`, or `clamp()` value print a warning, and the document default
+  applies.
+
+The `wrap-lines` attribute sets the number of lines beside the figure. It
+works only in LaTeX. Without it, wrapfig counts the lines from the height
+of the figure.
+
+```markdown
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right wrap-lines="12"}
+```
+
+A caption inside a wrapped figure is set ragged-right.
+
+wrapfig has limits, and the extension keeps some of them:
+
+- Wrapping stops only in part. wrapfig narrows a number of lines that it
+  counts from the height of the figure. A heading, a list, a quote, a
+  table, or a code block in those lines sits beside the figure, narrowed.
+  If the text is shorter than the figure, the lines after it are narrowed
+  too.
+- A figure that does not fit at the bottom of a page moves to the start of
+  a paragraph on the next page. The text before it fills the page.
+- If a page break comes while lines are still narrowed, the first lines on
+  the next page are narrowed with no figure beside them. A `wrap-lines`
+  value larger than the figure needs can narrow lines past a page break in
+  the same way.
+- Figures in a row: when a wrapped figure starts while the text beside an
+  earlier figure is still narrowed, the extension adds space, so the new
+  figure starts below the earlier one. A figure that moved to the next page
+  waits for a paragraph. If the next wrapped figure comes first, the figure
+  that waits renders centered with no text beside it.
+- In a two-column document, set with `classoption: twocolumn`, wrapped
+  figures render as normal figures, and the render prints one warning.
+- A figure in a list keeps its normal layout, as in HTML.
+
+Tagged PDF: Quarto 1.10.19 ignores `pdf-standard: ua-1` in LaTeX, so that
+PDF has no tags, with or without the extension. With `pdf-standard: ua-2`,
+Quarto's default document class fails, so set a class such as
+`documentclass: article`. In such a PDF, each wrapped figure and wrapped
+image keeps its `fig-alt` text as its alt text.
+
 ## Notes
 
-- A captioned image with no `#fig-` id wraps too. It has no figure number.
+- A captioned image with no `#fig-` id wraps too. In HTML it has no figure
+  number. In PDF through LaTeX, Quarto numbers it.
 - An image inside a link, or beside other content in its paragraph, does
-  not wrap. In HTML the render prints a warning for it.
-- In HTML, a `width` or `wrap-gap` value that is not a length or a percent
-  prints a warning, and the document default applies.
+  not wrap. In HTML and LaTeX the render prints a warning for it.
+- In HTML and LaTeX, a `width` or `wrap-gap` value that is not a length or a
+  percent prints a warning, and the document default applies.
 - The sides are physical. In a right-to-left document, `.wrap-right` still
   puts the figure on the right.
 - A long caption wraps inside the figure box.
