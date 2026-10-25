@@ -116,6 +116,11 @@ paragraph that you want beside the figure:
 
 ## Notes
 
+- A captioned image with no `#fig-` id wraps too. It has no figure number.
+- An image inside a link, or beside other content in its paragraph, does
+  not wrap. The render prints a warning for it.
+- A `width` or `wrap-gap` value that is not a length or a percent prints a
+  warning, and the document default applies.
 - The sides are physical. In a right-to-left document, `.wrap-right` still
   puts the figure on the right.
 - A long caption wraps inside the figure box.

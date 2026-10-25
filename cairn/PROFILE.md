@@ -33,7 +33,8 @@ Layout is not in this command. Measure it in a browser with
 Toolchain tests that `/milestone-review` runs *in addition to* the universal
 cairn-file tests (`cairn_validate`, coverage completeness, `cairn_impact`):
 - Every version marker that `release-walk` names holds the same version.
-- The verify render finishes with no errors on the review head.
+- The verify command passes on the review head: every fixture renders with
+  no errors, and every snapshot matches.
 - The changelog slot says "none", so the gate reads no changelog entry.
 
 ## test-doctrine
@@ -94,8 +95,8 @@ Recognized by `cairn-init` from `_extensions/*/_extension.yml` or
 `pyproject.toml`/`setup.py`/`setup.cfg`, and no
 `.claude-plugin/plugin.json`/`.claude-plugin/marketplace.json`. It ranks ahead
 of docker-image and generic. This repo had no marker at init (2026-10-24), so
-the user chose the profile. `_extensions/wrapped/_extension.yml` arrives with
-the first code milestone.
+the user chose the profile. The repo now holds
+`_extensions/wrapped/_extension.yml`, so detection finds the profile.
 
 ## greenfield-openers
 Answered at init on 2026-10-24. The extension type is a filter. The version

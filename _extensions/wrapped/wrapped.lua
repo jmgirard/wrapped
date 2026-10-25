@@ -2,18 +2,32 @@
 --
 -- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output
 -- floats each wrapped figure inside a .wrap-group div that also holds the
--- paragraphs after it. Every other format keeps a normal figure.
+-- paragraphs after it. Every other format keeps a normal figure. A figure
+-- with no wrap class is left as it is in every format.
 
 local SIDES = { ["wrap-left"] = "left", ["wrap-right"] = "right" }
 
-local options = {
+local DEFAULTS = {
   width = "40%",
   gap = "1em",
   breakpoint = "576px",
 }
 
+-- The document's values, read from the `wrapped:` metadata in the first pass.
+local options = {
+  width = DEFAULTS.width,
+  gap = DEFAULTS.gap,
+  breakpoint = DEFAULTS.breakpoint,
+}
+
 local is_html = quarto.doc.is_format("html:js")
 local found_wrap = false
+
+-- CSS units that a width, gap, or breakpoint may use.
+local UNITS = {
+  px = true, pt = true, pc = true, ["in"] = true, cm = true, mm = true,
+  em = true, rem = true, ex = true, ch = true, vw = true, vh = true,
+}
 
 -- Returns the wrap class in a class list, or nil.
 local function wrap_class(classes)
@@ -30,38 +44,64 @@ local function strip_wrap(classes)
   end
 end
 
--- A unitless number is a pixel length, as in Pandoc.
+-- Returns the CSS length for a value, or nil when the value is not a
+-- number, a percent, or a number with a CSS unit. A unitless number is a
+-- pixel length, as in Pandoc.
 local function css_length(value)
-  value = pandoc.utils.stringify(value)
-  if value:match("^%d+%.?%d*$") then return value .. "px" end
-  return value
+  local s = pandoc.utils.stringify(value)
+  local num, unit = s:match("^(%d*%.?%d+)(%a*%%?)$")
+  if not num then return nil end
+  if unit == "" then return num .. "px" end
+  if unit == "%" or UNITS[unit] then return s end
+  return nil
 end
 
-local function style_for(width, gap)
-  return string.format("--wrap-width: %s; --wrap-gap: %s;",
-    css_length(width or options.width), css_length(gap or options.gap))
+-- Returns the CSS length for a value, or `fallback` with a warning when the
+-- value is not a length. `what` and `where` name the value in the warning.
+local function checked_length(value, fallback, what, where)
+  if value == nil then return fallback end
+  local length = css_length(value)
+  if length then return length end
+  quarto.log.warning(string.format(
+    'wrapped: %s "%s" on %s is not a length or a percent, so it is %s.',
+    what, pandoc.utils.stringify(value), where, fallback))
+  return fallback
 end
 
--- Reads the wrap class and width from the images inside a float, and
--- removes the class from each image. In HTML it also removes the width, so
--- the image fills the figure box. Elsewhere the image keeps its width.
-local function take_from_images(blocks)
+-- The custom properties for a wrapped box, followed by any style the user
+-- set on it.
+local function style_for(width, gap, where, existing)
+  local style = string.format("--wrap-width: %s; --wrap-gap: %s;",
+    checked_length(width, options.width, "width", where),
+    checked_length(gap, options.gap, "wrap-gap", where))
+  if existing and existing ~= "" then style = style .. " " .. existing end
+  return style
+end
+
+-- Reads the first wrap class and the first width of the images in a list
+-- of blocks, and changes nothing.
+local function image_wrap(blocks)
   local class, width
-  local new = blocks:walk({
+  blocks:walk({
     Image = function(img)
-      local c = wrap_class(img.classes)
-      if c then
-        class = class or c
-        strip_wrap(img.classes)
-      end
-      if img.attributes.width then
-        width = width or img.attributes.width
-        if is_html then img.attributes.width = nil end
-      end
+      class = class or wrap_class(img.classes)
+      width = width or img.attributes.width
+    end,
+  })
+  return class, width
+end
+
+-- Removes the wrap class from each image in a wrapped figure. In HTML it
+-- also removes the width, so the image fills the figure box. Elsewhere the
+-- image keeps its width.
+local function clean_images(blocks)
+  return blocks:walk({
+    Image = function(img)
+      strip_wrap(img.classes)
+      if is_html then img.attributes.width = nil end
       return img
     end,
   })
-  return new, class, width
 end
 
 -- Counts the floats (figures and tables) inside a code cell. Inside a user
@@ -80,9 +120,9 @@ end
 local function read_meta(meta)
   local m = meta.wrapped
   if type(m) ~= "table" then return end
-  for _, key in ipairs({ "width", "gap", "breakpoint" }) do
-    if m[key] ~= nil then options[key] = pandoc.utils.stringify(m[key]) end
-  end
+  options.width = checked_length(m.width, DEFAULTS.width, "width", "the wrapped metadata")
+  options.gap = checked_length(m.gap, DEFAULTS.gap, "gap", "the wrapped metadata")
+  options.breakpoint = checked_length(m.breakpoint, DEFAULTS.breakpoint, "breakpoint", "the wrapped metadata")
 end
 
 -- Custom ids of wrapped floats outside a code cell, and the anchor tokens of
@@ -100,7 +140,6 @@ local function cell_div(div)
   if not div.classes:includes("cell") then return nil end
   local c = wrap_class(div.classes)
   if not c then return nil end
-  found_wrap = true
   strip_wrap(div.classes)
   local n = count_floats(div)
   if n > 0 then
@@ -127,27 +166,25 @@ local function float_target(float)
     strip_wrap(float.classes)
     return float
   end
-  local class = wrap_class(float.classes) or carried
-  local from_cell = carried ~= nil
-  local content, img_class, img_width = take_from_images(float.content)
-  float.content = content
-  class = class or img_class
-  -- knitr writes the plot's pixel size as a unitless image width. That is
-  -- not a box width, so a cell figure takes only a width with a unit.
-  if from_cell and img_width and tostring(img_width):match("^%d+%.?%d*$") then
-    img_width = nil
-  end
-  if not class then return float end
+  local img_class, img_width = image_wrap(float.content)
+  local class = wrap_class(float.classes) or carried or img_class
+  if not class then return nil end
   found_wrap = true
   strip_wrap(float.classes)
+  float.content = clean_images(float.content)
   if not is_html then return float end
+  -- knitr writes the plot's pixel size as a unitless image width. That is
+  -- not a box width, so a cell figure takes only a width with a unit.
+  if carried and img_width and tostring(img_width):match("^%d+%.?%d*$") then
+    img_width = nil
+  end
   local width = float.attributes.width or img_width
   local gap = float.attributes["wrap-gap"]
   float.attributes.width = nil
   float.attributes["wrap-gap"] = nil
   float.classes:insert(class)
-  float.attributes.style = style_for(width, gap)
-  if from_cell then
+  float.attributes.style = style_for(width, gap, "#" .. float.identifier, float.attributes.style)
+  if carried then
     wrapped_cells[token] = true
   else
     -- The grouping pass sees this float as a plain Div that Quarto marks
@@ -157,6 +194,25 @@ local function float_target(float)
     if id then wrapped_ids[id] = true end
   end
   return float
+end
+
+-- A captioned image with no #fig- id is a Pandoc Figure, not a float.
+-- Quarto drops a Figure's own classes and style in HTML, so the filter puts
+-- the Figure inside a .wrapped-image box. Returning false stops the
+-- traversal from visiting the Figure again inside the box.
+local function figure_block(fig)
+  local img_class, img_width = image_wrap(fig.content)
+  local class = wrap_class(fig.classes) or img_class
+  if not class then return nil end
+  found_wrap = true
+  strip_wrap(fig.classes)
+  fig.content = clean_images(fig.content)
+  if not is_html then return fig end
+  local width = fig.attributes.width or img_width
+  fig.attributes.width = nil
+  local box = pandoc.Div({ fig }, pandoc.Attr("", { "wrapped-image", class },
+    { style = style_for(width, nil, "a figure with no id", nil) }))
+  return box, false
 end
 
 -- A paragraph that holds only an image with a wrap class, and no caption.
@@ -179,8 +235,16 @@ local function wrapped_image_div(img)
   strip_wrap(img.classes)
   local width = img.attributes.width
   img.attributes.width = nil
-  return pandoc.Div({ pandoc.Plain({ img }) },
-    pandoc.Attr("", { "wrapped-image", class }, { style = style_for(width, nil) }))
+  return pandoc.Div({ pandoc.Plain({ img }) }, pandoc.Attr("", { "wrapped-image", class },
+    { style = style_for(width, nil, pandoc.utils.stringify(img.src), nil) }))
+end
+
+-- A block that a group takes in: a paragraph that does not start a wrap of
+-- its own, or a raw HTML comment, which shows nothing.
+local function joins_group(block)
+  if block.t == "Para" then return lone_wrapped_image(block) == nil end
+  return block.t == "RawBlock" and block.format:match("html") ~= nil
+    and block.text:match("^%s*<!%-%-.-%-%->%s*$") ~= nil
 end
 
 -- Groups each wrapped figure with the paragraphs after it. The group stops
@@ -200,6 +264,8 @@ local function group_blocks(blocks)
       else
         strip_wrap(img.classes)
       end
+    elseif b.t == "Div" and b.classes:includes("wrapped-image") then
+      members = pandoc.List({ b })
     elseif b.t == "Div" and b.attributes["data-wrap-anchor"] then
       -- A wrapped cell starts a group only if one of its figures wrapped.
       local token = b.attributes["data-wrap-anchor"]
@@ -210,7 +276,7 @@ local function group_blocks(blocks)
     end
     if members then
       i = i + 1
-      while i <= #blocks and blocks[i].t == "Para" and not lone_wrapped_image(blocks[i]) do
+      while i <= #blocks and joins_group(blocks[i]) do
         members:insert(blocks[i])
         i = i + 1
       end
@@ -221,6 +287,22 @@ local function group_blocks(blocks)
     end
   end
   return out
+end
+
+-- An image whose wrap class is still there after the grouping pass sits
+-- where the filter cannot place a box, such as inside a link or beside
+-- other content in a paragraph. It keeps a normal layout, with a warning in
+-- HTML. Other formats print the one format warning instead.
+local function unplaced_image(img)
+  if not wrap_class(img.classes) then return nil end
+  found_wrap = true
+  strip_wrap(img.classes)
+  if is_html then
+    quarto.log.warning(string.format(
+      "wrapped: the image %s is not a figure or the only content of its paragraph, so it does not wrap.",
+      pandoc.utils.stringify(img.src)))
+  end
+  return img
 end
 
 local function add_html_assets()
@@ -239,7 +321,7 @@ local function add_html_assets()
     float: none; width: auto; margin: 1em 0;
   }
 }
-</style>]], css_length(options.breakpoint)))
+</style>]], options.breakpoint))
 end
 
 local function finish(doc)
@@ -260,7 +342,9 @@ return {
     traverse = "topdown",
     Div = cell_div,
     FloatRefTarget = float_target,
+    Figure = figure_block,
   },
   { Blocks = group_blocks },
+  { Image = unplaced_image },
   { Pandoc = finish },
 }

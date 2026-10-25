@@ -1,46 +1,14 @@
 # warnings
 1x wrapped: latex output does not wrap figures yet, so wrapped figures render as normal figures.
 # tex
-\begin{figure}
-\includegraphics[width=0.3\linewidth,height=\textheight,keepaspectratio]{plot.png}
-\caption{\label{fig-md}Mean ratings by condition.}
-\end{figure}%
-\begin{figure}
-\pandocbounded{\includegraphics[keepaspectratio]{plot.png}}
-\caption{\label{fig-div}Ratings by group.}
-\end{figure}%
-\begin{figure}
-\includegraphics[width=0.35\linewidth,height=\textheight,keepaspectratio]{plot.png}
-\caption{\label{fig-inner}A long caption that runs to two or more lines
-\end{figure}%
-\begin{figure}[H]
-\pandocbounded{\includegraphics[keepaspectratio]{fixture_files/figure-pdf/fig-cell-1.pdf}}
-\caption{\label{fig-cell}A figure from a knitr cell.}
-\end{figure}%
-\includegraphics[width=0.2\linewidth,height=\textheight,keepaspectratio]{plot.png}
-\begin{figure}
-\includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{plot.png}
-\caption{\label{fig-plain}A figure with no wrap class.}
-\end{figure}%
-\caption{\label{tbl-cars}A table from a cell with a wrap class.}
-\begin{figure}
-\includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{plot.png}
-\caption{\label{fig-after-table}A figure after the table cell, with no
-\end{figure}%
-\begin{figure}
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{plot.png}
-\caption{\label{fig-readme-md}Mean ratings by condition.}
-\end{figure}%
-\begin{figure}
-\pandocbounded{\includegraphics[keepaspectratio]{plot.png}}
-\caption{\label{fig-readme-div}Ratings by group.}
-\end{figure}%
-\includegraphics[width=0.2\linewidth,height=\textheight,keepaspectratio]{plot.png}
-\begin{figure}[H]
-\includegraphics[width=0.3\linewidth,height=\textheight,keepaspectratio]{fixture_files/figure-pdf/fig-readme-cell-1.pdf}
-\caption{\label{fig-readme-cell}A scatter plot.}
-\end{figure}%
-\begin{figure}
-\includegraphics[width=3in,height=\textheight,keepaspectratio]{plot.png}
-\caption{\label{fig-readme-gap}Mean ratings by condition.}
-\end{figure}%
+figure: fig-md
+figure: fig-div
+figure: fig-inner
+figure: fig-cell
+figure: fig-plain
+figure: fig-after-table
+figure: fig-unwrapped-cell
+figure: -
+figure: fig-comment
+figure: fig-bad-width
+figure: fig-styled

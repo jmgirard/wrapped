@@ -1,27 +1,9 @@
 # warnings
+# breakpoint
+800px
 # figures
-fig-defaults: wrap-right quarto-float quarto-figure quarto-figure-center anchored
-# breakpoint style
-<style>
-@media (max-width: 800px) {
-  .quarto-float.wrap-left, .quarto-float.wrap-right,
-  .wrapped-image.wrap-left, .wrapped-image.wrap-right {
-    float: none; width: auto; margin: 1em 0;
-  }
-}
-</style>
-# wrap-group 1
-<div class="wrap-group">
-<div class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" id="fig-defaults" style="--wrap-width: 25%; --wrap-gap: 30px;">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-defaults-caption-UUID">
-<img class="img-fluid figure-img" src="plot.png">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-defaults-caption-UUID">
-Figure&nbsp;1: A figure with no width or gap attribute.
-</figcaption>
-</figure>
-</div>
-<p>The paragraph after the figure wraps around it. See <a class="quarto-xref" href="#fig-defaults">Figure&nbsp;1</a>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-</div>
+fig-defaults: wrap-right style=--wrap-width: 25%; --wrap-gap: 30px;
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-defaults, p, p

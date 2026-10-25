@@ -6,15 +6,18 @@ Run from the repository root:
     python3 tests/verify.py --update   # render and rewrite the snapshots
 
 Needs Quarto, R with knitr, and TinyTeX. Each render must exit with status
-0. Each snapshot under tests/_snapshots/ holds the parts of one render that
-the filter changes. For every format it holds the extension's warnings. For
-HTML it also holds the classes of every figure div, the breakpoint style,
-and every .wrap-group fragment. For PDF and Typst it also holds the figure
-lines of the kept .tex or .typ. For Word it holds the warnings only. The
-script exits with status 1 on a failed render or a snapshot difference.
+0. A snapshot under tests/_snapshots/ records only what the filter decides,
+never the rest of Quarto's output. For every format it holds the
+extension's warnings. For HTML it also holds the breakpoint value, the wrap
+class and style of every figure div and wrapped box, the wrap class, style,
+and width of every image, and the members of every .wrap-group. For PDF and
+Typst it also holds the label of each figure environment and its kind. For
+Word it holds the warnings only. The script exits with status 1 on a failed
+render or a snapshot difference.
 
-Layout (floats, widths, the stop rule) is checked in a browser with
-tests/layout.js, not here.
+Some fixtures exist for the browser checks in tests/layout.js, which measure
+layout. Those fixtures are rendered here, so their HTML is current, and they
+have no snapshot.
 """
 
 import difflib
@@ -27,94 +30,113 @@ from pathlib import Path
 TESTS = Path(__file__).resolve().parent
 SNAPSHOTS = TESTS / "_snapshots"
 
-# (fixture, format) pairs to render.
+# (fixture, format, compare with a snapshot)
 RENDERS = [
-    ("fixture", "html"),
-    ("fixture", "pdf"),
-    ("fixture", "typst"),
-    ("fixture", "docx"),
-    ("margin", "html"),
-    ("defaults", "html"),
-    ("stop-rule", "html"),
-    ("rtl", "html"),
+    ("fixture", "html", True),
+    ("fixture", "pdf", True),
+    ("fixture", "typst", True),
+    ("fixture", "docx", True),
+    ("defaults", "html", True),
+    ("margin", "html", False),
+    ("stop-rule", "html", False),
+    ("rtl", "html", False),
+    ("readme", "html", False),
 ]
 
 WARNING = re.compile(r"wrapped: .*")
-UUID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
 ANSI = re.compile(r"\x1b\[[0-9;]*m")
-START_TAG = re.compile(r"<([a-zA-Z][a-zA-Z0-9]*)((?:\s+[^\s=>/]+(?:=\"[^\"]*\")?)+)\s*>")
-ATTR = re.compile(r"[^\s=>/]+(?:=\"[^\"]*\")?")
+WRAP_CLASSES = ("wrap-left", "wrap-right", "wrapped-image")
 
 
-def sort_attributes(html):
-    """Sorts the attributes of each start tag. Quarto writes a figure div's
-    attributes in an order that changes between renders."""
-    return START_TAG.sub(lambda m: "<" + m.group(1) + " " + " ".join(sorted(ATTR.findall(m.group(2)))) + ">", html)
+def wrap_classes(classes):
+    return " ".join(c for c in classes.split() if c in WRAP_CLASSES) or "-"
 
 
-class Fragments(HTMLParser):
-    """Collects the source text of each div.wrap-group and the classes of
-    each figure div."""
+VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
 
-    def __init__(self, source):
-        super().__init__(convert_charrefs=False)
-        self.source = source
-        self.lines = source.splitlines(keepends=True)
-        self.offsets = [0]
-        for line in self.lines:
-            self.offsets.append(self.offsets[-1] + len(line))
-        self.depth = 0
-        self.start = None
-        self.groups = []
+
+class Decisions(HTMLParser):
+    """Collects what the filter decides in a rendered HTML page."""
+
+    def __init__(self):
+        super().__init__()
         self.figures = []
+        self.images = []
+        self.groups = []
+        self.in_group = False
+        self.level = 0  # open elements below the current .wrap-group
 
-    def _pos(self):
-        line, col = self.getpos()
-        return self.offsets[line - 1] + col
+    def describe(self, tag, attrs):
+        classes = attrs.get("class") or ""
+        if tag == "div" and attrs.get("id", "").startswith("fig-"):
+            return attrs["id"]
+        if tag == "div" and "wrapped-image" in classes.split():
+            return "wrapped-image"
+        if tag == "div" and "cell" in classes.split():
+            return "cell"
+        return tag
 
     def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        classes = attrs.get("class") or ""
+        if self.in_group:
+            if self.level == 0:
+                self.groups[-1].append(self.describe(tag, attrs))
+            if tag not in VOID:
+                self.level += 1
+        elif tag == "div" and "wrap-group" in classes.split():
+            self.groups.append([])
+            self.in_group = True
+            self.level = 0
+        if tag == "img":
+            src = Path(attrs.get("src", "")).name
+            self.images.append(
+                f"{src}: wrap={wrap_classes(classes)} style={attrs.get('style', '-')} width={attrs.get('width', '-')}"
+            )
         if tag != "div":
             return
-        attrs = dict(attrs)
-        classes = (attrs.get("class") or "").split()
-        if attrs.get("id", "").startswith("fig-") or "wrapped-image" in classes:
-            self.figures.append(f"{attrs.get('id', '(uncaptioned)')}: {' '.join(classes)}")
-        if self.start is not None:
-            self.depth += 1
-        elif "wrap-group" in classes:
-            self.start = self._pos()
-            self.depth = 1
+        if attrs.get("id", "").startswith("fig-") or "wrapped-image" in classes.split():
+            name = attrs.get("id", "(box)")
+            self.figures.append(f"{name}: {wrap_classes(classes)} style={attrs.get('style', '-')}")
 
     def handle_endtag(self, tag):
-        if tag != "div" or self.start is None:
+        if not self.in_group or tag in VOID:
             return
-        self.depth -= 1
-        if self.depth == 0:
-            end = self.source.index(">", self._pos()) + 1
-            self.groups.append(self.source[self.start:end])
-            self.start = None
+        if self.level == 0:
+            self.in_group = False
+        else:
+            self.level -= 1
+
+    def handle_comment(self, data):
+        if self.in_group and self.level == 0:
+            self.groups[-1].append("comment")
 
 
 def html_summary(path):
     source = path.read_text(encoding="utf-8")
-    parser = Fragments(source)
+    parser = Decisions()
     parser.feed(source)
-    style = re.search(r"<style>\s*@media \(max-width: [^)]*\).*?</style>", source, re.S)
-    parts = ["# figures"] + parser.figures
-    parts += ["# breakpoint style", style.group(0) if style else "(none)"]
-    for i, group in enumerate(parser.groups, 1):
-        parts += [f"# wrap-group {i}", sort_attributes(group)]
+    breakpoint = re.search(r"@media \(max-width: ([^)]*)\)\s*\{\s*\.quarto-float\.wrap-left", source)
+    parts = ["# breakpoint", breakpoint.group(1) if breakpoint else "(none)"]
+    parts += ["# figures"] + parser.figures
+    parts += ["# images"] + parser.images
+    parts += ["# groups"] + [", ".join(members) for members in parser.groups]
     return "\n".join(parts)
 
 
 def tex_summary(path):
-    keep = re.compile(r"\\begin\{(figure|wrappedfigure)\}|\\end\{(figure|wrappedfigure)\}|\\includegraphics|\\caption\{")
-    return "\n".join(line.strip() for line in path.read_text(encoding="utf-8").splitlines() if keep.search(line))
+    tex = path.read_text(encoding="utf-8")
+    envs = re.findall(r"\\begin\{(figure|wrappedfigure)\}(.*?)\\end\{\1\}", tex, re.S)
+    lines = []
+    for kind, body in envs:
+        label = re.search(r"\\label\{([^}]*)\}", body)
+        lines.append(f"{kind}: {label.group(1) if label else '-'}")
+    return "\n".join(lines)
 
 
 def typ_summary(path):
-    keep = re.compile(r"^#figure\(|^<fig-|wrap-content|image\(")
-    return "\n".join(line.strip() for line in path.read_text(encoding="utf-8").splitlines() if keep.search(line.strip()))
+    labels = re.findall(r"^<(fig-[\w-]+)>", path.read_text(encoding="utf-8"), re.M)
+    return "\n".join(f"figure: {label}" for label in labels)
 
 
 def render(fixture, fmt):
@@ -134,21 +156,23 @@ def summary(fixture, fmt, log):
         parts += ["# tex", tex_summary(TESTS / f"{fixture}.tex")]
     elif fmt == "typst":
         parts += ["# typ", typ_summary(TESTS / f"{fixture}.typ")]
-    text = "\n".join(parts) + "\n"
-    return UUID.sub("UUID", text)
+    return "\n".join(parts) + "\n"
 
 
 def main():
     update = "--update" in sys.argv[1:]
     SNAPSHOTS.mkdir(exist_ok=True)
     failed = []
-    for fixture, fmt in RENDERS:
+    for fixture, fmt, compare in RENDERS:
         name = f"{fixture}.{fmt}"
         code, log = render(fixture, fmt)
         if code != 0:
             print(f"FAIL {name}: quarto render exited with status {code}")
             print(log[-2000:])
             failed.append(name)
+            continue
+        if not compare:
+            print(f"ok   {name} (rendered, no snapshot)")
             continue
         got = summary(fixture, fmt, log)
         snap = SNAPSHOTS / f"{name}.txt"
@@ -171,7 +195,7 @@ def main():
     if failed:
         print(f"{len(failed)} of {len(RENDERS)} renders failed: {', '.join(failed)}")
         return 1
-    print(f"all {len(RENDERS)} renders match")
+    print(f"all {len(RENDERS)} renders pass")
     return 0
 
 

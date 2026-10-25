@@ -71,15 +71,19 @@ function figureEntry(el) {
     line.top < box.bottom &&
     (side === "right" ? line.right <= box.left : line.left >= box.right);
   const img = el.querySelector("img");
-  const imgWidth = img.getBoundingClientRect().width;
-  const content = box.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const imgWidth = img ? img.getBoundingClientRect().width : NaN;
+  const content = box.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
+    - parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth);
   entry.image = { width: +imgWidth.toFixed(1), boxContent: +content.toFixed(1) };
   const caption = el.querySelector("figcaption");
   let captionInside = true;
   if (caption) {
     const c = caption.getBoundingClientRect();
+    const ccs = getComputedStyle(caption);
+    // A line height of "normal" has no px value, so use 1.2 times the font size.
+    const lineHeight = parseFloat(ccs.lineHeight) || 1.2 * parseFloat(ccs.fontSize);
     captionInside = c.left >= box.left - TOL && c.right <= box.right + TOL;
-    entry.caption = { lines: Math.round(c.height / parseFloat(getComputedStyle(caption).lineHeight || 20)), inside: captionInside };
+    entry.caption = { lines: Math.round(c.height / lineHeight), inside: captionInside };
   }
   entry.checks = {
     float: cs.float === side,

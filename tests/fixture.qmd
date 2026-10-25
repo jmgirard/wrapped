@@ -87,36 +87,53 @@ knitr::kable(head(cars, 3))
 
 The figure above keeps its normal layout. See @fig-after-table and @tbl-cars.
 
-## README examples
-
-Each figure example in `README.md` appears here, with only ids and file names changed. The `wrap-clear` example is in `stop-rule.qmd`, and the `wrapped:` example is in `defaults.qmd`.
-
-![Mean ratings by condition.](plot.png){#fig-readme-md .wrap-right width="40%"}
-
-Text beside the markdown example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-
-::: {#fig-readme-div .wrap-left width="35%"}
-![](plot.png)
-
-Ratings by group.
-:::
-
-Text beside the div example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-
-![](plot.png){.wrap-right width="20%" fig-alt="Lab logo"}
-
-Text beside the uncaptioned example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+## A cell figure with no wrap class
 
 ```{r}
-#| label: fig-readme-cell
-#| fig-cap: "A scatter plot."
-#| classes: wrap-right
+#| label: fig-unwrapped-cell
+#| fig-cap: "A cell figure with no wrap class."
 #| out-width: "30%"
 plot(1:10)
 ```
 
-Text beside the code cell example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+The figure above keeps its normal layout and its 30% width. See @fig-unwrapped-cell.
 
-![Mean ratings by condition.](plot.png){#fig-readme-gap .wrap-left width="3in" wrap-gap="2em"}
+## A captioned image with no id
 
-Text beside the gap example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+![Lab logo](plot.png){.wrap-right width="20%"}
+
+The paragraph after the captioned image with no id wraps around it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## An image inside a link
+
+[![](plot.png){.wrap-left width="20%"}](https://example.com)
+
+The image above does not wrap, and the render prints a warning for it.
+
+## A comment after the figure
+
+![A figure with a comment after it.](plot.png){#fig-comment .wrap-right width="30%"}
+
+<!-- A comment between the figure and its text. -->
+
+The paragraph after the comment wraps around the figure. See @fig-comment. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A width that is not a length
+
+::: {#fig-bad-width .wrap-left width="banana" wrap-gap="wide"}
+![](plot.png)
+
+A figure with a width and a gap that are not lengths.
+:::
+
+The figure takes the default width and gap, and the render prints a warning for each. See @fig-bad-width. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A figure with its own style
+
+::: {#fig-styled .wrap-right width="30%" style="border: 1px solid gray;"}
+![](plot.png)
+
+A figure with its own style.
+:::
+
+The figure keeps its border. See @fig-styled. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
