@@ -109,3 +109,38 @@ A document rendered to PDF through LaTeX with the extension installed shows body
 - re-review after the AC2 amendment (6b4e3d2): `main` still a40abc1; `git diff e87bec1 HEAD` outside `cairn/` is empty, so the 21-render verify run and the LaTeX render above stand for the current code.
 - AC2 (amended): page images of the LaTeX render (13 pages, `pdftoppm -r 50`). 15 figures wrap (AC1). The 13 that AC5 does not plant each sit on their side beside lines of the paragraph right after them on the same page: fig-md and fig-div (p1), fig-inner and fig-cell (p2), the uncaptioned image (p3), the Lab-logo image and fig-comment (p5), fig-bad-width and fig-styled (p6), fig-clamp and fig-raw (p7), `#logo` (p8), fig-bottom (p9). AC5's fig-break (left) and fig-break-lines (right) move to pages 11 and 13 and sit on their sides beside lines of later paragraphs there.
 - gate: `cairn_validate.py` exit 0, all checks pass; no DESIGN principle changed, so no `cairn_impact`. Profile gate: one version marker (`_extension.yml` 0.1.0, unchanged on the branch); verify 21 of 21 pass on the review code; changelog "none", no entry read.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: the filter reads only `classoption`, so a class that is two-column by default (IEEEtran rendered: a wrappedfigure in a column, no warning) is not detected — follow-up, row "Detect two-column LaTeX classes and gaps"; README now says only `classoption` is read, fixed a4a855b
+- diff-bug #2: `%g` writes an exponent, so `width="0.0001%"` gives `1e-06\linewidth` and LaTeX stops — fix now: decimals with no exponent, regression `fig-bad-lines` in `tests/tex-options.qmd` (`gap=0.00001\linewidth`), fixed a4a855b
+- diff-bug #3: global save and restore of `\columnsep` leaks a local value, and a `multicols` that starts while a figure waits takes the figure's gap — follow-up, row "Detect two-column LaTeX classes and gaps"
+- diff-bug #4: `twocolumn=false` matched the two-column pattern (confirmed with the old pattern in `pandoc lua`) — fix now: options parsed one by one, `twocolumn`, `=true`, `=on`, `=yes` count; `tests/tex-options.qmd` sets `twocolumn=false` and wraps, fixed a4a855b
+- diff-bug #5: LaTeX dropped an image's `height` with no warning — fix now: an image with a height keeps it and loses its width, giving `width=\linewidth,height=1in,keepaspectratio` (`fig-height` in `tests/tex-options.qmd`); README says so, fixed a4a855b
+- diff-bug #6: the HTML lone-image path kept `wrap-lines` as `data-wrap-lines` — fix now, fixed 9989f94
+- diff-bug #7: `wrapped.tex` needs a 2020-10 or newer LaTeX kernel, which Quarto's own template does not — reject, edge: a TeX distribution older than 2020 is outside Quarto 1.9's common use (it installs current TinyTeX), and the effect is a LaTeX error
+- diff-bug #8: the end-of-wrap skip follows `wrap-lines`, so a large value leaves blank lines before the next figure — follow-up, absorbed into row "Honor wrap-clear and figures in LaTeX"
+- diff-bug #9 (tests): `pdf-ua1` repeats `pdf-ua` — reject, planned change: AC6 names the ua-1 render
+- diff-bug #10 (tests): nothing pinned the alt text — fix now: the `.tex` snapshot records each image's `\includegraphics` options, so `alt={…}` shows in `pdf-ua.pdf.txt`; kinds, labels, and environment options unchanged in all 8 changed PDF snapshots, fixed a4a855b
+- diff-bug #11 (tests): `stop-rule.pdf` repeats one branch 11 times — reject, planned change: AC7 names the render, and the snapshot is the profile's test form
+- diff-bug #12 (tests): no snapshot pins `wrapped.tex` behavior — reject, planned change: the profile keeps layout out of the verify command, and AC2, AC4, and AC5 check layout on page images
+- diff-bug #13 (tests): the `tex_default` and `checked_lines` warnings had no test — fix now: `tests/tex-options.qmd` fires both (`50vw` metadata, `wrap-lines="banana"`), fixed a4a855b
+- blame-history #1: a moved figure crosses a heading, which DESIGN's stop-rule sentence did not say — fix now: DESIGN states it, fixed 9989f94
+- blame-history #2: a two-column document whose only wrapped figure precedes a heading still prints the two-column warning — reject, false: D-003 and E6 govern the per-figure warning; the one format warning follows `found_wrap`, as for Typst and Word since M003
+- blame-history #3: same as diff-bug #6 — fix now, fixed 9989f94
+- blame-history #4: Typst and Word floats keep the `wrap-lines` attribute — reject, false: `fixture.typ` and `word/document.xml` hold "wrap-lines" only in the fixture's heading and body text
+- blame-history #5: the image-width column could not tell the box width from the author's — fix now: same change as diff-bug #10, fixed a4a855b
+- blame-history #6: the AC2 amendment relaxes the paragraph-after rule for moved figures — reject, planned change: a recorded amendment return
+- prior-review #1: the README `wrap-lines` example was not in `tests/readme.qmd` — fix now, fixed 9989f94
+- prior-review #2: the README's general stop rule named `wrap-clear` with no LaTeX note — fix now, fixed 9989f94
+- prior-review #3: "(corrected M004)" marks in DESIGN — reject, false: the tracking rules require that mark on a correction of a current-knowledge file
+- prior-review #4: AC2 was reworded with no user approval — reject, false: a wording-only amendment takes no stop under the rules, and the work log records it
+- prior-review #5: context warnings now print in LaTeX; ROADMAP W2 row still open — noted, no action (planned; hygiene graduates the row)
+- ripple #1: README said only HTML prints no warning for a figure before a heading — fix now, fixed 9989f94
+- ripple #2: research E12 row promised ua-1 tags — fix now, corrected in place, fixed 9989f94
+- ripple #3: same as prior-review #1 — fix now, fixed 9989f94
+- ripple #4: research W2 limits said a page break "fails" — fix now, corrected in place, fixed 9989f94
+- ripple #5: research W2 row gave the spike's `fig-pos` — fix now, row corrected, fixed 9989f94; line 69 is the dated spike record and stays
+- ripple #6: DESIGN Known issues says none while the overlap is documented — reject, false: the overlap has a candidate row, and Known issues holds only limitations with no planned work
+- ripple #7: ROADMAP row "Wrap figures in HTML and LaTeX output" still says W2 is left — reject, planned change: step 9 hygiene graduates it
+- ripple #8: DESIGN and CLAUDE.md name Typst and Word as goals — reject, false: they state scope, and the README says those formats are planned
+- re-check after fixes: `python3 tests/verify.py` on a4a855b, 22 of 22 pass. The fixes leave the fixture's `.tex` environment and image options unchanged (snapshot comparison above), so the page-image evidence stands.
+- snapshot: changed-snapshot list empty — the repo's snapshots live under `tests/_snapshots/`, not a `_snaps` or `__snapshots__` directory.
