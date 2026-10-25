@@ -572,12 +572,18 @@ local function wrapped_image_div(img)
 end
 
 -- In LaTeX, an image with no caption goes in a raw wrappedfigure. The image
--- stays a Pandoc image, so the LaTeX writer keeps its alt text.
+-- stays a Pandoc image, so the LaTeX writer keeps its alt text. Quarto
+-- writes fig-alt as alt text only for a figure, so an image with fig-alt
+-- and no description takes fig-alt as its description.
 local function wrapped_image_tex(img)
   local class = wrap_class(img.classes)
   local opts = tex_options(class, img.attributes.width, img.attributes["wrap-gap"],
     img.attributes["wrap-lines"], pandoc.utils.stringify(img.src))
   clean_image(img)
+  local alt = img.attributes["fig-alt"]
+  if alt and #img.caption == 0 then
+    img.caption = pandoc.Inlines(alt)
+  end
   return pandoc.List({
     pandoc.RawBlock("latex", "\\begin{wrappedfigure}[" .. opts .. "]\n\\centering"),
     pandoc.Plain({ img }),

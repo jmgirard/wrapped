@@ -1,0 +1,13 @@
+---
+title: "wrapped fixture: a two-column document"
+filters:
+  - wrapped
+format:
+  pdf:
+    keep-tex: true
+classoption: twocolumn
+---
+
+![A wrapped figure in a two-column document.](plot.png){#fig-two .wrap-right width="40%"}
+
+The figure keeps a normal layout, and the render prints one warning. See @fig-two. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
