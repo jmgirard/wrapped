@@ -302,6 +302,10 @@ wrapped figures:
 
 - Microsoft Word 16.114 on macOS: text sits beside every wrapped figure.
 - LibreOffice 26.8 on macOS: text sits beside every wrapped figure.
+- Google Docs: no text sits beside the figure. The figure and its caption
+  sit on the figure's side on lines of their own, and the text starts
+  below them. Nothing is lost. This was checked on the first figure of the
+  test document.
 
 Right-to-left Word documents are not tested.
 
