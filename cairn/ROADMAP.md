@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-25 (M004 done: HTML and LaTeX core row graduated, M001 row pruned, two LaTeX follow-up rows added, three lessons captured)_
+_Last hygiene check: 2026-10-25 (M005 done: Typst row graduated, M002 row pruned, three Typst follow-up rows added, three lessons captured, one known issue)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-25 (M004 done: HTML and LaTeX core row graduated, M
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M005 | Wrap figures in Typst PDF output | review | — | high | milestones/M005-typst-wrap.md |
+| M005 | Wrap figures in Typst PDF output | done | — | high | milestones/archive/M005-typst-wrap.md |
 | M004 | Wrap figures in LaTeX PDF output | done | M002, M003 | high | milestones/archive/M004-latex-wrap.md |
 | M003 | Fall back in contexts that cannot wrap | done | M002 | high | milestones/archive/M003-context-fallbacks.md |
-| M002 | Wrap figures in HTML output | done | — | high | milestones/archive/M002-html-wrap.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -26,7 +25,6 @@ _Last hygiene check: 2026-10-25 (M004 done: HTML and LaTeX core row graduated, M
      ending with `(#N)` for a row written for GitHub issue N, such as
      `Fix SE of skewness calculation (#100)`; `/cairn-triage` offers a new title for one
      with fewer than 5 words or more than 40 characters; tracking-rules "Candidate short title" has the whole rule -->
-- Wrap figures in Typst PDF output: W3, with wrap-it bundled under `typst/packages`. Spike S3 in M001 showed that wrap-it 0.1.1 renders wrapped text with a citation. Add a `@citation` in wrapped text to `tests/fixture.qmd`, as the research page's test plan asks (M002 review, ripple #4) — added 2026-10-24 — references/wrap-mechanisms.md — started M005
 - Wrap figures in Word output with frames: W4. Spike S4 in M001 showed that Word opens the file and shows one merged frame. This work also checks how LibreOffice and Google Docs show the frame (moved from M001 on 2026-10-24), and shows Word the frame `w:pPr` in the order a filter makes, after Pandoc's own `w:pPr`, with the caption style checked (found at M001 review) — added 2026-10-24 — references/wrap-mechanisms.md
 - Honor wrap-clear and figures in LaTeX: in PDF through LaTeX, a figure with no wrap class in the lines beside a wrapped figure overlaps its caption (stop-rule case 8), and a `wrap-clear` div does nothing. The wrapper's end-of-wrap step (skip the lines left, then `\WFclear`) could run before such a figure and at a `wrap-clear` div. That skip also follows `wrap-lines`, so a large value leaves blank lines before the next wrapped figure (M004 review, diff-bug #8). Found by the M004 claim audit — added 2026-10-25 — milestones/M004-latex-wrap.md
 - Detect two-column LaTeX classes and gaps: the filter reads only `classoption`, so a class that is two-column by default (IEEEtran, acmart sigconf, revtex) or a `\twocolumn` in a header gets wrapfig figures with no warning. `wrapped.tex` sets `\columnsep` globally while a moved figure waits, so a `multicols` that starts then, or a column page shipped then, takes the figure's gap, and a local `\columnsep` around a wrappedfigure leaks out on restore. Found at M004 review (diff-bug #1, #3) — added 2026-10-25 — milestones/M004-latex-wrap.md
