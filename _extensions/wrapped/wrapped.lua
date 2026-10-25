@@ -78,26 +78,28 @@ local function style_for(width, gap, where, existing)
   return style
 end
 
--- Reads the first wrap class and the first width of the images in a list
+-- Reads the first wrap class, width, and wrap-gap of the images in a list
 -- of blocks, and changes nothing.
 local function image_wrap(blocks)
-  local class, width
+  local class, width, gap
   blocks:walk({
     Image = function(img)
       class = class or wrap_class(img.classes)
       width = width or img.attributes.width
+      gap = gap or img.attributes["wrap-gap"]
     end,
   })
-  return class, width
+  return class, width, gap
 end
 
--- Removes the wrap class from each image in a wrapped figure. In HTML it
--- also removes the width, so the image fills the figure box. Elsewhere the
--- image keeps its width.
+-- Removes the wrap class and wrap-gap from each image in a wrapped figure.
+-- In HTML it also removes the width, so the image fills the figure box.
+-- Elsewhere the image keeps its width.
 local function clean_images(blocks)
   return blocks:walk({
     Image = function(img)
       strip_wrap(img.classes)
+      img.attributes["wrap-gap"] = nil
       if is_html then img.attributes.width = nil end
       return img
     end,
@@ -166,7 +168,7 @@ local function float_target(float)
     strip_wrap(float.classes)
     return float
   end
-  local img_class, img_width = image_wrap(float.content)
+  local img_class, img_width, img_gap = image_wrap(float.content)
   local class = wrap_class(float.classes) or carried or img_class
   if not class then return nil end
   found_wrap = true
@@ -179,7 +181,7 @@ local function float_target(float)
     img_width = nil
   end
   local width = float.attributes.width or img_width
-  local gap = float.attributes["wrap-gap"]
+  local gap = float.attributes["wrap-gap"] or img_gap
   float.attributes.width = nil
   float.attributes["wrap-gap"] = nil
   float.classes:insert(class)
@@ -201,7 +203,7 @@ end
 -- the Figure inside a .wrapped-image box. Returning false stops the
 -- traversal from visiting the Figure again inside the box.
 local function figure_block(fig)
-  local img_class, img_width = image_wrap(fig.content)
+  local img_class, img_width, img_gap = image_wrap(fig.content)
   local class = wrap_class(fig.classes) or img_class
   if not class then return nil end
   found_wrap = true
@@ -209,9 +211,11 @@ local function figure_block(fig)
   fig.content = clean_images(fig.content)
   if not is_html then return fig end
   local width = fig.attributes.width or img_width
+  local gap = fig.attributes["wrap-gap"] or img_gap
   fig.attributes.width = nil
+  fig.attributes["wrap-gap"] = nil
   local box = pandoc.Div({ fig }, pandoc.Attr("", { "wrapped-image", class },
-    { style = style_for(width, nil, "a figure with no id", nil) }))
+    { style = style_for(width, gap, "a figure with no id", nil) }))
   return box, false
 end
 
@@ -234,9 +238,11 @@ local function wrapped_image_div(img)
   local class = wrap_class(img.classes)
   strip_wrap(img.classes)
   local width = img.attributes.width
+  local gap = img.attributes["wrap-gap"]
   img.attributes.width = nil
+  img.attributes["wrap-gap"] = nil
   return pandoc.Div({ pandoc.Plain({ img }) }, pandoc.Attr("", { "wrapped-image", class },
-    { style = style_for(width, nil, pandoc.utils.stringify(img.src), nil) }))
+    { style = style_for(width, gap, pandoc.utils.stringify(img.src), nil) }))
 end
 
 -- A block that a group takes in: a paragraph that does not start a wrap of

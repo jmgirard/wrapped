@@ -6,13 +6,13 @@ Run from the repository root:
     python3 tests/verify.py --update   # render and rewrite the snapshots
 
 Needs Quarto, R with knitr, and TinyTeX. Each render must exit with status
-0. A snapshot under tests/_snapshots/ records only what the filter decides,
-never the rest of Quarto's output. For every format it holds the
-extension's warnings. For HTML it also holds the breakpoint value, the wrap
-class and style of every figure div and wrapped box, the wrap class, style,
-and width of every image, and the members of every .wrap-group. For PDF and
-Typst it also holds the label of each figure environment and its kind. For
-Word it holds the warnings only. The script exits with status 1 on a failed
+0. A snapshot under tests/_snapshots/ records the parts of a render that
+show what the filter decided. For every format it holds the extension's
+warnings. For HTML it also holds the breakpoint value, the wrap class and
+style of every figure div and wrapped box, the wrap class, style, and width
+of every image, and the members of every .wrap-group. For PDF it also holds
+the kind and label of each figure environment. For Typst it holds the label
+of each labeled figure. For Word it holds the warnings only. The script exits with status 1 on a failed
 render or a snapshot difference.
 
 Some fixtures exist for the browser checks in tests/layout.js, which measure

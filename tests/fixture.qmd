@@ -59,7 +59,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 ## Uncaptioned image
 
-![](plot.png){.wrap-right width="20%" fig-alt="A small plot"}
+![](plot.png){.wrap-right width="20%" wrap-gap="wide" fig-alt="A small plot"}
 
 The paragraph after the uncaptioned image wraps around it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
@@ -100,7 +100,7 @@ The figure above keeps its normal layout and its 30% width. See @fig-unwrapped-c
 
 ## A captioned image with no id
 
-![Lab logo](plot.png){.wrap-right width="20%"}
+![Lab logo](plot.png){.wrap-right width="20%" wrap-gap="2em"}
 
 The paragraph after the captioned image with no id wraps around it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 

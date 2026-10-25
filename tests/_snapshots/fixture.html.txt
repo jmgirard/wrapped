@@ -2,6 +2,7 @@
 1x wrapped: the image plot.png is not a figure or the only content of its paragraph, so it does not wrap.
 1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
 1x wrapped: wrap-gap "wide" on #fig-bad-width is not a length or a percent, so it is 1em.
+1x wrapped: wrap-gap "wide" on plot.png is not a length or a percent, so it is 1em.
 # breakpoint
 576px
 # figures
@@ -13,7 +14,7 @@ fig-cell: wrap-left style=--wrap-width: 40%; --wrap-gap: 1em;
 fig-plain: - style=-
 fig-after-table: - style=-
 fig-unwrapped-cell: - style=-
-(box): wrapped-image wrap-right style=--wrap-width: 20%; --wrap-gap: 1em;
+(box): wrapped-image wrap-right style=--wrap-width: 20%; --wrap-gap: 2em;
 fig-comment: wrap-right style=--wrap-width: 30%; --wrap-gap: 1em;
 fig-bad-width: wrap-left style=--wrap-width: 40%; --wrap-gap: 1em;
 fig-styled: wrap-right style=--wrap-width: 30%; --wrap-gap: 1em; border: 1px solid gray;
