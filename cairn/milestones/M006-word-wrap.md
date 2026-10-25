@@ -2,7 +2,7 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M006: Wrap figures in Word output with frames
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** high
 - **Depends on:** —
 - **Driving RR:** —
@@ -81,6 +81,7 @@ A document rendered to Word with the extension installed shows body text beside 
 - 2026-10-25: T4 progress: `verify.py --update` passes 33 renders; only docx snapshots changed (fixture rewritten, four new). A planted copy of the fixture docx (clears removed, one caption's side changed) changes the frame summary and reports 28 framed paragraphs outside a frame, so the check can fail. LibreOffice 26.8.1.1 installed (D-005); its PDF of the fixture shows text beside all 15 wrapped figures, the page-bottom frame staying on its page. Word 16.114.1: docx-reference text block 90-523 pt (8666 twips), 30% and 50% figures measure 29.96% and 49.9%; stop-rule case 11's `wrap-clear` text starts below the frame. README Word section written (Google Docs pending the user's look); `tests/word-pdf.applescript` added.
 - 2026-10-25: Google Docs look (the user's screenshot of the fixture's first figure): the figure and caption sit on the right on their own lines, the caption wider than the frame and not italic; the text starts below at full width; nothing lost. README states this, limited to the first figure.
 - 2026-10-25: T2, T3, T4 done: `python3 tests/verify.py` passes all 33 renders.
+- 2026-10-25: claim audit: 118 claims read, 3 corrected — _extensions/wrapped/wrapped-docx.lua, tests/verify.py, README.md, tests/*.qmd, tests/reference_narrow.py, tests/word-pdf.applescript, _extension.yml. The two verify.py docstring claims passed the re-read. The wrapped-docx.lua Figure comment failed it (a one-image Figure is two paragraphs, not a table); reworded from this session's T2 output, where a raw inline in the Figure's image paragraph made Pandoc write a FigureTable. About 12 claims about what Word, LibreOffice, and Google Docs show rest on the page images and the user's look.
 
 ## Decisions
 

@@ -34,10 +34,11 @@ local function frame_para(block, xml)
   return block
 end
 
--- Pandoc writes a Figure (a captioned image with no #fig- id) as a one-cell
--- table, and a frame in a table cell is not beside the body text. So the
--- Figure becomes its image paragraphs and a caption paragraph in the
--- ImageCaption style, as Pandoc styles it, in a div that keeps its id.
+-- A Figure (a captioned image with no #fig- id) has no place for a raw
+-- w:framePr: with a raw inline beside its image, Pandoc writes the Figure as
+-- a one-cell table, and a frame in a table cell is not beside the body
+-- text. So the Figure becomes its image paragraphs and a caption paragraph
+-- in the ImageCaption style, as Pandoc styles it, in a div that keeps its id.
 local CAPTION_PR = '<w:pPr><w:pStyle w:val="ImageCaption"/></w:pPr>'
 
 local function figure_paras(fig)

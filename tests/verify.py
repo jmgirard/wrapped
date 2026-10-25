@@ -346,11 +346,12 @@ def docx_frame(p):
 
 def docx_frames(body):
     """Each frame in the body: consecutive top-level paragraphs with the same
-    w:framePr. Each frame records its side, width, and gap, the bookmark
-    open before it or its image's name, whether each image fills the frame
-    width, the image's alt text, each paragraph's style, and the kind of each
-    block after it up to and including the paragraph that holds the
-    clearing break ("p" for a paragraph)."""
+    w:framePr. Each frame records its side, width, gap, and anchor, the
+    bookmark open before it ("-" if none), each image's file name, whether
+    it fills the frame width, and its alt text, whether each caption
+    paragraph has the ImageCaption style, and the kind of each block after
+    it up to and including the paragraph that holds the clearing break ("p"
+    for a paragraph)."""
     lines = []
     framed = 0
     children = list(body)
