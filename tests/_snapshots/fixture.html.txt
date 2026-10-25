@@ -1,0 +1,56 @@
+# warnings
+1x wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.
+1x wrapped: the div #note is not a figure, so it does not wrap.
+1x wrapped: the image plot.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
+1x wrapped: width "wide" on #logo is not a length or a percent, so it is 40%.
+1x wrapped: wrap-gap "wide" on #fig-bad-width is not a length or a percent, so it is 1em.
+1x wrapped: wrap-gap "wide" on plot.png is not a length or a percent, so it is 1em.
+# breakpoint
+576px
+# figures
+fig-md: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
+fig-div: wrap-left style=--wrap-gap: 1em; --wrap-width: 3in
+fig-inner: wrap-right style=--wrap-gap: 2em; --wrap-width: 35%
+fig-cell: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+(box): wrapped-image wrap-right style=--wrap-gap: 1em; --wrap-width: 20%
+fig-plain: - style=-
+fig-after-table: - style=-
+fig-unwrapped-cell: - style=-
+(box): wrapped-image wrap-right style=--wrap-gap: 2em; --wrap-width: 20%
+fig-comment: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
+fig-bad-width: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-styled: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%; border: 1px solid gray
+fig-clamp: wrap-left style=--wrap-gap: 2VMIN; --wrap-width: clamp(150px, 30%, 400px)
+fig-raw: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
+(box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+# images
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+fig-cell-1.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=width:50.0% width=-
+plot.png: wrap=- style=width:50.0% width=-
+fig-unwrapped-cell-1.png: wrap=- style=width:30.0% width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=width:20.0% width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+# groups
+fig-md, p, p
+fig-div, p, p
+fig-inner, p, p
+cell, p, p
+wrapped-image, p
+wrapped-image, p
+fig-comment, comment, p
+fig-bad-width, p
+fig-styled, p
+fig-clamp, p
+fig-raw, p
+wrapped-image, p

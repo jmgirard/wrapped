@@ -1,0 +1,127 @@
+---
+title: "wrapped fixture: the stop rule"
+filters:
+  - wrapped
+format: html
+---
+
+## Case 1: ATX heading
+
+![Stop-rule case 1.](plot.png){#fig-stop-1 .wrap-right width="35%"}
+
+A short paragraph beside figure 1.
+
+### A heading stops the wrap
+
+Text after the stop block.
+
+## Case 2: bullet list
+
+![Stop-rule case 2.](plot.png){#fig-stop-2 .wrap-left width="35%"}
+
+A short paragraph beside figure 2.
+
+- First item
+- Second item
+
+Text after the stop block.
+
+## Case 3: ordered list
+
+![Stop-rule case 3.](plot.png){#fig-stop-3 .wrap-right width="35%"}
+
+A short paragraph beside figure 3.
+
+1. First item
+2. Second item
+
+Text after the stop block.
+
+## Case 4: blockquote
+
+![Stop-rule case 4.](plot.png){#fig-stop-4 .wrap-left width="35%"}
+
+A short paragraph beside figure 4.
+
+> A blockquote stops the wrap.
+
+Text after the stop block.
+
+## Case 5: pipe table
+
+![Stop-rule case 5.](plot.png){#fig-stop-5 .wrap-right width="35%"}
+
+A short paragraph beside figure 5.
+
+| Column A | Column B |
+|---|---|
+| 1 | 2 |
+
+Text after the stop block.
+
+## Case 6: fenced code block
+
+![Stop-rule case 6.](plot.png){#fig-stop-6 .wrap-left width="35%"}
+
+A short paragraph beside figure 6.
+
+```
+code stops the wrap
+```
+
+Text after the stop block.
+
+## Case 7: knitr cell
+
+![Stop-rule case 7.](plot.png){#fig-stop-7 .wrap-right width="35%"}
+
+A short paragraph beside figure 7.
+
+```{r}
+1 + 1
+```
+
+Text after the stop block.
+
+## Case 8: figure with no wrap class
+
+![Stop-rule case 8.](plot.png){#fig-stop-8 .wrap-left width="35%"}
+
+A short paragraph beside figure 8.
+
+![A figure with no wrap class.](plot.png){#fig-stop-plain width="30%"}
+
+Text after the stop block.
+
+## Case 9: callout
+
+![Stop-rule case 9.](plot.png){#fig-stop-9 .wrap-right width="35%"}
+
+A short paragraph beside figure 9.
+
+::: {.callout-note}
+A callout stops the wrap.
+:::
+
+Text after the stop block.
+
+## Case 10: horizontal rule
+
+![Stop-rule case 10.](plot.png){#fig-stop-10 .wrap-left width="35%"}
+
+A short paragraph beside figure 10.
+
+---
+
+Text after the stop block.
+
+## Case 11: wrap-clear div
+
+![Stop-rule case 11.](plot.png){#fig-stop-11 .wrap-right width="35%"}
+
+A short paragraph beside figure 11.
+
+::: {.wrap-clear}
+:::
+
+Text after the stop block.

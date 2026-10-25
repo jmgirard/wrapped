@@ -38,9 +38,10 @@ stable release whose source has the loader for an extension's
 The spikes ran only on Quarto 1.10.19, so behavior on 1.9.36 to 1.10.18 is
 not tested.
 
-### Planned syntax
+### Syntax
 
-Not built yet. This is the interface the first milestones implement.
+HTML output implements this syntax. The other formats keep a normal figure
+until their milestones land.
 
 Captioned figure, image form:
 
@@ -79,7 +80,7 @@ Document or project defaults go under one metadata key:
 wrapped:
   width: 35%
   gap: 0.75em
-  breakpoint: 576px   # HTML: below this width, figures stop floating
+  breakpoint: 576px   # HTML: at this width or narrower, figures stop floating
 ```
 
 Stop rule: the figure wraps the paragraphs that follow it. Wrapping stops at
@@ -90,8 +91,8 @@ part, because `wrapfigure` measures its own height.
 
 ## Function Families
 
-None yet (observed 2026-10-24). The planned surface is one filter with the
-syntax above.
+One filter, `_extensions/wrapped/wrapped.lua`, with the syntax above and its
+stylesheet `wrapped.css`. Users reach it through `filters: - wrapped`.
 
 ## Conventions
 
@@ -117,8 +118,24 @@ None yet.
 
 ## Architecture
 
-No code yet (observed 2026-10-24). The planned file layout, the two filter
-entry points, and the mechanism for each format are in
+The extension is `_extensions/wrapped/`. `_extension.yml` holds the one
+version marker and runs the filter at `pre-quarto`. The filter makes five
+passes:
+
+1. It reads the `wrapped:` metadata and checks each length.
+2. In a top-down pass, it carries a code cell's wrap class to that cell's
+   floats, moves an image's class to its float, and sets the box width and
+   gap as CSS custom properties. A captioned image with no id gets a
+   `.wrapped-image` box.
+3. It groups each wrapped figure with the paragraphs after it in a
+   `.wrap-group` div. The group's `display: flow-root` gives the stop rule.
+4. It warns for a wrap class on an image it cannot place.
+5. In HTML it adds the stylesheet and the breakpoint rule. Elsewhere it
+   prints one format warning.
+
+The grouping pass finds a wrapped float by Quarto's internal
+`__quarto_custom_id` attribute. `tests/verify.py` shows a change there as a
+snapshot difference. The mechanism for each other format is in
 `references/wrap-mechanisms.md`.
 
 ## Known issues

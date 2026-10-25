@@ -1,0 +1,10 @@
+# warnings
+1x wrapped: breakpoint "50%" on the wrapped metadata is not a length, so it is 576px.
+# breakpoint
+576px
+# figures
+fig-meta-breakpoint: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-meta-breakpoint, p

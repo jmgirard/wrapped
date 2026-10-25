@@ -14,19 +14,27 @@ A `v<version>` tag and a GitHub release mark the version for
 `quarto add jmgirard/wrapped@v<version>` and the releases page.
 
 ## verify
-Run by `/milestone-implement` (per task) and `/hotfix` (gate-lite). No
-automated verify yet: the repo has no extension code and no fixture document.
-The first milestone that adds code replaces this paragraph with its verify
-command. That command will render one fixture document to HTML, PDF through
-LaTeX, PDF through Typst, and docx. It will then compare the intermediate
-output with committed snapshots (`cairn/references/wrap-mechanisms.md`, "Test
-plan"). Until then, rely on the acceptance-criteria evidence.
+Run by `/milestone-implement` (per task) and `/hotfix` (gate-lite). From the
+repository root, run:
+
+```
+python3 tests/verify.py
+```
+
+It renders the fixtures under `tests/` to HTML, PDF through LaTeX, PDF
+through Typst, and docx. It compares the parts that the filter changes with
+the snapshots in `tests/_snapshots/`. It exits with status 1 on a failed
+render or a difference. It needs Quarto, R with knitr, and TinyTeX. After an
+intended output change, run it with `--update` and review the snapshot diff.
+Layout is not in this command. Measure it in a browser with
+`tests/layout.js`, as its header says.
 
 ## consistency-gate
 Toolchain tests that `/milestone-review` runs *in addition to* the universal
 cairn-file tests (`cairn_validate`, coverage completeness, `cairn_impact`):
 - Every version marker that `release-walk` names holds the same version.
-- The verify render finishes with no errors on the review head.
+- The verify command passes on the review head: every fixture renders with
+  no errors, and every snapshot matches.
 - The changelog slot says "none", so the gate reads no changelog entry.
 
 ## test-doctrine
@@ -42,10 +50,10 @@ tracking-rules. An extension is tested by rendering, not by calling functions:
 
 ## release-walk
 The release procedure `/cairn-release` follows. The version marker is
-`version:` in `_extensions/wrapped/_extension.yml`. A later change can add the
-version to another file, for example an `add_html_dependency{ version = ... }`
-call in the filter. If it does, that change names the file here. Every named
-marker holds the same version. The version rises at release (CLAUDE.md), so the
+`version:` in `_extensions/wrapped/_extension.yml`. The filter's
+`add_html_dependency` call carries no version, so it is not a marker. A later
+change can add the version to another file. If it does, that change names the
+file here. Every named marker holds the same version. The version rises at release (CLAUDE.md), so the
 release-time arm is the usual path.
 Before step 1 of `/cairn-release`,
 run `git fetch --tags <base>` and read the remote default branch's tip:
@@ -87,8 +95,8 @@ Recognized by `cairn-init` from `_extensions/*/_extension.yml` or
 `pyproject.toml`/`setup.py`/`setup.cfg`, and no
 `.claude-plugin/plugin.json`/`.claude-plugin/marketplace.json`. It ranks ahead
 of docker-image and generic. This repo had no marker at init (2026-10-24), so
-the user chose the profile. `_extensions/wrapped/_extension.yml` arrives with
-the first code milestone.
+the user chose the profile. The repo now holds
+`_extensions/wrapped/_extension.yml`, so detection finds the profile.
 
 ## greenfield-openers
 Answered at init on 2026-10-24. The extension type is a filter. The version

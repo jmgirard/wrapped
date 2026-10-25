@@ -1,0 +1,171 @@
+---
+title: "wrapped fixture"
+filters:
+  - wrapped
+format:
+  html: default
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
+  docx: default
+---
+
+## Markdown image
+
+![Mean ratings by condition.](plot.png){#fig-md .wrap-right width="30%" fig-align="left"}
+
+The paragraph after the figure wraps around it. See @fig-md. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## Div figure
+
+::: {#fig-div .wrap-left width="3in"}
+![](plot.png)
+
+Ratings by group.
+:::
+
+The paragraph after the div figure wraps to its right. See @fig-div. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## Class on the inner image
+
+::: {#fig-inner wrap-gap="2em"}
+![](plot.png){.wrap-right width="35%"}
+
+A long caption that runs to two or more lines inside the figure box, because the box is narrow and the caption has many words in it.
+:::
+
+The paragraph after this figure wraps around it. See @fig-inner. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## Code cell
+
+```{r}
+#| label: fig-cell
+#| fig-cap: "A figure from a knitr cell."
+#| classes: wrap-left
+plot(1:10)
+```
+
+The paragraph after the cell figure wraps to its right. See @fig-cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## Uncaptioned image
+
+![](plot.png){.wrap-right width="20%" wrap-gap="wide" fig-alt="A small plot"}
+
+The paragraph after the uncaptioned image wraps around it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A cell with no figure
+
+```{r}
+#| classes: wrap-right
+1 + 1
+```
+
+![A figure with no wrap class.](plot.png){#fig-plain width="50%"}
+
+The figure above keeps its normal layout. See @fig-plain.
+
+## A cell with a table
+
+```{r}
+#| label: tbl-cars
+#| tbl-cap: "A table from a cell with a wrap class."
+#| classes: wrap-right
+knitr::kable(head(cars, 3))
+```
+
+![A figure after the table cell, with no wrap class.](plot.png){#fig-after-table width="50%"}
+
+The figure above keeps its normal layout. See @fig-after-table and @tbl-cars.
+
+## A cell figure with no wrap class
+
+```{r}
+#| label: fig-unwrapped-cell
+#| fig-cap: "A cell figure with no wrap class."
+#| out-width: "30%"
+plot(1:10)
+```
+
+The figure above keeps its normal layout and its 30% width. See @fig-unwrapped-cell.
+
+## A captioned image with no id
+
+![Lab logo](plot.png){.wrap-right width="20%" wrap-gap="2em"}
+
+The paragraph after the captioned image with no id wraps around it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## An image inside a link
+
+[![](plot.png){.wrap-left width="20%"}](https://example.com)
+
+The image above does not wrap, and the render prints a warning for it.
+
+## A comment after the figure
+
+![A figure with a comment after it.](plot.png){#fig-comment .wrap-right width="30%"}
+
+<!-- A comment between the figure and its text. -->
+
+The paragraph after the comment wraps around the figure. See @fig-comment. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A width that is not a length
+
+::: {#fig-bad-width .wrap-left width="banana" wrap-gap="wide"}
+![](plot.png)
+
+A figure with a width and a gap that are not lengths.
+:::
+
+The figure takes the default width and gap, and the render prints a warning for each. See @fig-bad-width. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A figure with its own style
+
+::: {#fig-styled .wrap-right width="30%" style="border: 1px solid gray;"}
+![](plot.png)
+
+A figure with its own style.
+:::
+
+The figure keeps its border. See @fig-styled. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## CSS functions and other units
+
+![A figure with a clamp() width and an uppercase unit gap.](plot.png){#fig-clamp .wrap-left width="clamp(150px, 30%, 400px)" wrap-gap="2VMIN"}
+
+The figure takes both values with no warning. See @fig-clamp. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## Raw HTML that is more than a comment
+
+![A figure with raw HTML after its paragraph.](plot.png){#fig-raw .wrap-right width="30%"}
+
+A short paragraph beside the figure. See @fig-raw.
+
+```{=html}
+<!-- a --><div class="raw-block">A raw block between comments.</div><!-- b -->
+```
+
+The raw block above ends the wrap, so it and this paragraph start below the figure.
+
+## A captioned image with an id that is not a figure id
+
+![Logo with its own id.](plot.png){#logo .wrap-left width="wide"}
+
+The image wraps, and the warning names it by its id.
+
+## A div with a wrap class that is not a figure
+
+::: {#note .wrap-right}
+A note in a div with a wrap class.
+:::
+
+The div above does not wrap, and the render prints a warning for it.

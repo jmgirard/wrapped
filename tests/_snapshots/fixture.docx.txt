@@ -1,0 +1,19 @@
+# warnings
+1x wrapped: docx output does not wrap figures yet, so wrapped figures render as normal figures.
+# docx
+image: cx=1600200
+image: cx=5334000
+image: cx=1866900
+image: cx=5334000
+image: cx=1066800
+image: cx=2667000
+image: cx=2667000
+image: cx=1600200
+image: cx=1066800
+image: cx=1066800
+image: cx=1600200
+image: cx=5334000
+image: cx=5334000
+image: cx=5334000
+image: cx=1600200
+image: cx=5334000

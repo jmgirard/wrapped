@@ -1,0 +1,9 @@
+# warnings
+# breakpoint
+800px
+# figures
+fig-defaults: wrap-right style=--wrap-gap: 30px; --wrap-width: 25%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-defaults, p, p
