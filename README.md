@@ -117,9 +117,9 @@ paragraph that you want beside the figure:
 ```
 
 A wrapped figure with no paragraph right after it keeps its normal layout,
-and the render prints no warning. An example is a figure right before a
-heading. Of two wrapped figures in a row, the first keeps its normal layout,
-and the second wraps the paragraphs after it.
+and in HTML the render prints no warning for it. An example is a figure
+right before a heading. Of two wrapped figures in a row, the first keeps its
+normal layout, and the second wraps the paragraphs after it.
 
 ## Where a figure keeps its normal layout
 
@@ -133,8 +133,9 @@ its normal layout, and the render prints one warning that names it.
   subfigure inside a panel.
 - A list, a callout, a `.columns` layout, or a tabset.
 
-A table, such as a `#tbl-` float, does not wrap either, and the render
-prints one warning that names it.
+A table float does not wrap either, and the render prints one warning that
+names it. A `#tbl-` div or a code cell with a `tbl-` label makes a table
+float.
 
 ## Slides
 

@@ -18,9 +18,10 @@ it also holds each image's width from word/document.xml. A revealjs
 snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
 book project: its snapshot holds the HTML parts of each page under _book/,
 and the href of each cross-reference link. For a fixture in MARGIN_IDS, the
-script also renders a copy with no filters and records whether each named
-figure sits in the same column-margin container in both renders. The script
-exits with status 1 on a failed render or a snapshot difference.
+script also renders a copy with no filters and records whether the nearest
+column-margin div around each named figure has the same classes in both
+renders. The script exits with status 1 on a failed render or a snapshot
+difference.
 
 Some fixtures exist for the browser checks in tests/layout.js, which measure
 layout. Those fixtures are rendered here, so their HTML is current, and they

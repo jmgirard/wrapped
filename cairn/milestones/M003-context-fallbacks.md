@@ -2,7 +2,7 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M003: Fall back in contexts that cannot wrap
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** high
 - **Depends on:** M002
 - **Driving RR:** —
@@ -62,6 +62,9 @@ Wrapped figures render as the research page's edge cases E3 to E8, E13, and E15 
 - 2026-10-25: T2 done. A `find_no_text` pre-pass records floats and cell floats whose next block, past comments, is not a joining paragraph, and strips the class from a no-id figure or lone image there. It skips lists inside a code cell or float, where the figure is the last block by design (a first version broke the main fixture's cell figure). The contexts fixture gains a no-id figure and a lone image, each in a context and before a heading.
 - 2026-10-25: T3 done. `verify.py` now renders 14 fixtures: `contexts.html`, the `tests/book/` project (chapters `index.qmd` and `two.qmd`, with `_extensions` and `plot.png` links), and `revealjs.revealjs`. A folder fixture renders as a project and its snapshot lists each page plus xref hrefs. For `contexts`, the script renders a no-filter copy and records whether each E3 figure keeps the same column-margin container; all three do. Snapshots now list `tbl-` floats and read revealjs's `data-src`; the main fixture gains a `tbl-cars` line.
 - 2026-10-25: T4 done. Built-in browser, `tests/layout.js`: revealjs slide at 1050x700, `#fig-slide` computed float right, first line at x=53 y=126 beside the box (620–998, top 115), all checks ok; contexts page at 1200, `#fig-second` float right, first line beside, fallback figures float none; main fixture all 12 figures ok. Fixes: `wrapped.css` sets `max-width: 100%` on wrapped images (revealjs caps images at 95%); `layout.js` scales the computed margin to screen px for scaled slides. A scratch render for the README claims found a panel with no wrap class warning because `image_wrap` read a subfigure's image; it now skips nested floats, and the contexts fixture gains `#fig-plain-panel` as its regression case. README gains the next-block rule, the contexts that keep a normal layout, and a Slides section.
+- 2026-10-25: delegation: claim audit to a fresh Opus reader. It could not open the local server in the browser pane, so the `layout.js` scale comment rests on its code read and on this session's browser run (gap 40 to 36 px after the change).
+- 2026-10-25: claim audit: 54 claims read, 3 corrected — README.md, tests/verify.py
+- 2026-10-25: all tasks done; verify passes (14 renders). Status set to review.
 
 ## Decisions
 
