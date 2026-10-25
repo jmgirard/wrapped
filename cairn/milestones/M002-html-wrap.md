@@ -215,3 +215,6 @@ Independent review, pass 2, on 166651f:
 - ripple #7: DESIGN keeps the heading "Planned syntax". — fix now
 - ripple #8: the research page's W1 stylesheet sketch differs from `wrapped.css`. — fix now: name the working stylesheet
 - ripple #9: E3, E4, E5, and E8 promise one warning, and the filter prints none. — follow-up: held by M003 AC1
+- Pass 2 fix-now lines are fixed in a80e7dc. With the 166651f filter swapped in, the new snapshots went red for each filter fix except the carry reset: no cell or div warning, "a figure with no id" for `#logo`, `clamp()` and `2VMIN` rejected, the raw block inside `fig-raw`'s group, `50%` written as the breakpoint, and no warning for string metadata. The carry reset guards a case no reviewer reproduced, so it has no test.
+- After a80e7dc: `python3 tests/verify.py` passes all 11 renders. At 1200 px all 12 wrapped items in `fixture.html` pass `tests/layout.js`, and the raw block starts below `fig-raw` (5729 against 5712). At 375 px none of them floats.
+- Snapshot files: the step-7 definition names directories called `_snaps` or `__snapshots__`. This repo's `tests/_snapshots/` matches neither, so the list is empty. The snapshot changes on the branch are the planned verify snapshots of T6, T10, and pass 2.
