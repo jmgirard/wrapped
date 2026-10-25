@@ -2,7 +2,7 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M005: Wrap figures in Typst PDF output
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** high
 - **Depends on:** —
 - **Driving RR:** —
@@ -77,6 +77,8 @@ A document rendered to PDF through Typst with the extension installed shows body
 - 2026-10-25: T3 done: `typst_length` and `checked_typst_length` sit beside the LaTeX pair, and `tex_default` became `format_default` for both formats. The new cases (`2pc` gap, `2IN` width with a `1ex` gap, unitless `300` width) went in `tests/defaults.qmd`, not `fixture.qmd`, so the LaTeX fixture's page placement stays as it is. defaults, stop-rule, and contexts render to Typst in `tests/verify.py`: 11, 1, and 4 calls, each matching its HTML group, and contexts prints the same 14 warnings in both formats. Page images show each stop-rule stop block below its figure.
 - 2026-10-25: T4 done: `tests/refs.bib` (from spike S3) and `@smith2020` in the `#fig-md` paragraph, which replaces "dolor sit amet" so the line count stays; the LaTeX page of each of Figures 10 to 16 is the same as on main (`pdftotext` per page). New fixtures `typst-break.qmd` (a raw Typst `#v(14cm)` puts the figure near the page bottom) and `typst-ua.qmd`. In the Typst break render, the whole `wrap-content` box moves to page 2 and leaves page 1 blank below the text above it, because wrap-it puts the grid in an unbreakable `box`. `pdfinfo -struct` shows both alt texts in Figure tags, so no fallback was needed.
 - 2026-10-25: T5 done: `pdftotext -bbox-layout` on the fixture's Typst page 1 puts the text block at x 90 to 522 pt and the text beside `#fig-md` ending at 381.4 pt, so with the 11 pt (1em) gutter the box is 129.6 pt, 30.0% of 432 pt; the `3in` box measures 216 pt. Page images 1 to 8 show each wrapped figure beside its text and each next block below it; the two near-bottom groups move to the next page whole. README gains a "PDF through Typst" section, and the intro, stop, context, and Notes lines now name Typst; Typst keeps a margin figure in the margin (`#notefigure` in contexts.typ). DESIGN Syntax, Function Families, and Architecture passes 4, 5, 7 and the research page's W3 and E10 rows are corrected in place. The plan's T5 named wrap-it #8 as a README limit; the break fixture showed the move to the next page instead, so the README states that, and states #1 as reported and untested.
+- 2026-10-25: claim audit: 60 claims read, 2 corrected — `_extensions/wrapped/wrapped.lua` (the `clean_image` height sentence was false for Typst, where an image with a height was cut off at the box edges; the code now gives a Typst image the box width and drops its height, and `#fig-height` in `tests/defaults.qmd` records `image-width=yes`, where before the fix the `.typ` had `height: 2in` and no width; the `TYPST_UNITS` comment now says em is not absolute). Both re-read against the render and the code.
+- 2026-10-25: all tasks done; verify passes (27 renders); status set to review.
 
 ## Decisions
 

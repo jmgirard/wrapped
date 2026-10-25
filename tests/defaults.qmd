@@ -39,3 +39,9 @@ The width is 2 inches. See @fig-upper. Lorem ipsum dolor sit amet, consectetur a
 ![A figure with a width with no unit, which is pixels.](plot.png){#fig-unitless .wrap-left width="300"}
 
 The width is 300 pixels. See @fig-unitless. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## An image with a height
+
+![A figure whose image sets a height.](plot.png){#fig-height .wrap-right width="20%" height="2in"}
+
+In LaTeX the image keeps its height and fits in the box. In Typst the image fills the box width and keeps its shape. See @fig-height. Lorem ipsum dolor sit amet, consectetur adipiscing elit.

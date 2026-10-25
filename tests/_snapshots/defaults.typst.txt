@@ -5,8 +5,10 @@ figure: fig-defaults image-width=yes
 figure: fig-pica image-width=yes
 figure: fig-upper image-width=yes
 figure: fig-unitless image-width=yes
+figure: fig-height image-width=yes
 # wraps
 align: top + right, columns: (1fr, 25%), column-gutter: 22.5pt | fig-defaults | p, p
 align: top + left, columns: (30%, 1fr), column-gutter: 24pt | fig-pica | p
 align: top + right, columns: (1fr, 2in), column-gutter: 22.5pt | fig-upper | p
 align: top + left, columns: (225pt, 1fr), column-gutter: 22.5pt | fig-unitless | p
+align: top + right, columns: (1fr, 20%), column-gutter: 22.5pt | fig-height | p

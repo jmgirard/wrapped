@@ -142,7 +142,7 @@ local function checked_tex_length(value, fallback, what, where)
   return tex_length(fallback)
 end
 
--- Absolute lengths that Typst reads as written.
+-- Lengths that Typst reads as written: absolute units and em.
 local TYPST_UNITS = { pt = true, mm = true, cm = true, ["in"] = true, em = true }
 
 -- Returns the Typst length for a CSS length from css_length, or nil when
@@ -232,16 +232,21 @@ local function drop_wrap(img)
 end
 
 -- Cleans an image in a wrapped figure, so the image fills the figure box.
--- HTML removes the width. LaTeX and Typst set the width to the box width.
--- An image with a height keeps it and loses its width, so Pandoc fits the
--- image in the box width and the height and keeps its shape. Elsewhere the
--- image keeps its width.
+-- HTML removes the width. LaTeX sets the width to the box width. An image
+-- with a height keeps it and loses its width, so Pandoc fits the image in
+-- the box width and the height and keeps its shape. Typst sets the width to
+-- the box width and removes the height, because Typst does not fit an image
+-- with a height in the box: an image wider than the box is cut off at its
+-- edges. Elsewhere the image keeps its width.
 local function clean_image(img)
   drop_wrap(img)
   if is_html then
     img.attributes.width = nil
-  elseif is_latex or is_typst then
+  elseif is_latex then
     img.attributes.width = (img.attributes.height == nil) and "100%" or nil
+  elseif is_typst then
+    img.attributes.width = "100%"
+    img.attributes.height = nil
   end
   return img
 end
