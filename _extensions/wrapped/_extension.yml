@@ -6,3 +6,5 @@ contributes:
   filters:
     - path: wrapped.lua
       at: pre-quarto
+    - path: wrapped-docx.lua
+      at: post-render
