@@ -165,3 +165,19 @@ Independent review, pass 1, on 49982e0:
 - ripple #9: M003's title overlaps the format fallback that M002 ships. — reject, false: M003's scope is contexts and M002's is formats
 - ripple #10: PROFILE init-detection says `_extension.yml` "arrives with the first code milestone". — fix now
 - ripple #11: the PROFILE consistency-gate line says only that the verify render finishes. — fix now: say that verify passes
+- Pass 1 fix-now lines are fixed in 1aa9a80 (diff-bug #1 to #4, #6 to #8, #12, (c)1 to (c)5, ripple #3, #4, #10, #11) and 5deb75c (blame-history #1, prior-review #1, ripple #1, #2). The two follow-up rows were added in 4bfec93.
+
+Review pass 2, 2026-10-25, on ccd1dc3 after review return 1. The branch still contains origin/main (231f50e). Each criterion's evidence was gathered again at this head.
+- AC1 evidence (pass 2): the HTML render of `tests/fixture.qmd` exited 0. `fig-md`, `fig-div`, `fig-inner`, and `fig-cell` are each a `div.quarto-float` with `wrap-right`, `wrap-left`, `wrap-right`, and `wrap-left`. Their captions read Figure 1 to 4, and each has one `<a href="#fig-…">` link.
+- AC2 evidence (pass 2): `tests/layout.js` at 1200 px. In `fixture.html`, all 9 wrapped items float to their side with text beside them, the 4 forms of AC1 plus the captioned image with no id, the comment, bad-width, and styled cases, and the image with no caption. Each image fills its box. The image with no caption is 159.8 px, 20% of the 799 px column. No image inside a wrapped float has a wrap class or a percent inline width. `fig-md` has `data-fig-align="left"` and floats right. Its caption runs 2 lines and `fig-inner`'s runs 4, both inside the box. `margin.html` (parent display `grid`) passes. At 375 px all 9 items and the margin figure have `float: none`.
+- AC3 evidence (pass 2): in `fixture.html`, `fig-md` 30% is 239.7 px, `fig-div` 3in is 288 px, `fig-inner` `wrap-gap="2em"` has a 34 px margin, and `fig-cell` with neither attribute is 319.6 px (40%) with 17 px (1em). In `defaults.html`, `fig-defaults` is 199.8 px (25%) with a 30 px margin, floats right at 1200 px, and has `float: none` at 700 px.
+- AC4 evidence (pass 2): in `stop-rule.html` at 1200 px, all 11 stop blocks start at or below their figure's bottom edge, from the heading section (359 to 402) to the `.wrap-clear` div (4863 to 4880).
+- AC5 evidence (pass 2): `fig-plain` carries no wrap class in the HTML.
+- AC6 evidence (pass 2): the PDF, Typst, and docx renders exited 0, and each log holds the format warning once. The kept `.tex` holds 11 `\begin{figure}` environments and no `wrappedfigure`. The kept `.typ` holds 12 `#figure(` calls, one for each figure and the table, including the captioned image with no id.
+- AC7 evidence (pass 2): `quarto add <checkout> --no-prompt` in an empty scratch folder exited 0 and installed `_extension.yml`, `wrapped.css`, and `wrapped.lua`. A `.wrap-right` figure there rendered with the class on its float. A script matched each of the README's 8 example blocks, after replacing ids and file names, to `tests/readme.qmd`, `tests/defaults.qmd`, `tests/stop-rule.qmd`, or every fixture (`filters:`). The 9th block is the install command.
+
+Consistency gate (pass 2):
+- `cairn_validate.py`: all checks passed, exit 0, with one advisory: M002 holds 11 tasks, one past the split tripwire (the four review-return tasks). `cairn_impact.py` was skipped, because DESIGN changed with no principle lines.
+- Version markers: `_extension.yml` holds 0.1.0. The filter's `add_html_dependency` call carries no version, which matches the PROFILE release-walk.
+- Verify: `python3 tests/verify.py` passed all 9 renders (5 compared with snapshots, 4 rendered for the browser checks).
+- Changelog: the slot says "none".
