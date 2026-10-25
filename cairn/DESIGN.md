@@ -89,7 +89,9 @@ Stop rule: the figure wraps the paragraphs that follow it. Wrapping stops at
 the first block that is not a paragraph: a heading, list, figure, table, code
 block, callout, or horizontal rule. An empty `::: {.wrap-clear}` div stops it
 earlier. HTML, Typst, and Word enforce the rule. LaTeX enforces it only in
-part, because `wrapfigure` measures its own height.
+part, because `wrapfigure` counts the narrowed lines from its own height,
+ignores `wrap-clear`, and moves a figure that does not fit to a paragraph
+on the next page, past any heading between (corrected M004).
 
 Next-block rule (D-003): a wrapped figure whose next block is not a
 paragraph has no text to wrap, so it keeps a normal figure with no warning.

@@ -30,7 +30,7 @@ source summary. It is a reference, not an authority. Status lives in
 | # | Format | Mechanism | Quarto hook | Main risk |
 |---|---|---|---|---|
 | W1 | HTML (html, revealjs, dashboard) | CSS `float` on `div.quarto-float`. Width and gap are CSS custom properties. A `.wrap-clear` div marks the stop point. No float below a breakpoint. | Quarto copies the float's classes to the outer `div.quarto-float`. | `quarto-figure-center` sets `text-align`. The lightbox extension wraps the image in a link. |
-| W2 | PDF through LaTeX | A `wrappedfigure` environment calls `wrapfigure` from `wrapfig`. The filter sets `fig-env="wrappedfigure"` and `fig-pos="side=r,width=0.4\linewidth"`. | Quarto writes `\begin{<fig-env>}[<fig-pos>]` and passes `fig-pos` unchanged. | Inside another environment, `wrapfigure` can lose its paragraph shape. |
+| W2 | PDF through LaTeX | A `wrappedfigure` environment calls `wrapfigure` from `wrapfig`. The filter sets `fig-env="wrappedfigure"` and `fig-pos="side=right,width=0.4\linewidth,gap=1em"`. If `wrap-lines` is set, `fig-pos` also holds `lines=<n>`. The shipped wrapper is `_extensions/wrapped/wrapped.tex` (corrected M004). | Quarto writes `\begin{<fig-env>}[<fig-pos>]` and passes `fig-pos` unchanged. | Inside another environment, `wrapfigure` can lose its paragraph shape. |
 | W3 | PDF through Typst | `wrap-content(fixed, body, align: ...)` from wrap-it, bundled under `_extensions/wrapped/typst/packages/preview/wrap-it/0.1.1/`. | Quarto renders `#figure(...)<id>`. A `post-render` step puts it and the next paragraphs in one `wrap-content` call. | wrap-it issue #15: a citation in the wrapped text fails. S3 did not show it with wrap-it 0.1.1 on Typst 0.15.1 (corrected M001). |
 | W4 | Word (docx) | Word frames. The image paragraph and the caption paragraph get the same `w:framePr`, and Word merges them into one frame. | Quarto renders a one-cell table. Its cell `Div` has the figure ID. A `post-render` step unwraps it. | A second raw `w:pPr` on the image paragraph. S4 showed that Word accepts a frame in an extra first `w:pPr`. The order a filter makes is not tested (corrected M001). |
 | W5 | gfm, commonmark, pptx, epub, ipynb, JATS, ODT | The filter removes the wrap class and keeps a normal figure. It warns once per document. | None. | None. |
@@ -44,7 +44,8 @@ Details by row:
   `post-render` step replaces the raw `\begin{figure}` and `\end{figure}`
   blocks instead.
 - W2 limits: `wrapfig` fails inside lists. If a page break falls in the
-  wrapped area, it also fails. It narrows a heading that comes before the
+  wrapped area, the first lines on the next page stay narrowed with no
+  figure beside them (corrected M004). It narrows a heading that comes before the
   figure's bottom edge. Two wrapped figures in a row break it. It does not
   work in `twocolumn` documents.
 - W3: typst#553 is closed. It moved to float placement, not text wrap. The
@@ -145,7 +146,7 @@ The filter has two entry points:
 | E9 | Text shorter than the figure | HTML and Word clear at the stop point. Typst wraps the text it has. LaTeX narrows the blocks that follow. |
 | E10 | Figure taller than the rest of the page | LaTeX and Typst move it to the next page. A test makes sure that the text before it leaves no gap. |
 | E11 | Long caption | The caption wraps inside the box width in all formats. |
-| E12 | `pdf-standard: ua-1` or `ua-2` | A test makes sure that alt text and tags stay. |
+| E12 | `pdf-standard: ua-1` or `ua-2` | A test makes sure that alt text and tags stay. Quarto 1.10.19 ignores `ua-1` for LaTeX, so that PDF has no tags. The LaTeX test uses `ua-2` with `documentclass: article` (corrected M004). |
 | E13 | Book projects and cross-chapter `@fig-` links | No change expected. The test book includes one. |
 | E14 | Right-to-left documents (`dir: rtl`) | `left` and `right` stay physical in version 1. |
 | E15 | revealjs | The HTML path works. If a test slide looks right, the README shows it. |

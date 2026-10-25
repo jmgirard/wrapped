@@ -567,6 +567,7 @@ local function wrapped_image_div(img)
   local gap = img.attributes["wrap-gap"]
   img.attributes.width = nil
   img.attributes["wrap-gap"] = nil
+  img.attributes["wrap-lines"] = nil
   return pandoc.Div({ pandoc.Plain({ img }) }, pandoc.Attr("", { "wrapped-image", class },
     { style = style_for(width, gap, pandoc.utils.stringify(img.src), nil) }))
 end

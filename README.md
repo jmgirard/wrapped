@@ -117,13 +117,13 @@ paragraph that you want beside the figure:
 ```
 
 A wrapped figure with no paragraph right after it keeps its normal layout.
-An example is a figure right before a heading. In HTML the render prints
-no warning for such a figure. The places in the next section are the
+An example is a figure right before a heading. In HTML and LaTeX the
+render prints no warning for such a figure. The places in the next section are the
 exception. Of two wrapped figures in a row, the first keeps its
 normal layout, and the second wraps the paragraphs after it.
 
-In PDF through LaTeX, wrapping stops only in part. See
-[PDF through LaTeX](#pdf-through-latex).
+In PDF through LaTeX, wrapping stops only in part, and a `wrap-clear` div
+does nothing. See [PDF through LaTeX](#pdf-through-latex).
 
 ## Where a figure keeps its normal layout
 
