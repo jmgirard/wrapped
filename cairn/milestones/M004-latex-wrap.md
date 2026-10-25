@@ -2,7 +2,7 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M004: Wrap figures in LaTeX PDF output
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** high
 - **Depends on:** M002, M003
 - **Driving RR:** —
@@ -32,7 +32,7 @@ A document rendered to PDF through LaTeX with the extension installed shows body
 ## Acceptance criteria
 
 - [x] AC1: `quarto render tests/fixture.qmd --to pdf` with `keep-tex: true` exits with status 0. In the kept `.tex`, each captioned figure that the fixture wraps in HTML is in a `wrappedfigure` environment whose option names its side. The wrapped uncaptioned image is in one too. If the knitr form needs the `#| wrap:` cell option that D-001 names as the LaTeX fallback, the fixture's knitr figure uses it. The `.tex` holds a `\ref{fig-…}` for each `@fig-` link, and the PDF text from `pdftotext` holds no `??`.
-- [ ] AC2: `pdftoppm` makes page images of the fixture's PDF. On them, each wrapped figure sits on its side, and lines of the paragraph after it sit beside it on the same page.
+- [ ] AC2: `pdftoppm` makes page images of the fixture's LaTeX PDF. On them, each wrapped figure sits on its side. Lines of the paragraph right after it sit beside it on the same page, except for AC5's two figures, which move to the next page: lines of a later paragraph sit beside each of them on that page.
 - [x] AC3: The kept `.tex` shows six conversions. A percent `width` attribute becomes the matching fraction of `\linewidth`, so `40%` becomes `0.4\linewidth`. A `px` length becomes `pt` at 0.75 pt per px. Any other absolute length stays as it is. A `wrap-gap` value sets `\columnsep` for that figure only. A `wrap-lines` value becomes `lines=<n>`. In `tests/defaults.qmd`, a figure that sets neither attribute takes the `wrapped: width` and `wrapped: gap` metadata.
 - [x] AC4: The fixture places a wrapped figure with a caption of two or more lines near the bottom of a page. On the page images, the caption of each wrapped figure ends above the bottom edge of the text block. That edge is the lowest body line on a full page.
 - [x] AC5: The fixture holds two wrapped figures that start too near the bottom of a page to fit there. The first sets no `wrap-lines`, and the second sets it. On the page images, no page shows narrowed lines with no figure beside them for the first. The README states that `wrap-lines` can narrow lines past a page break.
@@ -90,6 +90,9 @@ A document rendered to PDF through LaTeX with the extension installed shows body
 - 2026-10-25: second auditor finding, not fixed (the LaTeX stop rule is Out): a figure with no wrap class in the narrowed lines overlaps the wrapped figure's caption (stop-rule case 8), and a `wrap-clear` div has no effect in LaTeX. README limits now say both; candidate row "Honor wrap-clear and figures in LaTeX" added.
 - 2026-10-25: all tasks done, `verify.py` 21 of 21 pass; status → review.
 - 2026-10-25: amendment routed: AC2 — AC2 asks each wrapped figure to sit beside lines of the paragraph after it on the same page, but AC5's two planted figures cannot fit where that paragraph starts and wrapfig places a figure only at a paragraph start, so they sit beside later paragraphs on the next page (pages 11 and 13). The criterion conflicts with AC5; AC1 and AC3–AC7 verified and ticked. Status → in-progress for the amendment alone.
+- 2026-10-25: re-audit: AC2 (full) — suggested "and no text overlaps it"; "which move to the next page" states a result, not a condition (reader: harmless, leave); the review's evidence line counts "figures 1–15" plus 16 and 17, while 15 figures wrap (PDF numbers include three unwrapped figures and the uncaptioned image has none); probes to plant (drop the clamp `\clearpage`, undo the group guard). Answered with no wording change: the overlap clause widens the promise and the audit decides toward the narrower one (no overlap shows on the fixture's 13 pages, and the README names overlap as a limit); the count is review evidence, which the re-review writes fresh; the criterion cites no plant.
+- 2026-10-25: amendment return: AC2 — "Lines of the paragraph right after it sit beside it on the same page, except for AC5's two figures, which move to the next page: lines of a later paragraph sit beside each of them on that page."
+- 2026-10-25: status → review.
 
 ## Decisions
 

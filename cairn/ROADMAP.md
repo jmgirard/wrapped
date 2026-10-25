@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-25 (M003 done: HTML and LaTeX core row narrowed to 
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M004 | Wrap figures in LaTeX PDF output | in-progress | M002, M003 | high | milestones/M004-latex-wrap.md |
+| M004 | Wrap figures in LaTeX PDF output | review | M002, M003 | high | milestones/M004-latex-wrap.md |
 | M003 | Fall back in contexts that cannot wrap | done | M002 | high | milestones/archive/M003-context-fallbacks.md |
 | M002 | Wrap figures in HTML output | done | — | high | milestones/archive/M002-html-wrap.md |
 | M001 | Run the four wrap feasibility spikes | done | — | high | milestones/archive/M001-wrap-spikes.md |
