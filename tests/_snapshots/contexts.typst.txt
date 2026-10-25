@@ -1,0 +1,34 @@
+# warnings
+1x wrapped: a figure with no id is in a column layout, so it does not wrap.
+1x wrapped: a figure with no id is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-aside is in an aside, so it does not wrap.
+1x wrapped: the figure #fig-callout is in a callout, so it does not wrap.
+1x wrapped: the figure #fig-column is in a column layout, so it does not wrap.
+1x wrapped: the figure #fig-layout-cell is in a panel layout, so it does not wrap.
+1x wrapped: the figure #fig-list is in a list, so it does not wrap.
+1x wrapped: the figure #fig-margin is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-margin-cell is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-panel is a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-sub-wrapped is in a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-tab is in a tabset, so it does not wrap.
+1x wrapped: the image plot.png is in a list, so it does not wrap.
+1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
+# typ
+figure: - image-width=no
+figure: fig-aside image-width=no
+figure: fig-panel-a image-width=no
+figure: fig-panel-b image-width=no
+figure: fig-sub-wrapped image-width=no
+figure: fig-sub-plain image-width=no
+figure: fig-layout-cell image-width=no
+figure: tbl-wrapped image-width=yes
+figure: fig-callout image-width=no
+figure: fig-column image-width=no
+figure: - image-width=no
+figure: fig-tab image-width=no
+figure: fig-before-heading image-width=no
+figure: - image-width=yes
+figure: fig-first image-width=yes
+figure: fig-second image-width=yes
+# wraps
+align: top + right, columns: (1fr, 30%), column-gutter: 1em | fig-second | p, p

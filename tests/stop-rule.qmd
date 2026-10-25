@@ -6,6 +6,9 @@ format:
   html: default
   pdf:
     keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
 ---
 
 ## Case 1: ATX heading

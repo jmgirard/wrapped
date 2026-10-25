@@ -6,6 +6,8 @@ format:
   html: default
   pdf:
     keep-tex: true
+  typst:
+    keep-typ: true
 wrapped:
   width: 25%
   gap: 30px
@@ -19,3 +21,21 @@ wrapped:
 The paragraph after the figure wraps around it. See @fig-defaults. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A pica gap
+
+![A figure with a gap in picas.](plot.png){#fig-pica .wrap-left width="30%" wrap-gap="2pc"}
+
+The gap is 2 picas. See @fig-pica. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## An uppercase unit and an ex gap
+
+![A figure with an uppercase unit width and a gap in ex.](plot.png){#fig-upper .wrap-right width="2IN" wrap-gap="1ex"}
+
+The width is 2 inches. See @fig-upper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A width with no unit
+
+![A figure with a width with no unit, which is pixels.](plot.png){#fig-unitless .wrap-left width="300"}
+
+The width is 300 pixels. See @fig-unitless. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
