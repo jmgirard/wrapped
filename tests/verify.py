@@ -64,6 +64,8 @@ RENDERS = [
     ("pdf-ua", "pdf", True),
     ("pdf-ua1", "pdf", True),
     ("tex-options", "pdf", True),
+    ("typst-break", "typst", True),
+    ("typst-ua", "typst", True),
     ("book", "html", True),
     ("revealjs", "revealjs", True),
     ("margin", "html", False),

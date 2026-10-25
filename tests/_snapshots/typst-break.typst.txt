@@ -1,0 +1,5 @@
+# warnings
+# typ
+figure: fig-break image-width=yes
+# wraps
+align: top + right, columns: (1fr, 40%), column-gutter: 1em | fig-break | p, p, p
