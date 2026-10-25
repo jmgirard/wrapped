@@ -26,6 +26,9 @@ fig-styled: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%; border: 1px sol
 fig-clamp: wrap-left style=--wrap-gap: 2VMIN; --wrap-width: clamp(150px, 30%, 400px)
 fig-raw: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
 (box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-bottom: wrap-right style=--wrap-gap: 1em; --wrap-width: 150px
+fig-break: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-break-lines: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 # images
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
@@ -43,16 +46,22 @@ plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
 # groups
 fig-md, p, p
 fig-div, p, p
 fig-inner, p, p
 cell, p, p
-wrapped-image, p
-wrapped-image, p
-fig-comment, comment, p
-fig-bad-width, p
-fig-styled, p
-fig-clamp, p
+wrapped-image, p, p
+wrapped-image, p, p
+fig-comment, comment, p, p
+fig-bad-width, p, p
+fig-styled, p, p
+fig-clamp, p, p
 fig-raw, p
-wrapped-image, p
+wrapped-image, p, p
+fig-bottom, p, p
+fig-break, p, p, p, p
+fig-break-lines, p, p, p, p

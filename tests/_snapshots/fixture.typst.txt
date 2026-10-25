@@ -16,3 +16,6 @@ figure: fig-styled image-width=no
 figure: fig-clamp image-width=no
 figure: fig-raw image-width=yes
 figure: - image-width=no
+figure: fig-bottom image-width=yes
+figure: fig-break image-width=no
+figure: fig-break-lines image-width=no
