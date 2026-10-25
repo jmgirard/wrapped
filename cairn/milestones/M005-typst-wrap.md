@@ -159,3 +159,5 @@ Pass 2 evidence, 2026-10-25, head 12bd0fc, `main` at bd9a291 (unchanged).
 - prior-review #4 (pass 2): `--update` can still write an empty wraps section — reject, false as a defect: `--update` rewrites every snapshot by design, the compare run fails on such a loss, and the snapshot's git diff shows it
 - prior-review #6 (pass 2): two figures in one cell — repeat, follow-up row as in pass 1
 - prior-review #7 (pass 2): same as ripple #1 — fix now
+- Pass 2 fix-now items landed in 185255d: diff-bug #2, #3, #4 (summary kinds), ripple #1, #3, prior-review #1, #2, #7, fixed 185255d. A planted copy of `fixture.typ` (a code fence, a term list, a list from 3, a `#strike[` paragraph, a bracketed citation) reads `code, terms, list, p, p, p, p | cites=2`; verify: all 29 renders pass.
+- snapshot: none under the `_snaps`/`__snapshots__` definition. The repo's own `tests/_snapshots/` holds 10 changed files: 8 Typst snapshots (5 new, 3 changed) record the Typst renders, conversions, and alt text that AC1, AC4, AC6, and AC7 call for; `defaults.html.txt` and `defaults.pdf.txt` gain the five figures AC4's added cases call for
