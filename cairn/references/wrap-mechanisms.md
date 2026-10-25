@@ -120,22 +120,23 @@ Word frame (W4), on the image paragraph and the caption paragraph:
 
 ```
 _extensions/wrapped/
-  _extension.yml        # contributes: filters (pre-quarto and post-render entries)
+  _extension.yml        # contributes: filters (pre-quarto entry; a post-render entry for docx is planned)
   wrapped.lua           # shared parsing: classes, width, stop rule, warnings
   wrapped.css           # HTML layout
   wrapped.tex           # LaTeX wrapper environment
   typst/packages/preview/wrap-it/0.1.1/
 ```
 
-The filter has two entry points:
+The filter has one entry point now, and a second is planned (corrected
+M005):
 
 - `pre-quarto` runs after Quarto creates `FloatRefTarget` nodes. It
   normalizes the attributes and sets `fig-env` and `fig-pos` for LaTeX. It
-  also applies the stop rule and inserts clear points.
-- `post-render` runs after Quarto renders figures to raw output. It builds
-  the docx frames. The Typst `wrap-content` call comes from the `pre-quarto`
-  pass instead, and `_extension.yml` has no `post-render` entry yet
-  (corrected M005).
+  also applies the stop rule, inserts clear points, and writes the Typst
+  `wrap-content` call.
+- A planned `post-render` step will build the docx frames after Quarto
+  renders figures to raw output. `_extension.yml` has no `post-render`
+  entry yet.
 
 ## Edge cases
 

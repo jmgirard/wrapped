@@ -173,7 +173,8 @@ local function checked_typst_length(value, fallback, what, where)
 end
 
 -- True for a Typst percent of 100% or more. A box that wide leaves wrap-it
--- no room for the text, which then drops from the page.
+-- no room for the text. At 100% the text runs one word to a line outside
+-- the text area, and above 100% part of it drops from the page.
 local function typst_too_wide(length)
   local n = length:match("^(%d*%.?%d+)%%$")
   return n ~= nil and tonumber(n) >= 100

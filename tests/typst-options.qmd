@@ -24,6 +24,6 @@ The width leaves no room for text, so the figure takes the default width and the
 
 ## An uncaptioned image with a height
 
-![](plot.png){.wrap-right width="25%" height="1in" fig-alt="A small scatter plot"}
+![](plot.png){.wrap-right width="25%" height="2in" fig-alt="A small scatter plot"}
 
 Typst does not use the height, so the image fills the box width and the render prints a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

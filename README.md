@@ -241,7 +241,8 @@ The `width` and `wrap-gap` values change to Typst lengths:
   applies.
 
 A percent of 100% or more leaves no room for the text in Typst, so it
-prints a warning, and the document default applies.
+prints a warning. A figure's own width then takes the document default.
+A `wrapped: width` of 100% or more takes the built-in 40%.
 
 The `wrap-lines` attribute does nothing in Typst. Typst does not use an
 image's `height` in a wrapped figure. The image fills the box width and
