@@ -223,13 +223,21 @@ local TWIPS = { ["in"] = 1440, cm = 1440 / 2.54, mm = 144 / 2.54, pt = 20, pc = 
 local DOCX_TEXT_WIDTH = 9360
 local docx_text_width = DOCX_TEXT_WIDTH
 
--- Returns the text width of the reference doc that the render uses: the
--- page width less the left and right margins in the w:sectPr of its body.
--- With no reference doc, or a w:sectPr with no w:pgSz or no w:pgMar, it is
--- DOCX_TEXT_WIDTH. A reference doc that cannot be read gives a warning.
+-- The reference doc's body w:sectPr sets columns, so Word keeps normal
+-- figures, as LaTeX does in a two-column document.
+local docx_columns = false
+-- The reference doc that cannot be read, for a warning when a figure wraps.
+local docx_unread = nil
+
+-- Reads the reference doc that the render uses. Returns its text width:
+-- the page width less the left and right margins and the gutter in the
+-- w:sectPr of its body. With no reference doc, or a body w:sectPr with no
+-- w:pgSz or no w:pgMar, it is DOCX_TEXT_WIDTH. Also returns true when that
+-- w:sectPr sets more than one column. A reference doc that cannot be read
+-- is noted in docx_unread.
 local function read_docx_text_width()
   local path = PANDOC_WRITER_OPTIONS.reference_doc
-  if not path then return DOCX_TEXT_WIDTH end
+  if not path then return DOCX_TEXT_WIDTH, false end
   local ok, xml = pcall(function()
     local f = assert(io.open(path, "rb"))
     local bytes = f:read("a")
@@ -239,32 +247,47 @@ local function read_docx_text_width()
     end
   end)
   if not (ok and xml) then
-    quarto.log.warning(string.format(
-      "wrapped: the reference doc %s cannot be read, so a percent width in Word is a share of 6.5 in.", path))
-    return DOCX_TEXT_WIDTH
+    docx_unread = path
+    return DOCX_TEXT_WIDTH, false
   end
-  -- The body's own w:sectPr is the last one in the file.
-  local sect
-  for s in xml:gmatch("<w:sectPr.-</w:sectPr>") do sect = s end
-  local page = sect and sect:match('<w:pgSz[^>]-w:w="(%d+)"')
-  local margins = sect and sect:match("<w:pgMar[^>]*>")
-  if not (page and margins) then return DOCX_TEXT_WIDTH end
-  local left = margins:match('w:left="(%d+)"') or margins:match('w:start="(%d+)"') or "0"
-  local right = margins:match('w:right="(%d+)"') or margins:match('w:end="(%d+)"') or "0"
-  return tonumber(page) - tonumber(left) - tonumber(right)
+  -- The body's own w:sectPr is the last one in the file. It can be empty
+  -- and self-closing, and then it sets nothing.
+  local last = nil
+  local from = 1
+  while true do
+    local s = xml:find("<w:sectPr[%s>/]", from)
+    if not s then break end
+    last = s
+    from = s + 1
+  end
+  local tag = last and xml:match("^<w:sectPr[^>]*>", last)
+  if not tag or tag:match("/>$") then return DOCX_TEXT_WIDTH, false end
+  local sect = xml:match("^<w:sectPr[^>]*>.-</w:sectPr>", last)
+  if not sect then return DOCX_TEXT_WIDTH, false end
+  local cols = tonumber(sect:match('<w:cols[^>]-w:num="(%d+)"') or "1")
+  local page = sect:match('<w:pgSz[^>]-w:w="(%d+)"')
+  local margins = sect:match("<w:pgMar[^>]*>")
+  if not (page and margins) then return DOCX_TEXT_WIDTH, cols > 1 end
+  local left = margins:match('w:left="(%d+)"') or "0"
+  local right = margins:match('w:right="(%d+)"') or "0"
+  local gutter = margins:match('w:gutter="(%d+)"') or "0"
+  return tonumber(page) - tonumber(left) - tonumber(right) - tonumber(gutter), cols > 1
 end
 
 -- Returns the twips for a CSS length from css_length, or nil when Word has
--- no such length. A percent above 0% and below 100% is that share of the
--- text width. With `positive`, a length of 0 twips is not a length, because
--- a frame with no width takes the width of its content.
-local function docx_twips(length, positive)
+-- no such length, and "wide" when the length is the text width or more,
+-- which leaves no room for text. A percent above 0% and below 100% is that
+-- share of the text width. With `positive` (a width), a length of 0 twips
+-- is not a length, because a frame with no width takes the width of its
+-- content.
+local function docx_measure(length, positive)
   local num, unit = length:match("^(%d*%.?%d+)(%a*%%?)$")
   if not num then return nil end
   local n = tonumber(num)
   local twips
   if unit == "%" then
-    if n <= 0 or n >= 100 then return nil end
+    if n >= 100 then return nil, "wide" end
+    if n <= 0 then return nil end
     twips = n / 100 * docx_text_width
   else
     local per = TWIPS[unit:lower()]
@@ -272,20 +295,24 @@ local function docx_twips(length, positive)
     twips = n * per
   end
   twips = math.floor(twips + 0.5)
+  if twips >= docx_text_width then return nil, "wide" end
   if positive and twips <= 0 then return nil end
   return twips
+end
+
+local function docx_twips(length, positive)
+  return (docx_measure(length, positive))
 end
 
 -- Returns the twips for a value, or the twips of `fallback` with a warning
 -- when the value is not a length that Word can use.
 local function checked_docx_twips(value, fallback, what, where, positive)
   local length = checked_length(value, fallback, what, where)
-  local twips = docx_twips(length, positive)
+  local twips, why = docx_measure(length, positive)
   if twips then return twips end
-  local pct = tonumber(length:match("^(%d*%.?%d+)%%$") or "")
   quarto.log.warning(string.format(
     'wrapped: %s "%s" on %s %s, so it is %s.', what, length, where,
-    (pct and pct >= 100) and "leaves no room for text in Word" or "is not a length that Word can use",
+    why == "wide" and "leaves no room for text in Word" or "is not a length that Word can use",
     fallback))
   return docx_twips(fallback, positive)
 end
@@ -590,7 +617,10 @@ local function format_default(key, what, convert, name)
 end
 
 local function read_meta(meta)
-  if is_docx then docx_text_width = read_docx_text_width() end
+  if is_docx then
+    docx_text_width, docx_columns = read_docx_text_width()
+    if docx_columns then is_docx = false end
+  end
   if is_latex and names_two_column(meta.classoption) then
     is_latex = false
     two_column = true
@@ -1114,6 +1144,14 @@ local function finish(doc)
     end
   elseif is_docx then
     -- wrapped-docx.lua builds the frames at post-render and needs no header.
+    if docx_unread and found_wrap then
+      quarto.log.warning(string.format(
+        "wrapped: the reference doc %s cannot be read, so a percent width in Word is a share of 6.5 in.",
+        docx_unread))
+    end
+  elseif docx_columns and found_wrap then
+    quarto.log.warning(
+      "wrapped: Word does not wrap figures in a document with columns, so wrapped figures render as normal figures.")
   elseif two_column and found_wrap then
     quarto.log.warning(
       "wrapped: LaTeX does not wrap figures in a two-column document, so wrapped figures render as normal figures.")

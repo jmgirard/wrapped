@@ -22,9 +22,10 @@ it also holds each image's width from word/document.xml, and each frame: its
 side, width, gap, and anchor, the figure bookmark open before it, whether
 each image fills the frame width and its alt text, whether each caption has
 the ImageCaption style, and the kind of each block after the frame up to the
-paragraph with the clearing break. It also counts framed paragraphs that are
-in no frame. The script first writes tests/reference-narrow.docx with
-tests/reference_narrow.py. A revealjs
+paragraph with the clearing break, with the link anchors and author-year
+citations in those paragraphs. It also counts framed paragraphs that are
+in no frame. The script first writes the reference docs of the docx
+fixtures with tests/reference_narrow.py. A revealjs
 snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
 book project: its snapshot holds the HTML parts of each page under _book/,
 and the href of each cross-reference link. For a fixture in MARGIN_IDS, the
@@ -64,6 +65,8 @@ RENDERS = [
     ("defaults", "typst", True),
     ("defaults", "docx", True),
     ("docx-reference", "docx", True),
+    ("docx-options", "docx", True),
+    ("docx-columns", "docx", True),
     ("meta-breakpoint", "html", True),
     ("meta-string", "html", True),
     ("contexts", "html", True),
@@ -332,6 +335,8 @@ W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 WP = "{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}"
 PIC = "{http://schemas.openxmlformats.org/drawingml/2006/picture}"
 EMU_PER_TWIP = 635
+# A citation as citeproc writes it in the text: "Smith and Doe (2020)".
+AUTHOR_YEAR = re.compile(r"[A-Z][\w-]+(?: and [A-Z][\w-]+| et al\.)? \(\d{4}\)")
 
 
 def docx_frame(p):
@@ -351,7 +356,8 @@ def docx_frames(body):
     it fills the frame width, and its alt text, whether each caption
     paragraph has the ImageCaption style, and the kind of each block after
     it up to and including the paragraph that holds the clearing break ("p"
-    for a paragraph)."""
+    for a paragraph). It also records the anchors of the links in those
+    paragraphs and the number of author-year citations in their text."""
     lines = []
     framed = 0
     children = list(body)
@@ -387,7 +393,7 @@ def docx_frames(body):
         for p in paras:
             extent = p.find(f".//{WP}extent")
             if extent is not None:
-                name = Path(p.find(f".//{PIC}cNvPr").get("descr")).name
+                name = Path(p.find(f".//{PIC}cNvPr").get("descr") or "-").name
                 fills = abs(int(extent.get("cx")) - width * EMU_PER_TWIP) <= EMU_PER_TWIP
                 alt = p.find(f".//{WP}docPr").get("descr")
                 parts.append(f"image {name} fills={'yes' if fills else 'no'} alt={alt!r}")
@@ -395,6 +401,8 @@ def docx_frames(body):
                 styles = [s.get(f"{W}val") for s in p.iter(f"{W}pStyle")]
                 parts.append(f"caption style={'ImageCaption' if 'ImageCaption' in styles else '-'}")
         after = []
+        links = []
+        cites = 0
         while i < len(children):
             el = children[i]
             i += 1
@@ -404,6 +412,9 @@ def docx_frames(body):
                 after.append(el.tag.replace(W, ""))
                 continue
             after.append("p")
+            links += [h.get(f"{W}anchor") for h in el.iter(f"{W}hyperlink") if h.get(f"{W}anchor")]
+            text = "".join(t.text or "" for t in el.iter(f"{W}t"))
+            cites += len(AUTHOR_YEAR.findall(text))
             if any(br.get(f"{W}clear") == "all" for br in el.iter(f"{W}br")):
                 after.append("clear")
                 break
@@ -411,7 +422,7 @@ def docx_frames(body):
         gap = frame.get(f"{W}hSpace")
         anchor = frame.get(f"{W}hAnchor")
         lines.append(f"frame {side} w={width} gap={gap} anchor={anchor} | {bookmark or '-'} | "
-                     f"{'; '.join(parts)} | {', '.join(after)}")
+                     f"{'; '.join(parts)} | {', '.join(after)} | links={','.join(links) or '-'} cites={cites}")
         bookmark = None
     return lines, framed
 
@@ -464,7 +475,8 @@ def summary(fixture, fmt, log):
 def main():
     update = "--update" in sys.argv[1:]
     SNAPSHOTS.mkdir(exist_ok=True)
-    # docx-reference.qmd reads this reference doc, which is not committed.
+    # docx-reference.qmd and docx-columns.qmd read these reference docs,
+    # which are not committed.
     reference_narrow.main()
     failed = []
     for fixture, fmt, compare in RENDERS:

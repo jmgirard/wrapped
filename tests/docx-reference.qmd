@@ -9,7 +9,9 @@ format:
 ---
 
 The reference doc sets an A4 page with a 1.25 in left margin and a 1 in
-right margin, so a percent width is a share of 8666 twips of text.
+right margin, so a percent width is a share of 8666 twips of text. Run
+`python3 tests/reference_narrow.py` first, or `python3 tests/verify.py`,
+which writes the reference docs.
 
 ## A figure at 30%
 

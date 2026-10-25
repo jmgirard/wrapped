@@ -1,0 +1,87 @@
+---
+title: "wrapped fixture: Word lengths and figure contents"
+filters:
+  - wrapped
+format:
+  html: default
+  docx:
+    reference-doc: reference-gutter.docx
+wrapped:
+  width: 120%
+  gap: 1ex
+---
+
+The reference doc sets a Letter page with 1 in margins and a 0.5 in
+gutter, so a percent width is a share of 8640 twips of text. Run
+`python3 tests/reference_narrow.py` first, or `python3 tests/verify.py`,
+which writes the reference docs. In Word the metadata width and gap take
+the built-in defaults with a warning each.
+
+## A width in centimeters
+
+![A figure 5 cm wide.](plot.png){#fig-cm .wrap-right width="5cm" wrap-gap="12pt"}
+
+The paragraph beside the figure. See @fig-cm. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A width in millimeters
+
+![A figure 40 mm wide.](plot.png){#fig-mm .wrap-left width="40mm"}
+
+The paragraph beside the figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A width in points
+
+![A figure 144 pt wide.](plot.png){#fig-pt .wrap-right width="144pt"}
+
+The paragraph beside the figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A width of 0%
+
+![A figure with a width of 0%.](plot.png){#fig-zero .wrap-left width="0%"}
+
+The figure takes the default width, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A width of 100%
+
+![A figure with a width of 100%.](plot.png){#fig-full .wrap-right width="100%"}
+
+The figure takes the default width, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## An absolute width wider than the text
+
+![A figure 10 in wide.](plot.png){#fig-wide .wrap-left width="10in"}
+
+The figure takes the default width, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A gap of 0%
+
+![A figure with a gap of 0%.](plot.png){#fig-gap-zero .wrap-right width="30%" wrap-gap="0%"}
+
+The figure takes the default gap, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A figure that holds a list
+
+::: {#fig-list .wrap-left width="35%"}
+![](plot.png)
+
+- A note under the image.
+- A second note.
+
+A figure with a list under its image.
+:::
+
+The list sits in the frame with the image and the caption. See @fig-list. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A figure that holds a code block
+
+::: {#fig-code .wrap-right width="35%"}
+![](plot.png)
+
+```
+plot(1:10)
+```
+
+A figure with a code block under its image.
+:::
+
+Word cannot put the code block in a frame, so the figure keeps its normal layout, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

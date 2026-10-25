@@ -105,3 +105,31 @@ Pass 1, 2026-10-25, on 81792a7 (main not moved since the branch was cut). Eviden
 - ripple #6: E10 names only LaTeX and Typst moving a tall figure; Word does too — fix now
 - ripple #7: tests/fixture.qmd `#fig-clamp` prose names only LaTeX and Typst as falling back — fix now
 - ripple #8: tests/defaults.qmd `#fig-height` prose leaves out Word dropping the height — fix now
+- diff-bug #1: a reference doc with two columns gets frames sized and placed for one column, with no warning — fix now: a body `w:cols w:num` above 1 keeps normal figures with one warning (docx-columns fixture)
+- diff-bug #2: an unreadable reference doc (such as a URL) warns on every docx render, wrapped figures or not — fix now: the warning prints only when a figure wraps
+- diff-bug #3: a float holding a list or code block splits into two frames with body text between — fix now: every paragraph at any depth takes the frame; a float holding a code block, table, rule, line block, raw block, or heading keeps its normal layout with a warning (docx-options `#fig-list`, `#fig-code`)
+- diff-bug #4: a width at or above the text width (95% leaves Pandoc's 8400-twip image cap short of the frame; 10in is wider than the page) passes with no warning — fix now for widths at or above the text width (default with "leaves no room for text"); the image cap between 8400 twips and the text width goes to the candidate "Bound wide absolute widths in Typst"
+- diff-bug #5: the text width ignores `w:gutter` — fix now: the gutter is subtracted (docx-options uses a gutter reference doc)
+- diff-bug #6: a self-closing body `w:sectPr` makes an earlier section's size be read — fix now: the last `w:sectPr` start is found, and an empty one sets nothing
+- diff-bug #7: a figure table the post-render pass does not recognize renders normally with no warning — fix now: it warns
+- diff-bug #8: warning wording (metadata 150% says "not a length", gap 0% rejected while 0 passes, gap 150% says "no room") — reject: style (the 0% gap follows AC4's percent rule)
+- diff-bug #9: a Pandoc Figure rebuild joins caption blocks and drops the figure paragraph style — fix now: each caption block is its own ImageCaption paragraph, and image paragraphs keep CaptionedFigure (Pandoc Figure) or Compact (figure table)
+- diff-bug #10: several `w:pPr` per paragraph are schema-invalid and tools that read the first see no frame — reject: planned change (the plan's filter-position frames, T1)
+- diff-bug #11: `fig-alt` on a captioned float gives no Word alt text — follow-up: new candidate "Carry fig-alt to Word alt text" (same without the filter)
+- diff-bug #12: a page break Para inside a group — reject: false (no wrong output; shared with HTML)
+- diff-bug #13: docx-reference.qmd fails alone until the reference doc is generated — fix now: each docx fixture with a reference doc says to run `tests/reference_narrow.py` first
+- diff-bug (c) #1: the stop-rule docx render repeats one post-render path — reject: planned change (AC5 names it; the group membership differs per stop kind at pre-quarto)
+- diff-bug (c) #2: the `{=openxml}` spacing before `#fig-break-lines` repeats `#fig-break` — fix now: removed
+- diff-bug (c) #3: `#fig-ref-abs` runs the fixture's absolute-width path — reject: false (it is the case the reference doc must leave untouched)
+- diff-bug (c) #4: fig-pica/fig-upper and fig-ref-30/50 share paths — reject: false (pica and upper predate the branch; fig-ref-50 carries the only percent gap)
+- blame-history #1: the post-render entry may fail on Quarto 1.9.36 to 1.10.18 — reject: false (v1.9.36's schema definitions.yml lists `post-render`; DESIGN already states those versions are untested)
+- blame-history #2: post-render reverses M005's recorded choice with no D-entry — reject: false (M005's choice was for Typst; Word's choice and its rejected alternative are in this work log)
+- blame-history #3: the Word page-break gap is not a DESIGN Known issue — fix now: Known issues entry
+- blame-history #4: `wrapped.lua` loaded alone gives normal Word figures with no warning — follow-up: new candidate "Warn when Word frames are not built"
+- blame-history #5: a self-closing body `w:sectPr` is skipped silently — fix now (same fix as diff-bug #6)
+- blame-history #6: verify.py raises on a picture with no `descr` — fix now
+- prior-review #1: the README citation and `@fig-` link claims have no docx check — fix now: the frame summary records link anchors and author-year citations
+- prior-review #2: README Notes says sides are physical in every format, but Word right-to-left is untested — fix now: the Notes line names HTML, LaTeX, and Typst
+- prior-review #3: the Word metadata-default branch has no render — fix now: docx-options sets `width: 120%` and `gap: 1ex`
+- prior-review #4: cm, mm, pt, 0%, and 100%-or-more widths are untested — fix now: docx-options covers them
+- prior-review #5: a failed frame in post-render gives no warning — fix now (same fix as diff-bug #7)
