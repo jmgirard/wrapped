@@ -172,19 +172,41 @@ local function checked_typst_length(value, fallback, what, where)
   return typst_length(fallback)
 end
 
+-- True for a Typst percent of 100% or more. A box that wide leaves wrap-it
+-- no room for the text, which then drops from the page.
+local function typst_too_wide(length)
+  local n = length:match("^(%d*%.?%d+)%%$")
+  return n ~= nil and tonumber(n) >= 100
+end
+
 -- The opening of a wrap-content call, which takes the figure box as its
--- first argument. wrap-it reads `right` as the side of the box. The width
--- sets the box's grid column, where a percent is a share of the text
--- width. Set on the box itself, a percent would be a share of the box's
--- own measured column.
+-- first argument. The width sets the box's grid column, where a percent is
+-- a share of the text width. Set on the box itself, a percent would be a
+-- share of the box's own measured column. wrap-it's grid follows the text
+-- direction, so the helpers in TYPST_HEADER turn the physical side into
+-- the side wrap-it reads, in context.
 local function typst_open(class, width, gap, where)
   local side = SIDES[class]
   local w = checked_typst_length(width, options.width, "width", where)
-  local columns = side == "right" and ("(1fr, " .. w .. ")") or ("(" .. w .. ", 1fr)")
+  if typst_too_wide(w) then
+    quarto.log.warning(string.format(
+      'wrapped: width "%s" on %s leaves no room for text in Typst, so it is %s.',
+      w, where, options.width))
+    w = typst_length(options.width)
+  end
   return string.format(
-    "#wrap-content(align: top + %s, columns: %s, column-gutter: %s, box(width: 100%%)[",
-    side, columns, checked_typst_length(gap, options.gap, "wrap-gap", where))
+    "#context wrap-content(align: top + wrapped-side(%s), columns: wrapped-columns(%s, %s), column-gutter: %s, box(width: 100%%)[",
+    side, side, w, checked_typst_length(gap, options.gap, "wrap-gap", where))
 end
+
+-- The Typst header: the wrap-it import and the side helpers. Typst takes a
+-- text's direction from `dir`, or from its language when `dir` is auto, and
+-- these are the languages that Typst sets right to left.
+local TYPST_HEADER = [[
+#import "@preview/wrap-it:0.1.1": wrap-content
+#let wrapped-rtl() = text.dir == rtl or (text.dir == auto and text.lang in ("ar", "dv", "fa", "he", "ks", "pa", "ps", "sd", "ug", "ur", "yi"))
+#let wrapped-side(side) = if wrapped-rtl() { if side == right { left } else { right } } else { side }
+#let wrapped-columns(side, width) = if wrapped-side(side) == right { (1fr, width) } else { (width, 1fr) }]]
 
 -- The custom properties for a wrapped box, followed by any style the user
 -- set on it.
@@ -245,6 +267,11 @@ local function clean_image(img)
   elseif is_latex then
     img.attributes.width = (img.attributes.height == nil) and "100%" or nil
   elseif is_typst then
+    if img.attributes.height then
+      quarto.log.warning(string.format(
+        "wrapped: Typst does not use the height of the image %s in a wrapped figure, so the image fills the box width.",
+        pandoc.utils.stringify(img.src)))
+    end
     img.attributes.width = "100%"
     img.attributes.height = nil
   end
@@ -482,6 +509,12 @@ local function read_meta(meta)
   elseif is_typst then
     format_default("width", "width", typst_length, "Typst")
     format_default("gap", "gap", typst_length, "Typst")
+    if typst_too_wide(typst_length(options.width)) then
+      quarto.log.warning(string.format(
+        'wrapped: width "%s" in the wrapped metadata leaves no room for text in Typst, so it is %s.',
+        options.width, DEFAULTS.width))
+      options.width = DEFAULTS.width
+    end
   end
 end
 
@@ -782,6 +815,9 @@ local function typst_group(members)
     open = typst_opens[first.attributes.__quarto_custom_id]
     fixed:insert(first)
   end
+  -- A .wrapped-image div that the filter did not make has no opening, so
+  -- its group keeps its blocks as they are.
+  if not open then return members end
   local out = before
   out:insert(pandoc.RawBlock("typst", open))
   out:extend(fixed)
@@ -910,7 +946,7 @@ local function finish(doc)
   elseif is_typst then
     -- Quarto loads the package from the extension's typst/packages folder.
     if placed then
-      quarto.doc.include_text("in-header", '#import "@preview/wrap-it:0.1.1": wrap-content')
+      quarto.doc.include_text("in-header", TYPST_HEADER)
     end
   elseif two_column and found_wrap then
     quarto.log.warning(

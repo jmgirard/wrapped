@@ -158,14 +158,17 @@ passes (corrected M003):
    In LaTeX it puts an image with no caption in a raw `wrappedfigure`. In
    Typst it writes each group as raw Typst blocks around the figure and the
    paragraphs, which make one `wrap-content(..., box(width: 100%)[figure],
-   [paragraphs])` call. The width sets wrap-it's grid column. A code cell
-   keeps its code above the call (corrected M005).
+   [paragraphs])` call. The width sets wrap-it's grid column. A percent of
+   100% or more takes the default width with a warning. A code cell keeps
+   its code above the call (corrected M005).
 6. It warns for a wrap class on an image or a div that it cannot place.
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
    wraps. In LaTeX it adds wrapfig and `wrapped.tex`, which defines
    `wrappedfigure` over wrapfig's floating placements. In Typst it imports
    `wrap-content` from `@preview/wrap-it:0.1.1`, which Quarto loads from the
-   extension's `typst/packages` folder (corrected M005). Elsewhere it prints
+   extension's `typst/packages` folder, and defines the helpers that turn a
+   physical side into wrap-it's side in right-to-left text, read in context
+   (corrected M005). Elsewhere it prints
    one format warning.
 
 The grouping pass finds a wrapped float by Quarto's internal

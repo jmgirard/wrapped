@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-25 (M004 done: HTML and LaTeX core row graduated, M
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M005 | Wrap figures in Typst PDF output | in-progress | — | high | milestones/M005-typst-wrap.md |
+| M005 | Wrap figures in Typst PDF output | review | — | high | milestones/M005-typst-wrap.md |
 | M004 | Wrap figures in LaTeX PDF output | done | M002, M003 | high | milestones/archive/M004-latex-wrap.md |
 | M003 | Fall back in contexts that cannot wrap | done | M002 | high | milestones/archive/M003-context-fallbacks.md |
 | M002 | Wrap figures in HTML output | done | — | high | milestones/archive/M002-html-wrap.md |

@@ -13,14 +13,14 @@ figure: fig-stop-9 image-width=yes
 figure: fig-stop-10 image-width=yes
 figure: fig-stop-11 image-width=yes
 # wraps
-align: top + right, columns: (1fr, 35%), column-gutter: 1em | fig-stop-1 | p
-align: top + left, columns: (35%, 1fr), column-gutter: 1em | fig-stop-2 | p
-align: top + right, columns: (1fr, 35%), column-gutter: 1em | fig-stop-3 | p
-align: top + left, columns: (35%, 1fr), column-gutter: 1em | fig-stop-4 | p
-align: top + right, columns: (1fr, 35%), column-gutter: 1em | fig-stop-5 | p
-align: top + left, columns: (35%, 1fr), column-gutter: 1em | fig-stop-6 | p
-align: top + right, columns: (1fr, 35%), column-gutter: 1em | fig-stop-7 | p
-align: top + left, columns: (35%, 1fr), column-gutter: 1em | fig-stop-8 | p
-align: top + right, columns: (1fr, 35%), column-gutter: 1em | fig-stop-9 | p
-align: top + left, columns: (35%, 1fr), column-gutter: 1em | fig-stop-10 | p
-align: top + right, columns: (1fr, 35%), column-gutter: 1em | fig-stop-11 | p
+align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 1em | fig-stop-1 no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 35%), column-gutter: 1em | fig-stop-2 no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 1em | fig-stop-3 no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 35%), column-gutter: 1em | fig-stop-4 no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 1em | fig-stop-5 no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 35%), column-gutter: 1em | fig-stop-6 no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 1em | fig-stop-7 no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 35%), column-gutter: 1em | fig-stop-8 no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 1em | fig-stop-9 no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 35%), column-gutter: 1em | fig-stop-10 no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 1em | fig-stop-11 no-alt | p | cites=0

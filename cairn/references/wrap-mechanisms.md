@@ -98,12 +98,16 @@ LaTeX wrapper (W2). The filter adds `wrapfig` with
 \ExplSyntaxOff
 ```
 
-Typst output (W3), after the `post-render` step:
+Typst output (W3), as the filter writes it from the `pre-quarto` pass (corrected M005). The `wrapped-side` and `wrapped-columns` helpers keep the side physical in right-to-left text:
 
 ```typst
-#wrap-content(align: right, column-gutter: 1em,
-  [#figure(...)<fig-id>],
-  [Paragraph one. Paragraph two.])
+#context wrap-content(align: top + wrapped-side(right), columns: wrapped-columns(right, 40%), column-gutter: 1em, box(width: 100%)[
+#figure(...)<fig-id>
+], [
+Paragraph one.
+
+Paragraph two.
+])
 ```
 
 Word frame (W4), on the image paragraph and the caption paragraph:
@@ -129,7 +133,9 @@ The filter has two entry points:
   normalizes the attributes and sets `fig-env` and `fig-pos` for LaTeX. It
   also applies the stop rule and inserts clear points.
 - `post-render` runs after Quarto renders figures to raw output. It builds
-  the Typst `wrap-content` call and the docx frames.
+  the docx frames. The Typst `wrap-content` call comes from the `pre-quarto`
+  pass instead, and `_extension.yml` has no `post-render` entry yet
+  (corrected M005).
 
 ## Edge cases
 

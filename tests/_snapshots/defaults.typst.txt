@@ -1,4 +1,5 @@
 # warnings
+1x wrapped: Typst does not use the height of the image plot.png in a wrapped figure, so the image fills the box width.
 1x wrapped: wrap-gap "1ex" on #fig-upper is not a length that Typst can use, so it is 30px.
 # typ
 figure: fig-defaults image-width=yes
@@ -7,8 +8,8 @@ figure: fig-upper image-width=yes
 figure: fig-unitless image-width=yes
 figure: fig-height image-width=yes
 # wraps
-align: top + right, columns: (1fr, 25%), column-gutter: 22.5pt | fig-defaults | p, p
-align: top + left, columns: (30%, 1fr), column-gutter: 24pt | fig-pica | p
-align: top + right, columns: (1fr, 2in), column-gutter: 22.5pt | fig-upper | p
-align: top + left, columns: (225pt, 1fr), column-gutter: 22.5pt | fig-unitless | p
-align: top + right, columns: (1fr, 20%), column-gutter: 22.5pt | fig-height | p
+align: top + wrapped-side(right), columns: wrapped-columns(right, 25%), column-gutter: 22.5pt | fig-defaults no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 30%), column-gutter: 24pt | fig-pica no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 2in), column-gutter: 22.5pt | fig-upper no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 225pt), column-gutter: 22.5pt | fig-unitless no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 20%), column-gutter: 22.5pt | fig-height no-alt | p | cites=0

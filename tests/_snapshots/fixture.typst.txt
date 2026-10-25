@@ -29,18 +29,18 @@ figure: fig-bottom image-width=yes
 figure: fig-break image-width=yes
 figure: fig-break-lines image-width=yes
 # wraps
-align: top + right, columns: (1fr, 30%), column-gutter: 1em | fig-md | p, p
-align: top + left, columns: (3in, 1fr), column-gutter: 1em | fig-div | p, p
-align: top + right, columns: (1fr, 35%), column-gutter: 2em | fig-inner | p, p
-align: top + left, columns: (40%, 1fr), column-gutter: 1em | fig-cell | p, p
-align: top + right, columns: (1fr, 20%), column-gutter: 1em | plot.png | p, p
-align: top + right, columns: (1fr, 20%), column-gutter: 2em | plot.png | p, p
-align: top + right, columns: (1fr, 30%), column-gutter: 1em | fig-comment | p, p
-align: top + left, columns: (40%, 1fr), column-gutter: 1em | fig-bad-width | p, p
-align: top + right, columns: (1fr, 30%), column-gutter: 1em | fig-styled | p, p
-align: top + left, columns: (40%, 1fr), column-gutter: 1em | fig-clamp | p, p
-align: top + right, columns: (1fr, 30%), column-gutter: 1em | fig-raw | p
-align: top + left, columns: (40%, 1fr), column-gutter: 1em | plot.png | p, p
-align: top + right, columns: (1fr, 112.5pt), column-gutter: 1em | fig-bottom | p, p
-align: top + left, columns: (40%, 1fr), column-gutter: 1em | fig-break | p, p, p, p
-align: top + right, columns: (1fr, 40%), column-gutter: 1em | fig-break-lines | p, p, p, p
+align: top + wrapped-side(right), columns: wrapped-columns(right, 30%), column-gutter: 1em | fig-md no-alt | p, p | cites=1
+align: top + wrapped-side(left), columns: wrapped-columns(left, 3in), column-gutter: 1em | fig-div no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 2em | fig-inner no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | fig-cell no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 20%), column-gutter: 1em | plot.png alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 20%), column-gutter: 2em | plot.png no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 30%), column-gutter: 1em | fig-comment no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | fig-bad-width no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 30%), column-gutter: 1em | fig-styled no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | fig-clamp no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 30%), column-gutter: 1em | fig-raw no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | plot.png no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 112.5pt), column-gutter: 1em | fig-bottom no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | fig-break no-alt | p, p, p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 40%), column-gutter: 1em | fig-break-lines no-alt | p, p, p, p | cites=0

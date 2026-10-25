@@ -240,7 +240,15 @@ The `width` and `wrap-gap` values change to Typst lengths:
   `max()`, or `clamp()` value print a warning, and the document default
   applies.
 
-The `wrap-lines` attribute does nothing in Typst.
+A percent of 100% or more leaves no room for the text in Typst, so it
+prints a warning, and the document default applies.
+
+The `wrap-lines` attribute does nothing in Typst. Typst does not use an
+image's `height` in a wrapped figure. The image fills the box width and
+keeps its shape, and the render prints a warning.
+
+The sides stay physical in right-to-left text, which Typst sets from the
+document's `lang`, such as `lang: he`.
 
 wrap-it has limits:
 

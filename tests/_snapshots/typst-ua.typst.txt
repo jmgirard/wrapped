@@ -2,5 +2,5 @@
 # typ
 figure: fig-ua image-width=yes
 # wraps
-align: top + right, columns: (1fr, 35%), column-gutter: 1em | fig-ua | p, p
-align: top + left, columns: (25%, 1fr), column-gutter: 1em | plot.png | p, p
+align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 1em | fig-ua alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 25%), column-gutter: 1em | plot.png alt | p, p | cites=0

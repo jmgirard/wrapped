@@ -1,0 +1,12 @@
+# warnings
+1x wrapped: Typst does not use the height of the image plot.png in a wrapped figure, so the image fills the box width.
+1x wrapped: gap "1ex" in the wrapped metadata is not a length that Typst can use, so it is 1em.
+1x wrapped: width "100%" on #fig-full leaves no room for text in Typst, so it is 40%.
+1x wrapped: width "120%" in the wrapped metadata leaves no room for text in Typst, so it is 40%.
+# typ
+figure: fig-meta image-width=yes
+figure: fig-full image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, 40%), column-gutter: 1em | fig-meta no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | fig-full no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 25%), column-gutter: 1em | plot.png alt | p | cites=0

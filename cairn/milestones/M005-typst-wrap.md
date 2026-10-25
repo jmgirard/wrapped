@@ -2,7 +2,7 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M005: Wrap figures in Typst PDF output
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** high
 - **Depends on:** —
 - **Driving RR:** —
@@ -57,6 +57,7 @@ A document rendered to PDF through Typst with the extension installed shows body
 - [x] T3: Convert width and gap for Typst by AC4's rule, with the metadata defaults, and add the `2pc`, `1ex`, `2IN`, and `300` cases to the fixtures. Make the context, next-block, and unplaced warnings print in Typst. Add a `typst` format with `keep-typ: true` and `fig-format: png` to `tests/stop-rule.qmd`, `tests/contexts.qmd`, and `tests/defaults.qmd`, and render them to Typst.
 - [x] T4: Add a bibliography and a citation in wrapped text to `tests/fixture.qmd`. Add a Typst page-break fixture whose figure placement does not depend on raw LaTeX, and a `pdf-standard: ua-1` Typst fixture. Read the alt text from the PDF's structure tree with `pdfinfo -struct`. Fall back with a warning for each figure whose alt text is lost.
 - [x] T5: Add the Typst renders of the fixture, defaults, stop-rule, contexts, page-break, and ua-1 fixtures to `tests/verify.py`, and record in the `.typ` snapshot each `wrap-content` call's side, width, gap, and member labels. Make page images with `pdftoppm` and read them. Write the Typst section of `README.md` with wrap-it's limits: first-line indents (wrap-it #1), tall figures (#8), page breaks, the alt-text result, and the parts of the stop rule that differ from HTML.
+- [x] T6: Review return 1: keep the sides physical in right-to-left Typst text, warn for a percent width of 100% or more in Typst, and fix the other fix-now findings that the Review section lists for this pass.
 
 ## Work log
 
@@ -80,6 +81,9 @@ A document rendered to PDF through Typst with the extension installed shows body
 - 2026-10-25: claim audit: 60 claims read, 2 corrected — `_extensions/wrapped/wrapped.lua` (the `clean_image` height sentence was false for Typst, where an image with a height was cut off at the box edges; the code now gives a Typst image the box width and drops its height, and `#fig-height` in `tests/defaults.qmd` records `image-width=yes`, where before the fix the `.typ` had `height: 2in` and no width; the `TYPST_UNITS` comment now says em is not absolute). Both re-read against the render and the code.
 - 2026-10-25: all tasks done; verify passes (27 renders); status set to review.
 - 2026-10-25: review return 1: right-to-left Typst documents swap the sides (diff-bug #1), and a percent width of 100% or more squeezes or drops the text with no warning (diff-bug #2). The same pass fixes the other fix-now findings in the Review section: height warning and README line, `.typ` summary (block kinds, alt text, citations, unparsed calls, figure chunk), the `.wrapped-image` crash, a Typst metadata-default test, the research page's post-render lines, the `#fig-clamp` prose, and a LaTeX page-1 check.
+- 2026-10-25: T6 added for review return 1 (minor amendment).
+- 2026-10-25: T6 done. Quarto's Typst template sets `lang` and never `dir`, so the direction is read in Typst: the header now defines `wrapped-rtl`, `wrapped-side`, and `wrapped-columns` after the import, and each call is `#context wrap-content(align: top + wrapped-side(<side>), columns: wrapped-columns(<side>, <width>), …)`; in `tests/typst-rtl.qmd` (`lang: he`) `pdftotext -bbox` puts the right figure's caption at x 396 to 517 and the left figure's at x 95 to 214. A percent of 100% or more, on a figure or in the metadata, takes the default with a warning (`tests/typst-options.qmd`). A height in Typst warns. `typst_group` returns a user `.wrapped-image` div's group as it is. The `.typ` summary names each block's kind, records alt text and citations, counts unread calls, and reads a figure's image only before its `kind:` line; planted defects (a heading, a `#block[`, a broken opening) each showed in a scratch copy, and the figure-line fix changed exactly the two lines that had read a later image's width. LaTeX: `main` and the branch put Figures 1 to 17 on the same pages, and page 1 matches. verify: all 29 renders pass.
+- 2026-10-25: T6 complete; status set to review.
 
 ## Decisions
 
