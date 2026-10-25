@@ -1,0 +1,35 @@
+---
+title: "wrapped fixture: LaTeX options and lengths"
+filters:
+  - wrapped
+format:
+  pdf:
+    keep-tex: true
+classoption: twocolumn=false
+wrapped:
+  width: 50vw
+---
+
+## A metadata width that LaTeX cannot use
+
+![A figure that takes the built-in default width.](plot.png){#fig-meta-vw .wrap-right}
+
+`classoption: twocolumn=false` keeps one column, so the figure wraps. The metadata width `50vw` has no LaTeX length, so the figure takes the built-in default, 40%, and the render prints a warning. See @fig-meta-vw. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## An image with a height
+
+![A figure whose image has a height.](plot.png){#fig-height .wrap-right height="1in"}
+
+The image keeps its height and its shape, and it fits in the box width. See @fig-height. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A wrap-lines value that is not a whole number
+
+![A figure with wrap-lines="banana" and a very small gap.](plot.png){#fig-bad-lines .wrap-left width="30%" wrap-lines="banana" wrap-gap="0.001%"}
+
+The figure takes no line count, and the render prints a warning. The gap is written as a decimal with no exponent. See @fig-bad-lines. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.

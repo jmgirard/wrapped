@@ -1,14 +1,14 @@
 # warnings
 # tex
-wrappedfigure: fig-stop-1 [side=right,width=0.35\linewidth,gap=1em] image-width=yes
-wrappedfigure: fig-stop-2 [side=left,width=0.35\linewidth,gap=1em] image-width=yes
-wrappedfigure: fig-stop-3 [side=right,width=0.35\linewidth,gap=1em] image-width=yes
-wrappedfigure: fig-stop-4 [side=left,width=0.35\linewidth,gap=1em] image-width=yes
-wrappedfigure: fig-stop-5 [side=right,width=0.35\linewidth,gap=1em] image-width=yes
-wrappedfigure: fig-stop-6 [side=left,width=0.35\linewidth,gap=1em] image-width=yes
-wrappedfigure: fig-stop-7 [side=right,width=0.35\linewidth,gap=1em] image-width=yes
-wrappedfigure: fig-stop-8 [side=left,width=0.35\linewidth,gap=1em] image-width=yes
-figure: fig-stop-plain [-] image-width=yes
-wrappedfigure: fig-stop-9 [side=right,width=0.35\linewidth,gap=1em] image-width=yes
-wrappedfigure: fig-stop-10 [side=left,width=0.35\linewidth,gap=1em] image-width=yes
-wrappedfigure: fig-stop-11 [side=right,width=0.35\linewidth,gap=1em] image-width=yes
+wrappedfigure: fig-stop-1 [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-stop-2 [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-stop-3 [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-stop-4 [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-stop-5 [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-stop-6 [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-stop-7 [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-stop-8 [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+figure: fig-stop-plain [-] image=[width=0.3\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-stop-9 [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-stop-10 [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-stop-11 [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]

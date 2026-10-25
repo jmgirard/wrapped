@@ -105,15 +105,22 @@ end
 -- Absolute lengths that LaTeX reads as written. TeX also reads em and ex.
 local TEX_UNITS = { pt = true, pc = true, ["in"] = true, cm = true, mm = true, em = true, ex = true }
 
+-- A number as TeX reads it: decimal, never with an exponent as %g writes
+-- it, and with no trailing zeros.
+local function tex_number(n)
+  local s = string.format("%.6f", n):gsub("0+$", ""):gsub("%.$", "")
+  return s
+end
+
 -- Returns the LaTeX length for a CSS length from css_length, or nil when
 -- LaTeX has no such length. A percent is that fraction of \linewidth, and a
 -- px length is 0.75 pt for each px, as in CSS.
 local function tex_length(length)
   local num, unit = length:match("^(%d*%.?%d+)(%a*%%?)$")
   if not num then return nil end
-  if unit == "%" then return string.format("%g\\linewidth", tonumber(num) / 100) end
+  if unit == "%" then return tex_number(tonumber(num) / 100) .. "\\linewidth" end
   unit = unit:lower()
-  if unit == "px" then return string.format("%gpt", tonumber(num) * 0.75) end
+  if unit == "px" then return tex_number(tonumber(num) * 0.75) .. "pt" end
   if TEX_UNITS[unit] then return num .. unit end
   return nil
 end
@@ -177,15 +184,16 @@ local function drop_wrap(img)
 end
 
 -- Cleans an image in a wrapped figure, so the image fills the figure box.
--- HTML removes the width. LaTeX sets the width to the box width and removes
--- the height. Elsewhere the image keeps its width.
+-- HTML removes the width. LaTeX sets the width to the box width. An image
+-- with a height keeps it and loses its width, so Pandoc fits the image in
+-- the box width and the height and keeps its shape. Elsewhere the image
+-- keeps its width.
 local function clean_image(img)
   drop_wrap(img)
   if is_html then
     img.attributes.width = nil
   elseif is_latex then
-    img.attributes.width = "100%"
-    img.attributes.height = nil
+    img.attributes.width = (img.attributes.height == nil) and "100%" or nil
   end
   return img
 end
@@ -372,12 +380,18 @@ local function find_contexts(doc)
   return doc
 end
 
--- True when `classoption`, a string or a list, names twocolumn.
+-- True when `classoption`, a string or a list, turns on twocolumn: an
+-- option `twocolumn`, or KOMA's `twocolumn=true`, `on`, or `yes`.
+local TWO_COLUMN = { [""] = true, ["true"] = true, on = true, yes = true }
+
 local function names_two_column(classoption)
   if classoption == nil then return false end
   local items = pandoc.utils.type(classoption) == "List" and classoption or { classoption }
   for _, item in ipairs(items) do
-    if pandoc.utils.stringify(item):find("%f[%w]twocolumn%f[%W]") then return true end
+    for option in pandoc.utils.stringify(item):gmatch("[^,]+") do
+      local value = option:lower():match("^%s*twocolumn%s*=?%s*(%a*)%s*$")
+      if value and TWO_COLUMN[value] then return true end
+    end
   end
   return false
 end

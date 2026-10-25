@@ -184,7 +184,9 @@ of the figure.
 ![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right wrap-lines="12"}
 ```
 
-A caption inside a wrapped figure is set ragged-right.
+A caption inside a wrapped figure is set ragged-right. An image with a
+`height` keeps it in LaTeX and keeps its shape, and it fits in the box
+width.
 
 wrapfig has limits, and the extension keeps some of them:
 
@@ -207,7 +209,9 @@ wrapfig has limits, and the extension keeps some of them:
   it. If the next wrapped figure or the end of the document comes first,
   the figure that waits renders centered with no text beside it.
 - In a two-column document, set with `classoption: twocolumn`, wrapped
-  figures render as normal figures, and the render prints one warning.
+  figures render as normal figures, and the render prints one warning. The
+  extension reads only `classoption`. A class that sets two columns by
+  default, such as IEEEtran, is not detected.
 - A figure in a list keeps its normal layout, as in HTML.
 
 Tagged PDF: Quarto 1.10.19 ignores `pdf-standard: ua-1` in LaTeX, so that

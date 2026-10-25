@@ -14,16 +14,16 @@
 1x wrapped: the image plot.png is in a list, so it does not wrap.
 1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
 # tex
-figure: - [H] image-width=no
-figure: fig-panel-a [-] image-width=no
-figure: fig-sub-wrapped [-] image-width=no
-figure: fig-layout-cell [-] image-width=no
-figure: fig-list [-] image-width=no
-figure: fig-callout [H] image-width=no
-figure: fig-column [-] image-width=no
-figure: - [H] image-width=no
-figure: fig-tab [-] image-width=no
-figure: fig-before-heading [-] image-width=no
-figure: - [H] image-width=no
-figure: fig-first [-] image-width=yes
-wrappedfigure: fig-second [side=right,width=0.3\linewidth,gap=1em] image-width=yes
+figure: - [H] image=[keepaspectratio]
+figure: fig-panel-a [-] image=[keepaspectratio]
+figure: fig-sub-wrapped [-] image=[keepaspectratio]
+figure: fig-layout-cell [-] image=[keepaspectratio]
+figure: fig-list [-] image=[keepaspectratio]
+figure: fig-callout [H] image=[keepaspectratio]
+figure: fig-column [-] image=[keepaspectratio]
+figure: - [H] image=[keepaspectratio]
+figure: fig-tab [-] image=[keepaspectratio]
+figure: fig-before-heading [-] image=[keepaspectratio]
+figure: - [H] image=[keepaspectratio]
+figure: fig-first [-] image=[width=0.3\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-second [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
