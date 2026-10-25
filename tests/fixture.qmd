@@ -63,6 +63,8 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 The paragraph after the uncaptioned image wraps around it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ## A cell with no figure
 
 ```{r}
@@ -104,6 +106,8 @@ The figure above keeps its normal layout and its 30% width. See @fig-unwrapped-c
 
 The paragraph after the captioned image with no id wraps around it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ## An image inside a link
 
 [![](plot.png){.wrap-left width="20%"}](https://example.com)
@@ -118,6 +122,8 @@ The image above does not wrap, and the render prints a warning for it.
 
 The paragraph after the comment wraps around the figure. See @fig-comment. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ## A width that is not a length
 
 ::: {#fig-bad-width .wrap-left width="banana" wrap-gap="wide"}
@@ -127,6 +133,8 @@ A figure with a width and a gap that are not lengths.
 :::
 
 The figure takes the default width and gap, and the render prints a warning for each. See @fig-bad-width. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## A figure with its own style
 
@@ -138,11 +146,20 @@ A figure with its own style.
 
 The figure keeps its border. See @fig-styled. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+```{=latex}
+% Starts a page, so the figures below fit where they are in the PDF.
+\clearpage
+```
+
 ## CSS functions and other units
 
 ![A figure with a clamp() width and an uppercase unit gap.](plot.png){#fig-clamp .wrap-left width="clamp(150px, 30%, 400px)" wrap-gap="2VMIN"}
 
-The figure takes both values with no warning. See @fig-clamp. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+In HTML the figure takes both values with no warning. LaTeX cannot use them, so it takes the defaults and the render prints a warning for each. See @fig-clamp. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Raw HTML that is more than a comment
 
@@ -156,11 +173,18 @@ A short paragraph beside the figure. See @fig-raw.
 
 The raw block above ends the wrap, so it and this paragraph start below the figure.
 
+```{=latex}
+% Starts a page, so the figure below fits where it is in the PDF.
+\clearpage
+```
+
 ## A captioned image with an id that is not a figure id
 
 ![Logo with its own id.](plot.png){#logo .wrap-left width="wide"}
 
-The image wraps, and the warning names it by its id.
+The image wraps, and the warning names it by its id. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## A div with a wrap class that is not a figure
 
@@ -169,3 +193,62 @@ A note in a div with a wrap class.
 :::
 
 The div above does not wrap, and the render prints a warning for it.
+
+```{=latex}
+\clearpage
+```
+
+## A long caption near the bottom of a page
+
+```{=latex}
+% Moves the figure below near the bottom of the page.
+\vspace{0.6\textheight}
+```
+
+![A figure near the bottom of a page, with a caption that runs to three or more lines in its narrow box.](plot.png){#fig-bottom .wrap-right width="150px"}
+
+The figure is in its own box beside this paragraph, and its caption ends above the bottom of the text block. See @fig-bottom. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+```{=latex}
+\clearpage
+```
+
+## A figure too near the bottom of a page
+
+```{=latex}
+% Moves the figure below too near the bottom of the page to fit there.
+\vspace{0.75\textheight}
+```
+
+![A figure that starts too near the bottom of a page.](plot.png){#fig-break .wrap-left}
+
+The figure starts too near the bottom of the page to fit there. See @fig-break. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+```{=latex}
+\clearpage
+```
+
+## A figure with wrap-lines too near the bottom of a page
+
+```{=latex}
+% Moves the figure below too near the bottom of the page to fit there.
+\vspace{0.75\textheight}
+```
+
+![A figure with wrap-lines that starts too near the bottom of a page.](plot.png){#fig-break-lines .wrap-right wrap-lines="12"}
+
+The figure sets wrap-lines and starts too near the bottom of the page to fit there. See @fig-break-lines. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

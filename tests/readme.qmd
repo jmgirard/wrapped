@@ -37,6 +37,10 @@ Text beside the code cell example. Lorem ipsum dolor sit amet, consectetur adipi
 
 Text beside the gap example. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
+![Mean ratings by condition.](plot.png){#fig-readme-lines .wrap-right wrap-lines="12"}
+
+Text beside the wrap-lines example, which works only in LaTeX. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
 ## Results
 
 ![Mean ratings by condition.](plot.png){#fig-readme-slide .wrap-right width="40%"}

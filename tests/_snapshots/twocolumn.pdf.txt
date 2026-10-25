@@ -1,0 +1,4 @@
+# warnings
+1x wrapped: LaTeX does not wrap figures in a two-column document, so wrapped figures render as normal figures.
+# tex
+figure: fig-two [-] image=[width=0.4\linewidth,height=\textheight,keepaspectratio]

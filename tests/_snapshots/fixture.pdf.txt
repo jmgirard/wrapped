@@ -1,17 +1,30 @@
 # warnings
-1x wrapped: latex output does not wrap figures yet, so wrapped figures render as normal figures.
+1x wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.
+1x wrapped: the div #note is not a figure, so it does not wrap.
+1x wrapped: the image plot.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the table #tbl-cars is not a figure, so it does not wrap.
+1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
+1x wrapped: width "clamp(150px, 30%, 400px)" on #fig-clamp is not a length that LaTeX can use, so it is 40%.
+1x wrapped: width "wide" on #logo is not a length or a percent, so it is 40%.
+1x wrapped: wrap-gap "2VMIN" on #fig-clamp is not a length that LaTeX can use, so it is 1em.
+1x wrapped: wrap-gap "wide" on #fig-bad-width is not a length or a percent, so it is 1em.
+1x wrapped: wrap-gap "wide" on plot.png is not a length or a percent, so it is 1em.
 # tex
-figure: fig-md image-width=yes
-figure: fig-div image-width=no
-figure: fig-inner image-width=yes
-figure: fig-cell image-width=no
-figure: fig-plain image-width=yes
-figure: fig-after-table image-width=yes
-figure: fig-unwrapped-cell image-width=yes
-figure: - image-width=yes
-figure: fig-comment image-width=yes
-figure: fig-bad-width image-width=no
-figure: fig-styled image-width=no
-figure: fig-clamp image-width=no
-figure: fig-raw image-width=yes
-figure: - image-width=no
+wrappedfigure: fig-md [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-div [side=left,width=3in,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-inner [side=right,width=0.35\linewidth,gap=2em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-cell [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: - [side=right,width=0.2\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio,alt={A small plot}]
+figure: fig-plain [-] image=[width=0.5\linewidth,height=\textheight,keepaspectratio]
+figure: fig-after-table [-] image=[width=0.5\linewidth,height=\textheight,keepaspectratio]
+figure: fig-unwrapped-cell [H] image=[width=0.3\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: - [side=right,width=0.2\linewidth,gap=2em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-comment [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-bad-width [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-styled [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-clamp [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-raw [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: - [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-bottom [side=right,width=112.5pt,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-break [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-break-lines [side=right,width=0.4\linewidth,gap=1em,lines=12] image=[width=1\linewidth,height=\textheight,keepaspectratio]

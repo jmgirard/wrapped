@@ -2,7 +2,10 @@
 title: "wrapped fixture: contexts that keep a normal figure"
 filters:
   - wrapped
-format: html
+format:
+  html: default
+  pdf:
+    keep-tex: true
 ---
 
 ## E3: a margin figure

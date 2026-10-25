@@ -2,7 +2,10 @@
 title: "wrapped fixture: document defaults"
 filters:
   - wrapped
-format: html
+format:
+  html: default
+  pdf:
+    keep-tex: true
 wrapped:
   width: 25%
   gap: 30px

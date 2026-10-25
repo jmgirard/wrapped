@@ -2,7 +2,10 @@
 title: "wrapped fixture: the stop rule"
 filters:
   - wrapped
-format: html
+format:
+  html: default
+  pdf:
+    keep-tex: true
 ---
 
 ## Case 1: ATX heading

@@ -1,0 +1,7 @@
+# warnings
+1x wrapped: width "50vw" in the wrapped metadata is not a length that LaTeX can use, so it is 40%.
+1x wrapped: wrap-lines "banana" on #fig-bad-lines is not a whole number above 0, so it is not used.
+# tex
+wrappedfigure: fig-meta-vw [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: fig-height [side=right,width=0.4\linewidth,gap=1em] image=[width=\linewidth,height=1in,keepaspectratio]
+wrappedfigure: fig-bad-lines [side=left,width=0.3\linewidth,gap=0.00001\linewidth] image=[width=1\linewidth,height=\textheight,keepaspectratio]

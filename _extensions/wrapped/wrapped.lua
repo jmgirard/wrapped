@@ -5,8 +5,10 @@
 -- that also holds the paragraphs after it. Two passes first find the
 -- figures that keep a normal layout: those in a context that cannot wrap,
 -- such as a list or the margin, and those with no paragraph after them.
--- Every other format keeps a normal figure. A figure with no wrap class is
--- left as it is in every format.
+-- LaTeX output puts each wrapped figure in the wrappedfigure environment of
+-- wrapped.tex, which calls wrapfig. A two-column LaTeX document and every
+-- other format keep a normal figure. A figure with no wrap class is left as
+-- it is in every format.
 
 local SIDES = { ["wrap-left"] = "left", ["wrap-right"] = "right" }
 
@@ -24,11 +26,21 @@ local options = {
 }
 
 local is_html = quarto.doc.is_format("html:js")
+-- PDF through LaTeX. Beamer is a separate format and keeps a normal figure.
+-- The first pass sets is_latex to false for a two-column document.
+local is_latex = FORMAT == "latex"
+local two_column = false
 -- found_wrap: a figure or image carries a wrap class, so a format that
--- cannot wrap prints its one warning. placed: an HTML figure or image
--- wraps, so the page needs the stylesheet.
+-- cannot wrap prints its one warning. placed: a figure or image wraps, so
+-- the document needs the stylesheet or the LaTeX environment.
 local found_wrap = false
 local placed = false
+
+-- True in a format that wraps, which prints a warning for each figure that
+-- keeps its normal layout.
+local function wraps()
+  return is_html or is_latex
+end
 
 -- CSS units that a width, gap, or breakpoint may use, in lowercase.
 local UNITS = {
@@ -90,6 +102,42 @@ local function checked_length(value, fallback, what, where, no_percent)
   return fallback
 end
 
+-- Absolute lengths that LaTeX reads as written. TeX also reads em and ex.
+local TEX_UNITS = { pt = true, pc = true, ["in"] = true, cm = true, mm = true, em = true, ex = true }
+
+-- A number as TeX reads it: decimal, never with an exponent as %g writes
+-- it, and with no trailing zeros.
+local function tex_number(n)
+  local s = string.format("%.6f", n):gsub("0+$", ""):gsub("%.$", "")
+  return s
+end
+
+-- Returns the LaTeX length for a CSS length from css_length, or nil when
+-- LaTeX has no such length. A percent is that fraction of \linewidth, and a
+-- px length is 0.75 pt for each px, as in CSS.
+local function tex_length(length)
+  local num, unit = length:match("^(%d*%.?%d+)(%a*%%?)$")
+  if not num then return nil end
+  if unit == "%" then return tex_number(tonumber(num) / 100) .. "\\linewidth" end
+  unit = unit:lower()
+  if unit == "px" then return tex_number(tonumber(num) * 0.75) .. "pt" end
+  if TEX_UNITS[unit] then return num .. unit end
+  return nil
+end
+
+-- Returns the LaTeX length for a value, or the LaTeX length of `fallback`
+-- with a warning when the value is not a length that LaTeX can use.
+-- `fallback` is a CSS length that tex_length converts.
+local function checked_tex_length(value, fallback, what, where)
+  local length = checked_length(value, fallback, what, where)
+  local tex = tex_length(length)
+  if tex then return tex end
+  quarto.log.warning(string.format(
+    'wrapped: %s "%s" on %s is not a length that LaTeX can use, so it is %s.',
+    what, length, where, fallback))
+  return tex_length(fallback)
+end
+
 -- The custom properties for a wrapped box, followed by any style the user
 -- set on it.
 local function style_for(width, gap, where, existing)
@@ -105,11 +153,12 @@ local function is_float_div(div)
   return div.attributes.__quarto_custom_type == "FloatRefTarget"
 end
 
--- Reads the first wrap class, width, and wrap-gap of the images in a list
--- of blocks, and changes nothing. The images of a subfigure belong to the
--- subfigure, not to its panel, so the walk skips nested floats.
+-- Reads the first wrap class, width, wrap-gap, and wrap-lines of the images
+-- in a list of blocks, and changes nothing. The images of a subfigure
+-- belong to the subfigure, not to its panel, so the walk skips nested
+-- floats.
 local function image_wrap(blocks)
-  local class, width, gap
+  local class, width, gap, lines
   blocks:walk({
     traverse = "topdown",
     Div = function(d)
@@ -119,23 +168,62 @@ local function image_wrap(blocks)
       class = class or wrap_class(img.classes)
       width = width or img.attributes.width
       gap = gap or img.attributes["wrap-gap"]
+      lines = lines or img.attributes["wrap-lines"]
     end,
   })
-  return class, width, gap
+  return class, width, gap, lines
 end
 
--- Removes the wrap class and wrap-gap from each image in a wrapped figure.
--- In HTML it also removes the width, so the image fills the figure box.
--- Elsewhere the image keeps its width.
+-- Removes the wrap class, wrap-gap, and wrap-lines from an image, and
+-- keeps its width.
+local function drop_wrap(img)
+  strip_wrap(img.classes)
+  img.attributes["wrap-gap"] = nil
+  img.attributes["wrap-lines"] = nil
+  return img
+end
+
+-- Cleans an image in a wrapped figure, so the image fills the figure box.
+-- HTML removes the width. LaTeX sets the width to the box width. An image
+-- with a height keeps it and loses its width, so Pandoc fits the image in
+-- the box width and the height and keeps its shape. Elsewhere the image
+-- keeps its width.
+local function clean_image(img)
+  drop_wrap(img)
+  if is_html then
+    img.attributes.width = nil
+  elseif is_latex then
+    img.attributes.width = (img.attributes.height == nil) and "100%" or nil
+  end
+  return img
+end
+
 local function clean_images(blocks)
-  return blocks:walk({
-    Image = function(img)
-      strip_wrap(img.classes)
-      img.attributes["wrap-gap"] = nil
-      if is_html then img.attributes.width = nil end
-      return img
-    end,
-  })
+  return blocks:walk({ Image = clean_image })
+end
+
+-- Returns the line count of a wrap-lines value, or nil with a warning when
+-- it is not a whole number above 0.
+local function checked_lines(value, where)
+  if value == nil then return nil end
+  local s = pandoc.utils.stringify(value)
+  if s:match("^%d+$") and tonumber(s) > 0 then return s end
+  quarto.log.warning(string.format(
+    'wrapped: wrap-lines "%s" on %s is not a whole number above 0, so it is not used.', s, where))
+  return nil
+end
+
+-- The options of a wrappedfigure environment, such as
+-- side=right,width=0.4\linewidth,gap=1em,lines=12.
+local function tex_options(class, width, gap, lines, where)
+  local opts = {
+    "side=" .. SIDES[class],
+    "width=" .. checked_tex_length(width, options.width, "width", where),
+    "gap=" .. checked_tex_length(gap, options.gap, "wrap-gap", where),
+  }
+  local n = checked_lines(lines, where)
+  if n then table.insert(opts, "lines=" .. n) end
+  return table.concat(opts, ",")
 end
 
 -- Counts the floats (figures and tables) inside a code cell. Inside a user
@@ -187,19 +275,12 @@ local function block_context(block)
   return margin_context(block.classes)
 end
 
--- A context warning, printed in HTML only. Other formats print the one
--- format warning instead.
+-- A context warning, printed in a format that wraps. Other formats print
+-- the one format warning instead.
 local function context_warning(subject, context)
-  if is_html then
+  if wraps() then
     quarto.log.warning(string.format("wrapped: %s %s, so it does not wrap.", subject, context))
   end
-end
-
--- Removes the wrap class and wrap-gap from an image, and keeps its width.
-local function drop_wrap(img)
-  strip_wrap(img.classes)
-  img.attributes["wrap-gap"] = nil
-  return img
 end
 
 -- Records the floats in a list of blocks, subfloats included, by custom id.
@@ -299,7 +380,37 @@ local function find_contexts(doc)
   return doc
 end
 
+-- True when `classoption`, a string or a list, turns on twocolumn: an
+-- option `twocolumn`, or KOMA's `twocolumn=true`, `on`, or `yes`.
+local TWO_COLUMN = { [""] = true, ["true"] = true, on = true, yes = true }
+
+local function names_two_column(classoption)
+  if classoption == nil then return false end
+  local items = pandoc.utils.type(classoption) == "List" and classoption or { classoption }
+  for _, item in ipairs(items) do
+    for option in pandoc.utils.stringify(item):gmatch("[^,]+") do
+      local value = option:lower():match("^%s*twocolumn%s*=?%s*(%a*)%s*$")
+      if value and TWO_COLUMN[value] then return true end
+    end
+  end
+  return false
+end
+
+-- In LaTeX, a metadata width or gap that LaTeX cannot use, such as 50vw,
+-- gives way to the default with a warning.
+local function tex_default(key, what)
+  if tex_length(options[key]) then return end
+  quarto.log.warning(string.format(
+    'wrapped: %s "%s" in the wrapped metadata is not a length that LaTeX can use, so it is %s.',
+    what, options[key], DEFAULTS[key]))
+  options[key] = DEFAULTS[key]
+end
+
 local function read_meta(meta)
+  if is_latex and names_two_column(meta.classoption) then
+    is_latex = false
+    two_column = true
+  end
   local m = meta.wrapped
   if m == nil then return end
   if pandoc.utils.type(m) ~= "table" then
@@ -311,6 +422,10 @@ local function read_meta(meta)
   options.gap = checked_length(m.gap, DEFAULTS.gap, "gap", "the wrapped metadata")
   options.breakpoint = checked_length(m.breakpoint, DEFAULTS.breakpoint, "breakpoint",
     "the wrapped metadata", true)
+  if is_latex then
+    tex_default("width", "width")
+    tex_default("gap", "gap")
+  end
 end
 
 -- Custom ids of wrapped floats outside a code cell, and the anchor tokens of
@@ -333,7 +448,7 @@ local function cell_div(div)
   if not c then return nil end
   strip_wrap(div.classes)
   local n = count_floats(div)
-  if n == 0 and is_html then
+  if n == 0 and wraps() then
     quarto.log.warning(
       "wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.")
   end
@@ -354,7 +469,7 @@ local function float_target(float)
     carry.remaining = carry.remaining - 1
     carried, token = carry.class, carry.token
   end
-  local img_class, img_width, img_gap = image_wrap(float.content)
+  local img_class, img_width, img_gap, img_lines = image_wrap(float.content)
   local class = wrap_class(float.classes) or carried or img_class
   if not class then return nil end
   if float.type == "Figure" then found_wrap = true end
@@ -375,6 +490,7 @@ local function float_target(float)
   if context or no_text[custom_id or ""] then
     float.content = float.content:walk({ Image = drop_wrap })
     float.attributes["wrap-gap"] = nil
+    float.attributes["wrap-lines"] = nil
     if context then
       local noun = ({ Figure = "figure", Table = "table" })[float.type] or "float"
       context_warning(string.format("the %s #%s", noun, float.identifier), context)
@@ -382,7 +498,7 @@ local function float_target(float)
     return float
   end
   float.content = clean_images(float.content)
-  if not is_html then return float end
+  if not wraps() then return float end
   -- knitr writes the plot's pixel size as a unitless image width. That is
   -- not a box width, so a cell figure takes only a width with a unit.
   if carried and img_width and tostring(img_width):match("^%d+%.?%d*$") then
@@ -390,11 +506,19 @@ local function float_target(float)
   end
   local width = float.attributes.width or img_width
   local gap = float.attributes["wrap-gap"] or img_gap
+  local lines = float.attributes["wrap-lines"] or img_lines
   float.attributes.width = nil
   float.attributes["wrap-gap"] = nil
+  float.attributes["wrap-lines"] = nil
+  placed = true
+  if is_latex then
+    -- Quarto writes \begin{<fig-env>}[<fig-pos>] for the float.
+    float.attributes["fig-env"] = "wrappedfigure"
+    float.attributes["fig-pos"] = tex_options(class, width, gap, lines, "#" .. float.identifier)
+    return float
+  end
   float.classes:insert(class)
   float.attributes.style = style_for(width, gap, "#" .. float.identifier, float.attributes.style)
-  placed = true
   if carried then
     wrapped_cells[token] = true
   else
@@ -410,19 +534,26 @@ end
 -- the Figure inside a .wrapped-image box. Returning false stops the
 -- traversal from visiting the Figure again inside the box.
 local function figure_block(fig)
-  local img_class, img_width, img_gap = image_wrap(fig.content)
+  local img_class, img_width, img_gap, img_lines = image_wrap(fig.content)
   local class = wrap_class(fig.classes) or img_class
   if not class then return nil end
   found_wrap = true
   strip_wrap(fig.classes)
   fig.content = clean_images(fig.content)
-  if not is_html then return fig end
+  if not wraps() then return fig end
   local width = fig.attributes.width or img_width
   local gap = fig.attributes["wrap-gap"] or img_gap
+  local lines = fig.attributes["wrap-lines"] or img_lines
   fig.attributes.width = nil
   fig.attributes["wrap-gap"] = nil
+  fig.attributes["wrap-lines"] = nil
   local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
   placed = true
+  if is_latex then
+    fig.attributes["fig-env"] = "wrappedfigure"
+    fig.attributes["fig-pos"] = tex_options(class, width, gap, lines, where)
+    return fig, false
+  end
   local box = pandoc.Div({ fig }, pandoc.Attr("", { "wrapped-image", class },
     { style = style_for(width, gap, where, nil) }))
   return box, false
@@ -450,8 +581,29 @@ local function wrapped_image_div(img)
   local gap = img.attributes["wrap-gap"]
   img.attributes.width = nil
   img.attributes["wrap-gap"] = nil
+  img.attributes["wrap-lines"] = nil
   return pandoc.Div({ pandoc.Plain({ img }) }, pandoc.Attr("", { "wrapped-image", class },
     { style = style_for(width, gap, pandoc.utils.stringify(img.src), nil) }))
+end
+
+-- In LaTeX, an image with no caption goes in a raw wrappedfigure. The image
+-- stays a Pandoc image, so the LaTeX writer keeps its alt text. Quarto
+-- writes fig-alt as alt text only for a figure, so an image with fig-alt
+-- and no description takes fig-alt as its description.
+local function wrapped_image_tex(img)
+  local class = wrap_class(img.classes)
+  local opts = tex_options(class, img.attributes.width, img.attributes["wrap-gap"],
+    img.attributes["wrap-lines"], pandoc.utils.stringify(img.src))
+  clean_image(img)
+  local alt = img.attributes["fig-alt"]
+  if alt and #img.caption == 0 then
+    img.caption = pandoc.Inlines(alt)
+  end
+  return pandoc.List({
+    pandoc.RawBlock("latex", "\\begin{wrappedfigure}[" .. opts .. "]\n\\centering"),
+    pandoc.Plain({ img }),
+    pandoc.RawBlock("latex", "\\end{wrappedfigure}"),
+  })
 end
 
 -- True when raw HTML is one comment and nothing else.
@@ -534,6 +686,12 @@ local function group_blocks(blocks)
       if is_html then
         placed = true
         members = pandoc.List({ wrapped_image_div(img) })
+      elseif is_latex then
+        placed = true
+        out:extend(wrapped_image_tex(img))
+        -- LaTeX needs no group: wrapfig wraps the paragraphs that follow.
+        i = i + 1
+        goto continue
       else
         strip_wrap(img.classes)
       end
@@ -558,6 +716,7 @@ local function group_blocks(blocks)
       out:insert(b)
       i = i + 1
     end
+    ::continue::
   end
   return out
 end
@@ -565,12 +724,12 @@ end
 -- An image whose wrap class is still there after the grouping pass sits
 -- where the filter cannot place a box, such as inside a link or beside
 -- other content in a paragraph. It keeps a normal layout, with a warning in
--- HTML. Other formats print the one format warning instead.
+-- a format that wraps. Other formats print the one format warning instead.
 local function unplaced_image(img)
   if not wrap_class(img.classes) then return nil end
   found_wrap = true
   strip_wrap(img.classes)
-  if is_html then
+  if wraps() then
     quarto.log.warning(string.format(
       "wrapped: the image %s is not a figure or the only content of its paragraph, so it does not wrap.",
       pandoc.utils.stringify(img.src)))
@@ -579,13 +738,13 @@ local function unplaced_image(img)
 end
 
 -- A div with a wrap class that is not a figure, such as `::: {.wrap-right}`,
--- keeps a normal layout, with a warning in HTML. The filter's own
--- .wrapped-image boxes carry a wrap class on purpose.
+-- keeps a normal layout, with a warning in a format that wraps. The
+-- filter's own .wrapped-image boxes carry a wrap class on purpose.
 local function unplaced_div(div)
   if not wrap_class(div.classes) or div.classes:includes("wrapped-image") then return nil end
   found_wrap = true
   strip_wrap(div.classes)
-  if is_html then
+  if wraps() then
     local where = div.identifier ~= "" and ("#" .. div.identifier) or "with no id"
     quarto.log.warning(string.format(
       "wrapped: the div %s is not a figure, so it does not wrap.", where))
@@ -615,6 +774,14 @@ end
 local function finish(doc)
   if is_html then
     if placed then add_html_assets() end
+  elseif is_latex then
+    if placed then
+      quarto.doc.use_latex_package("wrapfig")
+      quarto.doc.include_file("in-header", "wrapped.tex")
+    end
+  elseif two_column and found_wrap then
+    quarto.log.warning(
+      "wrapped: LaTeX does not wrap figures in a two-column document, so wrapped figures render as normal figures.")
   elseif found_wrap then
     quarto.log.warning(string.format(
       "wrapped: %s output does not wrap figures yet, so wrapped figures render as normal figures.",

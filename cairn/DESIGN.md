@@ -42,8 +42,8 @@ not tested.
 
 ### Syntax
 
-HTML output implements this syntax. The other formats keep a normal figure
-until their milestones land.
+HTML output and PDF through LaTeX implement this syntax (corrected M004).
+The other formats keep a normal figure until their milestones land.
 
 Captioned figure, image form:
 
@@ -89,7 +89,9 @@ Stop rule: the figure wraps the paragraphs that follow it. Wrapping stops at
 the first block that is not a paragraph: a heading, list, figure, table, code
 block, callout, or horizontal rule. An empty `::: {.wrap-clear}` div stops it
 earlier. HTML, Typst, and Word enforce the rule. LaTeX enforces it only in
-part, because `wrapfigure` measures its own height.
+part, because `wrapfigure` counts the narrowed lines from its own height,
+ignores `wrap-clear`, and moves a figure that does not fit to a paragraph
+on the next page, past any heading between (corrected M004).
 
 Next-block rule (D-003): a wrapped figure whose next block is not a
 paragraph has no text to wrap, so it keeps a normal figure with no warning.
@@ -129,7 +131,8 @@ The extension is `_extensions/wrapped/`. `_extension.yml` holds the one
 version marker and runs the filter at `pre-quarto`. The filter makes seven
 passes (corrected M003):
 
-1. It reads the `wrapped:` metadata and checks each length.
+1. It reads the `wrapped:` metadata and checks each length. In LaTeX it
+   reads `classoption`, and a two-column document keeps normal figures.
 2. It finds the contexts that cannot wrap: lists, callouts, column layouts,
    panel layouts, tabsets, asides, margin blocks, and subfigure panels. It
    records each float there by its custom id, and it removes the wrap class
@@ -140,14 +143,20 @@ passes (corrected M003):
 4. In a top-down pass, it carries a code cell's wrap class to that cell's
    floats and moves an image's class to its float. A float that step 2 or
    3 recorded, a table, or a float with a margin class or a layout
-   attribute keeps its normal layout. Each other float gets its box width
-   and gap as CSS custom properties. A captioned image with no id gets a
-   `.wrapped-image` box.
-5. It groups each wrapped figure with the paragraphs after it in a
+   attribute keeps its normal layout. In HTML, each other float gets its
+   box width and gap as CSS custom properties, and a captioned image with
+   no id gets a `.wrapped-image` box. In LaTeX, each other float and
+   captioned image gets `fig-env="wrappedfigure"` and a `fig-pos` that
+   holds its side, width, gap, and line count as LaTeX values (corrected
+   M004).
+5. In HTML it groups each wrapped figure with the paragraphs after it in a
    `.wrap-group` div. The group's `display: flow-root` gives the stop rule.
+   In LaTeX it puts an image with no caption in a raw `wrappedfigure`.
 6. It warns for a wrap class on an image or a div that it cannot place.
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
-   wraps. Elsewhere it prints one format warning.
+   wraps. In LaTeX it adds wrapfig and `wrapped.tex`, which defines
+   `wrappedfigure` over wrapfig's floating placements. Elsewhere it prints
+   one format warning.
 
 The grouping pass finds a wrapped float by Quarto's internal
 `__quarto_custom_id` attribute. `tests/verify.py` shows a change there as a

@@ -11,9 +11,10 @@ show what the filter decided. For every format it holds the extension's
 warnings. For HTML it also holds the breakpoint value, the wrap class and
 style of every figure or table div and wrapped box, the wrap class, style, and width
 of every image, and the members of every .wrap-group. Style declarations
-are sorted, so their order does not count. For PDF it also holds the kind
-and label of each figure environment, and for Typst the label of each
-#figure( call. Both say whether the figure's image keeps a width. For Word
+are sorted, so their order does not count. For PDF it also holds the kind,
+label, and options of each figure environment and the options of its
+\includegraphics, and for Typst the label of each #figure( call and
+whether its image keeps a width. For Word
 it also holds each image's width from word/document.xml. A revealjs
 snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
 book project: its snapshot holds the HTML parts of each page under _book/,
@@ -47,9 +48,17 @@ RENDERS = [
     ("fixture", "typst", True),
     ("fixture", "docx", True),
     ("defaults", "html", True),
+    ("defaults", "pdf", True),
     ("meta-breakpoint", "html", True),
     ("meta-string", "html", True),
     ("contexts", "html", True),
+    ("contexts", "pdf", True),
+    ("stop-rule", "pdf", True),
+    ("twocolumn", "pdf", True),
+    ("twocolumn-list", "pdf", True),
+    ("pdf-ua", "pdf", True),
+    ("pdf-ua1", "pdf", True),
+    ("tex-options", "pdf", True),
     ("book", "html", True),
     ("revealjs", "revealjs", True),
     ("margin", "html", False),
@@ -222,13 +231,17 @@ def xref_summary(path):
 
 
 def tex_summary(path):
-    tex = path.read_text(encoding="utf-8")
-    envs = re.findall(r"\\begin\{(figure|wrappedfigure)\}(.*?)\\end\{\1\}", tex, re.S)
+    # The body only: the preamble holds the wrapper and its comments.
+    tex = path.read_text(encoding="utf-8").split("\\begin{document}", 1)[-1]
+    envs = re.findall(r"\\begin\{(figure|wrappedfigure)\}(?:\[([^\]]*)\])?(.*?)\\end\{\1\}", tex, re.S)
     lines = []
-    for kind, body in envs:
+    for kind, options, body in envs:
         label = re.search(r"\\label\{([^}]*)\}", body)
-        width = re.search(r"\\includegraphics\[[^\]]*width=", body) is not None
-        lines.append(f"{kind}: {label.group(1) if label else '-'} image-width={'yes' if width else 'no'}")
+        image = re.search(r"\\includegraphics(?:\[([^\]]*)\])?", body)
+        lines.append(
+            f"{kind}: {label.group(1) if label else '-'} [{options or '-'}] "
+            f"image=[{(image.group(1) or '-') if image else '(none)'}]"
+        )
     return "\n".join(lines)
 
 
