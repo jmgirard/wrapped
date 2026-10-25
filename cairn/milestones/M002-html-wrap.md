@@ -2,7 +2,7 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M002: Wrap figures in HTML output
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** high
 - **Depends on:** —
 - **Driving RR:** —
@@ -107,6 +107,8 @@ A document rendered to HTML with the extension installed shows body text beside 
 - 2026-10-25: DESIGN now states the HTML filter as built (syntax note, function family, the five passes). The PROFILE init-detection and consistency-gate lines and the ROADMAP candidate "Wrap figures in HTML and LaTeX output" are updated to match.
 - 2026-10-25: claim audit: 47 claims read, 4 corrected — README.md, tests/verify.py, _extensions/wrapped/wrapped.lua
 - 2026-10-25: the claim audit found that `wrap-gap` was ignored on a captioned image with no id and on an image with no caption. The filter now reads it there too and removes it from the image. Fixture cases: `wrap-gap="2em"` on the captioned image with no id, and `wrap-gap="wide"` (warns) on the image with no caption. The README warning notes now say "in HTML", and the verify docstring now matches the Typst summary. The audit's note on a wrapped `fig-subcap` cell went to the candidate "Handle a wrapped cell with two figures". `python3 tests/verify.py` passes all 9 renders.
+- 2026-10-25: claim audit re-read: all 4 corrections hold at 8bf3129. A leftover was noted: outside HTML, an image with no caption keeps its `wrap-gap` attribute, which LaTeX ignores. It has no visible effect and is left as it is.
+- 2026-10-25: implement done after review return 1. Status set to review.
 
 ## Decisions
 
