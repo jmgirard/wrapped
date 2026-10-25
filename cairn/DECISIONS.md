@@ -52,3 +52,14 @@ text around a figure. Spike S3 showed that wrap-it renders a citation and a
 render time. wrap-it's Unlicense allows the copy. meander was the other
 choice. It lays out whole pages, so it does not fit a figure placed between
 two blocks.
+
+### D-005: LibreOffice as a check tool for Word output
+
+2026-10-25, plan of M006. The user allowed this tool at the plan's question
+set. LibreOffice, installed with `brew install --cask libreoffice`, converts
+a test docx to PDF with no window (`soffice --headless --convert-to pdf`),
+so its view of a Word frame can be read from page images. It is used for
+the README's record of what each app shows and for review checks, not in
+the test command in `tests/verify.py`, which keeps the needs that D-002
+names. Word checks use the Microsoft Word already on the Mac, through
+AppleScript. Google Docs is checked by the user's own look.

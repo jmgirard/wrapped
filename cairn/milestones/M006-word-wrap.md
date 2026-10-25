@@ -1,0 +1,76 @@
+<!-- Section ownership + write-modes: see tracking-rules.md "Milestone-file
+     section ownership". A phase skill never rewrites another phase's section. -->
+# M006: Wrap figures in Word output with frames
+
+- **Status:** planned
+- **Priority:** high
+- **Depends on:** —
+- **Driving RR:** —
+- **Principles touched:** —
+- **Resolves:** —
+- **Surface tier:** user-facing — it changes the docx that users get from a wrapped figure
+- **Branch/PR:** —
+
+## Goal
+
+A document rendered to Word with the extension installed shows body text beside each figure marked `.wrap-left` or `.wrap-right`, in Word.
+
+## Scope
+
+**In:**
+- A `post-render` filter entry in `_extension.yml`. In docx it removes Quarto's one-cell figure table for each wrapped float, captioned image with no id, and uncaptioned image, and gives the image paragraph and each caption paragraph the same `w:framePr` (W4, spike S4). Word leaves the format fallback.
+- The group of paragraphs beside each frame follows the HTML grouping and the stop rule. The image width equals the frame width.
+- Width and gap conversions to twips, with the text width read from the reference doc's `w:sectPr` through `pandoc.zip`. The `wrapped:` metadata, and the context, next-block, and unplaced warnings, for docx.
+- Checks in Word, driven through AppleScript, and in LibreOffice, installed with Homebrew (D-005). The user looks in Google Docs at review.
+- docx renders of the fixture, defaults, stop-rule, contexts, and a reference-doc fixture in `tests/verify.py`, and a Word section in `README.md`.
+
+**Out:**
+- `wrap-lines`, which stays LaTeX only (DESIGN syntax table).
+- A cell with two figures → the candidate "Handle a wrapped cell with two figures".
+- EPUB → the candidate "Use the HTML stylesheet for EPUB".
+- Running the fixture renders in CI → the candidate "Run the fixture renders in CI".
+- Quarto versions other than 1.10.19, Word versions other than the one on this Mac, and renders of a project.
+
+## Acceptance criteria
+
+- [ ] AC1: `quarto render tests/fixture.qmd --to docx` exits with status 0 and prints no "docx output does not wrap figures yet" warning. In its `word/document.xml`, each figure and image that is in a `.wrap-group` in the fixture's HTML render, matched in document order, sits in no `w:tbl`. Its image paragraph and each of its caption paragraphs carry, in one of their `w:pPr` elements, a `w:framePr` with `w:wrap="around"`, `w:hAnchor="margin"`, and a `w:xAlign` that names the figure's side. Within each figure, those `w:framePr` elements carry the same `w:w` and `w:hSpace`, and the image's `wp:extent` `cx` equals that `w:w` at 635 EMU per twip, within 635 EMU. Each caption paragraph carries `w:pStyle w:val="ImageCaption"`, each figure with a `#fig-` id has a bookmark of that name around its frame, and each image with `fig-alt` carries that text in its `wp:docPr` `descr`.
+- [ ] AC2: In the same file, the paragraphs of each such `.wrap-group` follow its frame in source order, and no other block sits between the frame and them. A parse of the file finds no `w:framePr` with `w:wrap="around"` on any paragraph outside those frames.
+- [ ] AC3: Microsoft Word on this Mac opens the fixture's docx with no repair or error dialog. On page images of Word's PDF export of it, made with `pdftoppm`, each frame from AC1 sits whole on one page on its figure's side, with its caption inside the frame's width. Lines of the first paragraph of its group sit beside it on the same page, no text line overlaps it, and the block after its group starts below its bottom edge. This holds for a frame of the fixture that starts within its own height of a page's bottom edge. The PDF text from `pdftotext` holds every paragraph of each group.
+- [ ] AC4: On AC3's page images, the image of `#fig-md` (`width="30%"`) measures 28% to 32% of the text-block width. In `word/document.xml` of the fixture and of `tests/defaults.qmd`, each `width` and `wrap-gap` of a figure or image in AC1's domain becomes the twips this rule gives. A percent above 0% and below 100% is that share of the text width: the page width less the left and right margins in the `w:sectPr` of the reference doc that the render uses, or, where that `w:sectPr` has no `w:pgSz` or `w:pgMar`, the text width that Word's page images of the fixture show, which the README states. Any other percent takes the default, with a warning. An `in`, `cm`, `mm`, `pt`, or `pc` length in any letter case converts at 1440 twips per inch. A `px` length, or a number with no unit, converts at 15 twips per px. An `em` length converts at 240 twips per em. Any other value, `rem` and `ex` among them, takes the default, with a warning. A gap converts by the same rule and becomes `w:hSpace`. `tests/defaults.qmd` renders to docx with exit status 0, and a figure there that sets neither attribute takes the `wrapped: width` and `wrapped: gap` metadata. `tests/docx-reference.qmd`, whose reference doc `tests/reference-narrow.docx` sets a page width and left and right margins that each differ from Letter with 1 in margins, renders to docx with exit status 0, and its percent widths follow that reference doc's text width.
+- [ ] AC5: `tests/stop-rule.qmd`, `tests/contexts.qmd`, and `tests/defaults.qmd` each render to docx with exit status 0. For each, AC1's frame check and AC2's first sentence hold against each `.wrap-group` in the HTML render of that fixture, matched in document order. No figure or image that keeps a normal layout in HTML is in a paragraph whose `w:framePr` has `w:wrap="around"`. Each render prints each extension warning of the HTML render of that fixture the same number of times, plus one warning for each value that AC4's rule sends to the default, and no other extension warning.
+- [ ] AC6: The README's Word section states, for Word, LibreOffice, and Google Docs, whether text sits beside the fixture's wrapped figures, and names each figure that an app shows otherwise. Each statement matches that app's view of the fixture's docx: for Word and LibreOffice, the page images of its PDF export (LibreOffice through `soffice --headless --convert-to pdf`); for Google Docs, the user's look at review.
+
+## Coverage
+
+- AC1 → T1, T2, T4
+- AC2 → T2, T4
+- AC3 → T1, T2, T4
+- AC4 → T3, T4
+- AC5 → T3, T4
+- AC6 → T4
+
+## Tasks
+
+- [ ] T1: Test the frame position that a filter makes. In a `post-render` entry, remove the fixture's figure table for `#fig-md` and add a raw `w:pPr` with a `w:framePr` after Pandoc's and Quarto's own `w:pPr` on the image and caption paragraphs. Open the docx in Word through AppleScript, export a PDF, and read its page image: does Word read the frame from that position and keep the caption style? Do this first: a no changes the approach. Try a `w:framePr` merged into Quarto's raw caption `w:pPr` next. If Word reads no frame on the image paragraph from any position a filter can write, stop: the goal is wrong.
+- [ ] T2: Add docx to `wraps()`. At `post-render`, for each wrapped float, captioned image with no id, and uncaptioned image (code cells included), remove the one-cell table and put the frame on the image and caption paragraphs. Keep the `fig-` bookmark, the `ImageCaption` style, and the `fig-alt` text. Set the image width to the frame width. Group the paragraphs after it as the HTML grouping does, and end the wrap at the stop point, for example with `<w:br w:type="textWrapping" w:clear="all"/>`.
+- [ ] T3: Convert width and gap for docx by AC4's rule. Read the text width from the `w:sectPr` of `PANDOC_WRITER_OPTIONS.reference_doc` with `pandoc.zip`, and measure the width Word shows when it has no `w:pgSz` or `w:pgMar`. Apply the metadata defaults, and make the context, next-block, and unplaced warnings print in docx. Add a docx format to `tests/stop-rule.qmd`, `tests/contexts.qmd`, and `tests/defaults.qmd`. Add `tests/docx-reference.qmd` with `tests/reference-narrow.docx`.
+- [ ] T4: Add `{=openxml}` spacing to `tests/fixture.qmd` so one frame starts within its own height of a page's bottom edge. Add the docx renders of the fixture, defaults, stop-rule, contexts, and docx-reference fixtures to `tests/verify.py`, and record in the docx snapshot each frame's `w:w`, `w:hSpace`, `w:xAlign`, members, and the blocks after it. Make page images of Word's PDF export and of LibreOffice's (`brew install --cask libreoffice`). Write the Word section of `README.md` with each app's result, the default text width, and the frame limits, and update the DESIGN syntax line that says Word keeps a normal figure.
+
+## Work log
+
+- 2026-10-25: created by /milestone-plan.
+- 2026-10-25: tier check: not run — work named at the question set.
+- 2026-10-25: question set: next work — the user chose the candidate "Wrap figures in Word output with frames".
+- 2026-10-25: question set: Word check — the user allowed the agent to drive Microsoft Word on this Mac through AppleScript to open test docx files and save PDFs; the user clicks the macOS Automation and file-access prompts once and looks at one file at review.
+- 2026-10-25: question set: other apps — the user allowed installing LibreOffice with `brew install --cask libreoffice` for headless PDF conversion (D-005); the user opens the fixture's docx in Google Docs at review.
+- 2026-10-25: idea vet: no concern. Word is one of the four formats DESIGN's Purpose names, the syntax is shared, and S4 showed Word shows one merged frame. Frames are an older Word feature that Word still renders; Google Docs may not show them, which AC6 records in the README rather than blocks.
+- 2026-10-25: collision check: absorbed the candidate "Wrap figures in Word output with frames". D-002 covers HTML and LaTeX dependencies only, so LibreOffice takes D-005. M001's S4 is the evidence base. No dropped milestone or rejection overlaps.
+- 2026-10-25: inbox sweep: 0 open issues, 0 open PRs on jmgirard/wrapped.
+- 2026-10-25: lessons used: 2026-10-24 (M001) handle custom nodes at the filter's top level; 2026-10-25 (M002) `tests/_extensions` symlink; 2026-10-25 (M003) a `Blocks` filter runs inside cells and floats; 2026-10-25 (M004) verify.py renders overwrite shared outputs and Quarto deletes a log beside the `.qmd`.
+- 2026-10-25: plan gate chose a `post-render` filter entry over raw OpenXML at `pre-quarto`, because Pandoc assigns image relationship ids, so the image must stay a Pandoc Image, and only after Quarto's renderer exists the one-cell table to unwrap; falsified by Quarto's docx table not reaching `post-render` as a Pandoc Table.
+- 2026-10-25: plan gate chose reading the reference doc's `w:sectPr` for the text width over a fixed 6.5 in, because `PANDOC_WRITER_OPTIONS.reference_doc` and `pandoc.zip` exist in Pandoc 3.10 (probed 2026-10-25) and a custom reference doc changes the margins; falsified by Word showing a text width that differs from the `w:sectPr` values.
+- 2026-10-25: criteria audit (full mode, fresh Opus reader): 11 findings, all taken with the narrower wording. AC4: Quarto's default reference doc has no `w:pgSz` or `w:pgMar`, so the default text width is the one Word shows; the domain is AC1's figures; 28% to 32%; percents at or below 0% or at 100% or more take the default; `rem` and `ex` named; the reference-doc fixture is named and varies page width and margins. AC5 allows one warning per value AC4 rejects (`1ex` in defaults), counts warnings, and names "keeps a normal layout in HTML". AC1 says "carries" for alt text, which is new behavior, places the frame in one of the `w:pPr`, matches within each figure and by document order. AC2 counts only `w:wrap="around"` frames, since contexts has Quarto row-break frames. AC3 promises no repair dialog and a page-bottom frame (T4 spacing). AC6 drops the conversion step and names each differing figure. The harness criterion became part of T4.
+
+## Decisions
+
+## Review
