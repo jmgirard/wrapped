@@ -2,7 +2,7 @@
      section ownership". A phase skill never rewrites another phase's section. -->
 # M005: Wrap figures in Typst PDF output
 
-- **Status:** review
+- **Status:** in-progress
 - **Priority:** high
 - **Depends on:** —
 - **Driving RR:** —
@@ -79,6 +79,7 @@ A document rendered to PDF through Typst with the extension installed shows body
 - 2026-10-25: T5 done: `pdftotext -bbox-layout` on the fixture's Typst page 1 puts the text block at x 90 to 522 pt and the text beside `#fig-md` ending at 381.4 pt, so with the 11 pt (1em) gutter the box is 129.6 pt, 30.0% of 432 pt; the `3in` box measures 216 pt. Page images 1 to 8 show each wrapped figure beside its text and each next block below it; the two near-bottom groups move to the next page whole. README gains a "PDF through Typst" section, and the intro, stop, context, and Notes lines now name Typst; Typst keeps a margin figure in the margin (`#notefigure` in contexts.typ). DESIGN Syntax, Function Families, and Architecture passes 4, 5, 7 and the research page's W3 and E10 rows are corrected in place. The plan's T5 named wrap-it #8 as a README limit; the break fixture showed the move to the next page instead, so the README states that, and states #1 as reported and untested.
 - 2026-10-25: claim audit: 60 claims read, 2 corrected — `_extensions/wrapped/wrapped.lua` (the `clean_image` height sentence was false for Typst, where an image with a height was cut off at the box edges; the code now gives a Typst image the box width and drops its height, and `#fig-height` in `tests/defaults.qmd` records `image-width=yes`, where before the fix the `.typ` had `height: 2in` and no width; the `TYPST_UNITS` comment now says em is not absolute). Both re-read against the render and the code.
 - 2026-10-25: all tasks done; verify passes (27 renders); status set to review.
+- 2026-10-25: review return 1: right-to-left Typst documents swap the sides (diff-bug #1), and a percent width of 100% or more squeezes or drops the text with no warning (diff-bug #2). The same pass fixes the other fix-now findings in the Review section: height warning and README line, `.typ` summary (block kinds, alt text, citations, unparsed calls, figure chunk), the `.wrapped-image` crash, a Typst metadata-default test, the research page's post-render lines, the `#fig-clamp` prose, and a LaTeX page-1 check.
 
 ## Decisions
 
@@ -95,3 +96,25 @@ Evidence gathered 2026-10-25 on branch head cb530ea, Quarto 1.10.19, `main` at b
 - AC7: same script on `stop-rule.qmd` and `contexts.qmd`: both exit 0; 11 calls for 11 HTML groups and 1 call for 1 group, each matching in figure and paragraphs (13 blocks, all paragraphs); warnings identical to the HTML render (0 and 14).
 - Gate: `cairn_validate.py` all checks passed; no principle changed, so no `cairn_impact`. Profile gate: the one version marker (`_extension.yml` `version: 0.1.0`) is unchanged by the branch; `python3 tests/verify.py` "all 27 renders pass"; changelog slot "none", nothing read.
 - spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: in a right-to-left Typst document (`lang: he`, or `dir: rtl`) the sides swap, because wrap-it's grid follows the text direction; README promises physical sides — fix now (floor return 1)
+- diff-bug #2: a percent width of 100% or more leaves the text a sliver of a column (100%) or drops it from the PDF with no warning (120%) — fix now (floor return 1) for percents; too-wide absolute lengths go to the new candidate "Bound wide absolute widths in Typst"
+- diff-bug #3: an image `height` is dropped in Typst with no warning and no README line — fix now
+- diff-bug #4: the `.typ` summary records every block beside the box as "p", so a heading or block there would not change the snapshot; a figure chunk can read a later image's width; `--update` would write an empty wraps section without notice — fix now
+- diff-bug #5: a user div with the internal `.wrapped-image` class crashes the Typst render (nil `open` in `typst_group`) — fix now
+- diff-bug #6: Typst width warnings name the fallback in CSS units — reject, style: the LaTeX warnings use the same pattern on purpose (the value the user can write)
+- diff-bug #7: alt text and the page-break move rest on manual evidence — alt text: fix now (snapshot records it); page placement: reject, planned change: AC5 names page images as its procedure, as M004 did for LaTeX
+- blame-history #1: same as diff-bug #3 — fix now
+- blame-history #2: the `#fig-md` paragraph edit may move M004's tuned LaTeX page-1 placement — fix-now check: re-read the LaTeX page 1 image in the return
+- blame-history #3: two wrapped figures in one code cell share one Typst box with the first figure's options — follow-up: absorbed into the candidate "Handle a wrapped cell with two figures"
+- blame-history #4: `wrap-lines` is silent in Typst — reject, planned change: Scope Out keeps it LaTeX only and the README says it does nothing in Typst
+- blame-history #5: README's warning sentence is broader than the Typst warning text — reject, false: every value it names does print a warning
+- prior-review #1: same as diff-bug #3 (M004 diff-bug #5's rule) — fix now
+- prior-review #2: Typst alt text is not pinned by a snapshot (M004 diff-bug #10's rule) — fix now, with diff-bug #7
+- prior-review #3: the Typst metadata-default warning has no test (M004 diff-bug #13's rule) — fix now
+- prior-review #4: the README citation claim has no snapshot check — fix now: the `.typ` summary records citations per call
+- prior-review #5: two figures in one cell — follow-up, same row as blame-history #3
+- prior-review #6: Typst and LaTeX renders share output names — reject, false as a defect: no snapshot is affected, and LESSONS already records it
+- ripple #1, #2, #3: `wrap-mechanisms.md` line 131 bullet, the "after the `post-render` step" Typst sketch, and the planned layout's post-render entry are stale — fix now
+- ripple #4: `tests/fixture.qmd` prose at `#fig-clamp` names only LaTeX — fix now, with a LaTeX page check
+- ripple #5: the Typst candidate row still asks for the citation — reject, planned change: step 9 hygiene graduates the row
+- ripple #6: the W2 and W4 rows name `post-render` fallbacks — reject, false: they describe planned LaTeX and Word paths, still accurate as plans
