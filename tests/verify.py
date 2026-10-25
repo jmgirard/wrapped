@@ -10,9 +10,11 @@ Needs Quarto, R with knitr, and TinyTeX. Each render must exit with status
 show what the filter decided. For every format it holds the extension's
 warnings. For HTML it also holds the breakpoint value, the wrap class and
 style of every figure div and wrapped box, the wrap class, style, and width
-of every image, and the members of every .wrap-group. For PDF it also holds
-the kind and label of each figure environment. For Typst it holds the label
-of each labeled figure. For Word it holds the warnings only. The script exits with status 1 on a failed
+of every image, and the members of every .wrap-group. Style declarations
+are sorted, so their order does not count. For PDF it also holds the kind
+and label of each figure environment, and for Typst the label of each
+#figure( call. Both say whether the figure's image keeps a width. For Word
+it also holds each image's width from word/document.xml. The script exits with status 1 on a failed
 render or a snapshot difference.
 
 Some fixtures exist for the browser checks in tests/layout.js, which measure
@@ -24,6 +26,7 @@ import difflib
 import re
 import subprocess
 import sys
+import zipfile
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -37,19 +40,29 @@ RENDERS = [
     ("fixture", "typst", True),
     ("fixture", "docx", True),
     ("defaults", "html", True),
+    ("meta-breakpoint", "html", True),
+    ("meta-string", "html", True),
     ("margin", "html", False),
     ("stop-rule", "html", False),
     ("rtl", "html", False),
     ("readme", "html", False),
 ]
 
-WARNING = re.compile(r"wrapped: .*")
+WARNING = re.compile(r"\(W\) (wrapped: .*)")
 ANSI = re.compile(r"\x1b\[[0-9;]*m")
 WRAP_CLASSES = ("wrap-left", "wrap-right", "wrapped-image")
 
 
 def wrap_classes(classes):
     return " ".join(c for c in classes.split() if c in WRAP_CLASSES) or "-"
+
+
+def style_text(style):
+    """Sorts the declarations of a style attribute, so their order does not
+    count."""
+    if style is None:
+        return "-"
+    return "; ".join(sorted(d.strip() for d in style.split(";") if d.strip())) or "-"
 
 
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
@@ -91,13 +104,13 @@ class Decisions(HTMLParser):
         if tag == "img":
             src = Path(attrs.get("src", "")).name
             self.images.append(
-                f"{src}: wrap={wrap_classes(classes)} style={attrs.get('style', '-')} width={attrs.get('width', '-')}"
+                f"{src}: wrap={wrap_classes(classes)} style={style_text(attrs.get('style'))} width={attrs.get('width', '-')}"
             )
         if tag != "div":
             return
         if attrs.get("id", "").startswith("fig-") or "wrapped-image" in classes.split():
             name = attrs.get("id", "(box)")
-            self.figures.append(f"{name}: {wrap_classes(classes)} style={attrs.get('style', '-')}")
+            self.figures.append(f"{name}: {wrap_classes(classes)} style={style_text(attrs.get('style'))}")
 
     def handle_endtag(self, tag):
         if not self.in_group or tag in VOID:
@@ -116,7 +129,7 @@ def html_summary(path):
     source = path.read_text(encoding="utf-8")
     parser = Decisions()
     parser.feed(source)
-    breakpoint = re.search(r"@media \(max-width: ([^)]*)\)\s*\{\s*\.quarto-float\.wrap-left", source)
+    breakpoint = re.search(r"@media \(max-width: ([^)]*)\)\s*\{[^{}]*wrap-", source)
     parts = ["# breakpoint", breakpoint.group(1) if breakpoint else "(none)"]
     parts += ["# figures"] + parser.figures
     parts += ["# images"] + parser.images
@@ -130,13 +143,28 @@ def tex_summary(path):
     lines = []
     for kind, body in envs:
         label = re.search(r"\\label\{([^}]*)\}", body)
-        lines.append(f"{kind}: {label.group(1) if label else '-'}")
+        width = re.search(r"\\includegraphics\[[^\]]*width=", body) is not None
+        lines.append(f"{kind}: {label.group(1) if label else '-'} image-width={'yes' if width else 'no'}")
     return "\n".join(lines)
 
 
 def typ_summary(path):
-    labels = re.findall(r"^<(fig-[\w-]+)>", path.read_text(encoding="utf-8"), re.M)
-    return "\n".join(f"figure: {label}" for label in labels)
+    # A body figure's #figure( call starts a line, unlike the one in Quarto's
+    # template. Each call runs to the next one, and its label follows it.
+    chunks = re.split(r"^#figure\(", path.read_text(encoding="utf-8"), flags=re.M)[1:]
+    lines = []
+    for chunk in chunks:
+        label = re.search(r"^<((?:fig|tbl)-[\w-]+)>", chunk, re.M)
+        width = re.search(r"image\([^)]*width:", chunk) is not None
+        lines.append(f"figure: {label.group(1) if label else '-'} image-width={'yes' if width else 'no'}")
+    return "\n".join(lines)
+
+
+def docx_summary(path):
+    # The width Word shows for each image, in EMU, in document order.
+    with zipfile.ZipFile(path) as docx:
+        xml = docx.read("word/document.xml").decode("utf-8")
+    return "\n".join(f"image: cx={cx}" for cx in re.findall(r'<wp:extent cx="(\d+)"', xml))
 
 
 def render(fixture, fmt):
@@ -147,15 +175,17 @@ def render(fixture, fmt):
 
 
 def summary(fixture, fmt, log):
-    warnings = sorted(set(m.group(0).strip() for m in WARNING.finditer(log)))
-    counts = {w: len(re.findall(re.escape(w), log)) for w in warnings}
-    parts = ["# warnings"] + [f"{counts[w]}x {w}" for w in warnings]
+    found = [m.group(1).strip() for m in WARNING.finditer(log)]
+    warnings = sorted(set(found))
+    parts = ["# warnings"] + [f"{found.count(w)}x {w}" for w in warnings]
     if fmt == "html":
         parts.append(html_summary(TESTS / f"{fixture}.html"))
     elif fmt == "pdf":
         parts += ["# tex", tex_summary(TESTS / f"{fixture}.tex")]
     elif fmt == "typst":
         parts += ["# typ", typ_summary(TESTS / f"{fixture}.typ")]
+    elif fmt == "docx":
+        parts += ["# docx", docx_summary(TESTS / f"{fixture}.docx")]
     return "\n".join(parts) + "\n"
 
 

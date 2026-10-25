@@ -1,0 +1,12 @@
+---
+title: "wrapped fixture: a breakpoint that is a percent"
+filters:
+  - wrapped
+format: html
+wrapped:
+  breakpoint: 50%
+---
+
+![A wrapped figure.](plot.png){#fig-meta-breakpoint .wrap-right width="30%"}
+
+A media query takes no percent, so the breakpoint stays at its default, with a warning.

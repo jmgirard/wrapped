@@ -66,7 +66,7 @@ Details by row:
 
 ## Code sketches
 
-These sketches come from SCOPE.md. S2 ran the LaTeX sketch, and it did not compile as written. The working form is `spikes/s2/wrapped.tex`. No spike ran the other sketches as written (corrected M001).
+These sketches come from SCOPE.md. S2 ran the LaTeX sketch, and it did not compile as written. The working form is `spikes/s2/wrapped.tex`. No spike ran the other sketches as written (corrected M001). The working HTML stylesheet is `_extensions/wrapped/wrapped.css`, and the filter writes the breakpoint rule (corrected 2026-10-25, M002 review).
 
 HTML stylesheet (W1):
 
@@ -158,9 +158,11 @@ The filter has two entry points:
   wraps, an uncaptioned image, and a code-cell figure. It also has a
   `@citation` in the wrapped text, a figure near a page break, and a
   cross-reference to each figure.
-- Committed snapshots of the intermediate output (`keep-tex`, `keep-typ`,
-  and the unzipped `word/document.xml`) catch Quarto changes to the figure
-  renderers.
+- Committed snapshots record what the filter decides in each format's
+  intermediate output: the HTML, the kept `.tex` and `.typ`, and the
+  unzipped `word/document.xml`. They catch a Quarto change that alters
+  those decisions, not every change to Quarto's figure renderers
+  (`tests/verify.py`, corrected 2026-10-25, M002 review).
 - Before each release, a person opens the docx in Word, LibreOffice, and
   Google Docs.
 - CI runs against the Quarto release and pre-release channels.

@@ -1,0 +1,10 @@
+# warnings
+1x wrapped: the wrapped metadata is not a map of width, gap, and breakpoint, so it is ignored.
+# breakpoint
+576px
+# figures
+fig-meta-string: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-meta-string, p

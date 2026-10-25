@@ -38,7 +38,7 @@ stable release whose source has the loader for an extension's
 The spikes ran only on Quarto 1.10.19, so behavior on 1.9.36 to 1.10.18 is
 not tested.
 
-### Planned syntax
+### Syntax
 
 HTML output implements this syntax. The other formats keep a normal figure
 until their milestones land.
@@ -80,7 +80,7 @@ Document or project defaults go under one metadata key:
 wrapped:
   width: 35%
   gap: 0.75em
-  breakpoint: 576px   # HTML: below this width, figures stop floating
+  breakpoint: 576px   # HTML: at this width or narrower, figures stop floating
 ```
 
 Stop rule: the figure wraps the paragraphs that follow it. Wrapping stops at

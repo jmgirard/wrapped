@@ -2,7 +2,7 @@
 # breakpoint
 800px
 # figures
-fig-defaults: wrap-right style=--wrap-width: 25%; --wrap-gap: 30px;
+fig-defaults: wrap-right style=--wrap-gap: 30px; --wrap-width: 25%
 # images
 plot.png: wrap=- style=- width=-
 # groups

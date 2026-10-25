@@ -23,11 +23,17 @@ local options = {
 local is_html = quarto.doc.is_format("html:js")
 local found_wrap = false
 
--- CSS units that a width, gap, or breakpoint may use.
+-- CSS units that a width, gap, or breakpoint may use, in lowercase.
 local UNITS = {
-  px = true, pt = true, pc = true, ["in"] = true, cm = true, mm = true,
-  em = true, rem = true, ex = true, ch = true, vw = true, vh = true,
+  px = true, pt = true, pc = true, ["in"] = true, cm = true, mm = true, q = true,
+  em = true, rem = true, ex = true, ch = true, lh = true, rlh = true,
+  vw = true, vh = true, vmin = true, vmax = true,
+  svw = true, svh = true, lvw = true, lvh = true, dvw = true, dvh = true,
+  cqw = true, cqh = true, cqi = true, cqb = true, cqmin = true, cqmax = true,
 }
+
+-- CSS functions whose result is a length, passed through as written.
+local FUNCTIONS = { calc = true, min = true, max = true, clamp = true }
 
 -- Returns the wrap class in a class list, or nil.
 local function wrap_class(classes)
@@ -45,26 +51,35 @@ local function strip_wrap(classes)
 end
 
 -- Returns the CSS length for a value, or nil when the value is not a
--- number, a percent, or a number with a CSS unit. A unitless number is a
--- pixel length, as in Pandoc.
-local function css_length(value)
+-- number, a percent, a number with a CSS unit, or a calc(), min(), max(),
+-- or clamp() expression. A unitless number is a pixel length, as in
+-- Pandoc. With `no_percent`, a percent is not a length.
+local function css_length(value, no_percent)
   local s = pandoc.utils.stringify(value)
+  local fn = s:match("^(%a+)%(.+%)$")
+  if fn and FUNCTIONS[fn:lower()] then return s end
   local num, unit = s:match("^(%d*%.?%d+)(%a*%%?)$")
   if not num then return nil end
   if unit == "" then return num .. "px" end
-  if unit == "%" or UNITS[unit] then return s end
+  if unit == "%" then
+    if no_percent then return nil end
+    return s
+  end
+  if UNITS[unit:lower()] then return s end
   return nil
 end
 
 -- Returns the CSS length for a value, or `fallback` with a warning when the
 -- value is not a length. `what` and `where` name the value in the warning.
-local function checked_length(value, fallback, what, where)
+-- A breakpoint passes `no_percent`, because a media query takes no percent.
+local function checked_length(value, fallback, what, where, no_percent)
   if value == nil then return fallback end
-  local length = css_length(value)
+  local length = css_length(value, no_percent)
   if length then return length end
   quarto.log.warning(string.format(
-    'wrapped: %s "%s" on %s is not a length or a percent, so it is %s.',
-    what, pandoc.utils.stringify(value), where, fallback))
+    'wrapped: %s "%s" on %s is not %s, so it is %s.',
+    what, pandoc.utils.stringify(value), where,
+    no_percent and "a length" or "a length or a percent", fallback))
   return fallback
 end
 
@@ -121,10 +136,16 @@ end
 
 local function read_meta(meta)
   local m = meta.wrapped
-  if type(m) ~= "table" then return end
+  if m == nil then return end
+  if pandoc.utils.type(m) ~= "table" then
+    quarto.log.warning(
+      "wrapped: the wrapped metadata is not a map of width, gap, and breakpoint, so it is ignored.")
+    return
+  end
   options.width = checked_length(m.width, DEFAULTS.width, "width", "the wrapped metadata")
   options.gap = checked_length(m.gap, DEFAULTS.gap, "gap", "the wrapped metadata")
-  options.breakpoint = checked_length(m.breakpoint, DEFAULTS.breakpoint, "breakpoint", "the wrapped metadata")
+  options.breakpoint = checked_length(m.breakpoint, DEFAULTS.breakpoint, "breakpoint",
+    "the wrapped metadata", true)
 end
 
 -- Custom ids of wrapped floats outside a code cell, and the anchor tokens of
@@ -140,10 +161,16 @@ local carry = nil
 
 local function cell_div(div)
   if not div.classes:includes("cell") then return nil end
+  -- Each cell ends any carry left from an earlier cell.
+  carry = nil
   local c = wrap_class(div.classes)
   if not c then return nil end
   strip_wrap(div.classes)
   local n = count_floats(div)
+  if n == 0 and is_html then
+    quarto.log.warning(
+      "wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.")
+  end
   if n > 0 then
     next_token = next_token + 1
     local token = tostring(next_token)
@@ -214,8 +241,9 @@ local function figure_block(fig)
   local gap = fig.attributes["wrap-gap"] or img_gap
   fig.attributes.width = nil
   fig.attributes["wrap-gap"] = nil
+  local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
   local box = pandoc.Div({ fig }, pandoc.Attr("", { "wrapped-image", class },
-    { style = style_for(width, gap, "a figure with no id", nil) }))
+    { style = style_for(width, gap, where, nil) }))
   return box, false
 end
 
@@ -245,12 +273,18 @@ local function wrapped_image_div(img)
     { style = style_for(width, gap, pandoc.utils.stringify(img.src), nil) }))
 end
 
+-- True when raw HTML is one comment and nothing else.
+local function is_comment(text)
+  local body = text:match("^%s*<!%-%-(.*)%-%->%s*$")
+  return body ~= nil and not body:find("-->", 1, true)
+end
+
 -- A block that a group takes in: a paragraph that does not start a wrap of
 -- its own, or a raw HTML comment, which shows nothing.
 local function joins_group(block)
   if block.t == "Para" then return lone_wrapped_image(block) == nil end
   return block.t == "RawBlock" and block.format:match("html") ~= nil
-    and block.text:match("^%s*<!%-%-.-%-%->%s*$") ~= nil
+    and is_comment(block.text)
 end
 
 -- Groups each wrapped figure with the paragraphs after it. The group stops
@@ -311,6 +345,21 @@ local function unplaced_image(img)
   return img
 end
 
+-- A div with a wrap class that is not a figure, such as `::: {.wrap-right}`,
+-- keeps a normal layout, with a warning in HTML. The filter's own
+-- .wrapped-image boxes carry a wrap class on purpose.
+local function unplaced_div(div)
+  if not wrap_class(div.classes) or div.classes:includes("wrapped-image") then return nil end
+  found_wrap = true
+  strip_wrap(div.classes)
+  if is_html then
+    local where = div.identifier ~= "" and ("#" .. div.identifier) or "with no id"
+    quarto.log.warning(string.format(
+      "wrapped: the div %s is not a figure, so it does not wrap.", where))
+  end
+  return div
+end
+
 local function add_html_assets()
   -- No version here: `_extension.yml` holds the one version marker.
   quarto.doc.add_html_dependency({
@@ -351,6 +400,6 @@ return {
     Figure = figure_block,
   },
   { Blocks = group_blocks },
-  { Image = unplaced_image },
+  { Image = unplaced_image, Div = unplaced_div },
   { Pandoc = finish },
 }

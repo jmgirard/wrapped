@@ -1,0 +1,11 @@
+---
+title: "wrapped fixture: wrapped metadata that is not a map"
+filters:
+  - wrapped
+format: html
+wrapped: 25%
+---
+
+![A wrapped figure.](plot.png){#fig-meta-string .wrap-right}
+
+The metadata is a string, so the filter ignores it with a warning, and the figure takes the default width.

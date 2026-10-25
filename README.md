@@ -7,6 +7,7 @@ caption, and its `@fig-` links.
 This version wraps figures in HTML output. In every other format, a wrapped
 figure renders as a normal figure, and the render prints one warning.
 Support for PDF through LaTeX, PDF through Typst, and Word is planned.
+Dashboards are not tested yet.
 
 ## Install
 

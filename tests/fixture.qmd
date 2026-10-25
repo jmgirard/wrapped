@@ -137,3 +137,35 @@ A figure with its own style.
 :::
 
 The figure keeps its border. See @fig-styled. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## CSS functions and other units
+
+![A figure with a clamp() width and an uppercase unit gap.](plot.png){#fig-clamp .wrap-left width="clamp(150px, 30%, 400px)" wrap-gap="2VMIN"}
+
+The figure takes both values with no warning. See @fig-clamp. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## Raw HTML that is more than a comment
+
+![A figure with raw HTML after its paragraph.](plot.png){#fig-raw .wrap-right width="30%"}
+
+A short paragraph beside the figure. See @fig-raw.
+
+```{=html}
+<!-- a --><div class="raw-block">A raw block between comments.</div><!-- b -->
+```
+
+The raw block above ends the wrap, so it and this paragraph start below the figure.
+
+## A captioned image with an id that is not a figure id
+
+![Logo with its own id.](plot.png){#logo .wrap-left width="wide"}
+
+The image wraps, and the warning names it by its id.
+
+## A div with a wrap class that is not a figure
+
+::: {#note .wrap-right}
+A note in a div with a wrap class.
+:::
+
+The div above does not wrap, and the render prints a warning for it.

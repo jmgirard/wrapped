@@ -61,7 +61,8 @@ function figureEntry(el) {
   const gap = style.getPropertyValue("--wrap-gap").trim();
   entry.width = { set: width, expected: +resolve(width, group).toFixed(1), measured: +box.width.toFixed(1), column: +column.toFixed(1) };
   const margin = parseFloat(side === "right" ? cs.marginLeft : cs.marginRight);
-  entry.gap = { set: gap, expected: +resolve(gap, el).toFixed(1), measured: margin };
+  // A percent margin resolves against the containing block, the group.
+  entry.gap = { set: gap, expected: +resolve(gap, group).toFixed(1), measured: margin };
   const line = firstLine(group);
   entry.firstLine = line ? { x: Math.round(line.left), y: Math.round(line.top) } : null;
   entry.box = { left: Math.round(box.left), top: Math.round(box.top), right: Math.round(box.right), bottom: Math.round(box.bottom) };
