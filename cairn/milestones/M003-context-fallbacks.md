@@ -29,11 +29,11 @@ Wrapped figures render as the research page's edge cases E3 to E8, E13, and E15 
 
 ## Acceptance criteria
 
-- [ ] AC1: `tests/contexts.qmd` renders to HTML. It holds a wrapped float in each of the nine forms below, and the promise covers those forms. The E3 forms are a `.column-margin` figure, a figure in a `.aside` div, and a knitr cell with `#| column: margin`. The E4 form is a subfigure panel with `layout-ncol`, and the E5 form is a `#tbl-` float. The E8 forms are a bullet list item, a `callout-note`, a `.columns` layout, and a tabset. In the output, none of these floats carries a `wrap-left` or `wrap-right` class. For each one, the terminal output holds one extension warning that names the float's id. Each E3 figure sits in the same margin container as in a render of the same file without the extension.
-- [ ] AC2: In the same fixture, a wrapped figure is the last block before a heading. It renders without a wrap class, and no warning names its id (E6).
-- [ ] AC3: In the same fixture, two wrapped figures follow each other with no paragraph between them, and paragraphs follow the second. The first renders without a wrap class, and no warning names its id. The second keeps its wrap class. In the browser at 1200 px, the paragraph after the second sits beside it (E7, as D-003 states).
-- [ ] AC4: A two-chapter book fixture renders to HTML with exit status 0. The wrapped figure in chapter 1 carries its wrap class. In chapter 2, the `@fig-` link to it is an `<a>` whose `href` ends with that figure's id (E13).
-- [ ] AC5: `tests/revealjs.qmd` holds one slide with a wrapped figure and a paragraph after it. It renders with exit status 0. In the browser at a 1050 by 700 px viewport, the figure floats to its side by computed `float`, and the first line of the paragraph sits beside it. The README shows the revealjs case (E15).
+- [x] AC1: `tests/contexts.qmd` renders to HTML. It holds a wrapped float in each of the nine forms below, and the promise covers those forms. The E3 forms are a `.column-margin` figure, a figure in a `.aside` div, and a knitr cell with `#| column: margin`. The E4 form is a subfigure panel with `layout-ncol`, and the E5 form is a `#tbl-` float. The E8 forms are a bullet list item, a `callout-note`, a `.columns` layout, and a tabset. In the output, none of these floats carries a `wrap-left` or `wrap-right` class. For each one, the terminal output holds one extension warning that names the float's id. Each E3 figure sits in the same margin container as in a render of the same file without the extension.
+- [x] AC2: In the same fixture, a wrapped figure is the last block before a heading. It renders without a wrap class, and no warning names its id (E6).
+- [x] AC3: In the same fixture, two wrapped figures follow each other with no paragraph between them, and paragraphs follow the second. The first renders without a wrap class, and no warning names its id. The second keeps its wrap class. In the browser at 1200 px, the paragraph after the second sits beside it (E7, as D-003 states).
+- [x] AC4: A two-chapter book fixture renders to HTML with exit status 0. The wrapped figure in chapter 1 carries its wrap class. In chapter 2, the `@fig-` link to it is an `<a>` whose `href` ends with that figure's id (E13).
+- [x] AC5: `tests/revealjs.qmd` holds one slide with a wrapped figure and a paragraph after it. It renders with exit status 0. In the browser at a 1050 by 700 px viewport, the figure floats to its side by computed `float`, and the first line of the paragraph sits beside it. The README shows the revealjs case (E15).
 
 ## Coverage
 
@@ -69,3 +69,12 @@ Wrapped figures render as the research page's edge cases E3 to E8, E13, and E15 
 ## Decisions
 
 ## Review
+
+Evidence gathered 2026-10-25 on head 447d193, branch contains origin/main e7f1b90. `python3 tests/verify.py`: all 14 renders pass.
+
+- AC1: `quarto render contexts.qmd --to html` exit 0. Each of fig-margin, fig-aside, fig-margin-cell, fig-panel, tbl-wrapped, fig-list, fig-callout, fig-column, fig-tab has no wrap-left/wrap-right class in contexts.html, and exactly 1 warning in the render log names each id. `margin_summary("contexts")`: all three E3 figures have the same nearest column-margin div (`no-row-height column-margin column-container`) as a render with no filters.
+- AC2: same render. fig-before-heading (last block before a `###` heading) has no wrap class, and 0 warnings name it.
+- AC3: same render. fig-first has no wrap class and 0 warnings name it; fig-second keeps wrap-right and 0 warnings name it. Built-in browser at 1200x800, `tests/layout.js`: fig-second computed float right, box left 687 to right 927, top 6080; first line of the next paragraph at x=128, y=6082, `beside` true; fig-first computed float none.
+- AC4: `quarto render book --to html` (tests/book, chapters index.qmd and two.qmd) exit 0. In `_book/index.html`, fig-book has class `wrap-right`. In `_book/two.html`, the `@fig-book` link is `<a href="index.html#fig-book" class="quarto-xref">`, an href ending with the id.
+- AC5: `tests/revealjs.qmd` has one slide with fig-slide (.wrap-right) and a paragraph after it. `quarto render revealjs.qmd --to revealjs` exit 0, no extension warnings. Built-in browser at 1050x700: fig-slide computed float right, box 620 to 998, top 115 to 479; first line at x=53, y=126, `beside` true; all layout.js checks ok. README.md has a "Slides" section with a revealjs example and names revealjs in its intro.
+- Gate: `cairn_validate.py` exit 0, all checks pass. Toolchain: one version marker, `_extension.yml` version 0.1.0 (unchanged); verify passes on the review head (14 renders); changelog slot is "none". No DESIGN.md principle changed, so `cairn_impact` is skipped.
