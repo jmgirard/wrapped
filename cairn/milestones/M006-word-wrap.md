@@ -96,3 +96,12 @@ Pass 1, 2026-10-25, on 81792a7 (main not moved since the branch was cut). Eviden
 - AC5: stop-rule, contexts, defaults docx exit 0 (verify). Checker: stop-rule 11 groups/11 frames, contexts 1/1, defaults 5/5, each frame matching its group as in AC1 and AC2, 0 framed paragraphs outside a frame, so no figure with a normal HTML layout is framed. Warnings: contexts docx = HTML (14, once each); stop-rule 0 and 0; defaults HTML 0, docx 2: `1ex` to the default (AC4) and the height of `#fig-height`, whose source sets `height="2in"` on its image in a group.
 - AC6: README "Word" section states Word and LibreOffice show text beside every wrapped figure and Google Docs shows none beside the first figure checked. Word: AC3 geometry (15 of 15 with text beside). LibreOffice: fresh 11-page PDF, 15 images with text beside, 0 overlaps, 4 unwrapped images with none. Google Docs: the user's screenshot this session of the fixture's first figure (figure and caption on the right on their own lines, text below), which the README states limited to that figure.
 - Gate: `cairn_validate.py` all checks passed (coverage complete included); no principle changed, so no impact report. Profile gate: the one version marker, `_extensions/wrapped/_extension.yml`, holds 0.1.0, unchanged on the branch; `python3 tests/verify.py` all 33 renders pass on 81792a7; changelog "none".
+- spawned: diff-bug, blame-history, prior-review, ripple
+- ripple #1: wrap-mechanisms.md "Planned layout" says the post-render entry is planned and not in `_extension.yml` — fix now
+- ripple #2: wrap-mechanisms.md "one entry point now, and a second is planned" — fix now
+- ripple #3: the layout tree's `_extension.yml` comment and missing `wrapped-docx.lua` — fix now
+- ripple #4: W3 row "No `post-render` step runs" now misstates the extension — fix now
+- ripple #5: the `pre-quarto` bullet leaves out the Word grouping and `data-wrap-frame` — fix now
+- ripple #6: E10 names only LaTeX and Typst moving a tall figure; Word does too — fix now
+- ripple #7: tests/fixture.qmd `#fig-clamp` prose names only LaTeX and Typst as falling back — fix now
+- ripple #8: tests/defaults.qmd `#fig-height` prose leaves out Word dropping the height — fix now
