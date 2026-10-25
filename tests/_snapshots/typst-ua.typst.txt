@@ -2,5 +2,5 @@
 # typ
 figure: fig-ua image-width=yes
 # wraps
-align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 1em | fig-ua alt | p, p | cites=0
-align: top + wrapped-side(left), columns: wrapped-columns(left, 25%), column-gutter: 1em | plot.png alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 1em | fig-ua alt="A scatter plot of ten rising points" | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, 25%), column-gutter: 1em | plot.png alt="A small scatter plot" | p, p | cites=0

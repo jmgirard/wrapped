@@ -248,8 +248,9 @@ The `wrap-lines` attribute does nothing in Typst. Typst does not use an
 image's `height` in a wrapped figure. The image fills the box width and
 keeps its shape, and the render prints a warning.
 
-The sides stay physical in right-to-left text, which Typst sets from the
-document's `lang`, such as `lang: he`.
+The sides stay physical in right-to-left text. Typst sets that direction
+from the document's `lang`, such as `lang: he`, or from a raw Typst
+`#set text(dir: rtl)`. Quarto does not pass `dir: rtl` to Typst.
 
 wrap-it has limits:
 

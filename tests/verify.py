@@ -15,8 +15,9 @@ are sorted, so their order does not count. For PDF it also holds the kind,
 label, and options of each figure environment and the options of its
 \includegraphics, and for Typst the label of each #figure( call and
 whether its image keeps a width. For Typst it also holds each
-wrap-content call's options, the figure label or image in its box, and
-one "p" for each paragraph beside the box. For Word
+wrap-content call's options, the figure label or image in its box and its
+alt text, the kind of each block beside the box ("p" for a paragraph), the
+number of citations there, and the number of calls it could not read. For Word
 it also holds each image's width from word/document.xml. A revealjs
 snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
 book project: its snapshot holds the HTML parts of each page under _book/,
@@ -258,16 +259,24 @@ TYPST_WRAP_START = re.compile(r"^#context wrap-content\(", re.M)
 TYPST_WRAP = re.compile(
     r"^#context wrap-content\(([^\n]*), box\(width: 100%\)\[\n(.*?)^\], \[\n(.*?)^\]\)$", re.M | re.S
 )
-# Inline calls that can start a paragraph in Typst output.
-TYPST_INLINE = ("#ref(", "#cite(", "#link(", "#emph", "#strong", "#box(", "#text(")
+# Typst calls that Pandoc and Quarto write as blocks. Any other text, inline
+# calls such as #strike[ or #footnote[ included, starts a paragraph.
+TYPST_BLOCKS = (
+    "#block", "#figure", "#table", "#grid", "#Skylighting", "#wrap-content", "#context",
+    "#callout", "#quote", "#line(", "#pagebreak", "#v(", "#align(", "#pad(", "#columns(",
+)
 
 
 def typ_block_kind(block):
     if block.startswith("="):
         return "heading"
-    if block.startswith(("- ", "+ ")):
+    if block.startswith(("- ", "+ ")) or re.match(r"\d+\. ", block):
         return "list"
-    if block.startswith("#") and not block.startswith(TYPST_INLINE):
+    if block.startswith("/ "):
+        return "terms"
+    if block.startswith("```"):
+        return "code"
+    if block.startswith(TYPST_BLOCKS):
         return "block"
     return "p"
 
@@ -294,9 +303,11 @@ def typ_summary(path):
         label = re.search(r"^<((?:fig|tbl)-[\w-]+)>", fixed, re.M)
         image = re.search(r'image\("([^"]*)"', fixed)
         box = label.group(1) if label else Path(image.group(1)).name if image else "-"
-        alt = "alt" if re.search(r"image\([^)]*alt:", fixed) else "no-alt"
+        alt_text = re.search(r'image\([^)]*alt: "([^"]*)"', fixed)
+        alt = f'alt="{alt_text.group(1)}"' if alt_text else "no-alt"
         blocks = [typ_block_kind(b.strip()) for b in re.split(r"\n\s*\n", body) if b.strip()]
-        cites = len(re.findall(r"#cite\(", body))
+        # A narrative citation is a #cite( call, and a bracketed one is @key.
+        cites = len(re.findall(r"#cite\(|(?<![\w.@])@[\w:-]+", body))
         lines.append(f"{options} | {box} {alt} | {', '.join(blocks)} | cites={cites}")
     unread = len(TYPST_WRAP_START.findall(source)) - len(calls)
     if unread:
