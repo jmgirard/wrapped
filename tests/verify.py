@@ -85,6 +85,9 @@ RENDERS = [
     ("docx-columns", "docx", True),
     ("meta-breakpoint", "html", True),
     ("meta-string", "html", True),
+    ("meta-calc-bad", "html", True),
+    ("meta-calc-good", "html", True),
+    ("css-functions", "html", True),
     ("contexts", "html", True),
     ("contexts", "pdf", True),
     ("contexts", "typst", True),
@@ -202,7 +205,8 @@ def html_summary(path):
     source = path.read_text(encoding="utf-8")
     parser = Decisions()
     parser.feed(source)
-    breakpoint = re.search(r"@media \(max-width: ([^)]*)\)\s*\{[^{}]*wrap-", source)
+    # The value can hold a function, such as calc(30em + 100px).
+    breakpoint = re.search(r"@media \(max-width: ((?:[^()]|\([^()]*\))*)\)\s*\{[^{}]*wrap-", source)
     parts = ["# breakpoint", breakpoint.group(1) if breakpoint else "(none)"]
     parts += ["# figures"] + parser.figures
     parts += ["# images"] + parser.images

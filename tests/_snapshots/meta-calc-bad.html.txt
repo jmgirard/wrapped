@@ -1,0 +1,11 @@
+# warnings
+1x wrapped: breakpoint "calc(50%)" on the wrapped metadata is not a length, so it is 576px.
+1x wrapped: width "calc(1px + 2)" on the wrapped metadata is not a length or a percent, so it is 40%.
+# breakpoint
+576px
+# figures
+fig-meta-calc-bad: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-meta-calc-bad, p

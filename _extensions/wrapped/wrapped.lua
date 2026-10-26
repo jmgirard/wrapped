@@ -62,8 +62,143 @@ local UNITS = {
   cqw = true, cqh = true, cqi = true, cqb = true, cqmin = true, cqmax = true,
 }
 
--- CSS functions whose result is a length, passed through as written.
+-- CSS functions whose result is a length, read by calc_value.
 local FUNCTIONS = { calc = true, min = true, max = true, clamp = true }
+
+-- The type of the math expression in `s` from position `i`: "number",
+-- "length" (a length or a percent), or "any" (a var() term, whose type is
+-- not known). Returns the type and the position after the expression, or
+-- nil when the text is not such an expression. The rules are calc()'s in
+-- CSS Values and Units Level 3 (section 8.1), with min(), max(), and
+-- clamp() from Level 4 (section 10.2). A + or - between terms needs
+-- whitespace on both sides, the terms of a sum share a type, a product
+-- has a number factor, and a divisor is a number. min() and max() take
+-- one or more terms, and clamp() takes three. With `no_percent`, a
+-- percent is not a length.
+local calc_sum
+
+-- Skips whitespace. Returns the position after it and true when there was
+-- some.
+local function skip(s, i)
+  local j = s:match("^%s*()", i)
+  return j, j > i
+end
+
+-- The common type of two terms of a sum or two arguments, or nil.
+local function same_type(a, b)
+  if a == "any" then return b end
+  if b == "any" or a == b then return a end
+  return nil
+end
+
+-- A function's argument list from position `i`, after its "(": `count`
+-- terms, or one or more when `count` is nil. Returns their common type and
+-- the position after the ")".
+local function calc_args(s, i, no_percent, count)
+  local t, n = "any", 0
+  repeat
+    local ti
+    ti, i = calc_sum(s, skip(s, i), no_percent)
+    if not ti then return nil end
+    t, n = same_type(t, ti), n + 1
+    if not t then return nil end
+    i = skip(s, i)
+    local more = s:sub(i, i) == ","
+    if more then i = i + 1 end
+  until not more
+  if s:sub(i, i) ~= ")" or (count and n ~= count) then return nil end
+  return t, i + 1
+end
+
+-- One value: a number, a length, a percent, a sum in parentheses, a math
+-- function, or a var() term.
+local function calc_value(s, i, no_percent)
+  local num, unit, j = s:match("^([+-]?%d*%.?%d+)(%a*%%?)()", i)
+  if num then
+    if unit == "" then return "number", j end
+    if unit == "%" then
+      if no_percent then return nil end
+      return "length", j
+    end
+    if UNITS[unit:lower()] then return "length", j end
+    return nil
+  end
+  if s:sub(i, i) == "(" then
+    local t
+    t, i = calc_sum(s, skip(s, i + 1), no_percent)
+    if not t then return nil end
+    i = skip(s, i)
+    if s:sub(i, i) ~= ")" then return nil end
+    return t, i + 1
+  end
+  local name, k = s:match("^(%a+)%(()", i)
+  if not name then return nil end
+  name = name:lower()
+  if name == "var" then
+    k = s:match("^%s*%-%-[%w_-]+()", k)
+    if not k then return nil end
+    k = skip(s, k)
+    if s:sub(k, k) == ")" then return "any", k + 1 end
+    if s:sub(k, k) ~= "," then return nil end
+    local t
+    t, k = calc_args(s, k + 1, no_percent, 1)
+    return t and "any", k
+  end
+  if name == "calc" then return calc_args(s, k, no_percent, 1) end
+  if name == "clamp" then return calc_args(s, k, no_percent, 3) end
+  if FUNCTIONS[name] then return calc_args(s, k, no_percent) end
+  return nil
+end
+
+-- A product: values joined by * or /.
+local function calc_product(s, i, no_percent)
+  local t
+  t, i = calc_value(s, i, no_percent)
+  if not t then return nil end
+  while true do
+    local j = skip(s, i)
+    local op = s:sub(j, j)
+    if op ~= "*" and op ~= "/" then return t, i end
+    local u
+    u, i = calc_value(s, skip(s, j + 1), no_percent)
+    if not u then return nil end
+    if op == "/" then
+      if u == "length" then return nil end
+    elseif t == "number" then
+      t = u
+    elseif u == "length" and t == "length" then
+      return nil
+    elseif t == "any" and u == "length" then
+      t = "length"
+    end
+  end
+end
+
+-- A sum: products joined by + or -.
+calc_sum = function(s, i, no_percent)
+  local t
+  t, i = calc_product(s, i, no_percent)
+  if not t then return nil end
+  while true do
+    local j, before = skip(s, i)
+    local op = s:sub(j, j)
+    if (op ~= "+" and op ~= "-") or not before then return t, i end
+    local k, after = skip(s, j + 1)
+    if not after then return t, i end
+    local u
+    u, i = calc_product(s, k, no_percent)
+    if not u then return nil end
+    t = same_type(t, u)
+    if not t then return nil end
+  end
+end
+
+-- True for a calc(), min(), max(), or clamp() value whose result is a
+-- length or a percent.
+local function calc_length(s, no_percent)
+  local t, i = calc_value(s, 1, no_percent)
+  return t ~= nil and t ~= "number" and i == #s + 1
+end
 
 -- Returns the wrap class in a class list, or nil.
 local function wrap_class(classes)
@@ -82,12 +217,16 @@ end
 
 -- Returns the CSS length for a value, or nil when the value is not a
 -- number, a percent, a number with a CSS unit, or a calc(), min(), max(),
--- or clamp() expression. A unitless number is a pixel length, as in
--- Pandoc. With `no_percent`, a percent is not a length.
+-- or clamp() expression that calc_length reads as a length. A unitless
+-- number is a pixel length, as in Pandoc. With `no_percent`, a percent is
+-- not a length.
 local function css_length(value, no_percent)
   local s = pandoc.utils.stringify(value)
-  local fn = s:match("^(%a+)%(.+%)$")
-  if fn and FUNCTIONS[fn:lower()] then return s end
+  local fn = s:match("^(%a+)%(")
+  if fn and FUNCTIONS[fn:lower()] then
+    if calc_length(s, no_percent) then return s end
+    return nil
+  end
   local num, unit = s:match("^(%d*%.?%d+)(%a*%%?)$")
   if not num then return nil end
   if unit == "" then return num .. "px" end

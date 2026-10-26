@@ -1,0 +1,9 @@
+# warnings
+# breakpoint
+calc(30em + 100px)
+# figures
+fig-meta-calc-good: wrap-right style=--wrap-gap: 1em; --wrap-width: min(40%, 300px)
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-meta-calc-good, p

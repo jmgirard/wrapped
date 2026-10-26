@@ -1,0 +1,93 @@
+# warnings
+1x wrapped: width "calc(100%-2em)" on #fig-invalid-2 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(10px * 2em / 1em)" on #fig-invalid-14 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(10px / 2px)" on #fig-invalid-5 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(1px * 2px)" on #fig-invalid-4 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(1px + 2)" on #fig-invalid-3 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(1px + 2px" on #fig-invalid-9 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(5)" on #fig-invalid-6 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(banana)" on #fig-invalid-1 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(foo(30%))" on #fig-invalid-10 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(round(30%, 1px))" on #fig-invalid-13 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(var(w) * 2)" on #fig-invalid-12 is not a length or a percent, so it is 40%.
+1x wrapped: width "clamp(1px, 2px)" on #fig-invalid-8 is not a length or a percent, so it is 40%.
+1x wrapped: width "min()" on #fig-invalid-7 is not a length or a percent, so it is 40%.
+1x wrapped: width "min(40%, 2)" on #fig-invalid-11 is not a length or a percent, so it is 40%.
+1x wrapped: wrap-gap "calc(1px + 2)" on #fig-invalid-15 is not a length or a percent, so it is 1em.
+# breakpoint
+576px
+# figures
+fig-valid-1: wrap-right style=--wrap-gap: 1em; --wrap-width: calc(100% - 2em)
+fig-valid-2: wrap-left style=--wrap-gap: 1em; --wrap-width: min(40%, 300px)
+fig-valid-3: wrap-right style=--wrap-gap: 1em; --wrap-width: max(20%, 10em)
+fig-valid-4: wrap-left style=--wrap-gap: 1em; --wrap-width: clamp(10em, 30%, 400px)
+fig-valid-5: wrap-right style=--wrap-gap: 1em; --wrap-width: calc((100% - 2em) / 3)
+fig-valid-6: wrap-left style=--wrap-gap: 1em; --wrap-width: max(calc(20% + 1em), 8em)
+fig-valid-7: wrap-right style=--wrap-gap: 1em; --wrap-width: calc(var(--w) * 0.5)
+fig-valid-8: wrap-left style=--wrap-gap: 1em; --wrap-width: CALC(2 * 10px)
+fig-valid-9: wrap-right style=--wrap-gap: min(40%, 300px); --wrap-width: 30%
+fig-invalid-1: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-2: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-3: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-4: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-5: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-6: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-7: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-8: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-9: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-10: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-11: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-12: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-13: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-14: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-invalid-15: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
+# images
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+# groups
+fig-valid-1, p
+fig-valid-2, p
+fig-valid-3, p
+fig-valid-4, p
+fig-valid-5, p
+fig-valid-6, p
+fig-valid-7, p
+fig-valid-8, p
+fig-valid-9, p
+fig-invalid-1, p
+fig-invalid-2, p
+fig-invalid-3, p
+fig-invalid-4, p
+fig-invalid-5, p
+fig-invalid-6, p
+fig-invalid-7, p
+fig-invalid-8, p
+fig-invalid-9, p
+fig-invalid-10, p
+fig-invalid-11, p
+fig-invalid-12, p
+fig-invalid-13, p
+fig-invalid-14, p
+fig-invalid-15, p
