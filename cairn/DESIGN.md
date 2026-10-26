@@ -74,7 +74,7 @@ filter carries it to the figure (`references/wrap-mechanisms.md`, S1; D-001).
 | `.wrap-left`, `.wrap-right` | class | none | Turns wrapping on and picks the side. |
 | `width` | percent of text width, or an absolute length | `40%` | Width of the figure box, caption included. |
 | `wrap-gap` | length | `1em` | Space between the figure and the text. |
-| `wrap-lines` | integer | auto | LaTeX only. The number of narrowed lines; a stop block ends the wrap earlier (corrected M007). |
+| `wrap-lines` | integer | auto | LaTeX only. The most narrowed lines; a stop block ends the wrap earlier (changed M007, D-007). |
 
 Document or project defaults go under one metadata key:
 

@@ -78,17 +78,25 @@ writes from a header that only a test file loads, which needs more test
 code and depends on the PDF engine, and over page images checked by eye,
 which no test fails on.
 
-### D-007: LaTeX wraps end at the stop block, a waiting figure included
+### D-007: LaTeX wraps end at the stop block, a waiting figure included (corrects D-006)
 
 2026-10-26, M007, narrowing M004's LaTeX behavior. The user chose at the
 M007 plan's question set that PDF through LaTeX ends a wrap at every block
 that the stop rule names, as HTML, Typst, and Word do, over ending it only
 at a `wrap-clear` div and before an unwrapped figure. The filter writes
 `\wrappedstop` after each group's last paragraph. Where the wrap is still
-narrowed, it skips the lines that the figure's height still needs. A
+narrowed, it skips the lines that the figure's height still needs. The plan
+then chose, as a consequence of that answer, how a waiting figure ends: a
 figure that moved because it did not fit and still waits for a paragraph
 is put out there with no text beside it, before the stop block. Under M004
 such a figure waited for any later paragraph on its group level, which
 could put it beside text after a heading that is not its own. The cost is
 that a figure near a page's end wraps less often: when its paragraphs end
-before it can be placed, it renders centered with no text beside it.
+before it can be placed, it renders centered with no text beside it. A
+`wrap-lines` value now sets the most lines beside a figure, since a stop
+block can end the wrap before that count.
+
+This entry also corrects D-006: the test command reads positions with
+poppler's `pdftohtml` alone, not `pdftotext`, because `pdftohtml -xml` also
+gives image boxes. Poppler joins the test command's needs beside those that
+D-002 names, which D-005 kept unchanged for LibreOffice.

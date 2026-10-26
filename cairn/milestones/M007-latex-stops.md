@@ -257,3 +257,14 @@ Review pass 2, 2026-10-26, on 340e636 (main at c681043, not moved; code last cha
 - ripple #2: wrap-mechanisms.md's pre-quarto entry point omits the raw \wrappedstop — fix now
 - ripple #3: wrap-mechanisms.md's LaTeX wrapper sketch has no \wrappedstop — reject (false): the section records the research-time sketch, a record of an earlier setup
 - ripple #4: wrap-mechanisms.md's test plan says one fixture renders to all four formats — reject (false): the plan is the research-time test plan, a record of an earlier setup
+- blame-history #1: D-007 credits the user with the waiting-figure choice, which the plan made from the user's answer — fix now: D-007 reworded (not yet on the default branch)
+- blame-history #2: D-006 names pdftotext, which the check does not use, and does not mention D-005 — fix now: D-007 carries the correction of D-006 (D-006 is on the default branch)
+- blame-history #3: the M004 waiting-figure rule is reversed — reject (false): recorded in D-007
+- blame-history #4: wrap-lines now sets the most lines, labeled "corrected" in DESIGN.md — fix now: labeled "changed M007, D-007", and D-007 names the change
+- blame-history #5: a raw LaTeX block between paragraphs now ends the wrap — reject (planned change), as pass 1 diff-bug #5
+- blame-history #6: the M004 group-level guard is now redundant for callouts — reject (false): informational, it still guards a figure inside a group, and nothing breaks
+- prior-review #1: fixture.qmd's LaTeX page 4 overflows and Figure 2 moved; the overflow evidence was a hand shift of main, not main's render — follow-up: the row "Fix the overfull LaTeX fixture page" now says this branch's spacing moves the content into the clash, and main renders it within bounds
+- prior-review #2: the page-top stop gap has no fixture — follow-up: already the row "Trim the LaTeX stop gap at page tops"
+- prior-review #3: the global \wrapped@startlines and \wrapped@startbs writes — reject (false), as pass 1 prior-review #5; the reviewer traced the call sites and found no stale read
+- prior-review #4: no test for a raw LaTeX block inside a group — reject (planned change): the stop rule is the planned behavior
+- prior-review #5: wrap-mechanisms.md E9 says LaTeX "skips to the figure's bottom" — fix now: "skips the lines that the figure's height still needs"

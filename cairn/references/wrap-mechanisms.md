@@ -152,7 +152,7 @@ The filter has two entry points (corrected M006):
 | E6 | Wrapped figure is the last block before a heading | No text to wrap. Normal figure, no warning. |
 | E7 | Two wrapped figures with no text between them | The first figure falls back with no warning, and the second wraps the text after it (corrected 2026-10-24, D-003). |
 | E8 | Wrapped figure inside a list, callout, column layout, or tabset | Normal figure. One warning. |
-| E9 | Text shorter than the figure | HTML and Word clear at the stop point. Typst wraps the text it has. LaTeX skips to the figure's bottom at the stop point (corrected M007). |
+| E9 | Text shorter than the figure | HTML and Word clear at the stop point. Typst wraps the text it has. LaTeX skips the lines that the figure's height still needs at the stop point (corrected M007). |
 | E10 | Figure taller than the rest of the page | LaTeX, Typst, and Word move it to the next page. In LaTeX the text before it leaves no gap. A figure whose paragraphs all end before it is placed renders with no text beside it, before the stop block (corrected M007). In Typst the `wrap-content` box moves whole and the rest of the page stays blank (corrected M005). Word moves the frame and the paragraph after it, and the rest of the page stays blank (corrected M006). |
 | E11 | Long caption | The caption wraps inside the box width in all formats. |
 | E12 | `pdf-standard: ua-1` or `ua-2` | A test makes sure that alt text and tags stay. Quarto 1.10.19 ignores `ua-1` for LaTeX, so that PDF has no tags. The LaTeX test uses `ua-2` with `documentclass: article` (corrected M004). |
