@@ -43,6 +43,9 @@ after its render, before the Typst render writes the same path, and checks
 where each case's text starts beside and below its wrapped figure. It reads
 the boxes of text lines and images with poppler's pdftohtml (brew install
 poppler, or apt install poppler-utils). It prints one line for each case it measured.
+For a fixture in TYPST_LAYOUT, it reads the PDF through Typst the same way
+after its Typst render, and checks each figure's image width and the first
+line of its paragraph beside it.
 
 For a fixture in LOGS, rendered with latex-clean: false so its LaTeX log
 stays, the script also reads the warnings that wrapped.tex writes to that
