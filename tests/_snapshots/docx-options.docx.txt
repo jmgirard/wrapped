@@ -1,7 +1,7 @@
 # warnings
 1x wrapped: #fig-code holds a block that Word cannot put in a frame, so it does not wrap in Word.
 1x wrapped: gap "1ex" in the wrapped metadata is not a length that Word can use, so it is 1em.
-1x wrapped: width "0%" on #fig-zero is not a length that Word can use, so it is 40%.
+1x wrapped: width "0%" on #fig-zero is zero, so it is 40%.
 1x wrapped: width "100%" on #fig-full leaves no room for text in Word, so it is 40%.
 1x wrapped: width "10in" on #fig-wide leaves no room for text in Word, so it is 40%.
 1x wrapped: width "120%" in the wrapped metadata is not a length that Word can use, so it is 40%.

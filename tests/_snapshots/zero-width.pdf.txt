@@ -1,0 +1,24 @@
+# warnings
+1x wrapped: width ".0" on #fig-zero-dot is zero, so it is 25%.
+1x wrapped: width "0" on #fig-zero-unitless is zero, so it is 25%.
+1x wrapped: width "0%" on #fig-zero-percent is zero, so it is 25%.
+1x wrapped: width "0.0px" on #fig-zero-px is zero, so it is 25%.
+1x wrapped: width "0IN" on #fig-zero-upper is zero, so it is 25%.
+1x wrapped: width "0in" on #fig-zero-in is zero, so it is 25%.
+# tex
+wrappedfigure: fig-zero-percent [side=right,width=0.25\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-zero-in [side=left,width=0.25\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-zero-upper [side=right,width=0.25\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-zero-unitless [side=left,width=0.25\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-zero-px [side=right,width=0.25\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-zero-dot [side=left,width=0.25\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-gap-zero-pt [side=right,width=0.3\linewidth,gap=0pt] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-gap-zero [side=left,width=0.3\linewidth,gap=0pt] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

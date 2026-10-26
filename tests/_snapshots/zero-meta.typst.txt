@@ -1,0 +1,6 @@
+# warnings
+1x wrapped: width "0%" on the wrapped metadata is zero, so it is 40%.
+# typ
+figure: fig-zero-meta image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, 40%), column-gutter: 0pt | fig-zero-meta no-alt | p | cites=0
