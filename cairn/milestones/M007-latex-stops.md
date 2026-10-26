@@ -198,6 +198,7 @@ horizontal rule beside a figure is not checked.
 - 2026-10-26: claim audit (T6 lines): 27 claims read, 2 corrected — README.md (the moved-figure sentence read as "on the next page"; now "it renders with no text beside it. It renders before the block that stops the wrap"), cairn/DECISIONS.md (D-007's "renders as a normal figure" now "renders centered with no text beside it", corrected before D-007 reached the default branch); re-read pending.
 - 2026-10-26: claim audit re-read: both corrections correct (fixture page 13 caption at 282, stop heading at 335; the waiting figure's center 459 px is the text block's center).
 - 2026-10-26: T6 done; implement done after review return 1; status review.
+- 2026-10-26: step-7 approval: m007-latex-stops approved for merge
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
