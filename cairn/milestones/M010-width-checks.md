@@ -118,22 +118,22 @@ Consistency gate, 2026-10-26: `cairn_validate.py` all checks passed. No DESIGN.m
 
 Review pass 1, 2026-10-26. spawned: diff-bug, blame-history, prior-review, ripple. No finding shows a criterion failing or a load-bearing defect, so no return.
 
-- diff-bug #1: metadata values pass through Pandoc's smart punctuation, so `--` in `var(--w)` becomes an en dash and `2*1em*1` loses its asterisks as emphasis; the README says metadata takes function values — fix now (restore `--` from an en dash in metadata; README tells users to put spaces around `*`).
-- diff-bug #2: a zero inside a function (`calc(0%)`, `min(0px, 10%)`, `calc(-10px)`) passes with no warning, against README "A width of zero … prints a warning" — fix now for the README wording (a width of zero written as a number); the check itself — follow-up to row "Warn on zero widths in CSS functions".
-- diff-bug #3: a breakpoint accepts `var()`, which a media query cannot use, so the narrow rule drops with no warning — fix now (a `no_percent` read also refuses `var()`; fixture meta-calc-var).
-- diff-bug #4: no test covers the document default being chosen by `wrapped-width` — fix now (fixture typst-wide-meta with a 2in default).
-- diff-bug #5: the wide cases compare against the 40% figure in the same PDF, so nothing states 40% independently — fix now (cases expect 259 px, 40% of the 6 in text of Quarto's Typst page).
+- diff-bug #1: metadata values pass through Pandoc's smart punctuation, so `--` in `var(--w)` becomes an en dash and `2*1em*1` loses its asterisks as emphasis; the README says metadata takes function values — fix now (restore `--` from an en dash in metadata; README tells users to put spaces around `*`), fixed 4752de4.
+- diff-bug #2: a zero inside a function (`calc(0%)`, `min(0px, 10%)`, `calc(-10px)`) passes with no warning, against README "A width of zero … prints a warning" — fix now for the README wording (a width of zero written as a number), fixed 4752de4; the check itself — follow-up to row "Warn on zero widths in CSS functions".
+- diff-bug #3: a breakpoint accepts `var()`, which a media query cannot use, so the narrow rule drops with no warning — fix now (a `no_percent` read also refuses `var()`; fixture meta-calc-var), fixed 4752de4.
+- diff-bug #4: no test covers the document default being chosen by `wrapped-width` — fix now (fixture typst-wide-meta with a 2in default), fixed 4752de4.
+- diff-bug #5: the wide cases compare against the 40% figure in the same PDF, so nothing states 40% independently — fix now (cases expect 259 px, 40% of the 6 in text of Quarto's Typst page), fixed 4752de4.
 - diff-bug #6: zero forms, function pairs, and 10in/60em run the same code paths — reject, planned change: AC1, AC2, and AC4 name each value after the plan's criteria audit asked for varied forms.
-- diff-bug #7: README says `pi` and `none` in `clamp()` warn, with no test — fix now (both added to css-functions).
-- diff-bug #8: exponents (`1e2px`), `env()`, an empty `var()` fallback, and non-ASCII property names now warn, and the README does not say so — fix now for the README (exponents, `env()`, empty fallback listed); non-ASCII names — reject, edge: a custom property name outside ASCII is outside documented and common use, and its effect is a warning.
+- diff-bug #7: README says `pi` and `none` in `clamp()` warn, with no test — fix now (both added to css-functions), fixed 4752de4.
+- diff-bug #8: exponents (`1e2px`), `env()`, an empty `var()` fallback, and non-ASCII property names now warn, and the README does not say so — fix now for the README (exponents, `env()`, empty fallback listed, and each added to css-functions), fixed 4752de4; non-ASCII names — reject, edge: a custom property name outside ASCII is outside documented and common use, and its effect is a warning.
 - diff-bug #9: `calc(1px / 0)` passes — follow-up to row "Warn on zero widths in CSS functions".
-- diff-bug #10: the media-query pattern reads one level of parentheses — fix now (pattern reads to the `) {` that ends the query).
+- diff-bug #10: the media-query pattern reads one level of parentheses — fix now (pattern reads to the `) {` that ends the query), fixed 4752de4.
 - diff-bug #11: the Typst wide check ignores the gap — follow-up to row "Count the gap in Typst width checks".
-- diff-bug #12: README calls the rule "absolute width" though it covers `em` — fix now (wording).
+- diff-bug #12: README calls the rule "absolute width" though it covers `em` — fix now (wording), fixed 4752de4.
 - diff-bug #13: D-006 covers poppler for LaTeX layout only — reject, false: poppler is already a test requirement and no dependency changes; the work log records the wider use.
 - diff-bug #14: about 100k nested parentheses overflow the Lua stack — reject, edge: no document nests that deep, and the effect is a render error.
 - blame-history #1: a width plus its gap can exceed the Typst text width (6.4in with 2em, or 99% with 1em) — follow-up to row "Count the gap in Typst width checks".
-- blame-history #2: `UNITS` lacks valid CSS units (`dvmin`, `svmax`, `vi`, `vb`, `cap`, `ic`, `rcap`, `rch`, `rex`, `ric`, and others), so `calc(100% - 2dvmin)`, which main passed, now warns — fix now (units added from CSS Values 4).
+- blame-history #2: `UNITS` lacks valid CSS units (`dvmin`, `svmax`, `vi`, `vb`, `cap`, `ic`, `rcap`, `rch`, `rex`, `ric`, and others), so `calc(100% - 2dvmin)`, which main passed, now warns — fix now (units added from CSS Values 4; `calc(100% - 2dvmin)` added to css-functions), fixed 4752de4.
 - blame-history #3: the Typst fallback prints no warning, against the warn-once goal — reject, planned change: the user chose no warning at the question set.
 - blame-history #4: `pi`, `round()`, and other newer forms now warn — reject, planned change: the user chose to warn on newer forms.
 - blame-history #5: `calc(0%)` passes the zero check — same as diff-bug #2.
@@ -141,7 +141,8 @@ Review pass 1, 2026-10-26. spawned: diff-bug, blame-history, prior-review, rippl
 - prior-review #1: the Typst wide width falls back silently, against M005's and M006's warn-on-fallback findings — reject, planned change: the user chose no warning, and the README says so.
 - prior-review #2: `cairn/PROFILE.md` line 29 is long — reject, style: the cap counts lines.
 - ripple #1, #2, #3: the three candidate rows describe the fixed bugs — reject, planned change: post-merge hygiene graduates them; #3's "lacks the started M010 tag" is false (the row ends with ` — started M010`).
-- ripple #4: `cairn/references/wrap-mechanisms.md` shows the old `#context wrap-content(` call and `])` close — fix now.
-- ripple #5: PROFILE.md test-doctrine names only the `LAYOUT` list — fix now.
-- ripple #6: the W3 row says the blocks make one `wrap-content` call — fix now (with #4).
+- ripple #4: `cairn/references/wrap-mechanisms.md` shows the old `#context wrap-content(` call and `])` close — fix now, fixed 4752de4.
+- ripple #5: PROFILE.md test-doctrine names only the `LAYOUT` list — fix now, fixed 4752de4.
+- ripple #6: the W3 row says the blocks make one `wrap-content` call — fix now (with #4), fixed 4752de4.
 - ripple #7: the workflow comment names only fixture.pdf — reject, false: the comment says which render fixture.pdf holds, which stays true.
+- After 4752de4: `python3 tests/verify.py --update` passed all 51 renders and every layout case; only css-functions.html changed among old snapshots (the six added values), and meta-calc-var and typst-wide-meta are new. Follow-up rows added: "Count the gap in Typst width checks" and "Warn on zero widths in CSS functions". PR conversation read: not run, no PR yet.
