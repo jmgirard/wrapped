@@ -29,6 +29,19 @@ After figure C. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do 
 \clearpage
 ```
 
+```{=latex}
+\noindent\begin{minipage}{\linewidth}
+```
+
+![Fig B.](plot.png){#fig-box .wrap-right width="40%"}
+
+After figure B. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+```{=latex}
+\end{minipage}
+\clearpage
+```
+
 A paragraph before the class image. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ![](plot.png){.wrap-left width="40%"}

@@ -126,8 +126,9 @@
     caption .initial:n = true,
   }
 % The mode of a wrappedfigure: w wraps, f is a figure float in two-column
-% text, and p sets the figure in place, inside multicols or for an image
-% with no caption in two-column text.
+% text, and p sets the figure in place: inside multicols, and in two-column
+% text for an image with no caption or a figure inside a box, where a float
+% is lost.
 \cs_new_protected:Npn \__wrapped_set_mode:
   {
     \legacy_if:nTF { wrapped@multicols }
@@ -138,7 +139,9 @@
       {
         \legacy_if:nTF { @twocolumn }
           {
-            \bool_if:NTF \l__wrapped_caption_bool
+            \bool_lazy_and:nnTF
+              { \l__wrapped_caption_bool }
+              { ! \mode_if_inner_p: }
               { \tl_set:Nn \l__wrapped_mode_tl { f } }
               { \tl_set:Nn \l__wrapped_mode_tl { p } }
             \use:c { wrapped@warntwocolumn }
@@ -179,6 +182,9 @@
             \begin { center }
             \begin { minipage } { \l__wrapped_width_tl }
             \cs_set:cpn { @captype } { figure }
+            % No float begins here, so the caption package has no anchor
+            % to move a link to; the link goes to the caption.
+            \cs_if_exist:NT \captionsetup { \captionsetup { hypcap = false } }
           }
       }
   }

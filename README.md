@@ -164,7 +164,8 @@ Ratings rose in both conditions.
 ## PDF through LaTeX
 
 In PDF through LaTeX, the extension puts each wrapped figure in a
-`wrapfigure` from the LaTeX package wrapfig. If your TeX distribution does
+`wrapfigure` from the LaTeX package wrapfig. Where the text runs in
+columns, it does not (see below). If your TeX distribution does
 not have wrapfig, install it, for example with `tlmgr install wrapfig`.
 
 The `width` and `wrap-gap` values change to LaTeX lengths:
@@ -209,14 +210,15 @@ wrapfig has limits, and the extension keeps some of them:
   block that stops its wrap, so it starts below the wrapped figure. A
   figure that moved to the next page waits for one of its own paragraphs.
   A heading or the end of a callout does not take it.
-- Where the text runs in columns, wrapped figures do not wrap. Each keeps
-  its width as a share of the column. With `classoption: twocolumn`, they
-  render as normal figures, and the render prints one warning. LaTeX loses
-  a figure from that document inside `multicols`.
+- Where the text runs in columns, set by `classoption: twocolumn`, a class
+  default, `\twocolumn`, or `multicols`, wrapped figures render as normal
+  figures: they do not wrap. A percent width is a share of the column.
+  With `classoption: twocolumn`, the render prints one warning.
 - A class that sets two columns by default, such as IEEEtran, a
   `\twocolumn` command, and a `multicols` environment are found only while
   LaTeX runs. In two-column text, a captioned figure floats as a normal
-  figure does, and an image with no caption stays in place. Inside
+  figure does. An image with no caption, or a figure inside a box such as
+  a `minipage`, stays in place. Inside
   `multicols`, where LaTeX loses floats, each figure stays in place. After
   `\onecolumn`, figures wrap again.
 - In those cases the render prints no warning. LaTeX writes the warning to

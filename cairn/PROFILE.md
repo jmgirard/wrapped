@@ -26,8 +26,10 @@ LaTeX, PDF through Typst, and docx, and the book project under `tests/book/`
 to HTML. It compares the parts that the filter changes with
 the snapshots in `tests/_snapshots/`. For the fixtures in its `LAYOUT`
 list, it also reads where text starts beside and below each wrapped figure
-in the PDF through LaTeX (D-006). It exits with status 1 on a failed render,
-a difference, or a failed layout case. It needs Quarto, R with knitr,
+in the PDF through LaTeX (D-006). For the fixtures in its `LOGS` list, it
+reads the warnings that `wrapped.tex` writes to the LaTeX log (corrected
+M009). It exits with status 1 on a failed render, a difference, or a failed
+layout case or log check. It needs Quarto, R with knitr,
 TinyTeX, and poppler. After an intended output change, run it with
 `--update` and review the snapshot diff. Other layout is not in this
 command. Measure HTML layout in a browser with `tests/layout.js`, as its
@@ -43,7 +45,8 @@ Toolchain tests that `/milestone-review` runs *in addition to* the universal
 cairn-file tests (`cairn_validate`, coverage completeness, `cairn_impact`):
 - Every version marker that `release-walk` names holds the same version.
 - The verify command passes on the review head: every fixture renders with
-  no errors, every snapshot matches, and every layout case passes.
+  no errors, every snapshot matches, and every layout case and log check
+  passes.
 - The changelog slot says "none", so the gate reads no changelog entry.
 
 ## test-doctrine

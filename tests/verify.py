@@ -32,7 +32,7 @@ and the href of each cross-reference link. For a fixture in MARGIN_IDS, the
 script also renders a copy with no filters and records whether the nearest
 column-margin div around each named figure has the same classes in both
 renders. The script exits with status 1 on a failed render, a snapshot
-difference, or a failed layout case.
+difference, or a failed layout case or log check.
 
 Some fixtures exist only for the browser checks in tests/layout.js, which
 measure layout. Those fixtures are rendered here, so their HTML is current,
@@ -585,12 +585,10 @@ def check_alone(boxes, fig, edges):
 
 def normal_case(caption, para):
     """A wrapped figure that keeps a normal figure: no text of its column
-    beside its image, and a caption below the image."""
+    beside its image. find_figure finds a caption only below its image."""
     def case(boxes, edges, lh):
         fig = find_figure(boxes, caption, find_text(boxes, para))
         check_alone(boxes, fig, edges)
-        if fig.caption and fig.caption.top < fig.image.bottom - NEAR:
-            raise LayoutError("the caption is not below the image")
     return case
 
 
@@ -624,6 +622,7 @@ def multicols_cases():
 
 def twocolumn_class_cases():
     yield "figure", normal_case("Fig C.", "After figure C.")
+    yield "figure in a box", normal_case("Fig B.", "After figure B.")
     yield "image", normal_case(None, "After image C.")
 
 
@@ -677,7 +676,7 @@ LOGS = {
 }
 TWO_COLUMN_WARNING = "Two-column text: figures set as normal figures"
 MULTICOLS_WARNING = "Figure in multicols set as normal figure"
-LOG_WARNING = re.compile(r"Package wrapped Warning: (.*?)(?: on input line (\d+))?\.$", re.M)
+LOG_WARNING = re.compile(r"Package wrapped Warning: (.*?)(?: on input line (\d+))?\.")
 
 
 def multicols_figures(tex):
@@ -698,14 +697,17 @@ def log_check(fixture):
     warning, and a multicols warning that names the line of each wrapped
     figure inside multicols. Returns the names of the failed checks."""
     two_column, in_multicols = LOGS[fixture]
-    log = (TESTS / f"{fixture}.log").read_text(encoding="utf-8", errors="replace")
-    # With TeX Live's default max_print_line of 79, TeX breaks a log line
-    # after 79 characters (TinyTeX sets 10000). A line of exactly 79
-    # characters joins the next.
-    log = re.sub(r"(?m)^(.{79})\n", r"\1", log)
+    path = TESTS / f"{fixture}.log"
+    if not path.exists():
+        print(f"FAIL log {fixture}: no {path.name} after the render")
+        return [f"log {fixture}"]
+    # TeX breaks a long log line at max_print_line, 79 in TeX Live and 10000
+    # in TinyTeX, with no mark, so the log is read with its line breaks
+    # removed.
+    log = path.read_text(encoding="utf-8", errors="replace").replace("\n", "")
     found = LOG_WARNING.findall(log)
     two = [w for w in found if w[0] == TWO_COLUMN_WARNING]
-    multi = sorted(int(n) for msg, n in found if msg == MULTICOLS_WARNING)
+    multi = sorted(int(n) if n else 0 for msg, n in found if msg == MULTICOLS_WARNING)
     other = [msg for msg, n in found if msg not in (TWO_COLUMN_WARNING, MULTICOLS_WARNING)]
     want = multicols_figures(TESTS / f"{fixture}.tex")
     problems = []
@@ -717,6 +719,8 @@ def log_check(fixture):
         problems.append(f"multicols warnings on lines {multi}, not {want}")
     if other:
         problems.append(f"other wrapped warnings: {other}")
+    if "`hypcap=true' will be ignored" in log:
+        problems.append("a caption package hypcap warning")
     if problems:
         print(f"FAIL log {fixture}: {'; '.join(problems)}")
         return [f"log {fixture}"]
@@ -934,6 +938,9 @@ def main():
     failed = []
     for fixture, fmt, compare in RENDERS:
         name = f"{fixture}.{fmt}"
+        if fmt == "pdf" and fixture in LOGS:
+            # A log left by an earlier run must not pass for this one.
+            (TESTS / f"{fixture}.log").unlink(missing_ok=True)
         code, log = render(fixture, fmt)
         if code != 0:
             print(f"FAIL {name}: quarto render exited with status {code}")
