@@ -8,9 +8,13 @@ on:
     - cron: "0 6 * * 1"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
 
@@ -21,12 +25,14 @@ jobs:
 
       - name: Install R, knitr, rmarkdown, and poppler
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends r-base r-cran-knitr r-cran-rmarkdown poppler-utils
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends -o Acquire::Retries=3 r-base r-cran-knitr r-cran-rmarkdown poppler-utils
 
       - name: Run verify.py
         run: python3 tests/verify.py
 
+      # The fixture.pdf left here is the Typst render, which overwrites the
+      # LaTeX one.
       - name: Keep the rendered outputs
         if: failure()
         uses: actions/upload-artifact@v7
@@ -38,4 +44,5 @@ jobs:
             tests/**/*.tex
             tests/**/*.typ
             tests/**/*.docx
+            tests/**/*.log
           if-no-files-found: ignore
