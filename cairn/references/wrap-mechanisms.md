@@ -31,7 +31,7 @@ source summary. It is a reference, not an authority. Status lives in
 |---|---|---|---|---|
 | W1 | HTML (html, revealjs, dashboard) | CSS `float` on `div.quarto-float`. Width and gap are CSS custom properties. A `.wrap-clear` div marks the stop point. No float below a breakpoint. | Quarto copies the float's classes to the outer `div.quarto-float`. | `quarto-figure-center` sets `text-align`. The lightbox extension wraps the image in a link. |
 | W2 | PDF through LaTeX | A `wrappedfigure` environment calls `wrapfigure` from `wrapfig`. Where the text runs in columns (`\if@twocolumn`, or inside `multicols`), it does not wrap (corrected M009). It sets a figure float, or it sets the figure in place inside `multicols`, inside a box, or with no caption. The filter sets `fig-env="wrappedfigure"` and `fig-pos="side=right,width=0.4\linewidth,gap=1em"`. If `wrap-lines` is set, `fig-pos` also holds `lines=<n>`. The shipped wrapper is `_extensions/wrapped/wrapped.tex` (corrected M004). | Quarto writes `\begin{<fig-env>}[<fig-pos>]` and passes `fig-pos` unchanged. | Inside another environment, `wrapfigure` can lose its paragraph shape. |
-| W3 | PDF through Typst | `wrap-content(fixed, body, align: ...)` from wrap-it, bundled under `_extensions/wrapped/typst/packages/preview/wrap-it/0.1.1/`. | Quarto renders `#figure(...)<id>`. The `pre-quarto` grouping pass puts raw Typst blocks around it and the next paragraphs, as S3 did. The blocks make one `wrap-content` call. The `post-render` step changes nothing in Typst (corrected M006). | wrap-it issue #15: a citation in the wrapped text fails. S3 did not show it with wrap-it 0.1.1 on Typst 0.15.1 (corrected M001). |
+| W3 | PDF through Typst | `wrap-content(fixed, body, align: ...)` from wrap-it, bundled under `_extensions/wrapped/typst/packages/preview/wrap-it/0.1.1/`. | Quarto renders `#figure(...)<id>`. The `pre-quarto` grouping pass puts raw Typst blocks around it and the next paragraphs, as S3 did. The blocks make one `wrap-content` call inside `layout` (corrected M010). The `post-render` step changes nothing in Typst (corrected M006). | wrap-it issue #15: a citation in the wrapped text fails. S3 did not show it with wrap-it 0.1.1 on Typst 0.15.1 (corrected M001). |
 | W4 | Word (docx) | Word frames. The image paragraph and the caption paragraph get the same `w:framePr`, and Word merges them into one frame. | Quarto renders a one-cell table. Its cell `Div` has the figure ID. A `post-render` step unwraps it. | A second raw `w:pPr` on the image paragraph. S4 showed that Word accepts a frame in an extra first `w:pPr`. In M006, Word 16 read it after Pandoc's and Quarto's own `w:pPr`, the order a filter makes. The caption kept its `ImageCaption` style (corrected M006). |
 | W5 | gfm, commonmark, pptx, epub, ipynb, JATS, ODT | The filter removes the wrap class and keeps a normal figure. It warns once per document. | None. | None. |
 
@@ -99,16 +99,16 @@ LaTeX wrapper (W2). The filter adds `wrapfig` with
 \ExplSyntaxOff
 ```
 
-Typst output (W3), as the filter writes it from the `pre-quarto` pass (corrected M005). The `wrapped-side` and `wrapped-columns` helpers keep the side physical in right-to-left text:
+Typst output (W3), as the filter writes it from the `pre-quarto` pass (corrected M005, corrected M010). The `wrapped-side` and `wrapped-columns` helpers keep the side physical in right-to-left text. `layout` gives the text width, and `wrapped-width` takes the first of the figure width, the document default, and 40% that fits it:
 
 ```typst
-#context wrap-content(align: top + wrapped-side(right), columns: wrapped-columns(right, 40%), column-gutter: 1em, box(width: 100%)[
+#layout(wrapped-size => wrap-content(align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em, box(width: 100%)[
 #figure(...)<fig-id>
 ], [
 Paragraph one.
 
 Paragraph two.
-])
+]))
 ```
 
 Word frame (W4), on the image paragraph and the caption paragraph:

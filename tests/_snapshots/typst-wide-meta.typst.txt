@@ -1,0 +1,5 @@
+# warnings
+# typ
+figure: fig-m10in image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 10in, 2in, 40%)), column-gutter: 1em | fig-m10in no-alt | p | cites=0

@@ -53,12 +53,16 @@ local function wraps()
   return is_html or is_latex or is_typst or is_docx
 end
 
--- CSS units that a width, gap, or breakpoint may use, in lowercase.
+-- CSS units that a width, gap, or breakpoint may use, in lowercase: the
+-- length units of CSS Values and Units Level 4 (section 6).
 local UNITS = {
   px = true, pt = true, pc = true, ["in"] = true, cm = true, mm = true, q = true,
-  em = true, rem = true, ex = true, ch = true, lh = true, rlh = true,
-  vw = true, vh = true, vmin = true, vmax = true,
-  svw = true, svh = true, lvw = true, lvh = true, dvw = true, dvh = true,
+  em = true, rem = true, ex = true, rex = true, cap = true, rcap = true,
+  ch = true, rch = true, ic = true, ric = true, lh = true, rlh = true,
+  vw = true, vh = true, vi = true, vb = true, vmin = true, vmax = true,
+  svw = true, svh = true, svi = true, svb = true, svmin = true, svmax = true,
+  lvw = true, lvh = true, lvi = true, lvb = true, lvmin = true, lvmax = true,
+  dvw = true, dvh = true, dvi = true, dvb = true, dvmin = true, dvmax = true,
   cqw = true, cqh = true, cqi = true, cqb = true, cqmin = true, cqmax = true,
 }
 
@@ -73,8 +77,9 @@ local FUNCTIONS = { calc = true, min = true, max = true, clamp = true }
 -- clamp() from Level 4 (section 10.2). A + or - between terms needs
 -- whitespace on both sides, the terms of a sum share a type, a product
 -- has a number factor, and a divisor is a number. min() and max() take
--- one or more terms, and clamp() takes three. With `no_percent`, a
--- percent is not a length.
+-- one or more terms, and clamp() takes three. With `no_percent`, for a
+-- media query, a percent is not a length and a var() term is not read,
+-- because a media query takes neither.
 local calc_sum
 
 -- Skips whitespace. Returns the position after it and true when there was
@@ -135,6 +140,7 @@ local function calc_value(s, i, no_percent)
   if not name then return nil end
   name = name:lower()
   if name == "var" then
+    if no_percent then return nil end
     k = s:match("^%s*%-%-[%w_-]+()", k)
     if not k then return nil end
     k = skip(s, k)
@@ -781,6 +787,14 @@ local function format_default(key, what, convert, name)
   options[key] = DEFAULTS[key]
 end
 
+-- The text of a metadata value, or nil. Pandoc reads metadata as Markdown,
+-- and its smart punctuation turns the `--` of `var(--w)` into an en dash,
+-- which no CSS length holds, so the en dash turns back into `--`.
+local function meta_text(value)
+  if value == nil then return nil end
+  return (pandoc.utils.stringify(value):gsub("\u{2013}", "--"))
+end
+
 local function read_meta(meta)
   if is_docx then
     docx_text_width, docx_columns = read_docx_text_width()
@@ -797,9 +811,9 @@ local function read_meta(meta)
       "wrapped: the wrapped metadata is not a map of width, gap, and breakpoint, so it is ignored.")
     return
   end
-  options.width = checked_length(m.width, DEFAULTS.width, "width", "the wrapped metadata")
-  options.gap = checked_length(m.gap, DEFAULTS.gap, "gap", "the wrapped metadata")
-  options.breakpoint = checked_length(m.breakpoint, DEFAULTS.breakpoint, "breakpoint",
+  options.width = checked_length(meta_text(m.width), DEFAULTS.width, "width", "the wrapped metadata")
+  options.gap = checked_length(meta_text(m.gap), DEFAULTS.gap, "gap", "the wrapped metadata")
+  options.breakpoint = checked_length(meta_text(m.breakpoint), DEFAULTS.breakpoint, "breakpoint",
     "the wrapped metadata", true)
   if is_latex then
     format_default("width", "width", tex_length, "LaTeX")

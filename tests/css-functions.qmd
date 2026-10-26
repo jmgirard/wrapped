@@ -45,6 +45,10 @@ See @fig-valid-8. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed d
 
 See @fig-valid-9. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+![A width of `calc(100% - 2dvmin)`.](plot.png){#fig-valid-10 .wrap-left width="calc(100% - 2dvmin)"}
+
+See @fig-valid-10. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
 ## Values that print a warning
 
 ![A width of `calc(banana)`.](plot.png){#fig-invalid-1 .wrap-right width="calc(banana)"}
@@ -106,3 +110,23 @@ See @fig-invalid-14. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Se
 ![A gap of `calc(1px + 2)`.](plot.png){#fig-invalid-15 .wrap-right width="30%" wrap-gap="calc(1px + 2)"}
 
 See @fig-invalid-15. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(1px * pi)`.](plot.png){#fig-invalid-16 .wrap-left width="calc(1px * pi)"}
+
+See @fig-invalid-16. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `clamp(none, 30%, 400px)`.](plot.png){#fig-invalid-17 .wrap-right width="clamp(none, 30%, 400px)"}
+
+See @fig-invalid-17. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(1e2px)`.](plot.png){#fig-invalid-18 .wrap-left width="calc(1e2px)"}
+
+See @fig-invalid-18. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(100% - env(safe-area-inset-right))`.](plot.png){#fig-invalid-19 .wrap-right width="calc(100% - env(safe-area-inset-right))"}
+
+See @fig-invalid-19. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(var(--a,))`.](plot.png){#fig-invalid-20 .wrap-left width="calc(var(--a,))"}
+
+See @fig-invalid-20. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

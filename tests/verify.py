@@ -90,6 +90,7 @@ RENDERS = [
     ("meta-string", "html", True),
     ("meta-calc-bad", "html", True),
     ("meta-calc-good", "html", True),
+    ("meta-calc-var", "html", True),
     ("css-functions", "html", True),
     ("contexts", "html", True),
     ("contexts", "pdf", True),
@@ -112,6 +113,7 @@ RENDERS = [
     ("typst-rtl", "typst", True),
     ("typst-options", "typst", True),
     ("typst-wide", "typst", True),
+    ("typst-wide-meta", "typst", True),
     ("zero-meta", "html", True),
     ("zero-meta", "pdf", True),
     ("zero-meta", "typst", True),
@@ -209,8 +211,9 @@ def html_summary(path):
     source = path.read_text(encoding="utf-8")
     parser = Decisions()
     parser.feed(source)
-    # The value can hold a function, such as calc(30em + 100px).
-    breakpoint = re.search(r"@media \(max-width: ((?:[^()]|\([^()]*\))*)\)\s*\{[^{}]*wrap-", source)
+    # The value can hold functions, such as min(calc(30em + 1px), 600px), so
+    # it runs to the ") {" that ends the query.
+    breakpoint = re.search(r"@media \(max-width: ([^{}]*?)\)\s*\{[^{}]*wrap-", source)
     parts = ["# breakpoint", breakpoint.group(1) if breakpoint else "(none)"]
     parts += ["# figures"] + parser.figures
     parts += ["# images"] + parser.images
@@ -680,10 +683,15 @@ def find_words(boxes, words):
     return found[0]
 
 
-def typst_width_case(caption, para, want=None):
+# Quarto's Typst page has 6 in of text, so 40% of it is 2.4 in, 172.8 pt,
+# which pdftohtml writes as 259 px. 2 in is 144 pt, or 216 px.
+TYPST_40 = 259
+TYPST_2IN = 216
+
+
+def typst_width_case(caption, para, want):
     """A Typst figure whose paragraph's first line sits beside its image and
-    inside the text edges, and whose image is `want` px wide, or as wide as
-    the image of the figure "Fig W40." when `want` is None."""
+    inside the text edges, and whose image is `want` px wide."""
     def case(boxes, edges, lh):
         fig = find_figure(boxes, caption, None)
         line = find_words(boxes, para)
@@ -696,24 +704,22 @@ def typst_width_case(caption, para, want=None):
         if line.left < edges[0] - NEAR or line.right > edges[1] + NEAR:
             raise LayoutError(f"the paragraph's first line runs from {line.left:.0f} to {line.right:.0f} px, "
                               f"outside the text edges {edges[0]:.0f} to {edges[1]:.0f} px")
-        if want is None:
-            ref = find_figure(boxes, "Fig W40.", None).image
-            target = ref.right - ref.left
-        else:
-            target = want
         got = fig.image.right - fig.image.left
-        if abs(got - target) > NEAR:
-            raise LayoutError(f"the image is {got:.0f} px wide, not {target:.0f} px")
+        if abs(got - want) > NEAR:
+            raise LayoutError(f"the image is {got:.0f} px wide, not {want:.0f} px")
     return case
 
 
 def typst_wide_cases():
-    yield "40%", typst_width_case("Fig W40.", "Marker forty")
-    yield "no width", typst_width_case("Fig Wnone.", "Marker none")
-    yield "10in", typst_width_case("Fig W10in.", "Marker inches")
-    yield "60em", typst_width_case("Fig W60em.", "Marker ems")
-    # 2 in is 144 pt, which pdftohtml writes as 216 px.
-    yield "2in", typst_width_case("Fig W2in.", "Marker two", 216)
+    yield "40%", typst_width_case("Fig W40.", "Marker forty", TYPST_40)
+    yield "no width", typst_width_case("Fig Wnone.", "Marker none", TYPST_40)
+    yield "10in", typst_width_case("Fig W10in.", "Marker inches", TYPST_40)
+    yield "60em", typst_width_case("Fig W60em.", "Marker ems", TYPST_40)
+    yield "2in", typst_width_case("Fig W2in.", "Marker two", TYPST_2IN)
+
+
+def typst_wide_meta_cases():
+    yield "10in takes the 2in default", typst_width_case("Fig M10in.", "Marker default", TYPST_2IN)
 
 
 # The fixtures whose PDF through LaTeX the layout check reads, with their cases.
@@ -728,6 +734,7 @@ LAYOUT = {
 # The fixtures whose PDF through Typst the layout check reads, with their cases.
 TYPST_LAYOUT = {
     "typst-wide": typst_wide_cases,
+    "typst-wide-meta": typst_wide_meta_cases,
 }
 
 

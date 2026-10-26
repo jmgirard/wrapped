@@ -73,8 +73,10 @@ plot(1:10)
 The `width` attribute sets the width of the figure box, caption included.
 The image fills the box. A percent is a share of the text column. An
 absolute length, such as `3in` or `250px`, sets the width directly. The
-default width is 40%. A width of zero, such as `0%`, `0in`, or `0`, prints a
-warning, and the document default applies.
+default width is 40%. A width of zero written as a number, such as `0%`,
+`0in`, or `0`, prints a warning, and the document default applies. The
+extension does not compute a function value, so `calc(0%)` prints no
+warning.
 
 The `wrap-gap` attribute sets the space between the figure and the text.
 The default gap is `1em`. A gap of zero stays as it is. In Word, a gap of
@@ -93,9 +95,14 @@ functions inside one another, with these rules:
 - `min()` and `max()` take one or more values, and `clamp()` takes three.
 - The result is a length or a percent, not a number.
 
-Newer CSS forms that browsers accept also print a warning. Examples are
-other functions such as `round()`, constants such as `pi`, `none` in
-`clamp()`, and a length divided by a length.
+Some CSS that browsers accept also prints a warning:
+
+- other functions, such as `round()` and `env()`
+- constants, such as `pi`
+- `none` in `clamp()`
+- a length divided by a length
+- a number with an exponent, such as `1e2px`
+- an empty `var()` fallback, such as `var(--a,)`
 
 ```markdown
 ![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-left width="3in" wrap-gap="2em"}
@@ -123,8 +130,12 @@ warning, and the built-in 40% applies. A `gap` or `breakpoint` of zero stays
 as it is. In Word, a `gap` of 0% prints a warning, and the built-in `1em`
 applies. A `width`, `gap`, or `breakpoint` can be a `calc()`, `min()`,
 `max()`, or `clamp()` value, checked as above. A media query takes no
-percent, so a `breakpoint` with a percent, such as `calc(50%)`, prints a
-warning, and `576px` applies.
+percent and no `var()`. So a `breakpoint` with a percent or a `var()`, such
+as `calc(50%)`, prints a warning, and `576px` applies.
+
+Quarto reads the YAML values as Markdown. In a function value, put a space
+on each side of `*` and `/`, as in `calc(2 * 1em)`. Without the spaces,
+Markdown can read the stars as emphasis and drop them.
 
 ## Where wrapping stops
 
@@ -288,8 +299,8 @@ A percent of 100% or more leaves no room for the text in Typst, so it
 prints a warning. A figure's own width then takes the document default.
 A `wrapped: width` of 100% or more takes the built-in 40%.
 
-An absolute width as wide as the text or wider, such as `10in`, also leaves
-no room for the text. The extension cannot know the text width, so Typst
+A width in a unit such as `10in` or `60em` can be as wide as the text or
+wider. It also leaves no room for the text. The extension cannot know the text width, so Typst
 checks the width while it lays out the page. The figure then takes the
 document default. If the document default is that wide too, the figure
 takes the built-in 40%. Typst cannot print a warning, so the render prints

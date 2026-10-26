@@ -1,0 +1,13 @@
+---
+title: "wrapped fixture: metadata values with var()"
+filters:
+  - wrapped
+format: html
+wrapped:
+  breakpoint: calc(var(--bp))
+  width: calc(var(--w) * 0.5)
+---
+
+![A wrapped figure.](plot.png){#fig-meta-calc-var .wrap-right}
+
+A media query takes no var(), so the breakpoint stays at its default, with a warning. The width reaches the HTML as written, with its two hyphens, and with no warning.

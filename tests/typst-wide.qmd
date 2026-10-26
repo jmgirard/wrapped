@@ -18,7 +18,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 ![Fig W40.](plot.png){#fig-w40 .wrap-right width="40%"}
 
-Marker forty starts the paragraph beside the figure at 40%, which the figures with no width or a width wider than the text match. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Marker forty starts the paragraph beside the figure at 40%, which the figures with no width or a width wider than the text take too. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 ![Fig Wnone.](plot.png){#fig-wnone .wrap-left}
 
