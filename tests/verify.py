@@ -37,14 +37,24 @@ difference.
 Some fixtures exist only for the browser checks in tests/layout.js, which
 measure layout. Those fixtures are rendered here, so their HTML is current,
 and they have no snapshot.
+
+For a fixture in LAYOUT, the script also reads the PDF through LaTeX right
+after its render, before the Typst render writes the same path, and checks
+where each case's text starts beside and below its wrapped figure. It reads
+the boxes of text lines and images with poppler's pdftohtml, so it needs
+poppler (brew install poppler). It prints one line for each case it
+measured.
 """
 
 import difflib
 import re
 import shutil
+import statistics
 import subprocess
 import sys
+import tempfile
 import xml.etree.ElementTree as ET
+from dataclasses import dataclass
 import zipfile
 from html.parser import HTMLParser
 from pathlib import Path
@@ -76,6 +86,7 @@ RENDERS = [
     ("stop-rule", "pdf", True),
     ("stop-rule", "typst", True),
     ("stop-rule", "docx", True),
+    ("stop-latex", "pdf", True),
     ("twocolumn", "pdf", True),
     ("twocolumn-list", "pdf", True),
     ("pdf-ua", "pdf", True),
@@ -269,6 +280,251 @@ def tex_summary(path):
             f"image=[{(image.group(1) or '-') if image else '(none)'}]"
         )
     return "\n".join(lines)
+
+
+@dataclass
+class Box:
+    page: int
+    kind: str  # "text" or "image"
+    top: float
+    left: float
+    bottom: float
+    right: float
+    text: str = ""
+
+
+# pdftohtml sets 1.5 px for each pt, so 2 pt is 3 px.
+NEAR = 3
+
+
+def pdf_boxes(path):
+    """Every text line and image box in a PDF, with the page heights."""
+    if not shutil.which("pdftohtml"):
+        raise SystemExit("verify.py needs poppler's pdftohtml for the LaTeX layout check (brew install poppler)")
+    boxes, heights = [], {}
+    with tempfile.TemporaryDirectory() as tmp:
+        out = Path(tmp) / "layout"
+        subprocess.run(["pdftohtml", "-xml", "-q", str(path), str(out)], check=True)
+        root = ET.parse(f"{out}.xml").getroot()
+    for page in root.iter("page"):
+        n = int(page.get("number"))
+        heights[n] = float(page.get("height"))
+        for el in page:
+            if el.tag not in ("text", "image"):
+                continue
+            top, left = float(el.get("top")), float(el.get("left"))
+            bottom, right = top + float(el.get("height")), left + float(el.get("width"))
+            text = "".join(el.itertext()).strip()
+            boxes.append(Box(n, el.tag, top, left, bottom, right, text))
+    # A page number in the foot is not text of a case.
+    boxes = [b for b in boxes if not (b.kind == "text" and b.text.isdigit() and b.top > 0.85 * heights[b.page])]
+    return boxes
+
+
+def line_height(boxes):
+    """The usual distance between the tops of two lines of a paragraph."""
+    columns = {}
+    for b in boxes:
+        if b.kind == "text":
+            columns.setdefault((b.page, round(b.left)), []).append(b.top)
+    steps = []
+    for tops in columns.values():
+        tops.sort()
+        steps += [b - a for a, b in zip(tops, tops[1:]) if 10 < b - a < 40]
+    return statistics.median(steps)
+
+
+def text_edges(boxes):
+    """The left and right ends of a full line on the first page, which has no figure."""
+    lines = [b for b in boxes if b.page == 1 and b.kind == "text"]
+    widest = max(b.right - b.left for b in lines)
+    full = [b for b in lines if b.right - b.left > 0.95 * widest]
+    return min(b.left for b in full), max(b.right for b in full)
+
+
+def find_text(boxes, words):
+    found = [b for b in boxes if b.kind == "text" and words in b.text]
+    if len(found) != 1:
+        raise LayoutError(f"{len(found)} lines hold {words!r}")
+    return found[0]
+
+
+class LayoutError(Exception):
+    pass
+
+
+@dataclass
+class Figure:
+    image: Box
+    bottom: float
+
+    @property
+    def page(self):
+        return self.image.page
+
+
+def find_figure(boxes, caption, near):
+    """A figure by its caption words, or with caption None, the one image on
+    the page of the text box `near`."""
+    if caption is None:
+        images = [b for b in boxes if b.kind == "image" and b.page == near.page]
+        if len(images) != 1:
+            raise LayoutError(f"{len(images)} images on page {near.page}, so the uncaptioned figure is not known")
+        return Figure(images[0], images[0].bottom)
+    cap = find_text(boxes, caption)
+    above = [b for b in boxes if b.kind == "image" and b.page == cap.page and b.bottom <= cap.top + NEAR
+             and b.left < cap.right and cap.left < b.right]
+    if not above:
+        raise LayoutError(f"no image above the caption {caption!r}")
+    image = max(above, key=lambda b: b.bottom)
+    return Figure(image, max(image.bottom, cap.bottom))
+
+
+def after(boxes, box):
+    """The text lines after `box` on its page, in reading order, each as a
+    list of the boxes that share its top."""
+    rest = sorted((b for b in boxes if b.kind == "text" and b.page == box.page and b.top > box.top + NEAR),
+                  key=lambda b: (b.top, b.left))
+    lines = []
+    for b in rest:
+        if lines and abs(b.top - lines[-1][0].top) <= NEAR * 2:
+            lines[-1].append(b)
+        else:
+            lines.append([b])
+    return lines
+
+
+def overlaps(a_left, a_right, b_left, b_right):
+    return a_left < b_right and b_left < a_right
+
+
+def check_beside(fig, line, side, edges, lh):
+    if line.page != fig.page:
+        raise LayoutError(f"the paragraph is on page {line.page} and the figure on page {fig.page}")
+    if not line.top < fig.bottom:
+        raise LayoutError("the paragraph starts below the figure")
+    if fig.image.top - line.bottom > lh:
+        raise LayoutError("the paragraph ends more than a line above the figure")
+    if overlaps(line.left, line.right, fig.image.left, fig.image.right):
+        raise LayoutError("the paragraph overlaps the figure")
+    edge = abs(fig.image.left - edges[0]) if side == "left" else abs(fig.image.right - edges[1])
+    if edge > NEAR:
+        raise LayoutError(f"the figure is {edge:.0f} px from the {side} edge of the text")
+
+
+def check_below(fig, top, page, what):
+    if page < fig.page or (page == fig.page and top < fig.bottom):
+        raise LayoutError(f"{what} starts above the figure's bottom")
+
+
+def check_full(lines, edges, what):
+    if len(lines) < 3:
+        raise LayoutError(f"{what} has {len(lines)} lines, fewer than 3")
+    for line in lines[:-1]:
+        left, right = min(b.left for b in line), max(b.right for b in line)
+        if abs(left - edges[0]) > NEAR or abs(right - edges[1]) > NEAR:
+            raise LayoutError(f"a line of {what} runs from {left:.0f} to {right:.0f} px, not full width")
+
+
+def stop_case(boxes, edges, lh, caption, para, side, full=None):
+    """The checks of a figure, its short paragraph, and the stop text after
+    it. With `full`, the words that open the paragraph after the stop
+    heading, which must be full width. Returns the figure and the stop line."""
+    p = find_text(boxes, para)
+    fig = find_figure(boxes, caption, p)
+    check_beside(fig, p, side, edges, lh)
+    lines = [ln for ln in after(boxes, p) if not any(b.top >= fig.image.bottom - NEAR and b.top < fig.bottom
+                                                     and overlaps(b.left, b.right, fig.image.left, fig.image.right)
+                                                     for b in ln)]
+    if not lines:
+        raise LayoutError("no stop text after the paragraph on its page")
+    stop = lines[0]
+    check_below(fig, stop[0].top, stop[0].page, f"the stop text {stop[0].text!r}")
+    if full:
+        rest = [ln for ln in lines[1:] if ln[0].top >= find_text(boxes, full).top - NEAR]
+        check_full(rest, edges, f"the paragraph {full!r}")
+    return fig, stop[0]
+
+
+def plain_figure_case(boxes, edges, lh):
+    """Stop-rule case 8: the plain figure and the text after it start below
+    the wrapped figure."""
+    p = find_text(boxes, "beside figure 8.")
+    fig = find_figure(boxes, "Stop-rule case 8.", p)
+    check_beside(fig, p, "left", edges, lh)
+    plain = find_figure(boxes, "A figure with no wrap class.", p)
+    check_below(fig, plain.image.top, plain.page, "the plain figure")
+    texts = [b for b in boxes if b.kind == "text" and "Text after the stop block." in b.text
+             and (b.page, b.top) > (p.page, p.top)]
+    first = min(texts, key=lambda b: (b.page, b.top))
+    check_below(fig, first.top, first.page, "the text after the stop block")
+
+
+def lines_case(boxes, edges, lh):
+    """A wrap-lines value larger than the figure needs moves the heading no
+    further than a line from where it is without wrap-lines."""
+    gaps = {}
+    for name in ("plain", "extra"):
+        fig, stop = stop_case(boxes, edges, lh, f"Lines {name}.", f"beside lines {name}.", "right")
+        gaps[name] = stop.top - fig.bottom
+    if abs(gaps["extra"] - gaps["plain"]) > lh:
+        raise LayoutError(f"the heading is {gaps['extra']:.0f} px below the figure with wrap-lines "
+                          f"and {gaps['plain']:.0f} px without it")
+
+
+def page_bottom_case(boxes, edges, lh):
+    """A figure that moves to the next page after its paragraphs end there
+    has no text beside it, and its stop text starts below it."""
+    p = find_text(boxes, "before page bottom moves.")
+    fig = find_figure(boxes, "Page bottom.", p)
+    if fig.page != p.page + 1:
+        raise LayoutError(f"the paragraph is on page {p.page} and the figure on page {fig.page}, not the next")
+    cap = find_text(boxes, "Page bottom.")
+    beside = [b for b in boxes if b.kind == "text" and b.page == fig.page and b.top < fig.bottom and b is not cap]
+    if beside:
+        raise LayoutError(f"{beside[0].text!r} starts above the figure's bottom")
+    stop = find_text(boxes, "Stop page bottom")
+    check_below(fig, stop.top, stop.page, "the stop heading")
+
+
+def stop_rule_cases():
+    for n in range(1, 12):
+        if n == 8:
+            yield "case 8", plain_figure_case
+            continue
+        side = "left" if n % 2 == 0 else "right"
+        yield f"case {n}", lambda bx, e, lh, n=n, side=side: stop_case(
+            bx, e, lh, f"Stop-rule case {n}.", f"beside figure {n}.", side)
+
+
+def stop_latex_cases():
+    for form, caption in (("A", True), ("B", True), ("C", False), ("D", True)):
+        for side in ("left", "right"):
+            name = f"form {form} {side}"
+            yield name, lambda bx, e, lh, name=name, caption=caption, side=side: stop_case(
+                bx, e, lh, f"F{name[1:]}." if caption else None, f"beside {name}.", side,
+                full=f"Full width text after stop {form} {side}.")
+    yield "wrap-lines", lines_case
+    yield "page bottom", page_bottom_case
+
+
+# The fixtures whose PDF through LaTeX the layout check reads, with their cases.
+LAYOUT = {"stop-rule": stop_rule_cases, "stop-latex": stop_latex_cases}
+
+
+def layout_check(fixture):
+    """Prints a line for each case. Returns the names of the failed cases."""
+    boxes = pdf_boxes(TESTS / f"{fixture}.pdf")
+    edges, lh = text_edges(boxes), line_height(boxes)
+    failed = []
+    for name, case in LAYOUT[fixture]():
+        try:
+            case(boxes, edges, lh)
+            print(f"ok   layout {fixture} {name}")
+        except LayoutError as err:
+            print(f"FAIL layout {fixture} {name}: {err}")
+            failed.append(f"layout {fixture} {name}")
+    return failed
 
 
 TYPST_WRAP_START = re.compile(r"^#context wrap-content\(", re.M)
@@ -487,6 +743,8 @@ def main():
             print(log[-2000:])
             failed.append(name)
             continue
+        if fmt == "pdf" and fixture in LAYOUT:
+            failed += layout_check(fixture)
         if not compare:
             print(f"ok   {name} (rendered, no snapshot)")
             continue

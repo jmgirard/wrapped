@@ -1,0 +1,182 @@
+---
+title: "wrapped fixture: the stop rule in LaTeX"
+filters:
+  - wrapped
+format:
+  pdf:
+    keep-tex: true
+    fig-format: png
+---
+
+This page has no figure, so its full lines show the width of the text block. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## Form A left
+
+![Form A left.](plot.png){#fig-form-a-left .wrap-left width="35%"}
+
+A short paragraph beside form A left.
+
+### Stop A left
+
+Full width text after stop A left. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## Form A right
+
+![Form A right.](plot.png){#fig-form-a-right .wrap-right width="35%"}
+
+A short paragraph beside form A right.
+
+### Stop A right
+
+Full width text after stop A right. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## Form B left
+
+![Form B left.](plot.png){.wrap-left width="35%"}
+
+A short paragraph beside form B left.
+
+### Stop B left
+
+Full width text after stop B left. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## Form B right
+
+![Form B right.](plot.png){.wrap-right width="35%"}
+
+A short paragraph beside form B right.
+
+### Stop B right
+
+Full width text after stop B right. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## Form C left
+
+![](plot.png){.wrap-left width="35%"}
+
+A short paragraph beside form C left.
+
+### Stop C left
+
+Full width text after stop C left. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## Form C right
+
+![](plot.png){.wrap-right width="35%"}
+
+A short paragraph beside form C right.
+
+### Stop C right
+
+Full width text after stop C right. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## Form D left
+
+```{r}
+#| label: fig-form-d-left
+#| fig-cap: "Form D left."
+#| classes: wrap-left
+#| echo: false
+plot(1:10)
+```
+
+A short paragraph beside form D left.
+
+### Stop D left
+
+Full width text after stop D left. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## Form D right
+
+```{r}
+#| label: fig-form-d-right
+#| fig-cap: "Form D right."
+#| classes: wrap-right
+#| echo: false
+plot(1:10)
+```
+
+A short paragraph beside form D right.
+
+### Stop D right
+
+Full width text after stop D right. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## Lines plain
+
+![Lines plain.](plot.png){#fig-lines-plain .wrap-right width="35%"}
+
+A short paragraph beside lines plain.
+
+### Stop lines plain
+
+Text after stop lines plain.
+
+```{=latex}
+\clearpage
+```
+
+## Lines extra
+
+![Lines extra.](plot.png){#fig-lines-extra .wrap-right width="35%" wrap-lines="25"}
+
+A short paragraph beside lines extra.
+
+### Stop lines extra
+
+Text after stop lines extra.
+
+```{=latex}
+\clearpage
+```
+
+## Page bottom
+
+```{=latex}
+% Moves the figure below too near the bottom of the page to fit there.
+\vspace{0.75\textheight}
+```
+
+![Page bottom.](plot.png){#fig-page-bottom .wrap-left width="35%"}
+
+A short paragraph before page bottom moves.
+
+### Stop page bottom
+
+Text after stop page bottom.

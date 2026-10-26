@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M007: Stop LaTeX wraps at every stop block
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — it changes the layout of every wrapped figure in PDF through LaTeX   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m007-latex-stops   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -173,6 +173,9 @@ a callout frame, or a horizontal rule beside a figure is not checked.
 - 2026-10-26: plan chose putting a waiting figure out with no text at its stop block over letting it wait for a paragraph past the stop because that paragraph can follow a heading the figure does not belong to; falsified by a fixture where the put-out figure leaves a page with no text before it.
 - 2026-10-26: plan gate chose poppler in tests/verify.py over a TeX position log and over page images at the user's answer; falsified by poppler boxes that differ from the page image.
 - 2026-10-26: criteria audit (full mode, fresh Opus reader) returned 12 findings, all settled toward the narrower promise: beside now needs the image's page and top (1); one-page cases fail, never skip (2); case 8 measures the plain figure's image (3); rules and frames are named as not read (4); AC2 adds a full width paragraph after the heading (5); AC2 names its four forms, each on both sides (6); AC3's excess is at least 5 lines (7); AC4 states its page precondition and fails without it (8); T1 names a probe for each check (9); AC5 states the output property with the snapshot diff as evidence (10); AC6 adds "Figures in a row" and ties sentences to measured cases (11); D-006 lands in the plan commit (12).
+- 2026-10-26: started implement on branch m007-latex-stops; status in-progress.
+- 2026-10-26: T1 (checkpoint, not checked off): added tests/stop-latex.qmd (PDF only, fig-format png, a page per case) and, in tests/stop-rule.qmd, a LaTeX-only raw block with a full-width paragraph and a \clearpage before each case so that each case has its own page. The layout check in tests/verify.py reads pdftohtml -xml boxes in a temporary folder (no image files left in tests/). On main's filter all 21 cases fail the below check; probes on scratch copies made the beside check fail with the wrap class removed and with the figure moved to the next page. The full-width probe waits for T3.
+- 2026-10-26: implement chose pdftohtml -xml over pdftotext -bbox because it gives image boxes as well as text lines, which an image with no caption needs; both are poppler (D-006).
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
