@@ -209,10 +209,18 @@ wrapfig has limits, and the extension keeps some of them:
   block that stops its wrap, so it starts below the wrapped figure. A
   figure that moved to the next page waits for one of its own paragraphs.
   A heading or the end of a callout does not take it.
-- In a two-column document, set with `classoption: twocolumn`, wrapped
-  figures render as normal figures, and the render prints one warning. The
-  extension reads only `classoption`. A class that sets two columns by
-  default, such as IEEEtran, is not detected.
+- Where the text runs in columns, wrapped figures render as normal
+  figures, each with its width as a share of the column. With
+  `classoption: twocolumn`, the render prints one warning.
+- A class that sets two columns by default, such as IEEEtran, a
+  `\twocolumn` command, and a `multicols` environment are found only while
+  LaTeX runs. In two-column text, a captioned figure floats as a normal
+  figure does, and an image with no caption stays in place. Inside
+  `multicols`, where LaTeX loses floats, each figure stays in place. After
+  `\onecolumn`, figures wrap again.
+- In those cases the render prints no warning. LaTeX writes the warning to
+  its log, and Quarto keeps the log with `latex-clean: false`. A column
+  layout from another package, such as `paracol`, is not detected.
 - A figure in a list keeps its normal layout, as in HTML.
 
 Tagged PDF: Quarto 1.10.19 ignores `pdf-standard: ua-1` in LaTeX, so that

@@ -84,9 +84,26 @@
   \ifnum\currentgrouplevel=\wrapped@level\relax
     \expandafter\wrapped@floathand
   \fi}
+% Where the text runs in columns, a wrappedfigure is a normal figure. The
+% hooks mark the inside of a multicols environment, where a float is lost,
+% and the mark ends with the environment's group. \if@twocolumn stays true
+% inside multicols in two-column text, so the mark is tested first.
+\newif\ifwrapped@multicols
+\AddToHook{env/multicols/begin}{\wrapped@multicolstrue}
+\AddToHook{env/multicols*/begin}{\wrapped@multicolstrue}
+\newif\ifwrapped@twowarned
+\newcommand*\wrapped@warnmulticols{%
+  \PackageWarning{wrapped}{Figure in multicols set as normal figure}}
+\newcommand*\wrapped@warntwocolumn{%
+  \ifwrapped@twowarned\else
+    \global\wrapped@twowarnedtrue
+    \PackageWarningNoLine{wrapped}{Two-column text: figures set as normal figures}%
+  \fi}
 \makeatother
 \ExplSyntaxOn
 \tl_new:N \l__wrapped_side_tl
+\tl_new:N \l__wrapped_mode_tl
+\bool_new:N \l__wrapped_caption_bool
 \keys_define:nn { wrapped }
   {
     side .choice:,
@@ -99,25 +116,76 @@
     gap .initial:n = 1em,
     lines .tl_set:N = \l__wrapped_lines_tl,
     lines .initial:n = ,
+    caption .bool_set:N = \l__wrapped_caption_bool,
+    caption .initial:n = true,
+  }
+% The mode of a wrappedfigure: w wraps, f is a figure float in two-column
+% text, and p sets the figure in place, inside multicols or for an image
+% with no caption in two-column text.
+\cs_new_protected:Npn \__wrapped_set_mode:
+  {
+    \legacy_if:nTF { wrapped@multicols }
+      {
+        \tl_set:Nn \l__wrapped_mode_tl { p }
+        \use:c { wrapped@warnmulticols }
+      }
+      {
+        \legacy_if:nTF { @twocolumn }
+          {
+            \bool_if:NTF \l__wrapped_caption_bool
+              { \tl_set:Nn \l__wrapped_mode_tl { f } }
+              { \tl_set:Nn \l__wrapped_mode_tl { p } }
+            \use:c { wrapped@warntwocolumn }
+          }
+          { \tl_set:Nn \l__wrapped_mode_tl { w } }
+      }
   }
 \NewDocumentEnvironment { wrappedfigure } { O{} }
   {
     \keys_set:nn { wrapped } { #1 }
     \use:c { wrapped@endwrap }
-    % A caption in a narrow box reads better set plain and ragged-right.
-    \cs_if_exist:NT \captionsetup
-      { \captionsetup { format = plain, justification = raggedright } }
-    \use:e
+    \__wrapped_set_mode:
+    \exp_args:NV \str_case:nn \l__wrapped_mode_tl
       {
-        \exp_not:N \wrapfigure
-        \tl_if_empty:NF \l__wrapped_lines_tl
-          { [ \exp_not:V \l__wrapped_lines_tl ] }
-        { \exp_not:V \l__wrapped_side_tl }
-        { \exp_not:V \l__wrapped_width_tl }
+        { w }
+          {
+            % A caption in a narrow box reads better set plain and
+            % ragged-right.
+            \cs_if_exist:NT \captionsetup
+              { \captionsetup { format = plain, justification = raggedright } }
+            \use:e
+              {
+                \exp_not:N \wrapfigure
+                \tl_if_empty:NF \l__wrapped_lines_tl
+                  { [ \exp_not:V \l__wrapped_lines_tl ] }
+                { \exp_not:V \l__wrapped_side_tl }
+                { \exp_not:V \l__wrapped_width_tl }
+              }
+          }
+        { f }
+          {
+            \begin { figure }
+            \centering
+            \begin { minipage } { \l__wrapped_width_tl }
+          }
+        { p }
+          {
+            \begin { center }
+            \begin { minipage } { \l__wrapped_width_tl }
+            \cs_set:cpn { @captype } { figure }
+          }
       }
   }
   {
-    \endwrapfigure
-    \use:c { wrapped@setgap } { \l__wrapped_gap_tl }
+    \exp_args:NV \str_case:nn \l__wrapped_mode_tl
+      {
+        { w }
+          {
+            \endwrapfigure
+            \use:c { wrapped@setgap } { \l__wrapped_gap_tl }
+          }
+        { f } { \end { minipage } \end { figure } }
+        { p } { \end { minipage } \end { center } }
+      }
   }
 \ExplSyntaxOff

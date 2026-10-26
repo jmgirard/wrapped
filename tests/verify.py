@@ -43,6 +43,12 @@ after its render, before the Typst render writes the same path, and checks
 where each case's text starts beside and below its wrapped figure. It reads
 the boxes of text lines and images with poppler's pdftohtml (brew install
 poppler, or apt install poppler-utils). It prints one line for each case it measured.
+
+For a fixture in LOGS, rendered with latex-clean: false so its LaTeX log
+stays, the script also reads the warnings that wrapped.tex writes to that
+log: the count of two-column warnings, and the line of each multicols
+warning against the lines of the wrappedfigure environments inside
+multicols in the kept .tex.
 """
 
 import difflib
@@ -87,6 +93,8 @@ RENDERS = [
     ("stop-rule", "docx", True),
     ("stop-latex", "pdf", True),
     ("multicols", "pdf", True),
+    ("twocolumn-class", "pdf", True),
+    ("twocolumn-switch", "pdf", True),
     ("twocolumn", "pdf", True),
     ("twocolumn-list", "pdf", True),
     ("pdf-ua", "pdf", True),
@@ -563,14 +571,80 @@ def wide_gap_case(side):
     return case
 
 
+def check_alone(boxes, fig, edges):
+    """No text line of the image's column sits beside the image."""
+    middle = (edges[0] + edges[1]) / 2
+    left, right = (edges[0], middle) if fig.image.right <= middle + NEAR else (
+        (middle, edges[1]) if fig.image.left >= middle - NEAR else edges)
+    beside = [b for b in boxes if b.kind == "text" and b.page == fig.page and b is not fig.caption
+              and b.top < fig.image.bottom and b.bottom > fig.image.top
+              and b.left >= left - NEAR and b.right <= right + NEAR]
+    if beside:
+        raise LayoutError(f"{beside[0].text!r} is beside the image")
+
+
+def normal_case(caption, para):
+    """A wrapped figure that keeps a normal figure: no text of its column
+    beside its image, and a caption below the image."""
+    def case(boxes, edges, lh):
+        fig = find_figure(boxes, caption, find_text(boxes, para))
+        check_alone(boxes, fig, edges)
+        if fig.caption and fig.caption.top < fig.image.bottom - NEAR:
+            raise LayoutError("the caption is not below the image")
+    return case
+
+
+def in_place_case(caption, before, after_words):
+    """A figure in multicols sits in its column between the paragraph
+    before it and the paragraph after it, with no text beside it."""
+    def case(boxes, edges, lh):
+        end = find_text(boxes, before)
+        fig = find_figure(boxes, caption, end)
+        nxt = find_text(boxes, after_words)
+        if not (end.page == fig.page == nxt.page):
+            raise LayoutError(f"the paragraphs and the figure are on pages {end.page}, {fig.page}, {nxt.page}")
+        if not end.bottom <= fig.image.top + NEAR:
+            raise LayoutError("the image starts above the end of the paragraph before it")
+        if not fig.bottom <= nxt.top + NEAR:
+            raise LayoutError("the paragraph after the figure starts above the figure's bottom")
+        if not overlaps(end.left, end.right, fig.image.left, fig.image.right) or not overlaps(
+                nxt.left, nxt.right, fig.image.left, fig.image.right):
+            raise LayoutError("the figure is not in the column of the paragraphs around it")
+        check_alone(boxes, fig, edges)
+    return case
+
+
 def multicols_cases():
     yield "local columnsep", local_colsep_case
     yield "wide gap left", wide_gap_case("left")
     yield "wide gap right", wide_gap_case("right")
+    yield "figure in multicols", in_place_case("In multicols.", "Before figure M.", "After figure M.")
+    yield "image in multicols", in_place_case(None, "Before image M.", "After image M.")
+
+
+def twocolumn_class_cases():
+    yield "figure", normal_case("Fig C.", "After figure C.")
+    yield "image", normal_case(None, "After image C.")
+
+
+def twocolumn_switch_cases():
+    yield "before twocolumn", lambda bx, e, lh: check_beside(
+        find_figure(bx, "Before twocolumn.", None),
+        find_text(bx, "A short paragraph beside the figure before twocolumn."), "right", e, lh)
+    yield "in two columns", normal_case("Fig T.", "After figure T.")
+    yield "after onecolumn", lambda bx, e, lh: check_beside(
+        find_figure(bx, "After onecolumn.", None),
+        find_text(bx, "A short paragraph beside the figure after onecolumn."), "left", e, lh)
 
 
 # The fixtures whose PDF through LaTeX the layout check reads, with their cases.
-LAYOUT = {"stop-rule": stop_rule_cases, "stop-latex": stop_latex_cases, "multicols": multicols_cases}
+LAYOUT = {
+    "stop-rule": stop_rule_cases,
+    "stop-latex": stop_latex_cases,
+    "multicols": multicols_cases,
+    "twocolumn-class": twocolumn_class_cases,
+    "twocolumn-switch": twocolumn_switch_cases,
+}
 
 
 def layout_check(fixture):
@@ -590,6 +664,62 @@ def layout_check(fixture):
             print(f"FAIL layout {fixture} {name}: {err}")
             failed.append(f"layout {fixture} {name}")
     return failed
+
+
+# The fixtures whose LaTeX log the log check reads, rendered with
+# latex-clean: false so the log stays: the number of two-column warnings
+# and the number of wrapped figures inside multicols.
+LOGS = {
+    "twocolumn-class": (1, 0),
+    "twocolumn-switch": (1, 0),
+    "multicols": (0, 2),
+    "stop-latex": (0, 0),
+}
+TWO_COLUMN_WARNING = "Two-column text: figures set as normal figures"
+MULTICOLS_WARNING = "Figure in multicols set as normal figure"
+LOG_WARNING = re.compile(r"Package wrapped Warning: (.*?)(?: on input line (\d+))?\.$", re.M)
+
+
+def multicols_figures(tex):
+    """The line numbers of the wrappedfigure environments inside multicols."""
+    depth, found = 0, []
+    for n, line in enumerate(tex.read_text(encoding="utf-8").splitlines(), 1):
+        if line.startswith("\\begin{multicols"):
+            depth += 1
+        elif line.startswith("\\end{multicols"):
+            depth -= 1
+        elif line.startswith("\\begin{wrappedfigure}") and depth > 0:
+            found.append(n)
+    return found
+
+
+def log_check(fixture):
+    """Checks the wrapped warnings in a fixture's LaTeX log: the two-column
+    warning, and a multicols warning that names the line of each wrapped
+    figure inside multicols. Returns the names of the failed checks."""
+    two_column, in_multicols = LOGS[fixture]
+    log = (TESTS / f"{fixture}.log").read_text(encoding="utf-8", errors="replace")
+    # TeX breaks a log line after 79 characters.
+    log = re.sub(r"(?m)^(.{79})\n", r"\1", log)
+    found = LOG_WARNING.findall(log)
+    two = [w for w in found if w[0] == TWO_COLUMN_WARNING]
+    multi = sorted(int(n) for msg, n in found if msg == MULTICOLS_WARNING)
+    other = [msg for msg, n in found if msg not in (TWO_COLUMN_WARNING, MULTICOLS_WARNING)]
+    want = multicols_figures(TESTS / f"{fixture}.tex")
+    problems = []
+    if len(want) != in_multicols:
+        problems.append(f"the .tex has {len(want)} wrapped figures in multicols, not {in_multicols}")
+    if len(two) != two_column:
+        problems.append(f"{len(two)} two-column warnings, not {two_column}")
+    if multi != want:
+        problems.append(f"multicols warnings on lines {multi}, not {want}")
+    if other:
+        problems.append(f"other wrapped warnings: {other}")
+    if problems:
+        print(f"FAIL log {fixture}: {'; '.join(problems)}")
+        return [f"log {fixture}"]
+    print(f"ok   log {fixture}")
+    return []
 
 
 TYPST_WRAP_START = re.compile(r"^#context wrap-content\(", re.M)
@@ -810,6 +940,8 @@ def main():
             continue
         if fmt == "pdf" and fixture in LAYOUT:
             failed += layout_check(fixture)
+        if fmt == "pdf" and fixture in LOGS:
+            failed += log_check(fixture)
         if not compare:
             print(f"ok   {name} (rendered, no snapshot)")
             continue
