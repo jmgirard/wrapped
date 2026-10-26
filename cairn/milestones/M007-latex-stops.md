@@ -41,23 +41,20 @@ with the candidate row "Run the fixture renders in CI".
 
 ## Acceptance criteria
 
-Terms. A figure's bottom is the lowest edge of its image and its caption
-text. A line height is the distance between the tops of two consecutive
-lines of the paragraph on page 1. The text block's edges are the ends of a
-full line of that paragraph, and the check fails when page 1 holds an
-image. A line is beside a figure when it is on the page of the figure's
-image, its top is above the figure's bottom, its bottom is less than half a
-line height above the image's top, its words do not overlap the figure
-horizontally, and the image's edge on its wrap side is within 2 pt of the
-text block's edge. Text is below a figure when it is on the figure's page
-under its bottom, or on a later page. Full width means that every line but
-a paragraph's last starts and ends within 2 pt of the text block's edges.
-Each criterion's evidence is the position check that
-`python3 tests/verify.py` runs on the PDF through LaTeX. It reads word and
-image boxes with poppler, lists each case it measured, and fails, never
-skips, a case whose figure, paragraph, and first stop text are not on one
-page (AC4's case excepted). Rules and frames are not read, so a table rule,
-a callout frame, or a horizontal rule beside a figure is not checked.
+Terms. A figure's bottom is the lowest edge of its image and its caption text. A line height
+is the distance between the tops of two consecutive lines of the paragraph on page 1. The
+text block's edges are the ends of a full line of that paragraph, and the check fails when
+page 1 holds an image. A line is beside a figure when it is on the page of the figure's
+image, its top is above the figure's bottom, its bottom is less than half a line height
+above the image's top, its words do not overlap the figure horizontally, and the image's
+edge on its wrap side is within 2 pt of the text block's edge. Text is below a figure when
+it is on the figure's page under its bottom, or on a later page. Full width means that every
+line but a paragraph's last starts and ends within 2 pt of the text block's edges. Each
+criterion's evidence is the position check that `python3 tests/verify.py` runs on the PDF
+through LaTeX. It reads word and image boxes with poppler, lists each case it measured, and
+fails, never skips, a case whose figure, paragraph, and first stop text are not on one page
+(AC4's case excepted). Rules and frames are not read, so a table rule, a callout frame, or a
+horizontal rule beside a figure is not checked.
 
 - [x] AC1: In the PDF through LaTeX of `tests/stop-rule.qmd`, in each of its
       11 cases, the short paragraph after the wrapped figure, which fits on
