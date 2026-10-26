@@ -59,7 +59,7 @@ skips, a case whose figure, paragraph, and first stop text are not on one
 page (AC4's case excepted). Rules and frames are not read, so a table rule,
 a callout frame, or a horizontal rule beside a figure is not checked.
 
-- [ ] AC1: In the PDF through LaTeX of `tests/stop-rule.qmd`, in each of its
+- [x] AC1: In the PDF through LaTeX of `tests/stop-rule.qmd`, in each of its
       11 cases, the short paragraph after the wrapped figure, which fits on
       one line, is beside the figure, and the first text after that
       paragraph is below the figure. That text is the stop block's own text, or the
@@ -67,26 +67,26 @@ a callout frame, or a horizontal rule beside a figure is not checked.
       case 11 (`wrap-clear` div). In case 8 the plain figure's image top and
       the line "Text after the stop block." are both below the wrapped
       figure.
-- [ ] AC2: In the PDF through LaTeX of `tests/stop-latex.qmd`, the same holds
+- [x] AC2: In the PDF through LaTeX of `tests/stop-latex.qmd`, the same holds
       for each of these four forms, each rendered once with `.wrap-left` and
       once with `.wrap-right`, and each followed by one short paragraph, a
       heading, and a paragraph of at least three lines: a figure with a
       `#fig-` id, a captioned image with no id, an image with no caption, and
       a knitr cell figure with `#| classes:`. The heading is below the
       figure, and the paragraph after it is full width.
-- [ ] AC3: In `tests/stop-latex.qmd`, a wrapped figure whose `wrap-lines` is
+- [x] AC3: In `tests/stop-latex.qmd`, a wrapped figure whose `wrap-lines` is
       at least 5 more than the line count wrapfig computes from its height,
       followed by one short paragraph and a heading, has the heading below
       it. The distance from the figure's bottom to the heading's top is
       within one line height of that distance for a copy of the case with
       no `wrap-lines`.
-- [ ] AC4: In `tests/stop-latex.qmd`, a case whose last paragraph after a
+- [x] AC4: In `tests/stop-latex.qmd`, a case whose last paragraph after a
       wrapped figure ends on page N and whose image is on page N+1 sets that
       figure with no text beside it: on page N+1 no text other than its
       caption starts above its bottom, and the stop block's text is below
       it. The check fails when the case's precondition (paragraph on page N,
       image on page N+1) does not hold.
-- [ ] AC5: The HTML, revealjs, Typst, and Word output of every fixture, and
+- [x] AC5: The HTML, revealjs, Typst, and Word output of every fixture, and
       the book project's HTML, render as before: `python3 tests/verify.py`
       passes, and `git diff <plan commit> --stat -- tests/_snapshots/` lists
       only `.pdf.txt` files.
@@ -205,3 +205,11 @@ a callout frame, or a horizontal rule beside a figure is not checked.
      results, review findings + triage. EXEMPT from the 150-line cap (M55),
      as are the work log (D-046) and the decisions section (D-074); evidence
      never scrambles plan-owned content. -->
+
+Review pass 1, 2026-10-26, on ea4b4a5 (main at c681043 + plan f071331, not moved).
+
+- AC1 evidence: `python3 tests/verify.py` at ea4b4a5 printed `ok layout stop-rule case 1` to `case 11` (all 11), each run of `stop_case` (beside, then below) or, for case 8, `plain_figure_case`; the check reads the LaTeX PDF before the Typst render rewrites it. Implement-time probes showed the beside check red with the wrap class removed, the figure on the next page, and an unwrapped flush-right figure before or after the paragraph, and the below check red on main's filter (all 11 cases).
+- AC2 evidence: the same run printed `ok layout stop-latex form A left` through `form D right` (8 cases: 4 forms × 2 sides), each with the full width check on the paragraph after the heading; the stop-latex.pdf.txt snapshot shows the 8 environments (fig-form-a-left, -a-right, two captioned with no id, two with no caption, fig-form-d-left, -d-right) each followed by `wrappedstop`. The full width check was shown red at implement by a stop that skips space but leaves the wrap on.
+- AC3 evidence: the same run printed `ok layout stop-latex wrap-lines` (both cases pass stop_case, and the two figure-to-heading distances differ by at most one line height; both 62 px at implement). Premise re-run at review in a scratch copy rendered from HEAD with a \WF@startwrapping log: "Lines plain" starts at 13 lines, "Lines extra" at 26 (wrap-lines 25 + 1), and \WF@size 165.64 pt at \baselineskip 13.6 pt gives 13 lines from the height, so 25 is 12 more. The gap check was shown red at implement by a stop that skips the remaining wrap-lines count (326 px against 62 px).
+- AC4 evidence: the same run printed `ok layout stop-latex page bottom`: `page_bottom_case` found the paragraph on page 12 and the figure on page 13 (precondition), no text but the caption above the figure's bottom on page 13, and the stop heading below it. On main's filter the same case failed (the heading was on page 12, the figure put out at the document's end).
+- AC5 evidence: the same run ended `all 36 renders pass` (exit 0), every snapshot compared equal; `git diff f071331 --name-only -- tests/_snapshots/` lists 8 files, all `.pdf.txt` (none other), 63 added lines: 39 `wrappedstop` lines in 7 existing files and the new stop-latex.pdf.txt.
