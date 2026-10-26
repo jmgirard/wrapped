@@ -460,13 +460,13 @@ def plain_figure_case(boxes, edges, lh):
     fig = find_figure(boxes, "Stop-rule case 8.", p)
     check_beside(fig, p, "left", edges, lh)
     plain = find_figure(boxes, "A figure with no wrap class.", p)
+    if plain.page != p.page:
+        raise LayoutError(f"the paragraph is on page {p.page} and the plain figure on page {plain.page}")
     check_below(fig, plain.image.top, plain.page, "the plain figure")
-    # The text after case 8's stop block is on the page of its paragraph or
-    # of the plain figure, never on a later case's page.
     texts = [b for b in boxes if b.kind == "text" and "Text after the stop block." in b.text
-             and b.page in (p.page, plain.page) and (b.page, b.top) > (p.page, p.top)]
+             and b.page == p.page and b.top > p.top]
     if not texts:
-        raise LayoutError("no line 'Text after the stop block.' after the paragraph on its page or the plain figure's")
+        raise LayoutError("no line 'Text after the stop block.' after the paragraph on its page")
     first = min(texts, key=lambda b: (b.page, b.top))
     check_below(fig, first.top, first.page, "the text after the stop block")
 

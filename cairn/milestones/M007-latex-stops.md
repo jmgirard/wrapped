@@ -268,3 +268,12 @@ Review pass 2, 2026-10-26, on 340e636 (main at c681043, not moved; code last cha
 - prior-review #3: the global \wrapped@startlines and \wrapped@startbs writes — reject (false), as pass 1 prior-review #5; the reviewer traced the call sites and found no stale read
 - prior-review #4: no test for a raw LaTeX block inside a group — reject (planned change): the stop rule is the planned behavior
 - prior-review #5: wrap-mechanisms.md E9 says LaTeX "skips to the figure's bottom" — fix now: "skips the lines that the figure's height still needs"
+- diff-bug #1: with a wrap-lines smaller than the height, wrapfig ends the wrap after that count, so later text and the stop block can sit beside the figure, and with one short paragraph the stop goes to the full bottom — follow-up: new row "Stop text overlap with small wrap-lines" (the overlap is wrapfig's behavior on main too; the README sentence on wrap-lines already covers only a larger value)
+- diff-bug #2: the check takes the figure's bottom from the one caption box, so a two-line or split caption gives a false failure — reject (false): every caption in the measured fixtures is one box (all 21 cases find their caption with find_text), so no measured case is affected, and a longer caption fails loudly rather than passing
+- diff-bug #3: when narrowed lines cross a page break, the stop skips about 2 empty lines at the next page's top — follow-up: added to the row "Trim the LaTeX stop gap at page tops"; not load-bearing, since no text overlaps a figure
+- diff-bug #4: the skip ignores \parskip, so the gap below the figure grows about 10 px per paragraph beside it — follow-up: added to the row "Trim the LaTeX stop gap at page tops"
+- diff-bug #5: README "wrapping stops as in HTML" fails for a small wrap-lines — follow-up: in the row "Stop text overlap with small wrap-lines"
+- diff-bug #6: a wrapped figure in a block quote never wraps in LaTeX and prints no warning, predating this branch — follow-up: added to the row "Fall back in other margin and list forms"
+- diff-bug #7: case 8 passes when the plain figure or its text is on a later page, though the Terms fail such a case — fix now: the check requires both on the paragraph's page
+- diff-bug #8 (c): no regression test for pass 1's #1 and #6 fixes; both-sides pairs repeat one path — reject (false): neither defect reached the default branch, so the one-test-per-fixed-defect rule does not apply; the pairs, as pass 1's #8, are planned
+- diff-bug #9: a long DESIGN.md line — reject (style)
