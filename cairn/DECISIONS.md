@@ -114,3 +114,16 @@ none to the test command itself. Ubuntu packages were chosen over
 action. The user chose that Quarto's pre-release channel only reports: it
 runs weekly and by hand, never on a pull request, so its failure blocks no
 merge.
+
+### D-009: CI installs R from binaries with r-lib's actions (supersedes part of D-008)
+
+2026-10-26, M008 review. The user chose at the re-posed merge question to
+replace the Ubuntu packages `r-base`, `r-cran-knitr`, and
+`r-cran-rmarkdown` with `r-lib/actions/setup-r` (R with Posit's public
+package manager) and `r-lib/actions/setup-r-dependencies` (knitr and
+rmarkdown as binaries). Ubuntu's package mirror made the install step's
+time vary from seconds to more than half an hour across runs, close to the
+job timeout, so a slow mirror could fail a pull request that changed
+nothing. D-008 chose the Ubuntu packages to keep Quarto's action the only
+third-party action; that reason no longer outweighs the install time.
+`poppler-utils` stays an Ubuntu package. The rest of D-008 stands.

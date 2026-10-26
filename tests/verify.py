@@ -42,7 +42,7 @@ For a fixture in LAYOUT, the script also reads the PDF through LaTeX right
 after its render, before the Typst render writes the same path, and checks
 where each case's text starts beside and below its wrapped figure. It reads
 the boxes of text lines and images with poppler's pdftohtml (brew install
-poppler). It prints one line for each case it measured.
+poppler, or apt install poppler-utils). It prints one line for each case it measured.
 """
 
 import difflib
@@ -303,7 +303,7 @@ NEAR = 3
 def pdf_boxes(path):
     """Every text line and image box in a PDF."""
     if not shutil.which("pdftohtml"):
-        raise SystemExit("verify.py needs poppler's pdftohtml for the LaTeX layout check (brew install poppler)")
+        raise SystemExit("verify.py needs poppler's pdftohtml for the LaTeX layout check (brew install poppler, or apt install poppler-utils)")
     boxes, heights = [], {}
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "layout"
