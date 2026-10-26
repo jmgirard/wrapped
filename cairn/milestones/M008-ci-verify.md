@@ -176,3 +176,11 @@ Pass 1, 2026-10-26, at 51efbde (main at 2a92353, unmoved since the cut). Resume 
 - ripple #4: `tests/verify.py:44` and `:306` give only the brew install hint — fix now: apt form added, fixed 63a8960
 - conversation: PR #8 — empty (0 reviews, 0 comments, 0 review threads)
 - Fix-now re-check after 63a8960: local `python3 tests/verify.py` exit 0, `all 36 renders pass`; `cairn_validate` all checks passed.
+
+Pass 2, 2026-10-26, at d52a2a5 (code head 923adc5; main at 2a92353, unmoved). Return from the re-posed merge question (step-7 decline: slow install), fixed by T6.
+
+- AC1 (re-read): `verify.yml` at 923adc5 keeps the same `on:` triggers and `runs-on: ubuntu-latest`; it installs Quarto's release channel with `tinytex: true`, R from `r-lib/actions/setup-r@v2` (`use-public-rspm: true`), knitr and rmarkdown from `r-lib/actions/setup-r-dependencies@v2` (`packages: any::knitr, any::rmarkdown`), and `poppler-utils` by apt, then runs `python3 tests/verify.py`. Pass.
+- AC2 (re-read): run 40328216113 (pull_request) at 923adc5 succeeded; its "Run verify.py" step log holds `all 36 renders pass`, and `RENDERS` has 36 entries. No file under `tests/` changed since the local pass at 63a8960 (exit 0, `all 36 renders pass`). Pass.
+- AC3 (re-read): `verify-prerelease.yml` at 923adc5 keeps only `schedule` (weekly) and `workflow_dispatch`, the same R steps, `version: pre-release`, and `python3 tests/verify.py`. Pass.
+- AC4: the pass-1 evidence (run 40310746574) stands; T6 changed the install steps only, not the verify step or the `if: failure()` artifact step.
+- Consistency gate at d52a2a5: `cairn_validate` all checks passed; version marker unchanged (`0.1.0`); verify as AC2; changelog "none". Pass.
