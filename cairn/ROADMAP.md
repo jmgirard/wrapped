@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-26 (M006 done: Word row graduated, M003 row pruned, three Word follow-up rows added, three lessons captured, one known issue)_
+_Last hygiene check: 2026-10-26 (M007 done: LaTeX stop row graduated, M004 row pruned, three LaTeX follow-up rows added and one row extended, three lessons captured, five marked used)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-26 (M006 done: Word row graduated, M003 row pruned,
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M007 | Stop LaTeX wraps at every stop block | review | — | normal | milestones/M007-latex-stops.md |
+| M007 | Stop LaTeX wraps at every stop block | done | — | normal | milestones/archive/M007-latex-stops.md |
 | M006 | Wrap figures in Word output with frames | done | — | high | milestones/archive/M006-word-wrap.md |
 | M005 | Wrap figures in Typst PDF output | done | — | high | milestones/archive/M005-typst-wrap.md |
-| M004 | Wrap figures in LaTeX PDF output | done | M002, M003 | high | milestones/archive/M004-latex-wrap.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -26,7 +25,6 @@ _Last hygiene check: 2026-10-26 (M006 done: Word row graduated, M003 row pruned,
      ending with `(#N)` for a row written for GitHub issue N, such as
      `Fix SE of skewness calculation (#100)`; `/cairn-triage` offers a new title for one
      with fewer than 5 words or more than 40 characters; tracking-rules "Candidate short title" has the whole rule -->
-- Honor wrap-clear and figures in LaTeX: in PDF through LaTeX, a figure with no wrap class in the lines beside a wrapped figure overlaps its caption (stop-rule case 8), and a `wrap-clear` div does nothing. The wrapper's end-of-wrap step (skip the lines left, then `\WFclear`) could run before such a figure and at a `wrap-clear` div. That skip also follows `wrap-lines`, so a large value leaves blank lines before the next wrapped figure (M004 review, diff-bug #8). Found by the M004 claim audit — added 2026-10-25 — milestones/M004-latex-wrap.md — started M007
 - Detect two-column LaTeX classes and gaps: the filter reads only `classoption`, so a class that is two-column by default (IEEEtran, acmart sigconf, revtex) or a `\twocolumn` in a header gets wrapfig figures with no warning. `wrapped.tex` sets `\columnsep` globally while a moved figure waits, so a `multicols` that starts then, or a column page shipped then, takes the figure's gap, and a local `\columnsep` around a wrappedfigure leaks out on restore. Found at M004 review (diff-bug #1, #3) — added 2026-10-25 — milestones/M004-latex-wrap.md
 - Handle a wrapped cell with two figures: a code cell with `#| classes: wrap-right` that makes two figures floats both side by side in HTML. Decide whether such a cell wraps its first figure, falls back with a warning, or joins the subfigure fallback (E4). Found at M002 review (diff-bug #5, blame-history #3). A cell with `fig-subcap` or `layout-ncol` now keeps a normal panel with a warning (M003). In Typst both figures go in one box with the first figure's side and width (M005 review, blame-history #3) — added 2026-10-24, narrowed 2026-10-25 by M003 review — milestones/M002-html-wrap.md
 - Check wrapped figures in dashboards: in a Quarto dashboard the `.wrap-group` div likely gets `html-fill-container`, a flex container, where a float has no effect. Not verified. Make wrapping work there or fall back with a warning. Found at M002 review (diff-bug #9) — added 2026-10-24 — milestones/M002-html-wrap.md

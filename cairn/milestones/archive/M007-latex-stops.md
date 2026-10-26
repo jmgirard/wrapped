@@ -1,0 +1,11 @@
+# M007: Stop LaTeX wraps at every stop block
+
+**Status:** done (2026-10-26, PR #7 https://github.com/jmgirard/wrapped/pull/7)
+
+**Goal:** In PDF through LaTeX, a wrapped figure's wrap ends at the same block as in HTML, Typst, and Word, so that block, a `wrap-clear` div included, starts below the figure.
+
+**Outcome:** `wrapped.lua` groups LaTeX figures by the stop rule like the other formats (floats and cells recorded by custom id and cell token, a captioned image with no id kept as a `wrappedfigure` Figure, an image with no caption in a raw `wrappedfigure`, `.wrapped-image` groups only outside LaTeX) and writes a raw `\wrappedstop` after each group. `wrapped.tex` defines `\wrappedstop` over `\wrapped@endwrap`: it puts out a waiting figure centered, or skips the lines the figure's height still needs (wrapfig's count from `\WF@size` at the start's `\baselineskip`, less lines set, less one; none for a larger `wrap-lines`) and runs `\WFclear`; `\wrapped@startlines` and `\wrapped@startbs` hook `\WF@startwrapping`. `tests/verify.py` gains a layout check (`LAYOUT`, `pdftohtml -xml` boxes, line height and text edges from page 1) over `tests/stop-rule.qmd` (11 cases, LaTeX-only page breaks) and the new `tests/stop-latex.qmd` (four forms on both sides, a `wrap-lines` pair, a page-bottom case), and `tex_summary` records each `\wrappedstop`. README, PROFILE.md, DESIGN.md, and wrap-mechanisms.md updated. Tests: 36 renders and 21 layout cases.
+
+**Decisions:** D-006 (poppler as a test requirement), D-007 (LaTeX wraps end at the stop block, a waiting figure included; corrects D-006's tool list). The AC Terms ("beside", line height, text edges) were amended once at the user's choice.
+
+**Review:** Two four-lens passes; pass 1 returned once (AC6: README sentences matched no measured case). 58 findings: 25 fixed, 9 follow-up, 24 rejected (none edge). Claim audits: 37 claims, 2 corrected; T6 lines 27, 2 corrected. Follow-ups: new rows "Trim the LaTeX stop gap at page tops", "Stop text overlap with small wrap-lines", "Fix the overfull LaTeX fixture page"; "Fall back in other margin and list forms" extended with block quotes. Hygiene graduated "Honor wrap-clear and figures in LaTeX", pruned the M004 row, captured three lessons, and marked five used.
