@@ -277,3 +277,5 @@ Review pass 2, 2026-10-26, on 340e636 (main at c681043, not moved; code last cha
 - diff-bug #7: case 8 passes when the plain figure or its text is on a later page, though the Terms fail such a case — fix now: the check requires both on the paragraph's page
 - diff-bug #8 (c): no regression test for pass 1's #1 and #6 fixes; both-sides pairs repeat one path — reject (false): neither defect reached the default branch, so the one-test-per-fixed-defect rule does not apply; the pairs, as pass 1's #8, are planned
 - diff-bug #9: a long DESIGN.md line — reject (style)
+- Fixes from pass 2: ripple #1, #2 fixed 818c058; blame-history #1, #2, #4 and prior-review #5 fixed 3500dd6; diff-bug #7 fixed eacc2a3.
+- Final run (pass 2) at eacc2a3: `python3 tests/verify.py` exit 0, all 36 renders pass, 21 of 21 layout cases ok; cairn_validate all checks passed. Changed snapshot files under step 7's definition (`_snaps` or `__snapshots__` directories): none; this repo's `tests/_snapshots/` changes are the AC5 evidence above.
