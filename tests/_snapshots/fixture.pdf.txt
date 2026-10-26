@@ -11,20 +11,35 @@
 1x wrapped: wrap-gap "wide" on plot.png is not a length or a percent, so it is 1em.
 # tex
 wrappedfigure: fig-md [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-div [side=left,width=3in,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-inner [side=right,width=0.35\linewidth,gap=2em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-cell [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: - [side=right,width=0.2\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio,alt={A small plot}]
+wrappedstop
 figure: fig-plain [-] image=[width=0.5\linewidth,height=\textheight,keepaspectratio]
 figure: fig-after-table [-] image=[width=0.5\linewidth,height=\textheight,keepaspectratio]
 figure: fig-unwrapped-cell [H] image=[width=0.3\linewidth,height=\textheight,keepaspectratio]
 wrappedfigure: - [side=right,width=0.2\linewidth,gap=2em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-comment [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-bad-width [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-styled [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-clamp [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-raw [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: - [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-bottom [side=right,width=112.5pt,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-break [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-break-lines [side=right,width=0.4\linewidth,gap=1em,lines=12] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

@@ -12,6 +12,13 @@ format:
   docx: default
 ---
 
+```{=latex}
+% LaTeX only: full lines that show the width of the text block, and a page
+% for each case, for the position check in verify.py.
+This page has no figure, so its full lines show the width of the text block. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+\clearpage
+```
+
 ## Case 1: ATX heading
 
 ![Stop-rule case 1.](plot.png){#fig-stop-1 .wrap-right width="35%"}
@@ -21,6 +28,10 @@ A short paragraph beside figure 1.
 ### A heading stops the wrap
 
 Text after the stop block.
+
+```{=latex}
+\clearpage
+```
 
 ## Case 2: bullet list
 
@@ -33,6 +44,10 @@ A short paragraph beside figure 2.
 
 Text after the stop block.
 
+```{=latex}
+\clearpage
+```
+
 ## Case 3: ordered list
 
 ![Stop-rule case 3.](plot.png){#fig-stop-3 .wrap-right width="35%"}
@@ -44,6 +59,10 @@ A short paragraph beside figure 3.
 
 Text after the stop block.
 
+```{=latex}
+\clearpage
+```
+
 ## Case 4: blockquote
 
 ![Stop-rule case 4.](plot.png){#fig-stop-4 .wrap-left width="35%"}
@@ -53,6 +72,10 @@ A short paragraph beside figure 4.
 > A blockquote stops the wrap.
 
 Text after the stop block.
+
+```{=latex}
+\clearpage
+```
 
 ## Case 5: pipe table
 
@@ -66,6 +89,10 @@ A short paragraph beside figure 5.
 
 Text after the stop block.
 
+```{=latex}
+\clearpage
+```
+
 ## Case 6: fenced code block
 
 ![Stop-rule case 6.](plot.png){#fig-stop-6 .wrap-left width="35%"}
@@ -77,6 +104,10 @@ code stops the wrap
 ```
 
 Text after the stop block.
+
+```{=latex}
+\clearpage
+```
 
 ## Case 7: knitr cell
 
@@ -90,6 +121,10 @@ A short paragraph beside figure 7.
 
 Text after the stop block.
 
+```{=latex}
+\clearpage
+```
+
 ## Case 8: figure with no wrap class
 
 ![Stop-rule case 8.](plot.png){#fig-stop-8 .wrap-left width="35%"}
@@ -99,6 +134,10 @@ A short paragraph beside figure 8.
 ![A figure with no wrap class.](plot.png){#fig-stop-plain width="30%"}
 
 Text after the stop block.
+
+```{=latex}
+\clearpage
+```
 
 ## Case 9: callout
 
@@ -112,6 +151,10 @@ A callout stops the wrap.
 
 Text after the stop block.
 
+```{=latex}
+\clearpage
+```
+
 ## Case 10: horizontal rule
 
 ![Stop-rule case 10.](plot.png){#fig-stop-10 .wrap-left width="35%"}
@@ -121,6 +164,10 @@ A short paragraph beside figure 10.
 ---
 
 Text after the stop block.
+
+```{=latex}
+\clearpage
+```
 
 ## Case 11: wrap-clear div
 
