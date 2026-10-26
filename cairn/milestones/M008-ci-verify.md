@@ -48,7 +48,7 @@ not part of the verify command. Branch protection that requires the check
      lines together. -->
 
 - [x] AC1: `.github/workflows/verify.yml` runs `python3 tests/verify.py` from the repository root on an `ubuntu-latest` runner, after installing Quarto from its release channel with TinyTeX, R with the knitr and rmarkdown packages, and poppler's command-line tools. It runs on pull requests to `main`, on pushes to `main` that change a path outside `cairn/`, and by hand (`workflow_dispatch`).
-- [ ] AC2: On the milestone PR's last head commit, `gh pr checks` reports the `verify.yml` job as passed and the log of its `python3 tests/verify.py` step ends with `all <n> renders pass`, where n is the length of `RENDERS` in `tests/verify.py` at that commit; `python3 tests/verify.py` also exits 0 on this Mac at that commit.
+- [x] AC2: On the milestone PR's last head commit, `gh pr checks` reports the `verify.yml` job as passed and the log of its `python3 tests/verify.py` step ends with `all <n> renders pass`, where n is the length of `RENDERS` in `tests/verify.py` at that commit; `python3 tests/verify.py` also exits 0 on this Mac at that commit.
 - [x] AC3: `.github/workflows/verify-prerelease.yml` runs the same command after installing Quarto from its pre-release channel, on a weekly schedule and by hand, and has no `pull_request` or `push` trigger, so its result is not among a pull request's checks.
 - [x] AC4: A commit pushed to the draft PR that changes one line of `tests/_snapshots/meta-string.html.txt` makes the `verify.yml` job fail, the log of its verify step has the line `FAIL meta-string.html`, and the failed run has an artifact that holds `tests/meta-string.html`, as `gh run download` lists.
 
@@ -139,6 +139,7 @@ Pass 1, 2026-10-26, at 51efbde (main at 2a92353, unmoved since the cut). Resume 
 - AC1: `.github/workflows/verify.yml` read at 51efbde: `on:` holds `pull_request` (branches main), `push` (branches main, `paths-ignore: cairn/**`), and `workflow_dispatch`; job `verify` `runs-on: ubuntu-latest`; steps `actions/checkout@v7`, `quarto-dev/quarto-actions/setup@v2` with `version: release` and `tinytex: true`, `apt-get install` of `r-base r-cran-knitr r-cran-rmarkdown poppler-utils`, then `run: python3 tests/verify.py` (no `working-directory`, so the repository root). Pass.
 - AC3: `.github/workflows/verify-prerelease.yml` read at 51efbde: `on:` holds only `schedule` (`cron: "0 6 * * 1"`, weekly) and `workflow_dispatch`, no `pull_request` or `push`; same install steps with `version: pre-release`; `run: python3 tests/verify.py`. Pass.
 - AC4: run 40310746574 (pull_request, head 6fd85b1, which changed `576px` to `577px` in `tests/_snapshots/meta-string.html.txt`) read fresh: conclusion `failure`; its failed-step log holds one `FAIL meta-string.html` line; `gh run download 40310746574 -n rendered-outputs` writes `meta-string.html`. The restoring commit be641d8 ran green (run 40312839783). Pass.
+- AC2: at PR #8 head c849442, `gh pr checks 8` reported `verify` passed (run 40321894448, pull_request, success); its "Run verify.py" step log holds `all 36 renders pass`, and `len(verify.RENDERS)` is 36 at that commit. `python3 tests/verify.py` on this Mac at 63a8960 exited 0 with `all 36 renders pass`, and `git diff 63a8960 c849442 -- . ':!cairn'` is empty. Commits after c849442 touch `cairn/` only; step 8 waits for green CI on the head it merges. Pass.
 - Consistency gate at 51efbde: `cairn_validate` all checks passed; one version marker (`version: 0.1.0` in `_extension.yml`, untouched by the diff); `python3 tests/verify.py` exit 0, `all 36 renders pass`; changelog "none". Pass.
 - spawned: diff-bug, blame-history, prior-review, ripple
 - diff-bug #1: no job timeout, and the apt step took 19 s to 12 min across runs (mirror stalls) — fix now: `timeout-minutes: 45` and `Acquire::Retries=3` in both files, fixed 63a8960
@@ -162,3 +163,5 @@ Pass 1, 2026-10-26, at 51efbde (main at 2a92353, unmoved since the cut). Resume 
 - ripple #2: the candidate row stays open — reject, planned change: same as blame-history #2
 - ripple #3: README says "tested with Quarto 1.10.19" — reject, false: a dated record that still holds
 - ripple #4: `tests/verify.py:44` and `:306` give only the brew install hint — fix now: apt form added, fixed 63a8960
+- conversation: PR #8 — empty (0 reviews, 0 comments, 0 review threads)
+- Fix-now re-check after 63a8960: local `python3 tests/verify.py` exit 0, `all 36 renders pass`; `cairn_validate` all checks passed.
