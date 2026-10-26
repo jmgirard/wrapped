@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M007: Stop LaTeX wraps at every stop block
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -146,7 +146,7 @@ a callout frame, or a horizontal rule beside a figure is not checked.
       and the "PDF through LaTeX" limits ("Wrapping stops only in part",
       "Figures in a row") against renders, and update passes 4, 5, and 7 of
       DESIGN.md's Architecture (`corrected M007`).
-- [ ] T6: Review return 1: narrow the README sentences AC6 failed on, and
+- [x] T6: Review return 1: narrow the README sentences AC6 failed on, and
       fix the review's fix-now findings (Review section, pass 1).
 
 ## Work log
@@ -199,6 +199,8 @@ a callout frame, or a horizontal rule beside a figure is not checked.
 - 2026-10-26: T6 (checkpoint, verify running): README's wrap-lines sentence scoped to a value larger than the figure needs, the moved-figure sentence narrowed to "renders with no text beside it" plus the stop block below it (AC4), and "Figures in a row" now says a figure after a wrapped figure's paragraphs stops its wrap (case 8); `.wrapped-image` groups only outside LaTeX (a hand-written box in a LaTeX-only document renders, exit 0); wrapped.tex keeps the start's \baselineskip for the count and skip; the check leaves out the caption's own box (a synthetic heading beside the caption now fails), fails rather than crashes on an empty page 1, a missing case 8 line, or a pdftohtml failure; D-007 added; PROFILE.md verify and gate text, verify.py docstring, wrap-mechanisms.md W2/E9/E10, DESIGN.md wrap-lines row and pass 5, wrapped.lua header, and the CI row updated. A pre-existing "would" in wrap-mechanisms.md E16 that the prose linter flags is outside this diff and left as it is.
 - 2026-10-26: T6 verify: `python3 tests/verify.py` passed all 36 renders and 21 layout cases with no snapshot change.
 - 2026-10-26: claim audit (T6 lines): 27 claims read, 2 corrected — README.md (the moved-figure sentence read as "on the next page"; now "it renders with no text beside it. It renders before the block that stops the wrap"), cairn/DECISIONS.md (D-007's "renders as a normal figure" now "renders centered with no text beside it", corrected before D-007 reached the default branch); re-read pending.
+- 2026-10-26: claim audit re-read: both corrections correct (fixture page 13 caption at 282, stop heading at 335; the waiting figure's center 459 px is the text block's center).
+- 2026-10-26: T6 done; implement done after review return 1; status review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
