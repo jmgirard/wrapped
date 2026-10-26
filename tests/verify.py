@@ -326,15 +326,13 @@ def pdf_boxes(path):
 
 
 def line_height(boxes):
-    """The usual distance between the tops of two lines of a paragraph."""
-    columns = {}
-    for b in boxes:
-        if b.kind == "text":
-            columns.setdefault((b.page, round(b.left)), []).append(b.top)
-    steps = []
-    for tops in columns.values():
-        tops.sort()
-        steps += [b - a for a, b in zip(tops, tops[1:]) if 10 < b - a < 40]
+    """The distance between the tops of two consecutive lines of the
+    paragraph on page 1, the lines that text_edges reads."""
+    left = text_edges(boxes)[0]
+    tops = sorted(b.top for b in boxes if b.page == 1 and b.kind == "text" and abs(b.left - left) <= NEAR)
+    steps = [b - a for a, b in zip(tops, tops[1:])]
+    if not steps:
+        raise LayoutError("page 1 has fewer than two lines of its paragraph")
     return statistics.median(steps)
 
 
@@ -455,7 +453,7 @@ def stop_case(boxes, edges, lh, caption, para, side, full=None):
 def plain_figure_case(boxes, edges, lh):
     """Stop-rule case 8: the plain figure and the text after it start below
     the wrapped figure."""
-    p = find_text(boxes, "beside figure 8.")
+    p = find_text(boxes, "A short paragraph beside figure 8.")
     fig = find_figure(boxes, "Stop-rule case 8.", p)
     check_beside(fig, p, "left", edges, lh)
     plain = find_figure(boxes, "A figure with no wrap class.", p)
@@ -471,7 +469,7 @@ def lines_case(boxes, edges, lh):
     further than a line from where it is without wrap-lines."""
     gaps = {}
     for name in ("plain", "extra"):
-        fig, stop = stop_case(boxes, edges, lh, f"Lines {name}.", f"beside lines {name}.", "right")
+        fig, stop = stop_case(boxes, edges, lh, f"Lines {name}.", f"A short paragraph beside lines {name}.", "right")
         gaps[name] = stop.top - fig.bottom
     if abs(gaps["extra"] - gaps["plain"]) > lh:
         raise LayoutError(f"the heading is {gaps['extra']:.0f} px below the figure with wrap-lines "
@@ -481,7 +479,7 @@ def lines_case(boxes, edges, lh):
 def page_bottom_case(boxes, edges, lh):
     """A figure that moves to the next page after its paragraphs end there
     has no text beside it, and its stop text starts below it."""
-    p = find_text(boxes, "before page bottom moves.")
+    p = find_text(boxes, "A short paragraph before page bottom moves.")
     fig = find_figure(boxes, "Page bottom.", p)
     if fig.page != p.page + 1:
         raise LayoutError(f"the paragraph is on page {p.page} and the figure on page {fig.page}, not the next")
@@ -500,7 +498,7 @@ def stop_rule_cases():
             continue
         side = "left" if n % 2 == 0 else "right"
         yield f"case {n}", lambda bx, e, lh, n=n, side=side: stop_case(
-            bx, e, lh, f"Stop-rule case {n}.", f"beside figure {n}.", side)
+            bx, e, lh, f"Stop-rule case {n}.", f"A short paragraph beside figure {n}.", side)
 
 
 def stop_latex_cases():
@@ -508,7 +506,7 @@ def stop_latex_cases():
         for side in ("left", "right"):
             name = f"form {form} {side}"
             yield name, lambda bx, e, lh, name=name, caption=caption, side=side: stop_case(
-                bx, e, lh, f"F{name[1:]}." if caption else None, f"beside {name}.", side,
+                bx, e, lh, f"F{name[1:]}." if caption else None, f"A short paragraph beside {name}.", side,
                 full=f"Full width text after stop {form} {side}.")
     yield "wrap-lines", lines_case
     yield "page bottom", page_bottom_case
