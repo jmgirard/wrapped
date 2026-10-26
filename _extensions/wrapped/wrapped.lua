@@ -690,7 +690,7 @@ local function cell_div(div)
     next_token = next_token + 1
     local token = tostring(next_token)
     carry = { class = c, remaining = n, token = token }
-    if is_html or is_typst or is_docx then div.attributes["data-wrap-anchor"] = token end
+    if wraps() then div.attributes["data-wrap-anchor"] = token end
   end
   return div
 end
@@ -749,9 +749,7 @@ local function float_target(float)
     -- Quarto writes \begin{<fig-env>}[<fig-pos>] for the float.
     float.attributes["fig-env"] = "wrappedfigure"
     float.attributes["fig-pos"] = tex_options(class, width, gap, lines, "#" .. float.identifier)
-    return float
-  end
-  if is_typst then
+  elseif is_typst then
     if custom_id then
       typst_opens[custom_id] = typst_open(class, width, gap, "#" .. float.identifier)
     end
@@ -1019,7 +1017,8 @@ end
 -- Groups each wrapped figure with the paragraphs after it. The group stops
 -- at the first block that is not a paragraph (the stop rule). The group's
 -- CSS contains its float, so the stop block starts below the figure. In
--- Typst the group is a wrap-content call instead.
+-- Typst the group is a wrap-content call instead, and in LaTeX the group's
+-- blocks are followed by \wrappedstop.
 local function group_blocks(blocks)
   local out = pandoc.List()
   local i = 1
@@ -1040,14 +1039,14 @@ local function group_blocks(blocks)
         members = pandoc.List({ wrapped_image_docx(img) })
       elseif is_latex then
         placed = true
-        out:extend(wrapped_image_tex(img))
-        -- LaTeX needs no group: wrapfig wraps the paragraphs that follow.
-        i = i + 1
-        goto continue
+        members = wrapped_image_tex(img)
       else
         strip_wrap(img.classes)
       end
     elseif b.t == "Div" and b.classes:includes("wrapped-image") then
+      members = pandoc.List({ b })
+    elseif is_latex and b.t == "Figure" and b.attributes["fig-env"] == "wrappedfigure" then
+      -- In LaTeX, a captioned image with no id stays a Figure.
       members = pandoc.List({ b })
     elseif b.t == "Div" and b.attributes["data-wrap-anchor"] then
       -- A wrapped cell starts a group only if one of its figures wrapped.
@@ -1067,6 +1066,11 @@ local function group_blocks(blocks)
         out:extend(typst_group(members))
       elseif is_docx then
         out:extend(docx_group(members))
+      elseif is_latex then
+        -- wrapfig wraps the paragraphs that follow the figure, so the group
+        -- needs no div. \wrappedstop ends the wrap at the stop block.
+        out:extend(members)
+        out:insert(pandoc.RawBlock("latex", "\\wrappedstop"))
       else
         out:insert(pandoc.Div(members, pandoc.Attr("", { "wrap-group" })))
       end
@@ -1074,7 +1078,6 @@ local function group_blocks(blocks)
       out:insert(b)
       i = i + 1
     end
-    ::continue::
   end
   return out
 end

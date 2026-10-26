@@ -27,3 +27,4 @@ figure: fig-before-heading [-] image=[keepaspectratio]
 figure: - [H] image=[keepaspectratio]
 figure: fig-first [-] image=[width=0.3\linewidth,height=\textheight,keepaspectratio]
 wrappedfigure: fig-second [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

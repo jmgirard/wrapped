@@ -13,7 +13,7 @@ style of every figure or table div and wrapped box, the wrap class, style, and w
 of every image, and the members of every .wrap-group. Style declarations
 are sorted, so their order does not count. For PDF it also holds the kind,
 label, and options of each figure environment and the options of its
-\includegraphics, and for Typst the label of each #figure( call and
+\includegraphics, with each \wrappedstop in its place, and for Typst the label of each #figure( call and
 whether its image keeps a width. For Typst it also holds each
 wrap-content call's options, the figure label or image in its box and its
 alt text, the kind of each block beside the box ("p" for a paragraph), the
@@ -270,9 +270,13 @@ def xref_summary(path):
 def tex_summary(path):
     # The body only: the preamble holds the wrapper and its comments.
     tex = path.read_text(encoding="utf-8").split("\\begin{document}", 1)[-1]
-    envs = re.findall(r"\\begin\{(figure|wrappedfigure)\}(?:\[([^\]]*)\])?(.*?)\\end\{\1\}", tex, re.S)
+    found = re.finditer(r"\\begin\{(figure|wrappedfigure)\}(?:\[([^\]]*)\])?(.*?)\\end\{\1\}|\\wrappedstop\b", tex, re.S)
     lines = []
-    for kind, options, body in envs:
+    for m in found:
+        if m.group(1) is None:
+            lines.append("wrappedstop")
+            continue
+        kind, options, body = m.groups()
         label = re.search(r"\\label\{([^}]*)\}", body)
         image = re.search(r"\\includegraphics(?:\[([^\]]*)\])?", body)
         lines.append(
@@ -335,7 +339,9 @@ def line_height(boxes):
 
 
 def text_edges(boxes):
-    """The left and right ends of a full line on the first page, which has no figure."""
+    """The left and right ends of a full line on page 1, which must hold no image."""
+    if any(b.page == 1 and b.kind == "image" for b in boxes):
+        raise LayoutError("page 1 holds an image, so it does not show the width of the text block")
     lines = [b for b in boxes if b.page == 1 and b.kind == "text"]
     widest = max(b.right - b.left for b in lines)
     full = [b for b in lines if b.right - b.left > 0.95 * widest]
@@ -403,8 +409,8 @@ def check_beside(fig, line, side, edges, lh):
         raise LayoutError(f"the paragraph is on page {line.page} and the figure on page {fig.page}")
     if not line.top < fig.bottom:
         raise LayoutError("the paragraph starts below the figure")
-    if fig.image.top - line.bottom > lh:
-        raise LayoutError("the paragraph ends more than a line above the figure")
+    if fig.image.top - line.bottom >= lh / 2:
+        raise LayoutError("the paragraph ends half a line or more above the figure")
     if overlaps(line.left, line.right, fig.image.left, fig.image.right):
         raise LayoutError("the paragraph overlaps the figure")
     edge = abs(fig.image.left - edges[0]) if side == "left" else abs(fig.image.right - edges[1])
@@ -515,7 +521,11 @@ LAYOUT = {"stop-rule": stop_rule_cases, "stop-latex": stop_latex_cases}
 def layout_check(fixture):
     """Prints a line for each case. Returns the names of the failed cases."""
     boxes = pdf_boxes(TESTS / f"{fixture}.pdf")
-    edges, lh = text_edges(boxes), line_height(boxes)
+    try:
+        edges, lh = text_edges(boxes), line_height(boxes)
+    except LayoutError as err:
+        print(f"FAIL layout {fixture}: {err}")
+        return [f"layout {fixture}"]
     failed = []
     for name, case in LAYOUT[fixture]():
         try:

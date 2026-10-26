@@ -11,12 +11,15 @@
 % \WF@startwrapping and \WFclear put the document's value back once the
 % figure is placed or put out without text.
 %
-% wrapfig holds one figure at a time. So a wrappedfigure first deals with an
-% earlier one. A figure that moved and still waits for a paragraph is put
-% out here, centered, with no text beside it. A wrap whose text is still
-% narrowed ends: the environment skips the lines still left beside the
-% earlier figure, and \WFclear ends the wrap. \WFclear ends it inside the
-% environment's group, so \wrapped@afterenv ends it again after the group.
+% The filter writes \wrappedstop after the paragraphs beside a figure, at
+% the block that stops the wrap, so that block starts below the figure.
+% wrapfig holds one figure at a time, so a wrappedfigure also ends an
+% earlier wrap first, in the same way. A figure that moved and still waits
+% for a paragraph is put out there, centered, with no text beside it. A wrap
+% whose text is still narrowed ends: the lines that the figure's height
+% still needs are skipped, and \WFclear ends the wrap. In a wrappedfigure,
+% \WFclear ends it inside the environment's group, so \wrapped@afterenv
+% ends it again after the group.
 \usepackage{wrapfig}
 \makeatletter
 \let\wrapped@colsep\relax
@@ -40,14 +43,26 @@
   \fi
   \global\c@WF@wrappedlines\z@ \WF@finale
   \wrapped@restorecolsep}
+% wrapfig counts the lines beside a figure from \WF@size, the figure's
+% height, or takes the wrap-lines value. \wrapped@startlines keeps the count
+% that the wrap started with.
+\newcount\wrapped@startlines
+\g@addto@macro\WF@startwrapping{\global\wrapped@startlines\c@WF@wrappedlines}
+% The lines skipped are the lines that wrapfig counts from the height, less
+% the lines already set beside the figure, less one. A wrap-lines value
+% larger than the height needs adds no space.
 \newcommand*\wrapped@endwrap{%
   \ifvoid\WF@box\else \WFclear \fi
   \ifx\parshape\WF@fudgeparshape
     \par
-    \@tempcnta\c@WF@wrappedlines \advance\@tempcnta\m@ne
-    \vspace{\@tempcnta\baselineskip}%
+    \@tempdima\WF@size \advance\@tempdima1.1\baselineskip
+    \divide\@tempdima\baselineskip \@tempcnta\@tempdima
+    \advance\@tempcnta-\wrapped@startlines
+    \advance\@tempcnta\c@WF@wrappedlines \advance\@tempcnta\m@ne
+    \ifnum\@tempcnta>\z@ \vspace{\@tempcnta\baselineskip}\fi
     \WFclear
   \fi}
+\newcommand*\wrappedstop{\wrapped@endwrap}
 % wrapfig runs \WF@startfloating after the environment's groups end. Before
 % it, \wrapped@afterenv ends an earlier wrap there and records that group
 % level for \WF@floathand below.

@@ -115,7 +115,7 @@ a callout frame, or a horizontal rule beside a figure is not checked.
      cites; an insertion, removal, or reorder renumbers the labels and the
      Coverage lines together. -->
 
-- [ ] T1: Write `tests/stop-latex.qmd` (PDF only, `keep-tex`) with the AC2
+- [x] T1: Write `tests/stop-latex.qmd` (PDF only, `keep-tex`) with the AC2
       forms, the AC3 pair, and the AC4 case. Add the position check to
       `tests/verify.py`: it finds each case by its words, applies the AC1 to
       AC4 conditions, lists each case it measured, and fails on a missing
@@ -126,18 +126,18 @@ a callout frame, or a horizontal rule beside a figure is not checked.
       next page, the below check on `main`'s filter (text narrowed beside
       the figure) and with text on the figure's page above it, and the full
       width check with the wrap left on.
-- [ ] T2: In `wrapped.lua`, group in LaTeX as in the other formats: record
+- [x] T2: In `wrapped.lua`, group in LaTeX as in the other formats: record
       wrapped floats and cells by custom id and cell token in LaTeX too
       (`float_target` and `cell_div`, about lines 677 to 777), put an image
       with no caption into a group (`group_blocks`, about line 1041), and
       end each group with the raw stop command.
-- [ ] T3: In `wrapped.tex`, define the stop command from `\wrapped@endwrap`:
+- [x] T3: In `wrapped.tex`, define the stop command from `\wrapped@endwrap`:
       put out a waiting figure centered, skip to the figure's bottom from its
       height when lines are still narrowed, then end the wrap after the
       group as `\wrapped@afterenv` does. Use it for figures in a row. Check
       each placement with `\usepackage[verbose]{wrapfig}` (lesson 2026-10-25,
       M004).
-- [ ] T4: Make `tex_summary` in `tests/verify.py` record each stop command,
+- [x] T4: Make `tex_summary` in `tests/verify.py` record each stop command,
       run `python3 tests/verify.py --update`, and read the snapshot diff:
       only `.pdf.txt` files change, and each change is a stop command or a
       new fixture.
@@ -176,6 +176,12 @@ a callout frame, or a horizontal rule beside a figure is not checked.
 - 2026-10-26: started implement on branch m007-latex-stops; status in-progress.
 - 2026-10-26: T1 (checkpoint, not checked off): added tests/stop-latex.qmd (PDF only, fig-format png, a page per case) and, in tests/stop-rule.qmd, a LaTeX-only raw block with a full-width paragraph and a \clearpage before each case so that each case has its own page. The layout check in tests/verify.py reads pdftohtml -xml boxes in a temporary folder (no image files left in tests/). On main's filter all 21 cases fail the below check; probes on scratch copies made the beside check fail with the wrap class removed and with the figure moved to the next page. The full-width probe waits for T3.
 - 2026-10-26: implement chose pdftohtml -xml over pdftotext -bbox because it gives image boxes as well as text lines, which an image with no caption needs; both are poppler (D-006).
+- 2026-10-26: T2 done: in LaTeX, cell_div sets the cell anchor (wraps()), float_target falls through to record wrapped ids and cells, an image with no caption and a wrappedfigure Figure start groups, and group_blocks ends each LaTeX group with a raw \wrappedstop.
+- 2026-10-26: T3 done: wrapped.tex records the count each wrap starts with (\wrapped@startlines, added to \WF@startwrapping), \wrapped@endwrap skips the lines the height still needs (height lines less lines already set less one, none when wrap-lines is larger), and \wrappedstop runs it. All 21 layout cases pass. Probes on scratch copies: an unwrapped figure set flush right (fig-align="right") fails the beside check, and a stop that skips 8 lines but leaves the wrap on fails the full width check on both sides.
+- 2026-10-26: AC3 precondition read from a scratch compile that logs \WF@startwrapping: wrapfig counts 13 lines for the lines-plain figure and starts lines-extra at 26 (wrap-lines 25 plus 1), and the height gives 13 for both, so 25 is 12 more than the height needs.
+- 2026-10-26: T4 done: tex_summary records each \wrappedstop in place; `python3 tests/verify.py --update` passed all 36 renders and 21 layout cases. The snapshot diff is 39 added `wrappedstop` lines in 7 .pdf.txt files plus the new stop-latex.pdf.txt; no other snapshot changed.
+- 2026-10-26: re-audit: AC1 (full) — 6 findings on the amended beside definition (first reader): half a line height bound with a flush-right probe (2), page 1 must hold no image (4), line height as a median over same-left lines (5), the short paragraph fits on one line (6); 1 and 3 found nothing. All taken; the fixed wording goes to a second reader.
+- 2026-10-26: re-audit: AC2 (full) — same reader and findings as AC1, which AC2 reads through the Terms paragraph.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
