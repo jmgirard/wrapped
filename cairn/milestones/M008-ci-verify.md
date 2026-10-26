@@ -125,6 +125,7 @@ not part of the verify command. Branch protection that requires the check
 - 2026-10-26: claim audit: not owed — internal tier.
 - 2026-10-26: implement complete; status review.
 - 2026-10-26: cairn_validate failed weight caps after 79e118f (PROFILE.md 123 lines, cap <120, from T5's CI paragraph); the paragraph was compressed to 3 lines (118 lines), and validate passes.
+- 2026-10-26: step-7 approval: m008-ci-verify approved for merge
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
