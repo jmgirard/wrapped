@@ -52,6 +52,7 @@ multicols in the kept .tex.
 """
 
 import difflib
+import os
 import re
 import shutil
 import statistics
@@ -571,24 +572,43 @@ def wide_gap_case(side):
     return case
 
 
-def check_alone(boxes, fig, edges):
-    """No text line of the image's column sits beside the image."""
+def column_lines(boxes, fig, edges):
+    """The text lines on the figure's page in the image's column, the
+    caption left out."""
     middle = (edges[0] + edges[1]) / 2
     left, right = (edges[0], middle) if fig.image.right <= middle + NEAR else (
         (middle, edges[1]) if fig.image.left >= middle - NEAR else edges)
-    beside = [b for b in boxes if b.kind == "text" and b.page == fig.page and b is not fig.caption
-              and b.top < fig.image.bottom and b.bottom > fig.image.top
-              and b.left >= left - NEAR and b.right <= right + NEAR]
+    return [b for b in boxes if b.kind == "text" and b.page == fig.page and b is not fig.caption
+            and b.left >= left - NEAR and b.right <= right + NEAR]
+
+
+def check_alone(boxes, fig, edges):
+    """No text line of the image's column sits beside the image."""
+    beside = [b for b in column_lines(boxes, fig, edges)
+              if b.top < fig.image.bottom and b.bottom > fig.image.top]
     if beside:
         raise LayoutError(f"{beside[0].text!r} is beside the image")
 
 
+# The width of each figure in the column fixtures, as a share of its column
+# or box.
+COLUMN_SHARE = 0.4
+
+
 def normal_case(caption, para):
     """A wrapped figure that keeps a normal figure: no text of its column
-    beside its image. find_figure finds a caption only below its image."""
+    beside its image, and the image a share of the width of the text lines
+    around it, its column or box. find_figure finds a caption only below
+    its image."""
     def case(boxes, edges, lh):
         fig = find_figure(boxes, caption, find_text(boxes, para))
         check_alone(boxes, fig, edges)
+        lines = column_lines(boxes, fig, edges)
+        width = max(b.right for b in lines) - min(b.left for b in lines)
+        want = COLUMN_SHARE * width
+        got = fig.image.right - fig.image.left
+        if abs(got - want) > NEAR:
+            raise LayoutError(f"the image is {got:.0f} px wide, not {want:.0f} px")
     return case
 
 
@@ -904,7 +924,12 @@ def render(fixture, fmt):
     # A fixture that is a folder is a project, rendered whole.
     target = fixture if (TESTS / fixture).is_dir() else f"{fixture}.qmd"
     cmd = ["quarto", "render", target, "--to", fmt]
-    result = subprocess.run(cmd, cwd=TESTS, capture_output=True, text=True)
+    env = os.environ.copy()
+    if fmt == "pdf" and fixture in LOGS:
+        # TeX Live's default log line length, which TinyTeX raises to 10000,
+        # so the log check reads warnings that TeX breaks across lines.
+        env["max_print_line"] = "79"
+    result = subprocess.run(cmd, cwd=TESTS, capture_output=True, text=True, env=env)
     log = ANSI.sub("", result.stdout + result.stderr)
     return result.returncode, log
 

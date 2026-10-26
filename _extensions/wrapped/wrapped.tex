@@ -25,10 +25,9 @@
 %
 % Where the text runs in columns, inside multicols or where \if@twocolumn
 % is true, a wrappedfigure does not wrap: it floats as a normal figure, or
-% it is set in place inside multicols, inside a box, or when it has no
-% caption. LaTeX
-% writes a warning to its log: once for two-column text, and once for each
-% figure in multicols.
+% it is set in place inside multicols, or in two-column text inside a box
+% or when it has no caption. LaTeX writes a warning to its log: once for
+% two-column text, and once for each figure in multicols.
 \usepackage{wrapfig}
 \makeatletter
 \def\wrapped@gap{\columnsep}
@@ -127,8 +126,8 @@
     caption .initial:n = true,
   }
 % The mode of a wrappedfigure: w wraps, f is a figure float in two-column
-% text, and p sets the figure in place: inside multicols and inside a box,
-% where a float is lost, and in two-column text for an image with no
+% text, and p sets the figure in place: inside multicols, and in two-column
+% text inside a box, where a float is lost, or for an image with no
 % caption.
 \cs_new_protected:Npn \__wrapped_set_mode:
   {

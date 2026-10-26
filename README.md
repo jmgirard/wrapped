@@ -170,7 +170,8 @@ not have wrapfig, install it, for example with `tlmgr install wrapfig`.
 
 The `width` and `wrap-gap` values change to LaTeX lengths:
 
-- A percent is that share of the text width, so `40%` is `0.4\linewidth`.
+- A percent is that share of the line width, so `40%` is `0.4\linewidth`.
+  In one column, the line width is the text width.
 - A `px` length is 0.75 `pt` for each `px`, so `200px` is `150pt`.
 - A length in `pt`, `pc`, `in`, `cm`, `mm`, `em`, or `ex` stays as it is.
 - Any other CSS unit, such as `vw` or `rem`, and a `calc()`, `min()`,
@@ -212,9 +213,11 @@ wrapfig has limits, and the extension keeps some of them:
   A heading or the end of a callout does not take it.
 - Where the text runs in columns, set by `classoption: twocolumn`, a class
   default, `\twocolumn`, or `multicols`, wrapped figures render as normal
-  figures: they do not wrap. A percent width is a share of the column.
-  With `classoption: twocolumn`, the render prints one warning.
-- A class that sets two columns by default, such as IEEEtran, a
+  figures: they do not wrap. A percent width is a share of the column, or
+  of the box that holds the figure. With `classoption: twocolumn`, the
+  filter writes Quarto's normal figure, and the render prints one warning.
+- In other documents, a class that sets two columns by default, such as
+  IEEEtran, a
   `\twocolumn` command, and a `multicols` environment are found only while
   LaTeX runs. In two-column text, a captioned figure floats as a normal
   figure does. An image with no caption, or a figure inside a box such as

@@ -30,7 +30,7 @@ After figure C. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do 
 ```
 
 ```{=latex}
-\noindent\begin{minipage}{\linewidth}
+\noindent\begin{minipage}{0.8\linewidth}
 ```
 
 ![Fig B.](plot.png){#fig-box .wrap-right width="40%"}

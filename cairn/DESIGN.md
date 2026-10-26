@@ -179,7 +179,9 @@ passes (corrected M003):
    `wrappedfigure` over wrapfig's floating placements and `\wrappedstop`,
    which ends a wrap (corrected M007). Where the text runs in columns,
    inside `multicols` or where `\if@twocolumn` is true, `wrappedfigure`
-   sets a normal figure and writes a warning to the LaTeX log. It sets the
+   sets a normal figure and writes a warning to the LaTeX log: a `figure`
+   float, or the figure in place inside `multicols`, or in two-column text
+   inside a box or with no caption. It sets the
    gap as `\columnsep` only inside wrapfig's placement of the figure
    (corrected M009). In Typst it imports
    `wrap-content` from `@preview/wrap-it:0.1.1`, which Quarto loads from the
