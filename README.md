@@ -209,9 +209,10 @@ wrapfig has limits, and the extension keeps some of them:
   block that stops its wrap, so it starts below the wrapped figure. A
   figure that moved to the next page waits for one of its own paragraphs.
   A heading or the end of a callout does not take it.
-- Where the text runs in columns, wrapped figures render as normal
-  figures, each with its width as a share of the column. With
-  `classoption: twocolumn`, the render prints one warning.
+- Where the text runs in columns, wrapped figures do not wrap. Each keeps
+  its width as a share of the column. With `classoption: twocolumn`, they
+  render as normal figures, and the render prints one warning. LaTeX loses
+  such a figure inside `multicols`.
 - A class that sets two columns by default, such as IEEEtran, a
   `\twocolumn` command, and a `multicols` environment are found only while
   LaTeX runs. In two-column text, a captioned figure floats as a normal

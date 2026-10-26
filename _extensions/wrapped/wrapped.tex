@@ -24,9 +24,10 @@
 % ends it again after the group.
 %
 % Where the text runs in columns, inside multicols or where \if@twocolumn
-% is true, a wrappedfigure is a normal figure, and LaTeX writes a warning
-% to its log: once for two-column text, and once for each figure in
-% multicols.
+% is true, a wrappedfigure does not wrap: it floats as a normal figure, or
+% it is set in place inside multicols or when it has no caption. LaTeX
+% writes a warning to its log: once for two-column text, and once for each
+% figure in multicols.
 \usepackage{wrapfig}
 \makeatletter
 \def\wrapped@gap{\columnsep}
@@ -89,7 +90,7 @@
   \ifnum\currentgrouplevel=\wrapped@level\relax
     \expandafter\wrapped@floathand
   \fi}
-% Where the text runs in columns, a wrappedfigure is a normal figure. The
+% Where the text runs in columns, a wrappedfigure does not wrap. The
 % hooks mark the inside of a multicols environment, where a float is lost,
 % and the mark ends with the environment's group. \if@twocolumn stays true
 % inside multicols in two-column text, so the mark is tested first.

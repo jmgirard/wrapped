@@ -9,7 +9,7 @@ format:
     fig-format: png
 ---
 
-This page has no figure, so its full lines show the width of the text block. The class twocol, beside this file, loads article with twocolumn, and the document sets no classoption. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+This page has no figure, so its full lines in two columns span the width of the text block. The class twocol, beside this file, loads article with twocolumn, and the document sets no classoption. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 
 ```{=latex}
 \newpage

@@ -169,6 +169,8 @@ new fixtures with layout and log checks; README and DESIGN text. The
 - 2026-10-26: re-audit: AC6 (full) — 1 finding: Quarto's `.columns` div is a column layout that the Lua filter detects, so "a column layout that neither turns on two-column mode nor opens multicols is not detected" is false; repair "a column layout from a LaTeX class or package that ...". Second re-audit line on AC6: the wording goes to the user.
 - 2026-10-26: substantive amendment: AC6's paracol clause now reads "a column layout from a LaTeX class or package that neither turns on LaTeX's two-column mode nor opens a `multicols` environment is not detected, without naming `paracol` as such a layout"; the Scope Out bullet matches. The user accepted this wording at the stop.
 - 2026-10-26: T4 done: README two-column bullets, `wrapped.lua` and `wrapped.tex` header comments, DESIGN.md Architecture steps 1 and 7.
+- 2026-10-26: verify on macOS on c99e972: 39 renders pass, 31 layout cases, 4 log checks, no snapshot difference. CI on the PR is left to review.
+- 2026-10-26: claim audit pass (fresh Opus reader): 41 claims, 3 corrected (the verify.py log-line comment, since TinyTeX sets max_print_line 10000; the twocolumn-class page-1 sentence; "normal figure" in wrapped.tex and README, now "do not wrap"). Its edge case, a wrapped figure in `multicols` under `classoption: twocolumn`, was rendered by hand: LaTeX drops it. README now says so, and candidate row "Keep wrapped figures in multicols" holds the fix. Re-read of the corrections is running; checkpoint commit.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. EXEMPT from
