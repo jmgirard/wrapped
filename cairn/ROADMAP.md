@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-25 (M005 done: Typst row graduated, M002 row pruned, three Typst follow-up rows added, three lessons captured, one known issue)_
+_Last hygiene check: 2026-10-26 (M006 done: Word row graduated, M003 row pruned, three Word follow-up rows added, three lessons captured, one known issue)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-25 (M005 done: Typst row graduated, M002 row pruned
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M006 | Wrap figures in Word output with frames | review | — | high | milestones/M006-word-wrap.md |
+| M006 | Wrap figures in Word output with frames | done | — | high | milestones/archive/M006-word-wrap.md |
 | M005 | Wrap figures in Typst PDF output | done | — | high | milestones/archive/M005-typst-wrap.md |
 | M004 | Wrap figures in LaTeX PDF output | done | M002, M003 | high | milestones/archive/M004-latex-wrap.md |
-| M003 | Fall back in contexts that cannot wrap | done | M002 | high | milestones/archive/M003-context-fallbacks.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -26,7 +25,6 @@ _Last hygiene check: 2026-10-25 (M005 done: Typst row graduated, M002 row pruned
      ending with `(#N)` for a row written for GitHub issue N, such as
      `Fix SE of skewness calculation (#100)`; `/cairn-triage` offers a new title for one
      with fewer than 5 words or more than 40 characters; tracking-rules "Candidate short title" has the whole rule -->
-- Wrap figures in Word output with frames: W4. Spike S4 in M001 showed that Word opens the file and shows one merged frame. This work also checks how LibreOffice and Google Docs show the frame (moved from M001 on 2026-10-24), and shows Word the frame `w:pPr` in the order a filter makes, after Pandoc's own `w:pPr`, with the caption style checked (found at M001 review) — added 2026-10-24 — references/wrap-mechanisms.md — started M006
 - Honor wrap-clear and figures in LaTeX: in PDF through LaTeX, a figure with no wrap class in the lines beside a wrapped figure overlaps its caption (stop-rule case 8), and a `wrap-clear` div does nothing. The wrapper's end-of-wrap step (skip the lines left, then `\WFclear`) could run before such a figure and at a `wrap-clear` div. That skip also follows `wrap-lines`, so a large value leaves blank lines before the next wrapped figure (M004 review, diff-bug #8). Found by the M004 claim audit — added 2026-10-25 — milestones/M004-latex-wrap.md
 - Detect two-column LaTeX classes and gaps: the filter reads only `classoption`, so a class that is two-column by default (IEEEtran, acmart sigconf, revtex) or a `\twocolumn` in a header gets wrapfig figures with no warning. `wrapped.tex` sets `\columnsep` globally while a moved figure waits, so a `multicols` that starts then, or a column page shipped then, takes the figure's gap, and a local `\columnsep` around a wrappedfigure leaks out on restore. Found at M004 review (diff-bug #1, #3) — added 2026-10-25 — milestones/M004-latex-wrap.md
 - Handle a wrapped cell with two figures: a code cell with `#| classes: wrap-right` that makes two figures floats both side by side in HTML. Decide whether such a cell wraps its first figure, falls back with a warning, or joins the subfigure fallback (E4). Found at M002 review (diff-bug #5, blame-history #3). A cell with `fig-subcap` or `layout-ncol` now keeps a normal panel with a warning (M003). In Typst both figures go in one box with the first figure's side and width (M005 review, blame-history #3) — added 2026-10-24, narrowed 2026-10-25 by M003 review — milestones/M002-html-wrap.md
@@ -37,7 +35,7 @@ _Last hygiene check: 2026-10-25 (M005 done: Typst row graduated, M002 row pruned
 - Check wrapped figures in Typst columns: a Typst document with `columns:` set puts the text in columns, and no one has tested a `wrap-content` call there. Make wrapping work there or keep a normal figure with a warning, as LaTeX does for two columns. Left out of M005 — added 2026-10-25 — milestones/M005-typst-wrap.md
 - Check CSS function lengths before use: `css_length` passes any `calc()`, `min()`, `max()`, or `clamp()` text unread, so `width="calc(banana)"` or `breakpoint: calc(50%)` reaches the CSS with no warning (M003 review, prior-review #1; same class as M002 review pass 1 finding 7) — added 2026-10-25 — milestones/archive/M003-context-fallbacks.md
 - Run the fixture renders in CI: a GitHub Actions workflow that runs `tests/verify.py` against the Quarto release and pre-release channels, with TinyTeX and R with knitr installed (research page, test plan). Chosen for later at the M002 plan's question set — added 2026-10-24 — references/wrap-mechanisms.md
-- Fit images in wide Word frames: Pandoc caps an image at 8400 twips with the default reference doc, so a Word frame between 8400 twips and the text width (such as `width="95%"`) holds a narrower image. Widths at or above the text width take the default since M006 (M006 review, diff-bug #4) — added 2026-10-26 — milestones/M006-word-wrap.md
-- Carry fig-alt to Word alt text: `fig-alt` on a captioned float or a captioned image gives no Word alt text (`descr` is empty or the caption), with or without the filter; only an uncaptioned image carries it (M006 review, diff-bug #11) — added 2026-10-26 — milestones/M006-word-wrap.md
-- Warn when Word frames are not built: `wrapped.lua` run alone by path, without the extension's `wrapped-docx.lua`, marks Word groups that nothing turns into frames, so wrapped figures render as normal figures with no warning (M006 review, blame-history #4) — added 2026-10-26 — milestones/M006-word-wrap.md
+- Fit images in wide Word frames: Pandoc caps an image at 8400 twips with the default reference doc, so a Word frame between 8400 twips and the text width (such as `width="95%"`) holds a narrower image. Widths at or above the text width take the default since M006 (M006 review, diff-bug #4) — added 2026-10-26 — milestones/archive/M006-word-wrap.md
+- Carry fig-alt to Word alt text: `fig-alt` on a captioned float or a captioned image gives no Word alt text (`descr` is empty or the caption), with or without the filter; only an uncaptioned image carries it (M006 review, diff-bug #11) — added 2026-10-26 — milestones/archive/M006-word-wrap.md
+- Warn when Word frames are not built: `wrapped.lua` run alone by path, without the extension's `wrapped-docx.lua`, marks Word groups that nothing turns into frames, so wrapped figures render as normal figures with no warning (M006 review, blame-history #4) — added 2026-10-26 — milestones/archive/M006-word-wrap.md
 - [low] Use the HTML stylesheet for EPUB: EPUB is HTML-based, so the W1 stylesheet can apply there. Version 1 keeps a normal figure in EPUB (W5) — added 2026-10-24 — references/wrap-mechanisms.md
