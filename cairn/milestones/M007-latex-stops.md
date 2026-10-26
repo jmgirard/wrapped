@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M007: Stop LaTeX wraps at every stop block
 
-- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -192,6 +192,7 @@ a callout frame, or a horizontal rule beside a figure is not checked.
 - 2026-10-26: claim audit: 37 claims read, 2 corrected — README.md (the moved figure renders after its paragraphs and goes to the next page only if it still does not fit, shown by a scratch compile at 0.69\textheight), tests/verify.py (pdf_boxes docstring); the reader re-read both as correct.
 - 2026-10-26: re-audit: AC3 (full) — third reader on the amended AC3: reachable, met now (gaps equal, 341/425 on pages 10 and 11); findings: name the one fixture case (3), no probe had shown the gap check red (4), the 13-line premise rests on one scratch log (5). Settled without rewording, since a further change to AC3 would go to the user: (3) AC3 already scopes to stop-latex.qmd, which holds one such case; (4) a scratch probe whose stop skips by the remaining wrap-lines count fails the gap check (326 px with wrap-lines against 62 px without); (5) review re-runs the compile log for the premise.
 - 2026-10-26: implement done: `python3 tests/verify.py` on the branch passed all 36 renders and 21 layout cases with no snapshot change; status review.
+- 2026-10-26: review return 1: AC6 fails as written: the README's moved-figure sentence ("renders after them, centered") and "Figures in a row" sentence match no case AC1 to AC4 measure, and the wrap-lines sentence is false for a smaller value. The return also carries the review's fix-now findings (Review section, pass 1): diff-bug #1, #2, #3, #4, #6; blame-history #1 (D-007); prior-review #1, #3; ripple #1, #2, #4 to #11. Status in-progress.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
@@ -213,3 +214,30 @@ Review pass 1, 2026-10-26, on ea4b4a5 (main at c681043 + plan f071331, not moved
 - AC3 evidence: the same run printed `ok layout stop-latex wrap-lines` (both cases pass stop_case, and the two figure-to-heading distances differ by at most one line height; both 62 px at implement). Premise re-run at review in a scratch copy rendered from HEAD with a \WF@startwrapping log: "Lines plain" starts at 13 lines, "Lines extra" at 26 (wrap-lines 25 + 1), and \WF@size 165.64 pt at \baselineskip 13.6 pt gives 13 lines from the height, so 25 is 12 more. The gap check was shown red at implement by a stop that skips the remaining wrap-lines count (326 px against 62 px).
 - AC4 evidence: the same run printed `ok layout stop-latex page bottom`: `page_bottom_case` found the paragraph on page 12 and the figure on page 13 (precondition), no text but the caption above the figure's bottom on page 13, and the stop heading below it. On main's filter the same case failed (the heading was on page 12, the figure put out at the document's end).
 - AC5 evidence: the same run ended `all 36 renders pass` (exit 0), every snapshot compared equal; `git diff f071331 --name-only -- tests/_snapshots/` lists 8 files, all `.pdf.txt` (none other), 63 added lines: 39 `wrappedstop` lines in 7 existing files and the new stop-latex.pdf.txt.
+- AC6 fails as written (not ticked): two changed README sentences match no case that AC1 to AC4 measure. "the figure renders after them, centered" (a moved figure put out on its own page; AC4 measures only the next-page case and not centering) and "a wrapped figure is a block that stops the wrap of an earlier figure" (no measured case has a wrapped figure as the stop block; case 8's is unwrapped). The README "That block starts below the figure, as it does without `wrap-lines`" is also false for a wrap-lines smaller than the height needs (diff-bug #3).
+- Consistency gate: cairn_validate all checks passed at bd21ff4; profile gate: one version marker (`_extension.yml` 0.1.0, unchanged), verify passed (AC5 line), changelog "none". No DESIGN principle changed, so cairn_impact was skipped.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a user-written `.wrapped-image` div in LaTeX forms a group, and its `\wrappedstop` is undefined when no figure wrapped (probe render fails) — fix now
+- diff-bug #2: the layout check drops any line in the caption band, so stop text merged with or overlapping the caption is skipped and the next line is measured (false pass on synthetic boxes) — fix now: exclude the caption's own box
+- diff-bug #3: README wrap-lines sentence is false for a wrap-lines smaller than the height needs (wrapfig ends the wrap itself and the heading sits beside the caption) — fix now: scope the sentence to a larger value
+- diff-bug #4: verify.py crashes (ValueError) when page 1 has no text or case 8's "Text after the stop block." is missing, and case 8 can pick case 9's text on a later page — fix now
+- diff-bug #5: a raw LaTeX block between paragraphs now ends the wrap — reject (planned change): the stop rule ends a group at any block that is not a paragraph, as HTML, Typst, and Word already do
+- diff-bug #6: the skip uses the \baselineskip in force at the stop, not at the wrap's start, so a size change in the last paragraph miscounts — fix now: keep the start's \baselineskip
+- diff-bug #7: a figure at the top of a page leaves about one more blank line before the stop block (60 px against 39 px mid-page); no fixture covers a page-top figure, a smaller wrap-lines, or a group ending at a div's end — follow-up: new row "Trim the LaTeX stop gap at page tops"
+- diff-bug #8 (c): the both-sides pairs and stop-rule cases 1 to 7 and 9 run one code path — reject (planned change): AC2 calls for both sides, and the stop-rule cases predate this milestone
+- blame-history #1: a waiting figure is now put out at any stop block, a cross-cutting change of M004's behavior recorded in no D-entry — fix now: add D-007
+- blame-history #2 to #8: skip count, removed LaTeX no-group path, cell anchor, float_target return, README limits, snapshot regex, group guard — reject (false): the reviewer found each intended and recorded, no regression
+- prior-review #1: cairn/PROFILE.md says layout is not in the verify command and lists no poppler — fix now
+- prior-review #2: fixture.qmd's LaTeX placements moved: Figure 2 now renders centered on page 2 (the designed stop), and page 4 overflows; `main` with an 8-line hand shift overflows page 4 the same way (a floating figure on the longtable page), so the overflow predates this branch — follow-up: new row "Fix the overfull LaTeX fixture page"
+- prior-review #3: verify.py crashes on empty lists and an uncaught pdftohtml failure — fix now (with diff-bug #4)
+- prior-review #4: reordering RENDERS would check Typst's PDF — reject (false): layout_check runs in the same loop pass right after its PDF render, so the order of RENDERS does not matter
+- prior-review #5: the global \wrapped@startlines may leak like M004's \columnsep — reject (false): it is written at each wrap start and read only while that wrap is narrowed, and nothing restores it
+- prior-review #6: a long docstring line and import order — reject (style)
+- ripple #1, #2, #8: PROFILE.md verify slot and verify.py docstring omit the layout check, poppler, and layout failures in the exit status — fix now
+- ripple #3: the "Honor wrap-clear and figures in LaTeX" row is stale — reject (planned change): post-merge hygiene graduates the row
+- ripple #4 to #6: references/wrap-mechanisms.md W2, E9, E10 describe the old LaTeX stops — fix now, marked corrected M007
+- ripple #7: DESIGN.md wrap-lines row says "the number of narrowed lines" — fix now: a stop block ends it earlier
+- ripple #9: the CI candidate row lists no poppler — fix now
+- ripple #10: DESIGN.md pass 5 says LaTeX "groups as in HTML" and "writes no div" — fix now: reword
+- ripple #11: wrapped.lua's file header omits the LaTeX group — fix now
+- ripple #12: a long DESIGN.md line — reject (style)

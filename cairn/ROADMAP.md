@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-26 (M006 done: Word row graduated, M003 row pruned,
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M007 | Stop LaTeX wraps at every stop block | review | — | normal | milestones/M007-latex-stops.md |
+| M007 | Stop LaTeX wraps at every stop block | in-progress | — | normal | milestones/M007-latex-stops.md |
 | M006 | Wrap figures in Word output with frames | done | — | high | milestones/archive/M006-word-wrap.md |
 | M005 | Wrap figures in Typst PDF output | done | — | high | milestones/archive/M005-typst-wrap.md |
 | M004 | Wrap figures in LaTeX PDF output | done | M002, M003 | high | milestones/archive/M004-latex-wrap.md |
@@ -39,4 +39,6 @@ _Last hygiene check: 2026-10-26 (M006 done: Word row graduated, M003 row pruned,
 - Fit images in wide Word frames: Pandoc caps an image at 8400 twips with the default reference doc, so a Word frame between 8400 twips and the text width (such as `width="95%"`) holds a narrower image. Widths at or above the text width take the default since M006 (M006 review, diff-bug #4) — added 2026-10-26 — milestones/archive/M006-word-wrap.md
 - Carry fig-alt to Word alt text: `fig-alt` on a captioned float or a captioned image gives no Word alt text (`descr` is empty or the caption), with or without the filter; only an uncaptioned image carries it (M006 review, diff-bug #11) — added 2026-10-26 — milestones/archive/M006-word-wrap.md
 - Warn when Word frames are not built: `wrapped.lua` run alone by path, without the extension's `wrapped-docx.lua`, marks Word groups that nothing turns into frames, so wrapped figures render as normal figures with no warning (M006 review, blame-history #4) — added 2026-10-26 — milestones/archive/M006-word-wrap.md
+- Trim the LaTeX stop gap at page tops: a wrapped figure placed at the top of a page leaves about one more blank line before its stop block than one in mid-page (60 px against 39 px in a scratch render), since wrapfig counts its lines from a height less \intextsep there. No fixture covers a page-top figure, a wrap-lines smaller than the height needs, or a group that ends at a div's end (M007 review, diff-bug #7) — added 2026-10-26 — milestones/M007-latex-stops.md
+- Fix the overfull LaTeX fixture page: in tests/fixture.qmd's PDF through LaTeX, page 4 runs past the page bottom (Figure 7 off the page) when a floating figure lands on the page with the knitr longtable. `main` overflows the same way with an 8-line hand shift, so the clash predates M007 (M007 review, prior-review #2) — added 2026-10-26 — milestones/M007-latex-stops.md
 - [low] Use the HTML stylesheet for EPUB: EPUB is HTML-based, so the W1 stylesheet can apply there. Version 1 keeps a normal figure in EPUB (W5) — added 2026-10-24 — references/wrap-mechanisms.md
