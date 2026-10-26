@@ -17,7 +17,7 @@
 image: cx=5334000
 image: cx=5334000
 image: cx=5334000
-image: cx=5334000
+image: cx=4572000
 image: cx=2971800
 image: cx=2971800
 image: cx=2971800

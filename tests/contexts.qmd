@@ -39,6 +39,7 @@ The paragraph after the aside. Lorem ipsum dolor sit amet, consectetur adipiscin
 #| fig-cap: "A margin cell figure."
 #| column: margin
 #| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
 plot(1:10)
 ```
 
