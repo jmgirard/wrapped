@@ -47,10 +47,10 @@ not part of the verify command. Branch protection that requires the check
      insertion, removal, or reorder renumbers the labels and the Coverage
      lines together. -->
 
-- [ ] AC1: `.github/workflows/verify.yml` runs `python3 tests/verify.py` from the repository root on an `ubuntu-latest` runner, after installing Quarto from its release channel with TinyTeX, R with the knitr and rmarkdown packages, and poppler's command-line tools. It runs on pull requests to `main`, on pushes to `main` that change a path outside `cairn/`, and by hand (`workflow_dispatch`).
+- [x] AC1: `.github/workflows/verify.yml` runs `python3 tests/verify.py` from the repository root on an `ubuntu-latest` runner, after installing Quarto from its release channel with TinyTeX, R with the knitr and rmarkdown packages, and poppler's command-line tools. It runs on pull requests to `main`, on pushes to `main` that change a path outside `cairn/`, and by hand (`workflow_dispatch`).
 - [ ] AC2: On the milestone PR's last head commit, `gh pr checks` reports the `verify.yml` job as passed and the log of its `python3 tests/verify.py` step ends with `all <n> renders pass`, where n is the length of `RENDERS` in `tests/verify.py` at that commit; `python3 tests/verify.py` also exits 0 on this Mac at that commit.
-- [ ] AC3: `.github/workflows/verify-prerelease.yml` runs the same command after installing Quarto from its pre-release channel, on a weekly schedule and by hand, and has no `pull_request` or `push` trigger, so its result is not among a pull request's checks.
-- [ ] AC4: A commit pushed to the draft PR that changes one line of `tests/_snapshots/meta-string.html.txt` makes the `verify.yml` job fail, the log of its verify step has the line `FAIL meta-string.html`, and the failed run has an artifact that holds `tests/meta-string.html`, as `gh run download` lists.
+- [x] AC3: `.github/workflows/verify-prerelease.yml` runs the same command after installing Quarto from its pre-release channel, on a weekly schedule and by hand, and has no `pull_request` or `push` trigger, so its result is not among a pull request's checks.
+- [x] AC4: A commit pushed to the draft PR that changes one line of `tests/_snapshots/meta-string.html.txt` makes the `verify.yml` job fail, the log of its verify step has the line `FAIL meta-string.html`, and the failed run has an artifact that holds `tests/meta-string.html`, as `gh run download` lists.
 
 ## Coverage
 <!-- owner: plan · create/amend-via-gate; each acceptance criterion → the
@@ -133,3 +133,9 @@ not part of the verify command. Branch protection that requires the check
 ## Review
 <!-- owner: review · exclusive; evidence per criterion, consistency-gate
      results, review findings + triage. -->
+
+Pass 1, 2026-10-26, at 51efbde (main at 2a92353, unmoved since the cut). Resume route (d): PR #8 open as a draft, no box ticked.
+
+- AC1: `.github/workflows/verify.yml` read at 51efbde: `on:` holds `pull_request` (branches main), `push` (branches main, `paths-ignore: cairn/**`), and `workflow_dispatch`; job `verify` `runs-on: ubuntu-latest`; steps `actions/checkout@v7`, `quarto-dev/quarto-actions/setup@v2` with `version: release` and `tinytex: true`, `apt-get install` of `r-base r-cran-knitr r-cran-rmarkdown poppler-utils`, then `run: python3 tests/verify.py` (no `working-directory`, so the repository root). Pass.
+- AC3: `.github/workflows/verify-prerelease.yml` read at 51efbde: `on:` holds only `schedule` (`cron: "0 6 * * 1"`, weekly) and `workflow_dispatch`, no `pull_request` or `push`; same install steps with `version: pre-release`; `run: python3 tests/verify.py`. Pass.
+- AC4: run 40310746574 (pull_request, head 6fd85b1, which changed `576px` to `577px` in `tests/_snapshots/meta-string.html.txt`) read fresh: conclusion `failure`; its failed-step log holds one `FAIL meta-string.html` line; `gh run download 40310746574 -n rendered-outputs` writes `meta-string.html`. The restoring commit be641d8 ran green (run 40312839783). Pass.
