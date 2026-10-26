@@ -234,3 +234,19 @@ Pass 2, on 716d163 (level with origin/main e1f0cf3), after review return 1 (T6).
 - AC6 evidence (pass 2, README.md lines 213-227 and DESIGN.md Architecture step 1 on 716d163): "Where the text runs in columns, set by `classoption: twocolumn`, a class default, `\twocolumn`, or `multicols`, wrapped figures render as normal figures"; only `classoption` prints a warning in the render, the others write to the LaTeX log kept with `latex-clean: false`; "A column layout from a LaTeX class or package that neither turns on LaTeX's two-column mode nor opens a `multicols` environment is not detected"; no paracol; no "IEEEtran is not detected" sentence (IEEEtran now appears as found). DESIGN step 1 names the check in `wrapped.tex`. Pass.
 - AC7 evidence (macOS part, pass 2): the run above. CI half at step 8.
 - Gate (pass 2): `cairn_validate.py` all checks pass (after 882e1cc brought PROFILE.md to 119 lines and the milestone body under 150); version marker 0.1.0 unchanged; changelog "none".
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: `\cs_if_exist:NT \captionsetup` is true with caption3 alone, which lacks the `hypcap` key, so a custom template loading only caption3 stops with "hypcap undefined" (reviewer's scratch compile) — reject (edge): Quarto's templates load caption.sty; only a custom template that loads caption3 alone reaches it, and the effect is a LaTeX error
+- diff-bug #2: the newline-removal fix in the log reader has no regression test, since TinyTeX logs never break lines — fix now (the LOGS renders set `max_print_line=79`, TeX Live's default, so the multicols warning breaks and the reader is exercised each run)
+- diff-bug #3: the mode comment says p applies "inside a box" without saying "in two-column text" — fix now
+- diff-bug #4: "A percent width is a share of the column" is not exact inside a box — fix now (README names the box; the box case in twocolumn-class becomes a 0.8\linewidth minipage, and the layout cases check each image's width against the text lines of its column or box)
+- diff-bug #5: `multicols_figures` reads a `.tex` that is fresh only with `keep-tex: true` — reject (false): every LOGS fixture sets `keep-tex: true`, so each render rewrites it
+- diff-bug #6: orphan comment line in wrapped.tex, unreflowed long line in PROFILE.md — fix now
+- diff-bug #7: DESIGN.md step 7 does not name the in-a-box case — fix now
+- blame-history #1: DESIGN.md step 7 lags the in-place cases — fix now (with diff-bug #7)
+- blame-history #2: `hypcap=false` moves the `@fig-` link target to the caption, unverified — reject (false): the anchor stays at the caption, and the twocolumn-class and multicols logs have no undefined reference
+- blame-history #3: `LOG_WARNING` without `$` cuts a message at an inner period — reject (false): neither wrapped message has an inner period, and an unknown message lands in the "other" list and fails the check
+- blame-history #4: a 106-character line in PROFILE.md — fix now (with diff-bug #6)
+- prior-review #1: README "Inside `multicols`, where LaTeX loses floats" and the wrapped.tex comment restate the claim pass 1 dropped — reject (false): pass 1 dropped a claim about this extension's output with `classoption`; this one states multicol's own behavior, checked against multicol.sty by the claim audit, and the extension's in-place result there is AC3's cases
+- ripple #1: README says figures under `classoption: twocolumn` render as normal figures and that inside `multicols` each figure stays in place, while the candidate row "Keep wrapped figures in multicols" says LaTeX drops such a figure — fix now (README: with `classoption`, the filter writes Quarto's normal figure; the next bullets say "in other documents")
+- ripple #2: README line 173 "A percent is that share of the text width" against the new column statement — fix now (a share of the line width, the text width in one column)
+- ripple #3: DESIGN.md step 7 — fix now (with diff-bug #7)
