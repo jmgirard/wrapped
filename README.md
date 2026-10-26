@@ -121,9 +121,8 @@ Word the render prints no warning for such a figure. The places in the next sect
 exception. Of two wrapped figures in a row, the first keeps its
 normal layout, and the second wraps the paragraphs after it.
 
-In PDF through LaTeX, wrapping stops only in part, and a `wrap-clear` div
-does nothing. See [PDF through LaTeX](#pdf-through-latex). In PDF through
-Typst and in Word, wrapping stops as in HTML, and a `wrap-clear` div works.
+In PDF through LaTeX, in PDF through Typst, and in Word, wrapping stops as
+in HTML, and a `wrap-clear` div works.
 
 ## Where a figure keeps its normal layout
 
@@ -179,7 +178,8 @@ The `width` and `wrap-gap` values change to LaTeX lengths:
 
 The `wrap-lines` attribute sets the number of lines beside the figure. It
 works only in LaTeX. Without it, wrapfig counts the lines from the height
-of the figure.
+of the figure. A block that stops the wrap ends it before that number of
+lines. That block starts below the figure, as it does without `wrap-lines`.
 
 ```markdown
 ![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right wrap-lines="12"}
@@ -191,24 +191,23 @@ width.
 
 wrapfig has limits, and the extension keeps some of them:
 
-- Wrapping stops only in part. wrapfig narrows a number of lines that it
-  counts from the height of the figure. A heading, a list, a quote, a
-  table, or a code block in those lines sits beside the figure, narrowed.
-  If the text is shorter than the figure, the lines after it are narrowed
-  too. A figure with no wrap class in those lines can overlap the wrapped
-  figure. A `wrap-clear` div does not stop wrapping in LaTeX.
+- wrapfig narrows a number of lines that it counts from the height of the
+  figure. At the block that stops the wrap, the extension skips the lines
+  that the figure still needs. If the text beside the figure is shorter
+  than the figure, the space beside the figure stays empty.
 - A figure that does not fit at the bottom of a page moves to the start of
-  a paragraph on the next page. The text before it fills the page.
+  a paragraph on the next page. The text before it fills the page. If the
+  paragraphs beside it all end on the first page, the figure renders at
+  the top of the next page. It is centered, with no text beside it, and
+  the block that stops the wrap starts below it.
 - If a page break comes while lines are still narrowed, the first lines on
   the next page are narrowed with no figure beside them. A `wrap-lines`
   value larger than the figure needs can narrow lines past a page break in
   the same way.
-- Figures in a row: when a wrapped figure starts while the text beside an
-  earlier figure is still narrowed, the extension adds space, so the new
-  figure starts below the earlier one. A figure that moved to the next page
-  waits for a paragraph. A heading or the end of a callout does not take
-  it. If the next wrapped figure or the end of the document comes first,
-  the figure that waits renders centered with no text beside it.
+- Figures in a row: a wrapped figure is a block that stops the wrap of an
+  earlier figure, so the new figure starts below the earlier one. A figure
+  that moved to the next page waits for one of its own paragraphs. A
+  heading or the end of a callout does not take it.
 - In a two-column document, set with `classoption: twocolumn`, wrapped
   figures render as normal figures, and the render prints one warning. The
   extension reads only `classoption`. A class that sets two columns by

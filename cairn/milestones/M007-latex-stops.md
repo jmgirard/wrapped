@@ -141,7 +141,7 @@ a callout frame, or a horizontal rule beside a figure is not checked.
       run `python3 tests/verify.py --update`, and read the snapshot diff:
       only `.pdf.txt` files change, and each change is a stop command or a
       new fixture.
-- [ ] T5: Rewrite the README's "Where wrapping stops" paragraph about LaTeX
+- [x] T5: Rewrite the README's "Where wrapping stops" paragraph about LaTeX
       and the "PDF through LaTeX" limits ("Wrapping stops only in part",
       "Figures in a row") against renders, and update passes 4, 5, and 7 of
       DESIGN.md's Architecture (`corrected M007`).
@@ -182,6 +182,7 @@ a callout frame, or a horizontal rule beside a figure is not checked.
 - 2026-10-26: T4 done: tex_summary records each \wrappedstop in place; `python3 tests/verify.py --update` passed all 36 renders and 21 layout cases. The snapshot diff is 39 added `wrappedstop` lines in 7 .pdf.txt files plus the new stop-latex.pdf.txt; no other snapshot changed.
 - 2026-10-26: re-audit: AC1 (full) — 6 findings on the amended beside definition (first reader): half a line height bound with a flush-right probe (2), page 1 must hold no image (4), line height as a median over same-left lines (5), the short paragraph fits on one line (6); 1 and 3 found nothing. All taken; the fixed wording goes to a second reader.
 - 2026-10-26: re-audit: AC2 (full) — same reader and findings as AC1, which AC2 reads through the Terms paragraph.
+- 2026-10-26: T5 done: README "Where wrapping stops" now names LaTeX with Typst and Word; the wrap-lines paragraph says a stop block ends the wrap before that count; the LaTeX limits replace "Wrapping stops only in part" with the skip, give the moved figure's place (top of the next page, centered, read from stop-latex.pdf page 13: image left 342 of edges 125 to 794), and rewrite "Figures in a row". DESIGN.md stop-rule paragraph and Architecture passes 4, 5, 7 marked corrected M007.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
