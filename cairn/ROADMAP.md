@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-26 (M008 done: CI row graduated, M005 row pruned, t
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M009 | Keep LaTeX column layouts intact | in-progress | — | normal | milestones/M009-latex-columns.md |
+| M009 | Keep LaTeX column layouts intact | review | — | normal | milestones/M009-latex-columns.md |
 | M008 | Run the fixture renders in CI | done | — | normal | milestones/archive/M008-ci-verify.md |
 | M007 | Stop LaTeX wraps at every stop block | done | — | normal | milestones/archive/M007-latex-stops.md |
 | M006 | Wrap figures in Word output with frames | done | — | high | milestones/archive/M006-word-wrap.md |

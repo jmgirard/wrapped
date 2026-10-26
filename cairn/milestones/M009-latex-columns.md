@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M009: Keep LaTeX column layouts intact
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -141,7 +141,7 @@ new fixtures with layout and log checks; README and DESIGN text. The
 - [x] T4: Docs. Update the README's two-column bullet (README.md line
       212), the header comments of `wrapped.lua` (line 15) and
       `wrapped.tex`, and step 1 of DESIGN.md's Architecture.
-- [ ] T5: Run `python3 tests/verify.py` on macOS and see `verify.yml` pass
+- [x] T5: Run `python3 tests/verify.py` on macOS and see `verify.yml` pass
       on the PR.
 
 ## Work log
@@ -172,6 +172,7 @@ new fixtures with layout and log checks; README and DESIGN text. The
 - 2026-10-26: verify on macOS on c99e972: 39 renders pass, 31 layout cases, 4 log checks, no snapshot difference. CI on the PR is left to review.
 - 2026-10-26: claim audit pass (fresh Opus reader): 41 claims, 3 corrected (the verify.py log-line comment, since TinyTeX sets max_print_line 10000; the twocolumn-class page-1 sentence; "normal figure" in wrapped.tex and README, now "do not wrap"). Its edge case, a wrapped figure in `multicols` under `classoption: twocolumn`, was rendered by hand: LaTeX drops it. README now says so, and candidate row "Keep wrapped figures in multicols" holds the fix. Re-read of the corrections is running; checkpoint commit.
 - 2026-10-26: claim audit: 41 claims read, 3 corrected — tests/verify.py, tests/twocolumn-class.qmd, _extensions/wrapped/wrapped.tex, README.md. The re-read found all corrections hold; its two wording nits (the log-join comment, "a figure from that document") are applied.
+- 2026-10-26: T5: verify on macOS on 8ad78ab: 39 renders pass, 31 layout cases, 4 log checks, no snapshot difference. The `verify.yml` run on the PR happens at review, which opens the PR. Status set to review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. EXEMPT from
