@@ -31,4 +31,4 @@ figure: - image-width=no
 figure: fig-first image-width=yes
 figure: fig-second image-width=yes
 # wraps
-align: top + wrapped-side(right), columns: wrapped-columns(right, 30%), column-gutter: 1em | fig-second no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 30%, 40%, 40%)), column-gutter: 1em | fig-second no-alt | p, p | cites=0

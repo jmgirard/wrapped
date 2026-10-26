@@ -108,6 +108,7 @@ RENDERS = [
     ("typst-ua", "typst", True),
     ("typst-rtl", "typst", True),
     ("typst-options", "typst", True),
+    ("typst-wide", "typst", True),
     ("zero-meta", "html", True),
     ("zero-meta", "pdf", True),
     ("zero-meta", "typst", True),
@@ -323,7 +324,7 @@ NEAR = 3
 def pdf_boxes(path):
     """Every text line and image box in a PDF."""
     if not shutil.which("pdftohtml"):
-        raise SystemExit("verify.py needs poppler's pdftohtml for the LaTeX layout check (brew install poppler, or apt install poppler-utils)")
+        raise SystemExit("verify.py needs poppler's pdftohtml for the layout check (brew install poppler, or apt install poppler-utils)")
     boxes, heights = [], {}
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "layout"
@@ -666,6 +667,51 @@ def twocolumn_switch_cases():
         find_text(bx, "A short paragraph beside the figure after onecolumn."), "left", e, lh)
 
 
+def find_words(boxes, words):
+    """The one text line that holds `words`, with runs of spaces in the line
+    read as one space. pdftohtml writes Typst's word gaps as two spaces."""
+    found = [b for b in boxes if b.kind == "text" and words in " ".join(b.text.split())]
+    if len(found) != 1:
+        raise LayoutError(f"{len(found)} lines hold {words!r}")
+    return found[0]
+
+
+def typst_width_case(caption, para, want=None):
+    """A Typst figure whose paragraph's first line sits beside its image and
+    inside the text edges, and whose image is `want` px wide, or as wide as
+    the image of the figure "Fig W40." when `want` is None."""
+    def case(boxes, edges, lh):
+        fig = find_figure(boxes, caption, None)
+        line = find_words(boxes, para)
+        if line.page != fig.page:
+            raise LayoutError(f"the paragraph is on page {line.page} and the figure on page {fig.page}")
+        if not (line.top < fig.image.bottom and fig.image.top < line.bottom):
+            raise LayoutError("the paragraph's first line is not beside the image")
+        if overlaps(line.left, line.right, fig.image.left, fig.image.right):
+            raise LayoutError("the paragraph overlaps the figure")
+        if line.left < edges[0] - NEAR or line.right > edges[1] + NEAR:
+            raise LayoutError(f"the paragraph's first line runs from {line.left:.0f} to {line.right:.0f} px, "
+                              f"outside the text edges {edges[0]:.0f} to {edges[1]:.0f} px")
+        if want is None:
+            ref = find_figure(boxes, "Fig W40.", None).image
+            target = ref.right - ref.left
+        else:
+            target = want
+        got = fig.image.right - fig.image.left
+        if abs(got - target) > NEAR:
+            raise LayoutError(f"the image is {got:.0f} px wide, not {target:.0f} px")
+    return case
+
+
+def typst_wide_cases():
+    yield "40%", typst_width_case("Fig W40.", "Marker forty")
+    yield "no width", typst_width_case("Fig Wnone.", "Marker none")
+    yield "10in", typst_width_case("Fig W10in.", "Marker inches")
+    yield "60em", typst_width_case("Fig W60em.", "Marker ems")
+    # 2 in is 144 pt, which pdftohtml writes as 216 px.
+    yield "2in", typst_width_case("Fig W2in.", "Marker two", 216)
+
+
 # The fixtures whose PDF through LaTeX the layout check reads, with their cases.
 LAYOUT = {
     "stop-rule": stop_rule_cases,
@@ -675,8 +721,13 @@ LAYOUT = {
     "twocolumn-switch": twocolumn_switch_cases,
 }
 
+# The fixtures whose PDF through Typst the layout check reads, with their cases.
+TYPST_LAYOUT = {
+    "typst-wide": typst_wide_cases,
+}
 
-def layout_check(fixture):
+
+def layout_check(fixture, cases):
     """Prints a line for each case. Returns the names of the failed cases."""
     try:
         boxes = pdf_boxes(TESTS / f"{fixture}.pdf")
@@ -685,7 +736,7 @@ def layout_check(fixture):
         print(f"FAIL layout {fixture}: {err}")
         return [f"layout {fixture}"]
     failed = []
-    for name, case in LAYOUT[fixture]():
+    for name, case in cases[fixture]():
         try:
             case(boxes, edges, lh)
             print(f"ok   layout {fixture} {name}")
@@ -758,14 +809,15 @@ def log_check(fixture):
     return []
 
 
-TYPST_WRAP_START = re.compile(r"^#context wrap-content\(", re.M)
+TYPST_WRAP_START = re.compile(r"^#layout\(wrapped-size => wrap-content\(", re.M)
 TYPST_WRAP = re.compile(
-    r"^#context wrap-content\(([^\n]*), box\(width: 100%\)\[\n(.*?)^\], \[\n(.*?)^\]\)$", re.M | re.S
+    r"^#layout\(wrapped-size => wrap-content\(([^\n]*), box\(width: 100%\)\[\n(.*?)^\], \[\n(.*?)^\]\)\)$",
+    re.M | re.S,
 )
 # Typst calls that Pandoc and Quarto write as blocks. Any other text, inline
 # calls such as #strike[ or #footnote[ included, starts a paragraph.
 TYPST_BLOCKS = (
-    "#block", "#figure", "#table", "#grid", "#Skylighting", "#wrap-content", "#context",
+    "#block", "#figure", "#table", "#grid", "#Skylighting", "#wrap-content", "#context", "#layout(",
     "#callout", "#quote", "#line(", "#pagebreak", "#v(", "#align(", "#pad(", "#columns(",
 )
 
@@ -983,7 +1035,9 @@ def main():
             failed.append(name)
             continue
         if fmt == "pdf" and fixture in LAYOUT:
-            failed += layout_check(fixture)
+            failed += layout_check(fixture, LAYOUT)
+        if fmt == "typst" and fixture in TYPST_LAYOUT:
+            failed += layout_check(fixture, TYPST_LAYOUT)
         if fmt == "pdf" and fixture in LOGS:
             failed += log_check(fixture)
         if not compare:

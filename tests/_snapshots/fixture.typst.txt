@@ -29,18 +29,18 @@ figure: fig-bottom image-width=yes
 figure: fig-break image-width=yes
 figure: fig-break-lines image-width=yes
 # wraps
-align: top + wrapped-side(right), columns: wrapped-columns(right, 30%), column-gutter: 1em | fig-md no-alt | p, p | cites=1
-align: top + wrapped-side(left), columns: wrapped-columns(left, 3in), column-gutter: 1em | fig-div no-alt | p, p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, 35%), column-gutter: 2em | fig-inner no-alt | p, p | cites=0
-align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | fig-cell no-alt | p, p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, 20%), column-gutter: 1em | plot.png alt="A small plot" | p, p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, 20%), column-gutter: 2em | plot.png no-alt | p, p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, 30%), column-gutter: 1em | fig-comment no-alt | p, p | cites=0
-align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | fig-bad-width no-alt | p, p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, 30%), column-gutter: 1em | fig-styled no-alt | p, p | cites=0
-align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | fig-clamp no-alt | p, p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, 30%), column-gutter: 1em | fig-raw no-alt | p | cites=0
-align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | plot.png no-alt | p, p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, 112.5pt), column-gutter: 1em | fig-bottom no-alt | p, p | cites=0
-align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | fig-break no-alt | p, p, p, p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, 40%), column-gutter: 1em | fig-break-lines no-alt | p, p, p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 30%, 40%, 40%)), column-gutter: 1em | fig-md no-alt | p, p | cites=1
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 3in, 40%, 40%)), column-gutter: 1em | fig-div no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 35%, 40%, 40%)), column-gutter: 2em | fig-inner no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em | fig-cell no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 20%, 40%, 40%)), column-gutter: 1em | plot.png alt="A small plot" | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 20%, 40%, 40%)), column-gutter: 2em | plot.png no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 30%, 40%, 40%)), column-gutter: 1em | fig-comment no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em | fig-bad-width no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 30%, 40%, 40%)), column-gutter: 1em | fig-styled no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em | fig-clamp no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 30%, 40%, 40%)), column-gutter: 1em | fig-raw no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em | plot.png no-alt | p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 112.5pt, 40%, 40%)), column-gutter: 1em | fig-bottom no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em | fig-break no-alt | p, p, p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em | fig-break-lines no-alt | p, p, p, p | cites=0

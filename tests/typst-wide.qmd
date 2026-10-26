@@ -1,0 +1,41 @@
+---
+title: "wrapped fixture: Typst widths as wide as the text"
+filters:
+  - wrapped
+format:
+  typst:
+    keep-typ: true
+    fig-format: png
+wrapped:
+  width: 10in
+---
+
+The layout check reads the width of the text from the full lines of this first page, which holds no image. A width as wide as the text or wider leaves no room for the text beside the figure. The filter cannot know the text width, so Typst measures it while it lays out the page. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+{{< pagebreak >}}
+
+![Fig W40.](plot.png){#fig-w40 .wrap-right width="40%"}
+
+Marker forty starts the paragraph beside the figure at 40%, which the other figures match. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+![Fig Wnone.](plot.png){#fig-wnone .wrap-left}
+
+Marker none starts the paragraph beside the figure with no width. The metadata width of 10 in is wider than the text, so the figure takes 40%. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## Absolute widths wider than the text
+
+![Fig W10in.](plot.png){#fig-w10in .wrap-right width="10in"}
+
+Marker inches starts the paragraph beside the figure at 10 in, which is wider than the text, so the figure takes 40%. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![Fig W60em.](plot.png){#fig-w60em .wrap-left width="60em"}
+
+Marker ems starts the paragraph beside the figure at 60 em, which is wider than the text, so the figure takes 40%. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## An absolute width narrower than the text
+
+![Fig W2in.](plot.png){#fig-w2in .wrap-right width="2in"}
+
+Marker two starts the paragraph beside the figure at 2 in, which is narrower than the text, so the figure keeps its width. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

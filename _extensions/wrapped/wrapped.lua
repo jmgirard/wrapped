@@ -346,7 +346,12 @@ end
 -- a share of the text width. Set on the box itself, a percent would be a
 -- share of the box's own measured column. wrap-it's grid follows the text
 -- direction, so the helpers in TYPST_HEADER turn the physical side into
--- the side wrap-it reads, in context.
+-- the side wrap-it reads, in context. The filter cannot know the text
+-- width, so the call runs inside `layout`, and wrapped-width there turns an
+-- absolute width as wide as the text or wider into the document default,
+-- or into the built-in default when the document default is that wide too.
+-- Typst has no way to print a warning for it. The closing `]))` is written
+-- by the grouping pass.
 local function typst_open(class, width, gap, where)
   local side = SIDES[class]
   local w = checked_typst_length(width, options.width, "width", where)
@@ -357,18 +362,22 @@ local function typst_open(class, width, gap, where)
     w = typst_length(options.width)
   end
   return string.format(
-    "#context wrap-content(align: top + wrapped-side(%s), columns: wrapped-columns(%s, %s), column-gutter: %s, box(width: 100%%)[",
-    side, side, w, checked_typst_length(gap, options.gap, "wrap-gap", where))
+    "#layout(wrapped-size => wrap-content(align: top + wrapped-side(%s), columns: wrapped-columns(%s, wrapped-width(wrapped-size, %s, %s, %s)), column-gutter: %s, box(width: 100%%)[",
+    side, side, w, typst_length(options.width), typst_length(DEFAULTS.width),
+    checked_typst_length(gap, options.gap, "wrap-gap", where))
 end
 
--- The Typst header: the wrap-it import and the side helpers. Typst takes a
--- text's direction from `dir`, or from its language when `dir` is auto, and
--- these are the languages that Typst sets right to left.
+-- The Typst header: the wrap-it import, the side helpers, and the width
+-- helper. Typst takes a text's direction from `dir`, or from its language
+-- when `dir` is auto, and these are the languages that Typst sets right to
+-- left. wrapped-width returns the first width that is a percent or narrower
+-- than the text, which `size` from `layout` gives; the last is a percent.
 local TYPST_HEADER = [[
 #import "@preview/wrap-it:0.1.1": wrap-content
 #let wrapped-rtl() = text.dir == rtl or (text.dir == auto and text.lang in ("ar", "dv", "fa", "he", "ks", "pa", "ps", "sd", "ug", "ur", "yi"))
 #let wrapped-side(side) = if wrapped-rtl() { if side == right { left } else { right } } else { side }
-#let wrapped-columns(side, width) = if wrapped-side(side) == right { (1fr, width) } else { (width, 1fr) }]]
+#let wrapped-columns(side, width) = if wrapped-side(side) == right { (1fr, width) } else { (width, 1fr) }
+#let wrapped-width(size, ..widths) = widths.pos().find(w => type(w) == ratio or w.to-absolute() < size.width)]]
 
 -- Twips (1/20 pt) for each unit of a length that Word can use. A px length
 -- is 1/96 in, as in CSS, and an em is 12 pt.
@@ -1147,7 +1156,7 @@ local function typst_group(members)
   out:extend(fixed)
   out:insert(pandoc.RawBlock("typst", "], ["))
   for i = 2, #members do out:insert(members[i]) end
-  out:insert(pandoc.RawBlock("typst", "])"))
+  out:insert(pandoc.RawBlock("typst", "]))"))
   return out
 end
 

@@ -3,5 +3,5 @@
 figure: fig-rtl-right image-width=yes
 figure: fig-rtl-left image-width=yes
 # wraps
-align: top + wrapped-side(right), columns: wrapped-columns(right, 30%), column-gutter: 1em | fig-rtl-right no-alt | p | cites=0
-align: top + wrapped-side(left), columns: wrapped-columns(left, 30%), column-gutter: 1em | fig-rtl-left no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 30%, 40%, 40%)), column-gutter: 1em | fig-rtl-right no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 30%, 40%, 40%)), column-gutter: 1em | fig-rtl-left no-alt | p | cites=0
