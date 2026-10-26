@@ -30,18 +30,18 @@ image: cx=1428750
 image: cx=2377440
 image: cx=2377440
 # frames
-frame right w=2808 gap=240 anchor=margin | fig-md | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear
-frame left w=4320 gap=240 anchor=margin | fig-div | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear
-frame right w=3276 gap=480 anchor=margin | fig-inner | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear
-frame left w=3744 gap=240 anchor=margin | fig-cell | image fig-cell-1.png fills=yes alt=''; caption style=ImageCaption | p, p, clear
-frame right w=1872 gap=240 anchor=margin | - | image plot.png fills=yes alt='A small plot' | p, p, clear
-frame right w=1872 gap=480 anchor=margin | - | image plot.png fills=yes alt='Lab logo'; caption style=ImageCaption | p, p, clear
-frame right w=2808 gap=240 anchor=margin | fig-comment | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear
-frame left w=3744 gap=240 anchor=margin | fig-bad-width | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear
-frame right w=2808 gap=240 anchor=margin | fig-styled | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear
-frame left w=3744 gap=240 anchor=margin | fig-clamp | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear
-frame right w=2808 gap=240 anchor=margin | fig-raw | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear
-frame left w=3744 gap=240 anchor=margin | logo | image plot.png fills=yes alt='Logo with its own id.'; caption style=ImageCaption | p, p, clear
-frame right w=2250 gap=240 anchor=margin | fig-bottom | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear
-frame left w=3744 gap=240 anchor=margin | fig-break | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, p, p, clear
-frame right w=3744 gap=240 anchor=margin | fig-break-lines | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, p, p, clear
+frame right w=2808 gap=240 anchor=margin | fig-md | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-md cites=1
+frame left w=4320 gap=240 anchor=margin | fig-div | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-div cites=0
+frame right w=3276 gap=480 anchor=margin | fig-inner | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-inner cites=0
+frame left w=3744 gap=240 anchor=margin | fig-cell | image fig-cell-1.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-cell cites=0
+frame right w=1872 gap=240 anchor=margin | - | image plot.png fills=yes alt='A small plot' | p, p, clear | links=- cites=0
+frame right w=1872 gap=480 anchor=margin | - | image plot.png fills=yes alt='Lab logo'; caption style=ImageCaption | p, p, clear | links=- cites=0
+frame right w=2808 gap=240 anchor=margin | fig-comment | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-comment cites=0
+frame left w=3744 gap=240 anchor=margin | fig-bad-width | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-bad-width cites=0
+frame right w=2808 gap=240 anchor=margin | fig-styled | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-styled cites=0
+frame left w=3744 gap=240 anchor=margin | fig-clamp | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-clamp cites=0
+frame right w=2808 gap=240 anchor=margin | fig-raw | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=fig-raw cites=0
+frame left w=3744 gap=240 anchor=margin | logo | image plot.png fills=yes alt='Logo with its own id.'; caption style=ImageCaption | p, p, clear | links=- cites=0
+frame right w=2250 gap=240 anchor=margin | fig-bottom | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-bottom cites=0
+frame left w=3744 gap=240 anchor=margin | fig-break | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, p, p, clear | links=fig-break cites=0
+frame right w=3744 gap=240 anchor=margin | fig-break-lines | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, p, p, clear | links=fig-break-lines cites=0

@@ -1,0 +1,27 @@
+# warnings
+1x wrapped: #fig-code holds a block that Word cannot put in a frame, so it does not wrap in Word.
+1x wrapped: gap "1ex" in the wrapped metadata is not a length that Word can use, so it is 1em.
+1x wrapped: width "0%" on #fig-zero is not a length that Word can use, so it is 40%.
+1x wrapped: width "100%" on #fig-full leaves no room for text in Word, so it is 40%.
+1x wrapped: width "10in" on #fig-wide leaves no room for text in Word, so it is 40%.
+1x wrapped: width "120%" in the wrapped metadata is not a length that Word can use, so it is 40%.
+1x wrapped: wrap-gap "0%" on #fig-gap-zero is not a length that Word can use, so it is 1em.
+# docx
+image: cx=1800225
+image: cx=1440180
+image: cx=1828800
+image: cx=2194560
+image: cx=2194560
+image: cx=2194560
+image: cx=1645920
+image: cx=1920240
+image: cx=1920240
+# frames
+frame right w=2835 gap=240 anchor=margin | fig-cm | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=fig-cm cites=0
+frame left w=2268 gap=240 anchor=margin | fig-mm | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=2880 gap=240 anchor=margin | fig-pt | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=3456 gap=240 anchor=margin | fig-zero | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=3456 gap=240 anchor=margin | fig-full | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=3456 gap=240 anchor=margin | fig-wide | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=2592 gap=240 anchor=margin | fig-gap-zero | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=3024 gap=240 anchor=margin | fig-list | image plot.png fills=yes alt=''; caption style=-; caption style=-; caption style=ImageCaption | p, clear | links=fig-list cites=0

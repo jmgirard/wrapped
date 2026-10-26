@@ -1,0 +1,5 @@
+# warnings
+1x wrapped: Word does not wrap figures in a document with columns, so wrapped figures render as normal figures.
+# docx
+image: cx=2133600
+# frames

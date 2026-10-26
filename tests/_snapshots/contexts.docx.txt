@@ -36,4 +36,4 @@ image: cx=1066800
 image: cx=1600200
 image: cx=1783080
 # frames
-frame right w=2808 gap=240 anchor=margin | fig-second | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear
+frame right w=2808 gap=240 anchor=margin | fig-second | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-first,fig-second cites=0

@@ -4,6 +4,6 @@ image: cx=1651000
 image: cx=2751455
 image: cx=1828800
 # frames
-frame right w=2600 gap=240 anchor=margin | fig-ref-30 | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear
-frame left w=4333 gap=433 anchor=margin | fig-ref-50 | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear
-frame right w=2880 gap=240 anchor=margin | fig-ref-abs | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear
+frame right w=2600 gap=240 anchor=margin | fig-ref-30 | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=fig-ref-30 cites=0
+frame left w=4333 gap=433 anchor=margin | fig-ref-50 | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=fig-ref-50 cites=0
+frame right w=2880 gap=240 anchor=margin | fig-ref-abs | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
