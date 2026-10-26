@@ -203,3 +203,4 @@ Pass 2, 2026-10-26, at d52a2a5 (code head 923adc5; main at 2a92353, unmoved). Re
 - prior-review #2: the poppler step's `apt-get update` still uses the mirror — same as diff-bug #1, settled there
 - ripple: no ripple evidence
 - conversation: PR #8 — empty (0 reviews, 0 comments, 0 review threads), read on resume before the re-posed question
+- AC2 (after pass-2 fixes): run 40329399173 (pull_request) at 6d8c1ab succeeded in 2m55s; setup-r 27 s, setup-r-dependencies 16 s, poppler 4 s; its verify step log holds `all 36 renders pass`. No file under `tests/` changed. Commits after 6d8c1ab touch `cairn/` only; step 8 waits for green CI on the head it merges.
