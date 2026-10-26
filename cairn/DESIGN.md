@@ -115,7 +115,7 @@ under `typst/packages/` (D-004, corrected M006). Users reach it through
   (CLAUDE.md, `PROFILE.md` release-walk).
 - Tests render fixture documents and compare the output. See `PROFILE.md`
   test-doctrine. GitHub Actions runs the same test command on each pull
-  request to `main` (`.github/workflows/verify.yml`, D-008).
+  request to `main` (`.github/workflows/verify.yml`, D-008, D-009).
 
 ## Design Principles
 

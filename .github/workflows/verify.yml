@@ -36,9 +36,14 @@ jobs:
         with:
           use-public-rspm: true
 
+      # Binaries need no system packages, and Quarto brings its own pandoc,
+      # so pak skips apt. The step must not install a second Quarto.
       - uses: r-lib/actions/setup-r-dependencies@v2
+        env:
+          PKG_SYSREQS: false
         with:
           packages: any::knitr, any::rmarkdown
+          install-quarto: false
 
       - name: Install poppler
         run: |
