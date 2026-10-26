@@ -197,9 +197,10 @@ wrapfig has limits, and the extension keeps some of them:
   than the figure, the space beside the figure stays empty.
 - A figure that does not fit at the bottom of a page moves to the start of
   a paragraph on the next page. The text before it fills the page. If the
-  paragraphs beside it all end on the first page, the figure renders at
-  the top of the next page. It is centered, with no text beside it, and
-  the block that stops the wrap starts below it.
+  paragraphs after it all end on that page, the figure renders after them,
+  centered, with no text beside it. If it still does not fit there, it goes
+  to the top of the next page. The block that stops the wrap starts below
+  it.
 - If a page break comes while lines are still narrowed, the first lines on
   the next page are narrowed with no figure beside them. A `wrap-lines`
   value larger than the figure needs can narrow lines past a page break in

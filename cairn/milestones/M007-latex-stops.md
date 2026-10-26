@@ -44,13 +44,17 @@ with the candidate row "Run the fixture renders in CI".
      `ACn:` labels count top-to-bottom and renumber with Coverage. -->
 
 Terms. A figure's bottom is the lowest edge of its image and its caption
-text. A line is beside a figure when it is on the page of the figure's
-image, its top is at or below the image's top and above the figure's
-bottom, and its words do not overlap the figure horizontally. Text is below
-a figure when it is on the figure's page under its bottom, or on a later
-page. Full width means that every line but a paragraph's last starts and
-ends within 2 pt of the ends of a full line on a page with no figure in the
-same PDF. Each criterion's evidence is the position check that
+text. A line height is the distance between the tops of two consecutive
+lines of the paragraph on page 1. The text block's edges are the ends of a
+full line of that paragraph, and the check fails when page 1 holds an
+image. A line is beside a figure when it is on the page of the figure's
+image, its top is above the figure's bottom, its bottom is less than half a
+line height above the image's top, its words do not overlap the figure
+horizontally, and the image's edge on its wrap side is within 2 pt of the
+text block's edge. Text is below a figure when it is on the figure's page
+under its bottom, or on a later page. Full width means that every line but
+a paragraph's last starts and ends within 2 pt of the text block's edges.
+Each criterion's evidence is the position check that
 `python3 tests/verify.py` runs on the PDF through LaTeX. It reads word and
 image boxes with poppler, lists each case it measured, and fails, never
 skips, a case whose figure, paragraph, and first stop text are not on one
@@ -58,9 +62,9 @@ page (AC4's case excepted). Rules and frames are not read, so a table rule,
 a callout frame, or a horizontal rule beside a figure is not checked.
 
 - [ ] AC1: In the PDF through LaTeX of `tests/stop-rule.qmd`, in each of its
-      11 cases, the first line of the short paragraph after the wrapped
-      figure is beside the figure, and the first text after that paragraph
-      is below the figure. That text is the stop block's own text, or the
+      11 cases, the short paragraph after the wrapped figure, which fits on
+      one line, is beside the figure, and the first text after that
+      paragraph is below the figure. That text is the stop block's own text, or the
       line "Text after the stop block." in case 10 (horizontal rule) and
       case 11 (`wrap-clear` div). In case 8 the plain figure's image top and
       the line "Text after the stop block." are both below the wrapped
@@ -76,9 +80,8 @@ a callout frame, or a horizontal rule beside a figure is not checked.
       at least 5 more than the line count wrapfig computes from its height,
       followed by one short paragraph and a heading, has the heading below
       it. The distance from the figure's bottom to the heading's top is
-      within one line height (the distance between two lines of a paragraph
-      in the same PDF) of that distance for a copy of the case with no
-      `wrap-lines`.
+      within one line height of that distance for a copy of the case with
+      no `wrap-lines`.
 - [ ] AC4: In `tests/stop-latex.qmd`, a case whose last paragraph after a
       wrapped figure ends on page N and whose image is on page N+1 sets that
       figure with no text beside it: on page N+1 no text other than its
@@ -187,6 +190,8 @@ a callout frame, or a horizontal rule beside a figure is not checked.
 - 2026-10-26: re-audit: AC2 (full) — same second reader and findings as AC1.
 - 2026-10-26: re-audit: AC3 (full) — same reader, first audit of AC3's wording: its wrap-lines premise is not checked by the PDF check (3), and finding 4 applies.
 - 2026-10-26: settled without rewording: (1) a probe with the paragraph first and an unwrapped [H] figure set flush right after it fails the beside check (gap 18 px against a 10 px bound; wrapped 4 px); (2) the check now finds each short paragraph by its whole sentence, so a paragraph split over two lines fails; (3) AC3's premise is evidenced by the scratch compile log (13 lines from the height, wrap-lines 25), not by the PDF check; (5) the criteria promise no bound on the stop gap, so none is added. Finding 4 needs the line-height definition reworded, which reaches AC1 and AC2 a third time, so it goes to the user. The check now takes the line height from the paragraph on page 1 (20 px in both fixtures), and a plain median over the PDF gave 31 to 39 px.
+- 2026-10-26: substantive amendment: Terms now define a line height (two consecutive lines of the page 1 paragraph), the text block's edges (a full line of that paragraph; page 1 must hold no image), and beside (top above the figure's bottom, bottom less than half a line height above the image's top, no horizontal overlap, image edge within 2 pt of the text block's edge on its wrap side); AC1 says the short paragraph fits on one line; AC3 uses the Terms line height. The user chose this wording at the stop for the third change to AC1 and AC2; what the user sees from the plan is unchanged.
+- 2026-10-26: claim audit: 37 claims read, 2 corrected — README.md (the moved figure renders after its paragraphs and goes to the next page only if it still does not fit, shown by a scratch compile at 0.69\textheight), tests/verify.py (pdf_boxes docstring); the reader re-read both as correct.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

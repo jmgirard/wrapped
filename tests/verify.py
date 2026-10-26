@@ -302,7 +302,7 @@ NEAR = 3
 
 
 def pdf_boxes(path):
-    """Every text line and image box in a PDF, with the page heights."""
+    """Every text line and image box in a PDF."""
     if not shutil.which("pdftohtml"):
         raise SystemExit("verify.py needs poppler's pdftohtml for the LaTeX layout check (brew install poppler)")
     boxes, heights = [], {}
