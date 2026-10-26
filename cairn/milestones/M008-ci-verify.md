@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M008: Run the fixture renders in CI
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -94,7 +94,7 @@ not part of the verify command. Branch protection that requires the check
 - [x] T5: Update `cairn/PROFILE.md` (the verify slot names both workflows
       and the CI channels) and `cairn/DESIGN.md` Conventions (tests also
       run in CI).
-- [ ] T6: Install R and its packages from binaries in both workflows
+- [x] T6: Install R and its packages from binaries in both workflows
       (`r-lib/actions/setup-r` with Posit's public package manager, then
       `r-lib/actions/setup-r-dependencies` for knitr and rmarkdown), and
       keep apt for `poppler-utils` alone. Record D-009, rerun CI, and log
@@ -135,6 +135,7 @@ not part of the verify command. Branch protection that requires the check
 - 2026-10-26: resume (route c): PR #8 open, run 40322532367 at c650248 passed in 38m47s, of which "Install R, knitr, rmarkdown, and poppler" took 35m56s (12:26:47 to 13:02:43) and verify.py 2m23s; earlier install times were 19 s and about 12 min, against the 45-minute job timeout. PR conversation empty. Merge question re-posed with this fact.
 - 2026-10-26: step-7 decline: fix the slow install before merging — move R, knitr, and rmarkdown to r-lib's binary install (the alternative the plan gate recorded against apt), rerun CI, then re-pose the merge question. Added T6 and mapped it to AC2 (minor amendment); merge marker removed; status in-progress.
 - 2026-10-26: plan-gate choice reversed: apt for R was falsified by install times (35m56s in run 40322532367), a different falsifier than the one the plan recorded; the user chose r-lib/actions/setup-r at the re-posed merge question. D-009 records the dependency change.
+- 2026-10-26: T6 done: CI run 40328216113 at 923adc5 succeeded in 3m27s; setup-r 27 s, setup-r-dependencies 48 s (R 4.6.1, knitr and rmarkdown from binaries), poppler 3 s, verify.py 1m43s with `all 36 renders pass`. No file under `tests/` changed since the local pass at 63a8960. Status review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
