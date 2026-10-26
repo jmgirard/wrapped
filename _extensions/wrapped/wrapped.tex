@@ -22,6 +22,11 @@
 % still needs are skipped, and \WFclear ends the wrap. In a wrappedfigure,
 % \WFclear ends it inside the environment's group, so \wrapped@afterenv
 % ends it again after the group.
+%
+% Where the text runs in columns, inside multicols or where \if@twocolumn
+% is true, a wrappedfigure is a normal figure, and LaTeX writes a warning
+% to its log: once for two-column text, and once for each figure in
+% multicols.
 \usepackage{wrapfig}
 \makeatletter
 \def\wrapped@gap{\columnsep}

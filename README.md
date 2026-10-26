@@ -220,7 +220,8 @@ wrapfig has limits, and the extension keeps some of them:
   `\onecolumn`, figures wrap again.
 - In those cases the render prints no warning. LaTeX writes the warning to
   its log, and Quarto keeps the log with `latex-clean: false`. A column
-  layout from another package, such as `paracol`, is not detected.
+  layout from a LaTeX class or package that neither turns on LaTeX's
+  two-column mode nor opens a `multicols` environment is not detected.
 - A figure in a list keeps its normal layout, as in HTML.
 
 Tagged PDF: Quarto 1.10.19 ignores `pdf-standard: ua-1` in LaTeX, so that

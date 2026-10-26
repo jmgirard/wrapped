@@ -18,7 +18,7 @@ wrappedfigure: fig-inner [side=right,width=0.35\linewidth,gap=2em] image=[width=
 wrappedstop
 wrappedfigure: fig-cell [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
-wrappedfigure: - [side=right,width=0.2\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio,alt={A small plot}]
+wrappedfigure: - [side=right,width=0.2\linewidth,gap=1em,caption=false] image=[width=1\linewidth,height=\textheight,keepaspectratio,alt={A small plot}]
 wrappedstop
 figure: fig-plain [-] image=[width=0.5\linewidth,height=\textheight,keepaspectratio]
 figure: fig-after-table [-] image=[width=0.5\linewidth,height=\textheight,keepaspectratio]

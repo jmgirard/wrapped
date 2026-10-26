@@ -12,9 +12,10 @@
 -- wrap-it package. Word output groups each wrapped figure with its
 -- paragraphs as in HTML, and marks the group with the frame's side, width,
 -- and gap in twips; wrapped-docx.lua turns the group into a Word frame at
--- post-render. A two-column LaTeX document and every other format keep a
--- normal figure. A figure with no wrap class is left as it is in every
--- format.
+-- post-render. A LaTeX document with classoption: twocolumn and every other
+-- format keep a normal figure. In LaTeX, wrapped.tex also sets a normal
+-- figure where it finds columns while LaTeX runs. A figure with no wrap
+-- class is left as it is in every format.
 
 local SIDES = { ["wrap-left"] = "left", ["wrap-right"] = "right" }
 

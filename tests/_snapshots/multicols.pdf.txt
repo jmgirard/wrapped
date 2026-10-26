@@ -6,3 +6,7 @@ wrappedfigure: fig-gap-left [side=left,width=0.3\linewidth,gap=30pt] image=[widt
 wrappedstop
 wrappedfigure: fig-gap-right [side=right,width=0.3\linewidth,gap=30pt] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+wrappedfigure: fig-multicols [side=right,width=0.6\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: - [side=left,width=0.6\linewidth,gap=1em,caption=false] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

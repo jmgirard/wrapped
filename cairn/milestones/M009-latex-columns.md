@@ -41,8 +41,9 @@ new fixtures with layout and log checks; README and DESIGN text. The
   "Warn in the console for LaTeX columns".
 - Wrapping inside a column: the question set chose the fallback; no row.
 - Typst columns: candidate row "Check wrapped figures in Typst columns".
-- Column layouts that set neither `\if@twocolumn` nor enter `multicols`,
-  such as `paracol`: the README names them as not detected; no row.
+- Column layouts from a LaTeX class or package that neither turn on
+  LaTeX's two-column mode (`\if@twocolumn`) nor open a `multicols`
+  environment: the README says they are not detected; no row.
 
 ## Acceptance criteria
 <!-- owner: plan · create/amend-via-gate; review reads, never reinterprets.
@@ -90,7 +91,9 @@ new fixtures with layout and log checks; README and DESIGN text. The
       default, `\twocolumn`, or `multicols`, renders as a normal figure;
       that only `classoption` gives a warning in Quarto's output and the
       others write theirs to the LaTeX log, kept with `latex-clean: false`;
-      and that `paracol` is not detected. Its sentence that a class default
+      and that a column layout from a LaTeX class or package that neither
+      turns on LaTeX's two-column mode nor opens a `multicols` environment
+      is not detected, without naming `paracol` as such a layout. Its sentence that a class default
       such as IEEEtran is not detected is gone. Step 1 of DESIGN.md's
       Architecture names the check in `wrapped.tex`.
 - [ ] AC7: `python3 tests/verify.py` passes on macOS and in the
@@ -121,7 +124,7 @@ new fixtures with layout and log checks; README and DESIGN text. The
       `\columnsep` to it at the start of wrapfig's `\WF@putfigmaybe`, inside
       the group of `\WF@floathand` (`wrapfig.sty` lines 94-104); remove
       `\wrapped@setcolsep`, `\wrapped@restorecolsep`, and their hooks.
-- [ ] T2: Columns. Add `tests/twocolumn-class.qmd` with its class file,
+- [x] T2: Columns. Add `tests/twocolumn-class.qmd` with its class file,
       `tests/twocolumn-switch.qmd`, and the `multicols` figure cases in
       `tests/multicols.qmd` to `RENDERS` and `LAYOUT`, with
       `latex-clean: false`, and see their layout cases fail. In
@@ -132,10 +135,10 @@ new fixtures with layout and log checks; README and DESIGN text. The
       Scope says, and write the warning. The raw environment of an
       uncaptioned image (`wrapped.lua` line 887) passes a key that says it
       has no caption.
-- [ ] T3: Log check and snapshots. Add the log check of AC4 to
+- [x] T3: Log check and snapshots. Add the log check of AC4 to
       `tests/verify.py`, keeping each warning message short. Run
       `python3 tests/verify.py --update` and review the snapshot diff.
-- [ ] T4: Docs. Update the README's two-column bullet (README.md line
+- [x] T4: Docs. Update the README's two-column bullet (README.md line
       212), the header comments of `wrapped.lua` (line 15) and
       `wrapped.tex`, and step 1 of DESIGN.md's Architecture.
 - [ ] T5: Run `python3 tests/verify.py` on macOS and see `verify.yml` pass
@@ -160,6 +163,12 @@ new fixtures with layout and log checks; README and DESIGN text. The
 - 2026-10-26: implement started on branch m009-latex-columns.
 - 2026-10-26: T1 done. `wrapped.tex` keeps the gap in `\wrapped@gap` and sets `\columnsep` inside `\WF@putfigmaybe`; the global set and restore are gone. `tests/multicols.qmd` and 3 layout cases: the local-group case failed before the change (364 px against 341 px) and passes after; with the gap line removed from `\WF@putfigmaybe` both wide-gap cases fail (15 px against 45 px). `tests/.gitignore` ignores the `.log` and `.aux` that `latex-clean: false` keeps. verify: 37 renders pass, 24 layout cases pass, no snapshot changed but the new one.
 - 2026-10-26: checkpoint, T2 to T4 in progress: column fallback in `wrapped.tex` (modes w/f/p, `multicols` hook first), `caption=false` on raw image environments, fixtures `twocolumn-class` (with `twocol.cls`), `twocolumn-switch`, and `multicols` figure cases, the `LOGS` check in `verify.py`, README and DESIGN text. Layout and log cases failed before the change and pass after; planted defects (no multicols warning, two-column warning per figure) fail the log check. By-hand IEEEtran render: both cases pass, one two-column warning. Full verify with `--update` is running; snapshots are not in this commit.
+- 2026-10-26: full verify with `--update`: 39 renders pass, 31 layout cases and 4 log checks pass. Snapshot diffs: `caption=false` on raw image environments in fixture, pdf-ua, pdf-ua1, stop-latex; new cases in multicols; new snapshots twocolumn-class and twocolumn-switch.
+- 2026-10-26: by-hand paracol render: paracol sets `\global\@twocolumntrue` (paracol.sty line 2021), so the check finds it and the figure is a normal figure with the two-column warning. AC6's "paracol is not detected" and the Scope Out bullet are false; amendment proposed.
+- 2026-10-26: re-audit: AC6 (full) — 3 findings: a README that kept "such as paracol" would pass; the Scope Out bullet names paracol too; say "opens a multicols environment". All taken into the next wording.
+- 2026-10-26: re-audit: AC6 (full) — 1 finding: Quarto's `.columns` div is a column layout that the Lua filter detects, so "a column layout that neither turns on two-column mode nor opens multicols is not detected" is false; repair "a column layout from a LaTeX class or package that ...". Second re-audit line on AC6: the wording goes to the user.
+- 2026-10-26: substantive amendment: AC6's paracol clause now reads "a column layout from a LaTeX class or package that neither turns on LaTeX's two-column mode nor opens a `multicols` environment is not detected, without naming `paracol` as such a layout"; the Scope Out bullet matches. The user accepted this wording at the stop.
+- 2026-10-26: T4 done: README two-column bullets, `wrapped.lua` and `wrapped.tex` header comments, DESIGN.md Architecture steps 1 and 7.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. EXEMPT from

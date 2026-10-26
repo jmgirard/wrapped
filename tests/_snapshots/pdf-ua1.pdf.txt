@@ -2,5 +2,5 @@
 # tex
 wrappedfigure: fig-ua [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio,alt={A scatter plot of ten rising points}]
 wrappedstop
-wrappedfigure: - [side=left,width=0.25\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio,alt={A small scatter plot}]
+wrappedfigure: - [side=left,width=0.25\linewidth,gap=1em,caption=false] image=[width=1\linewidth,height=\textheight,keepaspectratio,alt={A small scatter plot}]
 wrappedstop
