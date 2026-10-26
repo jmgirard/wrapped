@@ -100,3 +100,17 @@ This entry also corrects D-006: the test command reads positions with
 poppler's `pdftohtml` alone, not `pdftotext`, because `pdftohtml -xml` also
 gives image boxes. Poppler joins the test command's needs beside those that
 D-002 names, which D-005 kept unchanged for LibreOffice.
+
+### D-008: CI tools for the test command
+
+2026-10-26, plan of M008. The user chose at the plan's question set to run
+`tests/verify.py` in GitHub Actions. The workflows run on an Ubuntu runner
+and use `actions/checkout`, `quarto-dev/quarto-actions/setup` (Quarto and
+TinyTeX, from Quarto's own organization), `actions/upload-artifact`, and the
+Ubuntu packages `r-base`, `r-cran-knitr`, `r-cran-rmarkdown`, and
+`poppler-utils`. These install the needs that D-002 and D-006 name and add
+none to the test command itself. Ubuntu packages were chosen over
+`r-lib/actions/setup-r` so that Quarto's action is the only third-party
+action. The user chose that Quarto's pre-release channel only reports: it
+runs weekly and by hand, never on a pull request, so its failure blocks no
+merge.
