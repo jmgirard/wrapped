@@ -63,3 +63,17 @@ the README's record of what each app shows and for review checks, not in
 the test command in `tests/verify.py`, which keeps the needs that D-002
 names. Word checks use the Microsoft Word already on the Mac, through
 AppleScript. Google Docs is checked by the user's own look.
+
+### D-006: poppler as a test requirement for LaTeX layout
+
+2026-10-26, plan of M007. The user allowed this tool at the plan's question
+set. The test command in `tests/verify.py` reads word and image positions
+from the PDFs that it renders through LaTeX with poppler's command-line
+tools (`pdftotext`, `pdftohtml`), installed with `brew install poppler`, and
+fails with a plain message when they are missing. This adds poppler to the
+needs that D-002 names. A position read is the one check that sees where a
+stop block starts beside a figure, and the `.tex` snapshot shows only where
+the filter puts a command. The user chose it over a position log that TeX
+writes from a header that only a test file loads, which needs more test
+code and depends on the PDF engine, and over page images checked by eye,
+which no test fails on.
