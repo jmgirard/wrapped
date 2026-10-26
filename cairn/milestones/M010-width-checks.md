@@ -68,7 +68,7 @@ A wrapped figure whose width is zero, is CSS that the filter cannot check, or is
 - [x] T3: Breakpoint and metadata functions. Add the two AC3 fixtures to `RENDERS` for html. Make `html_summary`'s media-query pattern read a value that holds parentheses.
 - [x] T4: Typst guard. Make `typst_open` (:196) put the `wrap-content` call inside `layout(size => ...)`. Add a helper to `TYPST_HEADER` (:213) that uses the document default when the absolute width is `size.width` or more, and 40% when the default is too wide as well. Update `typ_summary`'s call patterns for the new form, so that a call it cannot read is still counted. Confirm first that the 10in figure breaks its text one word per line on `main`.
 - [x] T5: Typst layout check. Add the AC4 fixture to `RENDERS` for typst. Run the layout check on its Typst PDF, with the AC4 cases. Give the fixture's first page full text lines, or make `text_edges` handle a page with an image.
-- [ ] T6: README. Write the AC5 rules in the Width and gap, Document defaults, PDF through LaTeX, PDF through Typst, and Word sections, from the renders of T1 to T5.
+- [x] T6: README. Write the AC5 rules in the Width and gap, Document defaults, PDF through LaTeX, PDF through Typst, and Word sections, from the renders of T1 to T5.
 - [ ] T7: Run `python3 tests/verify.py --update`, read each snapshot diff, then run `python3 tests/verify.py` and confirm it exits 0.
 
 ## Work log
@@ -92,6 +92,7 @@ A wrapped figure whose width is zero, is CSS that the filter cannot check, or is
 - 2026-10-26: T3 done. `html_summary`'s media-query pattern reads one level of parentheses. meta-calc-bad warns on both values and uses 576px; meta-calc-good keeps both. `python3 tests/verify.py --update` passed all 48 renders, and no earlier snapshot changed.
 - 2026-10-26: T4 done. Each Typst call is now `#layout(wrapped-size => wrap-content(...))`, closed by `]))`; `layout` gives the context that wrapped-side needs, so `#context` went. Choice: `wrapped-width(size, ..widths)` takes the figure width, the document default, and 40%, and returns the first that is a percent or narrower than `size.width`. typ_summary reads the new form; the Typst snapshot diffs change only that argument, and none reports an unread call.
 - 2026-10-26: T5 done. New fixture typst-wide.qmd; `layout_check` takes a case table, and TYPST_LAYOUT runs it after a Typst render. Choice: the Typst cases check that the first line sits beside the image and inside the text edges, not `check_beside`'s edge distance, because page 1's widest line runs 7 px past the right margin. On main's filter, the no-width, 10in, and 60em cases fail ("0 lines hold 'Marker none'"): pdftohtml shows each paragraph one word per line, "Marker" alone at x=1232 past the edge at 790. `python3 tests/verify.py --update` passed all 49 renders and every layout case.
+- 2026-10-26: T6 done. README states the zero rule and zero-gap exception and the function rules (Width and gap), the metadata rules (Document defaults), the zero rule (LaTeX, Typst), the Typst wide-width rule with no warning, and Word's zero rule. DESIGN.md Architecture steps 5 and 7 name the `layout` call and `wrapped-width` (corrected M010).
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

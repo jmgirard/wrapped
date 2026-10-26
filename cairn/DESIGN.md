@@ -165,10 +165,12 @@ passes (corrected M003):
    In LaTeX it finds the same groups by the stop rule but writes no div: it
    puts an image with no caption in a raw `wrappedfigure`, and a raw
    `\wrappedstop` follows each group's last paragraph (corrected M007). In Typst it writes each group as raw Typst blocks around the figure and the
-   paragraphs, which make one `wrap-content(..., box(width: 100%)[figure],
-   [paragraphs])` call. The width sets wrap-it's grid column. A percent of
-   100% or more takes the default width with a warning. A code cell keeps
-   its code above the call (corrected M005). In Word it groups as in HTML,
+   paragraphs, which make one `layout(wrapped-size => wrap-content(...,
+   box(width: 100%)[figure], [paragraphs]))` call. The width sets wrap-it's
+   grid column. A percent of 100% or more takes the default width with a
+   warning. An absolute width as wide as the text or wider takes the
+   default in Typst, with no warning, through `wrapped-width` (corrected
+   M010). A code cell keeps its code above the call (corrected M005). In Word it groups as in HTML,
    and the `.wrap-group` div's `data-wrap-frame` holds the frame's side,
    width, and gap in twips. A percent is a share of the text width in the
    reference doc's `w:sectPr`, or 6.5 in when it has no page size or
@@ -187,7 +189,8 @@ passes (corrected M003):
    `wrap-content` from `@preview/wrap-it:0.1.1`, which Quarto loads from the
    extension's `typst/packages` folder, and defines the helpers that turn a
    physical side into wrap-it's side in right-to-left text, read in context
-   (corrected M005). Word needs nothing here. Elsewhere it prints
+   (corrected M005), and `wrapped-width`, which picks the first width that
+   fits the text width that `layout` gives (corrected M010). Word needs nothing here. Elsewhere it prints
    one format warning.
 
 At `post-render`, `wrapped-docx.lua` turns each Word group into a frame. It

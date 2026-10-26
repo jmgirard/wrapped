@@ -73,10 +73,28 @@ plot(1:10)
 The `width` attribute sets the width of the figure box, caption included.
 The image fills the box. A percent is a share of the text column. An
 absolute length, such as `3in` or `250px`, sets the width directly. The
-default width is 40%.
+default width is 40%. A width of zero, such as `0%`, `0in`, or `0`, prints a
+warning, and the document default applies.
 
 The `wrap-gap` attribute sets the space between the figure and the text.
-The default gap is `1em`.
+The default gap is `1em`. A gap of zero stays as it is.
+
+In HTML, a width or gap can also be a `calc()`, `min()`, `max()`, or
+`clamp()` value, such as `calc(100% - 2em)` or `min(40%, 300px)`. The
+extension checks the value first. A value that fails the check prints a
+warning, and the document default applies. The check accepts numbers,
+lengths in CSS units, percents, parentheses, `var(--name)`, and the four
+functions inside one another, with these rules:
+
+- A `+` or `-` between two values has a space on each side.
+- The values of a sum are all lengths and percents, or all numbers.
+- A `*` has a number on one side, and a `/` has a number on its right.
+- `min()` and `max()` take one or more values, and `clamp()` takes three.
+- The result is a length or a percent, not a number.
+
+Newer CSS forms that browsers accept also print a warning. Examples are
+other functions such as `round()`, constants such as `pi`, `none` in
+`clamp()`, and a length divided by a length.
 
 ```markdown
 ![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-left width="3in" wrap-gap="2em"}
@@ -98,6 +116,13 @@ wrapped:
 
 In a window as wide as `breakpoint` or narrower, figures stop floating and
 take the full width of the text column. The default breakpoint is `576px`.
+
+The keys follow the rules of the attributes. A `width` of zero prints a
+warning, and the built-in 40% applies. A `gap` or `breakpoint` of zero stays
+as it is. A `width`, `gap`, or `breakpoint` can be a `calc()`, `min()`,
+`max()`, or `clamp()` value, checked as above. A media query takes no
+percent, so a `breakpoint` with a percent, such as `calc(50%)`, prints a
+warning, and `576px` applies.
 
 ## Where wrapping stops
 
@@ -177,6 +202,7 @@ The `width` and `wrap-gap` values change to LaTeX lengths:
 - Any other CSS unit, such as `vw` or `rem`, and a `calc()`, `min()`,
   `max()`, or `clamp()` value print a warning, and the document default
   applies.
+- A width of zero prints a warning, and the document default applies.
 
 The `wrap-lines` attribute sets the number of lines beside the figure. It
 works only in LaTeX. Without it, wrapfig counts the lines from the height
@@ -254,10 +280,18 @@ The `width` and `wrap-gap` values change to Typst lengths:
 - Any other unit, such as `ex`, `vw`, or `rem`, and a `calc()`, `min()`,
   `max()`, or `clamp()` value print a warning, and the document default
   applies.
+- A width of zero prints a warning, and the document default applies.
 
 A percent of 100% or more leaves no room for the text in Typst, so it
 prints a warning. A figure's own width then takes the document default.
 A `wrapped: width` of 100% or more takes the built-in 40%.
+
+An absolute width as wide as the text or wider, such as `10in`, also leaves
+no room for the text. The extension cannot know the text width, so Typst
+checks the width while it lays out the page. The figure then takes the
+document default. If the document default is that wide too, the figure
+takes the built-in 40%. Typst cannot print a warning, so the render prints
+none for such a width.
 
 The `wrap-lines` attribute does nothing in Typst. Typst does not use an
 image's `height` in a wrapped figure. The image fills the box width and
@@ -301,8 +335,8 @@ The `width` and `wrap-gap` values change to Word lengths:
   its size. A `px` length, or a number with no unit, is 1/96 in for each
   `px`. An `em` is 12 pt.
 - Any other unit, such as `ex`, `vw`, or `rem`, a `calc()`, `min()`,
-  `max()`, or `clamp()` value, and a percent of 0% print a warning, and
-  the document default applies.
+  `max()`, or `clamp()` value, a width of zero, and a gap of 0% print a
+  warning, and the document default applies.
 - A width or gap as wide as the text or wider, such as `100%` or `10in`,
   leaves no room for the text. It prints a warning, and the document
   default applies.
