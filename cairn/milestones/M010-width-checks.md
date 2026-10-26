@@ -97,6 +97,7 @@ A wrapped figure whose width is zero, is CSS that the filter cannot check, or is
 - 2026-10-26: resumed after the pause; origin/main has not moved since the cut. PROFILE.md's verify sentence split in two. T7 done: `python3 tests/verify.py` passed all 49 renders and every layout and log case; `cairn_validate` passed.
 - 2026-10-26: claim audit: 41 claims read, 4 corrected — README.md (zero gap and metadata zero gap: Word warns on a 0% gap), tests/verify.py (find_words docstring: double spaces only in some lines), tests/typst-wide.qmd (the 2in figure does not match 40%). The reader re-read the four corrections once and found each holds. `python3 tests/verify.py` passed all 49 renders after them.
 - 2026-10-26: implement done; status set to review.
+- 2026-10-26: step-7 approval: m010-width-checks approved for merge
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
