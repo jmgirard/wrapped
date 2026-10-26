@@ -47,7 +47,8 @@ tracking-rules. An extension is tested by rendering, not by calling functions:
 - A filter change is tested by rendering a fixture document that uses it and
   reading the output in each format the change touches. The test is a string
   in the HTML, or a snapshot of the kept `.tex`, the kept `.typ`, or the docx's
-  `word/document.xml`.
+  `word/document.xml`. Where LaTeX layout is the behavior, it is a position
+  case in the `LAYOUT` list of `tests/verify.py` (corrected M007).
 - A bug fix gets a fixture document that renders wrong before the fix.
 - A change to `wrapped.css` keeps the version as it is until release (see
   `release-walk`), because the version rises at release.

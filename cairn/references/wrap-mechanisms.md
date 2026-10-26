@@ -133,8 +133,9 @@ The filter has two entry points (corrected M006):
 
 - `pre-quarto` runs after Quarto creates `FloatRefTarget` nodes. It
   normalizes the attributes and sets `fig-env` and `fig-pos` for LaTeX. It
-  also applies the stop rule, inserts clear points, and writes the Typst
-  `wrap-content` call. In Word it marks each group with its frame in
+  also applies the stop rule, inserts clear points, writes a raw
+  `\wrappedstop` after each LaTeX group (corrected M007), and writes the
+  Typst `wrap-content` call. In Word it marks each group with its frame in
   `data-wrap-frame`.
 - `post-render` runs `wrapped-docx.lua`, which builds the docx frames after
   Quarto renders figures. It changes nothing in other formats.
