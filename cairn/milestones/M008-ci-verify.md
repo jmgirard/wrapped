@@ -139,3 +139,26 @@ Pass 1, 2026-10-26, at 51efbde (main at 2a92353, unmoved since the cut). Resume 
 - AC1: `.github/workflows/verify.yml` read at 51efbde: `on:` holds `pull_request` (branches main), `push` (branches main, `paths-ignore: cairn/**`), and `workflow_dispatch`; job `verify` `runs-on: ubuntu-latest`; steps `actions/checkout@v7`, `quarto-dev/quarto-actions/setup@v2` with `version: release` and `tinytex: true`, `apt-get install` of `r-base r-cran-knitr r-cran-rmarkdown poppler-utils`, then `run: python3 tests/verify.py` (no `working-directory`, so the repository root). Pass.
 - AC3: `.github/workflows/verify-prerelease.yml` read at 51efbde: `on:` holds only `schedule` (`cron: "0 6 * * 1"`, weekly) and `workflow_dispatch`, no `pull_request` or `push`; same install steps with `version: pre-release`; `run: python3 tests/verify.py`. Pass.
 - AC4: run 40310746574 (pull_request, head 6fd85b1, which changed `576px` to `577px` in `tests/_snapshots/meta-string.html.txt`) read fresh: conclusion `failure`; its failed-step log holds one `FAIL meta-string.html` line; `gh run download 40310746574 -n rendered-outputs` writes `meta-string.html`. The restoring commit be641d8 ran green (run 40312839783). Pass.
+- Consistency gate at 51efbde: `cairn_validate` all checks passed; one version marker (`version: 0.1.0` in `_extension.yml`, untouched by the diff); `python3 tests/verify.py` exit 0, `all 36 renders pass`; changelog "none". Pass.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: no job timeout, and the apt step took 19 s to 12 min across runs (mirror stalls) — fix now: `timeout-minutes: 45` and `Acquire::Retries=3` in both files, fixed 63a8960
+- diff-bug #2: the pre-release workflow cannot run before the merge (schedule and workflow_dispatch need the default branch) — reject, planned change: AC3 is a file check for this reason (plan audit); the close hands over a manual dispatch command
+- diff-bug #3: a weekly schedule notifies only the cron line's last editor and stops after 60 idle days — reject, planned change: the user chose report-only, and that editor is the maintainer
+- diff-bug #4: `cancel-in-progress: true` also cancels runs on main, so a commit there can go unchecked — fix now: cancel only for pull_request events, fixed 63a8960
+- diff-bug #5: the failure artifact leaves out LaTeX `.log` files — fix now: `tests/**/*.log` added in both files, fixed 63a8960
+- diff-bug #6: `ubuntu-latest` moves (now Ubuntu 26.04, R 4.5.2) — reject, planned change: AC1 names `ubuntu-latest`
+- diff-bug #7: the E3 cell's Word width now comes from the fixture, not Pandoc — reject, false: E3 tests the margin warning, which stays, and other knitr cells still render unsized to docx
+- diff-bug #8: no `permissions:` block — fix now: `contents: read` in both files, fixed 63a8960
+- diff-bug #9: PROFILE.md omits "outside cairn/", the manual trigger, and the channel names — fix now: verify slot reworded, fixed 63a8960
+- diff-bug #10: the artifact's HTML opens unstyled and takes the symlinked extension's files — reject, style: debugging aid, the files needed are present
+- diff-bug #11: actions pinned to major tags, not commit hashes — reject, planned change: D-008 names the actions at major tags
+- diff-bug #12: the fixture.pdf comment is in verify.yml only — fix now: copied to the pre-release file, fixed 63a8960
+- blame-history #1: an unsized Word figure's size depends on the system that made the PNG (pHYs tag), recorded only in this work log — follow-up: a LESSONS line at hygiene
+- blame-history #2: the candidate row "Run the fixture renders in CI" stays beside the M008 row — reject, planned change: hygiene graduates it at the merge
+- blame-history #3: D-008 says the installs are D-002's and D-006's needs, but rmarkdown is named by neither — reject, false: Quarto's knitr engine needs rmarkdown, so it is part of D-002's "R with knitr"
+- blame-history #4: DESIGN.md says CI runs "on each pull request" and omits pushes and manual runs — reject, false: the sentence is true and does not claim to list every trigger
+- prior-review: no finding (archived Review sections of M001–M007 read; no PR review comments)
+- ripple #1: `cairn/references/wrap-mechanisms.md:178` says CI runs both channels, implying both gate changes — fix now: line corrected in place, fixed 63a8960
+- ripple #2: the candidate row stays open — reject, planned change: same as blame-history #2
+- ripple #3: README says "tested with Quarto 1.10.19" — reject, false: a dated record that still holds
+- ripple #4: `tests/verify.py:44` and `:306` give only the brew install hint — fix now: apt form added, fixed 63a8960
