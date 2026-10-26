@@ -1,0 +1,63 @@
+---
+title: "wrapped fixture: zero widths"
+filters:
+  - wrapped
+format:
+  html: default
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+wrapped:
+  width: 25%
+---
+
+Each figure with a width of zero prints a warning and takes the document width, 25%.
+
+## A percent of zero
+
+![A figure with a width of 0%.](plot.png){#fig-zero-percent .wrap-right width="0%"}
+
+See @fig-zero-percent. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## Zero inches
+
+![A figure with a width of 0in.](plot.png){#fig-zero-in .wrap-left width="0in"}
+
+See @fig-zero-in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## Zero inches in uppercase
+
+![A figure with a width of 0IN.](plot.png){#fig-zero-upper .wrap-right width="0IN"}
+
+See @fig-zero-upper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## Zero with no unit
+
+![A figure with a width of 0.](plot.png){#fig-zero-unitless .wrap-left width="0"}
+
+See @fig-zero-unitless. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## Zero pixels with a decimal
+
+![A figure with a width of 0.0px.](plot.png){#fig-zero-px .wrap-right width="0.0px"}
+
+See @fig-zero-px. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## Zero with a leading dot
+
+![A figure with a width of .0.](plot.png){#fig-zero-dot .wrap-left width=".0"}
+
+See @fig-zero-dot. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A gap of zero points
+
+![A figure with a gap of 0pt.](plot.png){#fig-gap-zero-pt .wrap-right width="30%" wrap-gap="0pt"}
+
+The gap stays at zero, with no warning. See @fig-gap-zero-pt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A gap of zero with no unit
+
+![A figure with a gap of 0.](plot.png){#fig-gap-zero .wrap-left width="30%" wrap-gap="0"}
+
+The gap stays at zero, with no warning. See @fig-gap-zero. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

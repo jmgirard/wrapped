@@ -1,0 +1,13 @@
+---
+title: "wrapped fixture: metadata function values that pass"
+filters:
+  - wrapped
+format: html
+wrapped:
+  breakpoint: calc(30em + 100px)
+  width: min(40%, 300px)
+---
+
+![A wrapped figure.](plot.png){#fig-meta-calc-good .wrap-right}
+
+The breakpoint and the width reach the HTML as written, with no warning.

@@ -99,12 +99,27 @@ local function css_length(value, no_percent)
   return nil
 end
 
+-- True for a CSS length from css_length whose number is zero, such as 0%
+-- or 0in. A function value is not read.
+local function is_zero(length)
+  local num = length:match("^(%d*%.?%d+)%a*%%?$")
+  return num ~= nil and tonumber(num) == 0
+end
+
 -- Returns the CSS length for a value, or `fallback` with a warning when the
 -- value is not a length. `what` and `where` name the value in the warning.
+-- A width of zero is not a width, because a box with no width leaves the
+-- figure nothing to fill. A gap or a breakpoint of zero is a length.
 -- A breakpoint passes `no_percent`, because a media query takes no percent.
 local function checked_length(value, fallback, what, where, no_percent)
   if value == nil then return fallback end
   local length = css_length(value, no_percent)
+  if length and what == "width" and is_zero(length) then
+    quarto.log.warning(string.format(
+      'wrapped: width "%s" on %s is zero, so it is %s.',
+      pandoc.utils.stringify(value), where, fallback))
+    return fallback
+  end
   if length then return length end
   quarto.log.warning(string.format(
     'wrapped: %s "%s" on %s is not %s, so it is %s.',

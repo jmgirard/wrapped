@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M010: Check figure widths before use
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — the filter's warnings and figure widths reach every user   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m010-width-checks   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -84,6 +84,9 @@ A wrapped figure whose width is zero, is CSS that the filter cannot check, or is
 - 2026-10-26: plan gate chose the CSS Values 3 rules over a full Values 4 parser, because the four functions and var() cover the README's forms with a small parser; falsified by users who need round(), constants, or typed arithmetic in a figure width.
 - 2026-10-26: the Typst layout check in T5 uses poppler, which D-006 made a test requirement for LaTeX layout and CI already installs (D-008, D-009). No dependency changes.
 - 2026-10-26: lessons used: 2026-10-25 (M005) wrap-it measures a percent in its grid column; 2026-10-26 (M007) pdftohtml boxes at 1.5 px per pt.
+
+- 2026-10-26: implement started on m010-width-checks. On main, HTML and Typst took each zero width of the two zero fixtures as written, with no warning.
+- 2026-10-26: checkpoint, T1 in progress: `checked_length` now warns on a zero width ("is zero"), and the zero fixtures are in RENDERS; their snapshots wait for the --update run. Word's zero-width warning text changed to the same wording. CSS source note written; it says "CSS Values 3" holds calc() only, so min(), max(), and clamp() come from Level 4 section 10.2.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

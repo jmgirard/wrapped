@@ -1,0 +1,108 @@
+---
+title: "wrapped fixture: CSS function widths"
+filters:
+  - wrapped
+format: html
+---
+
+Each value in the first part reaches the style as written. Each value in the second part prints a warning, and its figure takes the default.
+
+## Values that pass
+
+![A width of `calc(100% - 2em)`.](plot.png){#fig-valid-1 .wrap-right width="calc(100% - 2em)"}
+
+See @fig-valid-1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `min(40%, 300px)`.](plot.png){#fig-valid-2 .wrap-left width="min(40%, 300px)"}
+
+See @fig-valid-2. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `max(20%, 10em)`.](plot.png){#fig-valid-3 .wrap-right width="max(20%, 10em)"}
+
+See @fig-valid-3. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `clamp(10em, 30%, 400px)`.](plot.png){#fig-valid-4 .wrap-left width="clamp(10em, 30%, 400px)"}
+
+See @fig-valid-4. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc((100% - 2em) / 3)`.](plot.png){#fig-valid-5 .wrap-right width="calc((100% - 2em) / 3)"}
+
+See @fig-valid-5. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `max(calc(20% + 1em), 8em)`.](plot.png){#fig-valid-6 .wrap-left width="max(calc(20% + 1em), 8em)"}
+
+See @fig-valid-6. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(var(--w) * 0.5)`.](plot.png){#fig-valid-7 .wrap-right width="calc(var(--w) * 0.5)"}
+
+See @fig-valid-7. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `CALC(2 * 10px)`.](plot.png){#fig-valid-8 .wrap-left width="CALC(2 * 10px)"}
+
+See @fig-valid-8. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `min(40%, 300px)`.](plot.png){#fig-valid-9 .wrap-right width="30%" wrap-gap="min(40%, 300px)"}
+
+See @fig-valid-9. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## Values that print a warning
+
+![A width of `calc(banana)`.](plot.png){#fig-invalid-1 .wrap-right width="calc(banana)"}
+
+See @fig-invalid-1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(100%-2em)`.](plot.png){#fig-invalid-2 .wrap-left width="calc(100%-2em)"}
+
+See @fig-invalid-2. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(1px + 2)`.](plot.png){#fig-invalid-3 .wrap-right width="calc(1px + 2)"}
+
+See @fig-invalid-3. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(1px * 2px)`.](plot.png){#fig-invalid-4 .wrap-left width="calc(1px * 2px)"}
+
+See @fig-invalid-4. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(10px / 2px)`.](plot.png){#fig-invalid-5 .wrap-right width="calc(10px / 2px)"}
+
+See @fig-invalid-5. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(5)`.](plot.png){#fig-invalid-6 .wrap-left width="calc(5)"}
+
+See @fig-invalid-6. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `min()`.](plot.png){#fig-invalid-7 .wrap-right width="min()"}
+
+See @fig-invalid-7. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `clamp(1px, 2px)`.](plot.png){#fig-invalid-8 .wrap-left width="clamp(1px, 2px)"}
+
+See @fig-invalid-8. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(1px + 2px`.](plot.png){#fig-invalid-9 .wrap-right width="calc(1px + 2px"}
+
+See @fig-invalid-9. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(foo(30%))`.](plot.png){#fig-invalid-10 .wrap-left width="calc(foo(30%))"}
+
+See @fig-invalid-10. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `min(40%, 2)`.](plot.png){#fig-invalid-11 .wrap-right width="min(40%, 2)"}
+
+See @fig-invalid-11. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(var(w) * 2)`.](plot.png){#fig-invalid-12 .wrap-left width="calc(var(w) * 2)"}
+
+See @fig-invalid-12. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(round(30%, 1px))`.](plot.png){#fig-invalid-13 .wrap-right width="calc(round(30%, 1px))"}
+
+See @fig-invalid-13. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(10px * 2em / 1em)`.](plot.png){#fig-invalid-14 .wrap-left width="calc(10px * 2em / 1em)"}
+
+See @fig-invalid-14. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(1px + 2)`.](plot.png){#fig-invalid-15 .wrap-right width="30%" wrap-gap="calc(1px + 2)"}
+
+See @fig-invalid-15. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
