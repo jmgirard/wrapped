@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M009: Keep LaTeX column layouts intact
 
-- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -173,6 +173,7 @@ new fixtures with layout and log checks; README and DESIGN text. The
 - 2026-10-26: claim audit pass (fresh Opus reader): 41 claims, 3 corrected (the verify.py log-line comment, since TinyTeX sets max_print_line 10000; the twocolumn-class page-1 sentence; "normal figure" in wrapped.tex and README, now "do not wrap"). Its edge case, a wrapped figure in `multicols` under `classoption: twocolumn`, was rendered by hand: LaTeX drops it. README now says so, and candidate row "Keep wrapped figures in multicols" holds the fix. Re-read of the corrections is running; checkpoint commit.
 - 2026-10-26: claim audit: 41 claims read, 3 corrected — tests/verify.py, tests/twocolumn-class.qmd, _extensions/wrapped/wrapped.tex, README.md. The re-read found all corrections hold; its two wording nits (the log-join comment, "a figure from that document") are applied.
 - 2026-10-26: T5: verify on macOS on 8ad78ab: 39 renders pass, 31 layout cases, 4 log checks, no snapshot difference. The `verify.yml` run on the PR happens at review, which opens the PR. Status set to review.
+- 2026-10-26: review return 1: AC6 fails as written: the README says figures in columns "do not wrap" and no longer says that a figure in columns set by a class default, `\twocolumn`, or `multicols` renders as a normal figure. Also the review's fix-now findings: diff-bug #1 (mode p in inner mode), #2 (hypcap in mode p), #4 (width claim), #5 and #6 (log parser), #7 (dead caption check), prior-review #1 (untested README sentence), prior-review #2 and ripple #2 (PROFILE and docstring), ripple #3 (README wrapfigure sentence), ripple #4 (wrap-mechanisms W2). See the Review section.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. EXEMPT from
@@ -192,3 +193,27 @@ Pass 1, on d142e36 (level with origin/main e1f0cf3). `python3 tests/verify.py`, 
 - AC6 evidence (README.md lines 212-225, DESIGN.md Architecture step 1, read on d142e36): the README names the four column sources, says only `classoption` warns in Quarto's output and the others write to the LaTeX log kept with `latex-clean: false`, has the not-detected sentence for a class or package layout with neither two-column mode nor `multicols`, names no paracol, and has no "IEEEtran is not detected" sentence; DESIGN step 1 names the check in `wrapped.tex`. FAIL on one clause: since the claim-audit correction, the README says wrapped figures in columns "do not wrap" and names "normal figures" only for the `classoption` case and for a captioned float in two-column text; it no longer says that a figure in columns set by a class default, `\twocolumn`, or `multicols` renders as a normal figure. Not ticked.
 - AC7 evidence (macOS part): the run above, 39 renders, 31 layout cases, 4 log checks pass. The CI half needs the PR, which step 8 opens. Not ticked yet.
 - Gate: `cairn_validate.py` all checks pass; one version marker (`_extension.yml` 0.1.0, unchanged by the branch); verify passes (above); changelog slot "none". No DESIGN principle changed, so no impact report.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: in two-column text a captioned wrappedfigure in inner mode (a raw minipage or tcolorbox, the optional argument of `\twocolumn[...]`) starts a `figure` float, and LaTeX stops with "Float(s) lost" (reviewer's scratch compile); wrapfig set such a figure in place before — fix now (test `\ifinner` and use mode p)
+- diff-bug #2: each in-place captioned figure logs "Package caption Warning: The option `hypcap=true' will be ignored" (tests/multicols.log) — fix now (hypcap off in mode p)
+- diff-bug #3: the warnings say "set as normal figure(s)" though mode p sets the figure in place — reject (false): in this project a normal figure is one that keeps its normal layout, not a wrap (DESIGN Goals), which both modes are
+- diff-bug #4: README "Each keeps its width as a share of the column" holds only for a percent width; `3in` stays 3in — fix now
+- diff-bug #5: the 79-character join never runs under TinyTeX (max_print_line 10000), and pdfTeX breaks by bytes — fix now (read the log with its line breaks removed, so any break width works)
+- diff-bug #6: a missing `.log` raises FileNotFoundError, a stale `.log` from an earlier run can be read, and `int(n)` fails on a warning without a line — fix now
+- diff-bug #7: `normal_case`'s caption-below check can never fail, since `find_figure` already requires the image above the caption — fix now (drop the dead check; `find_figure` holds the AC1 clause)
+- diff-bug #8: the local `\columnsep` is set before wrapfig's `\penalty`, so an output routine fired there sees the gap — reject (false): no wrong result in one-column text, and the old global set was wider
+- diff-bug (c) "before twocolumn", "image in multicols", the twocolumn-switch log count — reject (planned change): AC2, AC3, and AC4 name these cases
+- blame-history #1: caption styling now runs only in mode w, and README line 189 says "a caption inside a wrapped figure is set ragged-right" — reject (false): that README line is about wrapped figures, which mode w still styles
+- blame-history #2: `\AddToHook` raises the kernel floor — reject (false): `\NewDocumentEnvironment` in the kernel already needs LaTeX 2020-10, the same release
+- blame-history #3: wrapfig reading `\columnsep` only in `\WF@putfigmaybe` is recorded only in the work log — reject (false): the `wrapped.tex` header comment states it
+- blame-history #4: `\WFclear` is a hand copy of wrapfig's — reject (false): no defect; the branch changes only its last line
+- blame-history #5: the log join joins every 79-character line — fix now (same fix as diff-bug #5)
+- prior-review #1: README "LaTeX loses a figure from that document inside `multicols`" has no fixture — fix now (drop the sentence; candidate row "Keep wrapped figures in multicols" holds the case)
+- prior-review #2: PROFILE.md says verify exits 1 on a failed render, difference, or layout case, and omits the log check — fix now
+- prior-review #3: an uncaptioned image's alt text in mode p is not exercised in tagged PDF — reject (false): the mode changes only the wrapper; the body's `\includegraphics` and its `alt` key are the same, and the pdf-ua snapshots pin `alt`
+- prior-review #4: no case has a figure waiting when `multicols` begins — reject (false): unreachable through markdown, since every raw block after a wrap's paragraphs gets `\wrappedstop` (plan work log)
+- ripple #1: ROADMAP candidate row "Detect two-column LaTeX classes and gaps" now misdescribes the code — reject (planned change): post-merge hygiene removes the absorbed row
+- ripple #2: PROFILE.md lines 29-30 and 46-47 and the verify.py docstring omit the log check — fix now (with prior-review #2)
+- ripple #3: README lines 166-167 say the extension puts each wrapped figure in a `wrapfigure` — fix now
+- ripple #4: `cairn/references/wrap-mechanisms.md` W2 says `wrappedfigure` calls `wrapfigure` — fix now (mark corrected M009)
+- ripple #5: PROFILE.md line 56 "the `LAYOUT` list" names a dict — reject (style): a pre-existing word choice, "list" read as a list of fixtures
