@@ -136,6 +136,8 @@ not part of the verify command. Branch protection that requires the check
 - 2026-10-26: step-7 decline: fix the slow install before merging — move R, knitr, and rmarkdown to r-lib's binary install (the alternative the plan gate recorded against apt), rerun CI, then re-pose the merge question. Added T6 and mapped it to AC2 (minor amendment); merge marker removed; status in-progress.
 - 2026-10-26: plan-gate choice reversed: apt for R was falsified by install times (35m56s in run 40322532367), a different falsifier than the one the plan recorded; the user chose r-lib/actions/setup-r at the re-posed merge question. D-009 records the dependency change.
 - 2026-10-26: T6 done: CI run 40328216113 at 923adc5 succeeded in 3m27s; setup-r 27 s, setup-r-dependencies 48 s (R 4.6.1, knitr and rmarkdown from binaries), poppler 3 s, verify.py 1m43s with `all 36 renders pass`. No file under `tests/` changed since the local pass at 63a8960. Status review.
+- 2026-10-26: review pass 2 fixed diff-bug #1 (in part), #2, #9, #10 in 6d8c1ab and filed the row "Cut the Ubuntu mirror from CI setup".
+- 2026-10-26: step-7 approval: m008-ci-verify approved for merge
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
