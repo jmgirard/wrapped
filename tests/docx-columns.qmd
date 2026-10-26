@@ -1,0 +1,16 @@
+---
+title: "wrapped fixture: a Word reference doc with two columns"
+filters:
+  - wrapped
+format:
+  docx:
+    reference-doc: reference-columns.docx
+---
+
+The reference doc sets two columns, so Word keeps a normal figure and the
+render prints one warning. Run `python3 tests/reference_narrow.py` first,
+or `python3 tests/verify.py`, which writes the reference docs.
+
+![A figure in a two-column document.](plot.png){#fig-columns .wrap-right width="40%"}
+
+The paragraph after the figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

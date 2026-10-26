@@ -158,7 +158,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 ![A figure with a clamp() width and an uppercase unit gap.](plot.png){#fig-clamp .wrap-left width="clamp(150px, 30%, 400px)" wrap-gap="2VMIN"}
 
-In HTML the figure takes both values with no warning. LaTeX and Typst cannot use them, so they take the defaults and the render prints a warning for each. See @fig-clamp. Lorem ipsum, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+In HTML the figure takes both values with no warning. LaTeX, Typst, and Word cannot use them, so they take the defaults and the render prints a warning for each. See @fig-clamp. Lorem ipsum, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
@@ -199,11 +199,20 @@ The div above does not wrap, and the render prints a warning for it.
 \clearpage
 ```
 
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## A long caption near the bottom of a page
 
 ```{=latex}
 % Moves the figure below near the bottom of the page.
 \vspace{0.6\textheight}
+```
+
+```{=openxml}
+<!-- Moves the figure below near the bottom of the page in Word: 0.6 of the 12960 twips of text height on a Letter page with 1 in margins. -->
+<w:p><w:pPr><w:spacing w:before="7776" w:after="0"/></w:pPr></w:p>
 ```
 
 ![A figure near the bottom of a page, with a caption that runs to three or more lines in its narrow box.](plot.png){#fig-bottom .wrap-right width="150px"}
@@ -216,11 +225,20 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 \clearpage
 ```
 
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## A figure too near the bottom of a page
 
 ```{=latex}
 % Moves the figure below too near the bottom of the page to fit there.
 \vspace{0.75\textheight}
+```
+
+```{=openxml}
+<!-- Moves the figure below too near the bottom of the page to fit there in Word: 0.75 of 12960 twips. -->
+<w:p><w:pPr><w:spacing w:before="9720" w:after="0"/></w:pPr></w:p>
 ```
 
 ![A figure that starts too near the bottom of a page.](plot.png){#fig-break .wrap-left}
@@ -235,6 +253,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor i
 
 ```{=latex}
 \clearpage
+```
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
 ```
 
 ## A figure with wrap-lines too near the bottom of a page

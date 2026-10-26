@@ -1,0 +1,15 @@
+# warnings
+1x wrapped: Word does not use the height of the image plot.png in a wrapped figure, so the image fills the box width.
+1x wrapped: wrap-gap "1ex" on #fig-upper is not a length that Word can use, so it is 30px.
+# docx
+image: cx=1485900
+image: cx=1783080
+image: cx=1828800
+image: cx=2857500
+image: cx=1188720
+# frames
+frame right w=2340 gap=450 anchor=margin | fig-defaults | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-defaults cites=0
+frame left w=2808 gap=480 anchor=margin | fig-pica | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=fig-pica cites=0
+frame right w=2880 gap=450 anchor=margin | fig-upper | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=fig-upper cites=0
+frame left w=4500 gap=450 anchor=margin | fig-unitless | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=fig-unitless cites=0
+frame right w=1872 gap=450 anchor=margin | fig-height | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=fig-height cites=0

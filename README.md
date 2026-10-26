@@ -5,10 +5,9 @@ figure, to the left or right of it. The figure keeps its number, its
 caption, and its `@fig-` links.
 
 This version wraps figures in HTML output, revealjs slides included, in
-PDF through LaTeX, and in PDF through Typst. In every other format, a
-wrapped figure renders as a normal figure, and the render prints one
-warning. Support for Word is planned.
-Dashboards are not tested yet.
+PDF through LaTeX, in PDF through Typst, and in Word. In every other
+format, a wrapped figure renders as a normal figure, and the render prints
+one warning. Dashboards are not tested yet.
 
 ## Install
 
@@ -117,19 +116,19 @@ paragraph that you want beside the figure:
 ```
 
 A wrapped figure with no paragraph right after it keeps its normal layout.
-An example is a figure right before a heading. In HTML, LaTeX, and Typst
-the render prints no warning for such a figure. The places in the next section are the
+An example is a figure right before a heading. In HTML, LaTeX, Typst, and
+Word the render prints no warning for such a figure. The places in the next section are the
 exception. Of two wrapped figures in a row, the first keeps its
 normal layout, and the second wraps the paragraphs after it.
 
 In PDF through LaTeX, wrapping stops only in part, and a `wrap-clear` div
 does nothing. See [PDF through LaTeX](#pdf-through-latex). In PDF through
-Typst, wrapping stops as in HTML, and a `wrap-clear` div works.
+Typst and in Word, wrapping stops as in HTML, and a `wrap-clear` div works.
 
 ## Where a figure keeps its normal layout
 
-In HTML, in PDF through LaTeX, and in PDF through Typst, a wrapped figure
-in one of these places does not wrap. It keeps
+In HTML, in PDF through LaTeX, in PDF through Typst, and in Word, a wrapped
+figure in one of these places does not wrap. It keeps
 its normal layout, and the render prints one warning for it. The warning
 names the figure's id. If the figure has no id, the warning names its image
 file or says that the figure has no id.
@@ -138,7 +137,8 @@ file or says that the figure has no id.
   `.column-margin` or `.aside` div, or a code cell with `#| column: margin`.
   The figure stays in the margin. In PDF through LaTeX, Quarto puts a
   captioned image that has the `.column-margin` class and no `#fig-` id
-  in the body instead.
+  in the body instead. Word has no margin column, so there the figure is
+  in the body.
 - A subfigure panel, such as a figure div with `layout-ncol`, or a
   subfigure inside a panel.
 - A panel layout: a div or a code cell with `layout-ncol`, `layout-nrow`,
@@ -267,16 +267,73 @@ wrap-it has limits:
 Tagged PDF: with `pdf-standard: ua-1`, each wrapped figure and wrapped
 image keeps its `fig-alt` text as its alt text.
 
+## Word
+
+In Word output, the extension puts each wrapped figure in a Word frame. The
+image and its caption sit in the frame on the figure's side, and the
+paragraphs after the figure flow beside it. Citations and `@fig-` links in
+the text beside the figure work. An uncaptioned image keeps its `fig-alt`
+text as its alt text.
+
+The `width` and `wrap-gap` values change to Word lengths:
+
+- A percent above 0% and below 100% is that share of the text width. The
+  extension reads the text width from the page size and margins of the
+  reference doc that the document names with `reference-doc`. With no
+  reference doc, or a reference doc with no page size or margins, the text
+  width is 6.5 in: Word then shows a Letter page with 1 in margins.
+- A length in `in`, `cm`, `mm`, `pt`, or `pc`, in any letter case, keeps
+  its size. A `px` length, or a number with no unit, is 1/96 in for each
+  `px`. An `em` is 12 pt.
+- Any other unit, such as `ex`, `vw`, or `rem`, a `calc()`, `min()`,
+  `max()`, or `clamp()` value, and a percent of 0% print a warning, and
+  the document default applies.
+- A width or gap as wide as the text or wider, such as `100%` or `10in`,
+  leaves no room for the text. It prints a warning, and the document
+  default applies.
+
+The text width is the page width less the left and right margins and the
+gutter. A reference doc with more than one column keeps normal figures,
+and the render prints one warning.
+
+The image takes the width of the frame and keeps its shape. The extension
+does not use an image's `height` in a wrapped figure in Word, and the
+render prints a warning. The `wrap-lines` attribute does nothing in Word.
+
+A list in a figure div goes in the frame with the image and the caption.
+Word cannot put a code block, a table, a heading, a horizontal rule, or
+raw content in a frame. A figure div that holds one keeps its normal
+layout, and the render prints a warning.
+
+A frame does not break across pages. If a frame does not fit at the bottom
+of a page, Word moves it and the paragraph after it to the next page. The
+rest of the page before it stays blank.
+
+The extension is tested in these apps, with a test document that holds 15
+wrapped figures:
+
+- Microsoft Word 16.114 on macOS: text sits beside every wrapped figure.
+- LibreOffice 26.8 on macOS: text sits beside every wrapped figure.
+- Google Docs: no text sits beside the figure. The figure and its caption
+  sit on the figure's side on lines of their own, and the text starts
+  below them. Nothing is lost. This was checked on the first figure of the
+  test document.
+
+Right-to-left Word documents are not tested.
+
 ## Notes
 
-- A captioned image with no `#fig-` id wraps too. In HTML it has no figure
-  number. In PDF through LaTeX and Typst, Quarto numbers it.
+- A captioned image with no `#fig-` id wraps too. In HTML and Word it has
+  no figure number. In PDF through LaTeX and Typst, Quarto numbers it.
 - An image inside a link, or beside other content in its paragraph, does
-  not wrap. In HTML, LaTeX, and Typst the render prints a warning for it.
-- In HTML, LaTeX, and Typst, a `width` or `wrap-gap` value that is not a
-  length or a percent prints a warning, and the document default applies.
-- The sides are physical. In a right-to-left document, `.wrap-right` still
-  puts the figure on the right.
+  not wrap. In HTML, LaTeX, Typst, and Word the render prints a warning for
+  it.
+- In HTML, LaTeX, Typst, and Word, a `width` or `wrap-gap` value that is
+  not a length or a percent prints a warning, and the document default
+  applies.
+- In HTML, LaTeX, and Typst the sides are physical. In a right-to-left
+  document, `.wrap-right` still puts the figure on the right. Right-to-left
+  Word documents are not tested.
 - A long caption wraps inside the figure box.
 - If a page has margin content, such as a `.column-margin` note, a figure
   in the body of the page still wraps.

@@ -8,8 +8,11 @@
 -- LaTeX output puts each wrapped figure in the wrappedfigure environment of
 -- wrapped.tex, which calls wrapfig. Typst output puts each wrapped figure
 -- and the paragraphs of its group in a wrap-content call from the bundled
--- wrap-it package. A two-column LaTeX document and every other format keep
--- a normal figure. A figure with no wrap class is left as it is in every
+-- wrap-it package. Word output groups each wrapped figure with its
+-- paragraphs as in HTML, and marks the group with the frame's side, width,
+-- and gap in twips; wrapped-docx.lua turns the group into a Word frame at
+-- post-render. A two-column LaTeX document and every other format keep a
+-- normal figure. A figure with no wrap class is left as it is in every
 -- format.
 
 local SIDES = { ["wrap-left"] = "left", ["wrap-right"] = "right" }
@@ -33,6 +36,8 @@ local is_html = quarto.doc.is_format("html:js")
 local is_latex = FORMAT == "latex"
 -- PDF through Typst.
 local is_typst = FORMAT == "typst"
+-- Word.
+local is_docx = FORMAT == "docx"
 local two_column = false
 -- found_wrap: a figure or image carries a wrap class, so a format that
 -- cannot wrap prints its one warning. placed: a figure or image wraps, so
@@ -43,7 +48,7 @@ local placed = false
 -- True in a format that wraps, which prints a warning for each figure that
 -- keeps its normal layout.
 local function wraps()
-  return is_html or is_latex or is_typst
+  return is_html or is_latex or is_typst or is_docx
 end
 
 -- CSS units that a width, gap, or breakpoint may use, in lowercase.
@@ -209,6 +214,128 @@ local TYPST_HEADER = [[
 #let wrapped-side(side) = if wrapped-rtl() { if side == right { left } else { right } } else { side }
 #let wrapped-columns(side, width) = if wrapped-side(side) == right { (1fr, width) } else { (width, 1fr) }]]
 
+-- Twips (1/20 pt) for each unit of a length that Word can use. A px length
+-- is 1/96 in, as in CSS, and an em is 12 pt.
+local TWIPS = { ["in"] = 1440, cm = 1440 / 2.54, mm = 144 / 2.54, pt = 20, pc = 240, px = 15, em = 240 }
+
+-- Word's text width in twips with no page size or margins in the reference
+-- doc: Word shows a Letter page with 1 in margins, 6.5 in of text.
+local DOCX_TEXT_WIDTH = 9360
+local docx_text_width = DOCX_TEXT_WIDTH
+
+-- The reference doc's body w:sectPr sets columns, so Word keeps normal
+-- figures, as LaTeX does in a two-column document.
+local docx_columns = false
+-- The reference doc that cannot be read, for a warning when a figure wraps.
+local docx_unread = nil
+
+-- Reads the reference doc that the render uses. Returns its text width:
+-- the page width less the left and right margins and the gutter in the
+-- w:sectPr of its body. With no reference doc, or a body w:sectPr with no
+-- w:pgSz or no w:pgMar, it is DOCX_TEXT_WIDTH. Also returns true when that
+-- w:sectPr sets more than one column. A reference doc that cannot be read
+-- is noted in docx_unread.
+local function read_docx_text_width()
+  local path = PANDOC_WRITER_OPTIONS.reference_doc
+  if not path then return DOCX_TEXT_WIDTH, false end
+  local ok, xml = pcall(function()
+    local f = assert(io.open(path, "rb"))
+    local bytes = f:read("a")
+    f:close()
+    for _, entry in ipairs(pandoc.zip.Archive(bytes).entries) do
+      if entry.path == "word/document.xml" then return entry:contents() end
+    end
+  end)
+  if not (ok and xml) then
+    docx_unread = path
+    return DOCX_TEXT_WIDTH, false
+  end
+  -- The body's own w:sectPr is the last one in the file. It can be empty
+  -- and self-closing, and then it sets nothing.
+  local last = nil
+  local from = 1
+  while true do
+    local s = xml:find("<w:sectPr[%s>/]", from)
+    if not s then break end
+    last = s
+    from = s + 1
+  end
+  local tag = last and xml:match("^<w:sectPr[^>]*>", last)
+  if not tag or tag:match("/>$") then return DOCX_TEXT_WIDTH, false end
+  local sect = xml:match("^<w:sectPr[^>]*>.-</w:sectPr>", last)
+  if not sect then return DOCX_TEXT_WIDTH, false end
+  local cols = tonumber(sect:match('<w:cols[^>]-w:num="(%d+)"') or "1")
+  local page = sect:match('<w:pgSz[^>]-w:w="(%d+)"')
+  local margins = sect:match("<w:pgMar[^>]*>")
+  if not (page and margins) then return DOCX_TEXT_WIDTH, cols > 1 end
+  local left = margins:match('w:left="(%d+)"') or "0"
+  local right = margins:match('w:right="(%d+)"') or "0"
+  local gutter = margins:match('w:gutter="(%d+)"') or "0"
+  return tonumber(page) - tonumber(left) - tonumber(right) - tonumber(gutter), cols > 1
+end
+
+-- Returns the twips for a CSS length from css_length, or nil when Word has
+-- no such length, and "wide" when the length is the text width or more,
+-- which leaves no room for text. A percent above 0% and below 100% is that
+-- share of the text width. With `positive` (a width), a length of 0 twips
+-- is not a length, because a frame with no width takes the width of its
+-- content.
+local function docx_measure(length, positive)
+  local num, unit = length:match("^(%d*%.?%d+)(%a*%%?)$")
+  if not num then return nil end
+  local n = tonumber(num)
+  local twips
+  if unit == "%" then
+    if n >= 100 then return nil, "wide" end
+    if n <= 0 then return nil end
+    twips = n / 100 * docx_text_width
+  else
+    local per = TWIPS[unit:lower()]
+    if not per then return nil end
+    twips = n * per
+  end
+  twips = math.floor(twips + 0.5)
+  if twips >= docx_text_width then return nil, "wide" end
+  if positive and twips <= 0 then return nil end
+  return twips
+end
+
+local function docx_twips(length, positive)
+  return (docx_measure(length, positive))
+end
+
+-- Returns the twips for a value, or the twips of `fallback` with a warning
+-- when the value is not a length that Word can use.
+local function checked_docx_twips(value, fallback, what, where, positive)
+  local length = checked_length(value, fallback, what, where)
+  local twips, why = docx_measure(length, positive)
+  if twips then return twips end
+  quarto.log.warning(string.format(
+    'wrapped: %s "%s" on %s %s, so it is %s.', what, length, where,
+    why == "wide" and "leaves no room for text in Word" or "is not a length that Word can use",
+    fallback))
+  return docx_twips(fallback, positive)
+end
+
+-- A frame's side, width, and gap in twips, as "right 3744 240", and its
+-- width.
+local function docx_frame(class, width, gap, where)
+  local w = checked_docx_twips(width, options.width, "width", where, true)
+  local g = checked_docx_twips(gap, options.gap, "wrap-gap", where)
+  return string.format("%s %d %d", SIDES[class], w, g), w
+end
+
+-- Sets each image in a list of blocks to the frame's width, so the image
+-- fills the frame.
+local function docx_size(blocks, twips)
+  return blocks:walk({
+    Image = function(img)
+      img.attributes.width = tex_number(twips / 1440) .. "in"
+      return img
+    end,
+  })
+end
+
 -- The custom properties for a wrapped box, followed by any style the user
 -- set on it.
 local function style_for(width, gap, where, existing)
@@ -260,20 +387,21 @@ end
 -- the box width and the height and keeps its shape. Typst sets the width to
 -- the box width and removes the height, because Typst does not fit an image
 -- with a height in the box: an image wider than the box is cut off at its
--- edges. Elsewhere the image keeps its width.
+-- edges. Word removes the height in the same way, and docx_size sets the
+-- width to the frame width. Elsewhere the image keeps its width.
 local function clean_image(img)
   drop_wrap(img)
   if is_html then
     img.attributes.width = nil
   elseif is_latex then
     img.attributes.width = (img.attributes.height == nil) and "100%" or nil
-  elseif is_typst then
+  elseif is_typst or is_docx then
     if img.attributes.height then
       quarto.log.warning(string.format(
-        "wrapped: Typst does not use the height of the image %s in a wrapped figure, so the image fills the box width.",
-        pandoc.utils.stringify(img.src)))
+        "wrapped: %s does not use the height of the image %s in a wrapped figure, so the image fills the box width.",
+        is_typst and "Typst" or "Word", pandoc.utils.stringify(img.src)))
     end
-    img.attributes.width = "100%"
+    if is_typst then img.attributes.width = "100%" end
     img.attributes.height = nil
   end
   return img
@@ -477,9 +605,9 @@ local function names_two_column(classoption)
   return false
 end
 
--- In LaTeX and Typst, a metadata width or gap that the format cannot use,
--- such as 50vw, gives way to the default with a warning. `convert` is
--- tex_length or typst_length, and `name` names the format.
+-- In LaTeX, Typst, and Word, a metadata width or gap that the format cannot
+-- use, such as 50vw, gives way to the default with a warning. `convert` is
+-- tex_length, typst_length, or docx_twips, and `name` names the format.
 local function format_default(key, what, convert, name)
   if convert(options[key]) then return end
   quarto.log.warning(string.format(
@@ -489,6 +617,10 @@ local function format_default(key, what, convert, name)
 end
 
 local function read_meta(meta)
+  if is_docx then
+    docx_text_width, docx_columns = read_docx_text_width()
+    if docx_columns then is_docx = false end
+  end
   if is_latex and names_two_column(meta.classoption) then
     is_latex = false
     two_column = true
@@ -516,6 +648,9 @@ local function read_meta(meta)
         options.width, DEFAULTS.width))
       options.width = DEFAULTS.width
     end
+  elseif is_docx then
+    format_default("width", "width", function(l) return docx_twips(l, true) end, "Word")
+    format_default("gap", "gap", docx_twips, "Word")
   end
 end
 
@@ -528,6 +663,10 @@ local next_token = 0
 -- In Typst, the opening of each wrapped float's wrap-content call, by the
 -- float's custom id, cell floats included.
 local typst_opens = {}
+
+-- In Word, each wrapped float's frame from docx_frame, by the float's
+-- custom id, cell floats included.
+local docx_frames = {}
 
 -- The wrap class of a code cell, carried to the floats inside that cell.
 -- `remaining` counts the cell's floats, figures and tables, so a cell with
@@ -551,7 +690,7 @@ local function cell_div(div)
     next_token = next_token + 1
     local token = tostring(next_token)
     carry = { class = c, remaining = n, token = token }
-    if is_html or is_typst then div.attributes["data-wrap-anchor"] = token end
+    if is_html or is_typst or is_docx then div.attributes["data-wrap-anchor"] = token end
   end
   return div
 end
@@ -616,6 +755,10 @@ local function float_target(float)
     if custom_id then
       typst_opens[custom_id] = typst_open(class, width, gap, "#" .. float.identifier)
     end
+  elseif is_docx then
+    local frame, w = docx_frame(class, width, gap, "#" .. float.identifier)
+    float.content = docx_size(float.content, w)
+    if custom_id then docx_frames[custom_id] = frame end
   else
     float.classes:insert(class)
     float.attributes.style = style_for(width, gap, "#" .. float.identifier, float.attributes.style)
@@ -655,8 +798,16 @@ local function figure_block(fig)
     fig.attributes["fig-pos"] = tex_options(class, width, gap, lines, where)
     return fig, false
   end
-  local attrs = is_typst and { ["data-wrap-open"] = typst_open(class, width, gap, where) }
-    or { style = style_for(width, gap, where, nil) }
+  local attrs
+  if is_typst then
+    attrs = { ["data-wrap-open"] = typst_open(class, width, gap, where) }
+  elseif is_docx then
+    local frame, w = docx_frame(class, width, gap, where)
+    fig.content = docx_size(fig.content, w)
+    attrs = { ["data-wrap-frame"] = frame }
+  else
+    attrs = { style = style_for(width, gap, where, nil) }
+  end
   local box = pandoc.Div({ fig }, pandoc.Attr("", { "wrapped-image", class }, attrs))
   return box, false
 end
@@ -702,6 +853,22 @@ local function wrapped_image_typst(img)
   end
   return pandoc.Div({ pandoc.Plain({ img }) }, pandoc.Attr("", { "wrapped-image", class },
     { ["data-wrap-open"] = open }))
+end
+
+-- In Word, an image with no caption goes in a .wrapped-image box that holds
+-- its frame. As in LaTeX, an image with fig-alt and no description takes
+-- fig-alt as its description, which Pandoc writes as the image's alt text.
+local function wrapped_image_docx(img)
+  local class = wrap_class(img.classes)
+  local frame, w = docx_frame(class, img.attributes.width, img.attributes["wrap-gap"],
+    pandoc.utils.stringify(img.src))
+  clean_image(img)
+  local alt = img.attributes["fig-alt"]
+  if alt and #img.caption == 0 then
+    img.caption = pandoc.Inlines(alt)
+  end
+  return pandoc.Div(docx_size(pandoc.Blocks({ pandoc.Plain({ img }) }), w),
+    pandoc.Attr("", { "wrapped-image", class }, { ["data-wrap-frame"] = frame }))
 end
 
 -- In LaTeX, an image with no caption goes in a raw wrappedfigure. The image
@@ -828,6 +995,27 @@ local function typst_group(members)
   return out
 end
 
+-- In Word, a group's .wrap-group div carries its figure's frame, which
+-- wrapped-docx.lua reads at post-render. A .wrapped-image box gives its
+-- frame to the group, and a code cell or a float gives the frame of its
+-- wrapped float.
+local function docx_group(members)
+  local first = members[1]
+  local frame = first.attributes["data-wrap-frame"]
+  first.attributes["data-wrap-frame"] = nil
+  if not frame then
+    pandoc.Blocks({ first }):walk({
+      Div = function(d)
+        frame = frame or docx_frames[d.attributes.__quarto_custom_id or ""]
+      end,
+    })
+  end
+  -- A .wrapped-image div that the filter did not make has no frame, so its
+  -- group keeps its blocks as they are.
+  if not frame then return members end
+  return pandoc.List({ pandoc.Div(members, pandoc.Attr("", { "wrap-group" }, { ["data-wrap-frame"] = frame })) })
+end
+
 -- Groups each wrapped figure with the paragraphs after it. The group stops
 -- at the first block that is not a paragraph (the stop rule). The group's
 -- CSS contains its float, so the stop block starts below the figure. In
@@ -847,6 +1035,9 @@ local function group_blocks(blocks)
       elseif is_typst then
         placed = true
         members = pandoc.List({ wrapped_image_typst(img) })
+      elseif is_docx then
+        placed = true
+        members = pandoc.List({ wrapped_image_docx(img) })
       elseif is_latex then
         placed = true
         out:extend(wrapped_image_tex(img))
@@ -874,6 +1065,8 @@ local function group_blocks(blocks)
       end
       if is_typst then
         out:extend(typst_group(members))
+      elseif is_docx then
+        out:extend(docx_group(members))
       else
         out:insert(pandoc.Div(members, pandoc.Attr("", { "wrap-group" })))
       end
@@ -949,6 +1142,16 @@ local function finish(doc)
     if placed then
       quarto.doc.include_text("in-header", TYPST_HEADER)
     end
+  elseif is_docx then
+    -- wrapped-docx.lua builds the frames at post-render and needs no header.
+    if docx_unread and found_wrap then
+      quarto.log.warning(string.format(
+        "wrapped: the reference doc %s cannot be read, so a percent width in Word is a share of 6.5 in.",
+        docx_unread))
+    end
+  elseif docx_columns and found_wrap then
+    quarto.log.warning(
+      "wrapped: Word does not wrap figures in a document with columns, so wrapped figures render as normal figures.")
   elseif two_column and found_wrap then
     quarto.log.warning(
       "wrapped: LaTeX does not wrap figures in a two-column document, so wrapped figures render as normal figures.")

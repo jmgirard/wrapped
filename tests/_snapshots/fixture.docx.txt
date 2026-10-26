@@ -1,22 +1,47 @@
 # warnings
-1x wrapped: docx output does not wrap figures yet, so wrapped figures render as normal figures.
+1x wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.
+1x wrapped: the div #note is not a figure, so it does not wrap.
+1x wrapped: the image plot.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the table #tbl-cars is not a figure, so it does not wrap.
+1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
+1x wrapped: width "clamp(150px, 30%, 400px)" on #fig-clamp is not a length that Word can use, so it is 40%.
+1x wrapped: width "wide" on #logo is not a length or a percent, so it is 40%.
+1x wrapped: wrap-gap "2VMIN" on #fig-clamp is not a length that Word can use, so it is 1em.
+1x wrapped: wrap-gap "wide" on #fig-bad-width is not a length or a percent, so it is 1em.
+1x wrapped: wrap-gap "wide" on plot.png is not a length or a percent, so it is 1em.
 # docx
-image: cx=1600200
-image: cx=5334000
-image: cx=1866900
-image: cx=5334000
-image: cx=1066800
+image: cx=1783080
+image: cx=2743200
+image: cx=2080259
+image: cx=2377440
+image: cx=1188720
 image: cx=2667000
 image: cx=2667000
 image: cx=1600200
+image: cx=1188720
 image: cx=1066800
-image: cx=1066800
-image: cx=1600200
-image: cx=5334000
-image: cx=5334000
-image: cx=5334000
-image: cx=1600200
-image: cx=5334000
+image: cx=1783080
+image: cx=2377440
+image: cx=1783080
+image: cx=2377440
+image: cx=1783080
+image: cx=2377440
 image: cx=1428750
-image: cx=5334000
-image: cx=5334000
+image: cx=2377440
+image: cx=2377440
+# frames
+frame right w=2808 gap=240 anchor=margin | fig-md | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-md cites=1
+frame left w=4320 gap=240 anchor=margin | fig-div | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-div cites=0
+frame right w=3276 gap=480 anchor=margin | fig-inner | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-inner cites=0
+frame left w=3744 gap=240 anchor=margin | fig-cell | image fig-cell-1.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-cell cites=0
+frame right w=1872 gap=240 anchor=margin | - | image plot.png fills=yes alt='A small plot' | p, p, clear | links=- cites=0
+frame right w=1872 gap=480 anchor=margin | - | image plot.png fills=yes alt='Lab logo'; caption style=ImageCaption | p, p, clear | links=- cites=0
+frame right w=2808 gap=240 anchor=margin | fig-comment | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-comment cites=0
+frame left w=3744 gap=240 anchor=margin | fig-bad-width | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-bad-width cites=0
+frame right w=2808 gap=240 anchor=margin | fig-styled | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-styled cites=0
+frame left w=3744 gap=240 anchor=margin | fig-clamp | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-clamp cites=0
+frame right w=2808 gap=240 anchor=margin | fig-raw | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=fig-raw cites=0
+frame left w=3744 gap=240 anchor=margin | logo | image plot.png fills=yes alt='Logo with its own id.'; caption style=ImageCaption | p, p, clear | links=- cites=0
+frame right w=2250 gap=240 anchor=margin | fig-bottom | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-bottom cites=0
+frame left w=3744 gap=240 anchor=margin | fig-break | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, p, p, clear | links=fig-break cites=0
+frame right w=3744 gap=240 anchor=margin | fig-break-lines | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, p, p, clear | links=fig-break-lines cites=0

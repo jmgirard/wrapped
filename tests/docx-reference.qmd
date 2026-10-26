@@ -1,0 +1,32 @@
+---
+title: "wrapped fixture: a Word reference doc with its own page"
+filters:
+  - wrapped
+format:
+  html: default
+  docx:
+    reference-doc: reference-narrow.docx
+---
+
+The reference doc sets an A4 page with a 1.25 in left margin and a 1 in
+right margin, so a percent width is a share of 8666 twips of text. Run
+`python3 tests/reference_narrow.py` first, or `python3 tests/verify.py`,
+which writes the reference docs.
+
+## A figure at 30%
+
+![A figure at 30% of the text width.](plot.png){#fig-ref-30 .wrap-right width="30%"}
+
+The paragraph beside the figure. See @fig-ref-30. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A figure at 50%
+
+![A figure at 50% of the text width.](plot.png){#fig-ref-50 .wrap-left width="50%" wrap-gap="5%"}
+
+The paragraph beside the figure. See @fig-ref-50. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A figure at 2 in
+
+![A figure two inches wide.](plot.png){#fig-ref-abs .wrap-right width="2in"}
+
+The paragraph beside the figure. Its width does not depend on the page. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

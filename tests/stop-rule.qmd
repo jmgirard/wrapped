@@ -9,6 +9,7 @@ format:
   typst:
     keep-typ: true
     fig-format: png
+  docx: default
 ---
 
 ## Case 1: ATX heading
