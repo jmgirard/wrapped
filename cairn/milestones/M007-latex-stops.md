@@ -107,7 +107,7 @@ a callout frame, or a horizontal rule beside a figure is not checked.
 - AC3 → T1, T3
 - AC4 → T1, T3
 - AC5 → T4
-- AC6 → T5
+- AC6 → T5, T6
 
 ## Tasks
 <!-- owner: plan (create) / implement (check-off, minor edits); substantive
@@ -146,6 +146,8 @@ a callout frame, or a horizontal rule beside a figure is not checked.
       and the "PDF through LaTeX" limits ("Wrapping stops only in part",
       "Figures in a row") against renders, and update passes 4, 5, and 7 of
       DESIGN.md's Architecture (`corrected M007`).
+- [ ] T6: Review return 1: narrow the README sentences AC6 failed on, and
+      fix the review's fix-now findings (Review section, pass 1).
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates.
@@ -193,6 +195,8 @@ a callout frame, or a horizontal rule beside a figure is not checked.
 - 2026-10-26: re-audit: AC3 (full) — third reader on the amended AC3: reachable, met now (gaps equal, 341/425 on pages 10 and 11); findings: name the one fixture case (3), no probe had shown the gap check red (4), the 13-line premise rests on one scratch log (5). Settled without rewording, since a further change to AC3 would go to the user: (3) AC3 already scopes to stop-latex.qmd, which holds one such case; (4) a scratch probe whose stop skips by the remaining wrap-lines count fails the gap check (326 px with wrap-lines against 62 px without); (5) review re-runs the compile log for the premise.
 - 2026-10-26: implement done: `python3 tests/verify.py` on the branch passed all 36 renders and 21 layout cases with no snapshot change; status review.
 - 2026-10-26: review return 1: AC6 fails as written: the README's moved-figure sentence ("renders after them, centered") and "Figures in a row" sentence match no case AC1 to AC4 measure, and the wrap-lines sentence is false for a smaller value. The return also carries the review's fix-now findings (Review section, pass 1): diff-bug #1, #2, #3, #4, #6; blame-history #1 (D-007); prior-review #1, #3; ripple #1, #2, #4 to #11. Status in-progress.
+- 2026-10-26: T6 added for review return 1 (minor amendment; Coverage AC6 → T5, T6).
+- 2026-10-26: T6 (checkpoint, verify running): README's wrap-lines sentence scoped to a value larger than the figure needs, the moved-figure sentence narrowed to "renders with no text beside it" plus the stop block below it (AC4), and "Figures in a row" now says a figure after a wrapped figure's paragraphs stops its wrap (case 8); `.wrapped-image` groups only outside LaTeX (a hand-written box in a LaTeX-only document renders, exit 0); wrapped.tex keeps the start's \baselineskip for the count and skip; the check leaves out the caption's own box (a synthetic heading beside the caption now fails), fails rather than crashes on an empty page 1, a missing case 8 line, or a pdftohtml failure; D-007 added; PROFILE.md verify and gate text, verify.py docstring, wrap-mechanisms.md W2/E9/E10, DESIGN.md wrap-lines row and pass 5, wrapped.lua header, and the CI row updated. A pre-existing "would" in wrap-mechanisms.md E16 that the prose linter flags is outside this diff and left as it is.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

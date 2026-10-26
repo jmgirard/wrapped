@@ -5,7 +5,7 @@ Run from the repository root:
     python3 tests/verify.py            # render and compare
     python3 tests/verify.py --update   # render and rewrite the snapshots
 
-Needs Quarto, R with knitr, and TinyTeX. Each render must exit with status
+Needs Quarto, R with knitr, TinyTeX, and poppler. Each render must exit with status
 0. A snapshot under tests/_snapshots/ records the parts of a render that
 show what the filter decided. For every format it holds the extension's
 warnings. For HTML it also holds the breakpoint value, the wrap class and
@@ -31,8 +31,8 @@ book project: its snapshot holds the HTML parts of each page under _book/,
 and the href of each cross-reference link. For a fixture in MARGIN_IDS, the
 script also renders a copy with no filters and records whether the nearest
 column-margin div around each named figure has the same classes in both
-renders. The script exits with status 1 on a failed render or a snapshot
-difference.
+renders. The script exits with status 1 on a failed render, a snapshot
+difference, or a failed layout case.
 
 Some fixtures exist only for the browser checks in tests/layout.js, which
 measure layout. Those fixtures are rendered here, so their HTML is current,
@@ -41,9 +41,8 @@ and they have no snapshot.
 For a fixture in LAYOUT, the script also reads the PDF through LaTeX right
 after its render, before the Typst render writes the same path, and checks
 where each case's text starts beside and below its wrapped figure. It reads
-the boxes of text lines and images with poppler's pdftohtml, so it needs
-poppler (brew install poppler). It prints one line for each case it
-measured.
+the boxes of text lines and images with poppler's pdftohtml (brew install
+poppler). It prints one line for each case it measured.
 """
 
 import difflib
@@ -308,7 +307,9 @@ def pdf_boxes(path):
     boxes, heights = [], {}
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "layout"
-        subprocess.run(["pdftohtml", "-xml", "-q", str(path), str(out)], check=True)
+        result = subprocess.run(["pdftohtml", "-xml", "-q", str(path), str(out)], capture_output=True, text=True)
+        if result.returncode != 0:
+            raise LayoutError(f"pdftohtml exited with status {result.returncode}: {result.stderr.strip()}")
         root = ET.parse(f"{out}.xml").getroot()
     for page in root.iter("page"):
         n = int(page.get("number"))
@@ -341,6 +342,8 @@ def text_edges(boxes):
     if any(b.page == 1 and b.kind == "image" for b in boxes):
         raise LayoutError("page 1 holds an image, so it does not show the width of the text block")
     lines = [b for b in boxes if b.page == 1 and b.kind == "text"]
+    if not lines:
+        raise LayoutError("page 1 has no text, so it does not show the width of the text block")
     widest = max(b.right - b.left for b in lines)
     full = [b for b in lines if b.right - b.left > 0.95 * widest]
     return min(b.left for b in full), max(b.right for b in full)
@@ -361,6 +364,7 @@ class LayoutError(Exception):
 class Figure:
     image: Box
     bottom: float
+    caption: Box = None
 
     @property
     def page(self):
@@ -381,13 +385,14 @@ def find_figure(boxes, caption, near):
     if not above:
         raise LayoutError(f"no image above the caption {caption!r}")
     image = max(above, key=lambda b: b.bottom)
-    return Figure(image, max(image.bottom, cap.bottom))
+    return Figure(image, max(image.bottom, cap.bottom), cap)
 
 
-def after(boxes, box):
+def after(boxes, box, leave=None):
     """The text lines after `box` on its page, in reading order, each as a
-    list of the boxes that share its top."""
-    rest = sorted((b for b in boxes if b.kind == "text" and b.page == box.page and b.top > box.top + NEAR),
+    list of the boxes that share its top. The box `leave` is left out."""
+    rest = sorted((b for b in boxes if b.kind == "text" and b.page == box.page and b.top > box.top + NEAR
+                   and b is not leave),
                   key=lambda b: (b.top, b.left))
     lines = []
     for b in rest:
@@ -437,9 +442,7 @@ def stop_case(boxes, edges, lh, caption, para, side, full=None):
     p = find_text(boxes, para)
     fig = find_figure(boxes, caption, p)
     check_beside(fig, p, side, edges, lh)
-    lines = [ln for ln in after(boxes, p) if not any(b.top >= fig.image.bottom - NEAR and b.top < fig.bottom
-                                                     and overlaps(b.left, b.right, fig.image.left, fig.image.right)
-                                                     for b in ln)]
+    lines = after(boxes, p, leave=fig.caption)
     if not lines:
         raise LayoutError("no stop text after the paragraph on its page")
     stop = lines[0]
@@ -458,8 +461,12 @@ def plain_figure_case(boxes, edges, lh):
     check_beside(fig, p, "left", edges, lh)
     plain = find_figure(boxes, "A figure with no wrap class.", p)
     check_below(fig, plain.image.top, plain.page, "the plain figure")
+    # The text after case 8's stop block is on the page of its paragraph or
+    # of the plain figure, never on a later case's page.
     texts = [b for b in boxes if b.kind == "text" and "Text after the stop block." in b.text
-             and (b.page, b.top) > (p.page, p.top)]
+             and b.page in (p.page, plain.page) and (b.page, b.top) > (p.page, p.top)]
+    if not texts:
+        raise LayoutError("no line 'Text after the stop block.' after the paragraph on its page or the plain figure's")
     first = min(texts, key=lambda b: (b.page, b.top))
     check_below(fig, first.top, first.page, "the text after the stop block")
 
@@ -518,8 +525,8 @@ LAYOUT = {"stop-rule": stop_rule_cases, "stop-latex": stop_latex_cases}
 
 def layout_check(fixture):
     """Prints a line for each case. Returns the names of the failed cases."""
-    boxes = pdf_boxes(TESTS / f"{fixture}.pdf")
     try:
+        boxes = pdf_boxes(TESTS / f"{fixture}.pdf")
         edges, lh = text_edges(boxes), line_height(boxes)
     except LayoutError as err:
         print(f"FAIL layout {fixture}: {err}")

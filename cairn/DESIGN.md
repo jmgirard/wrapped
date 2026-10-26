@@ -74,7 +74,7 @@ filter carries it to the figure (`references/wrap-mechanisms.md`, S1; D-001).
 | `.wrap-left`, `.wrap-right` | class | none | Turns wrapping on and picks the side. |
 | `width` | percent of text width, or an absolute length | `40%` | Width of the figure box, caption included. |
 | `wrap-gap` | length | `1em` | Space between the figure and the text. |
-| `wrap-lines` | integer | auto | LaTeX only. The number of narrowed lines. |
+| `wrap-lines` | integer | auto | LaTeX only. The number of narrowed lines; a stop block ends the wrap earlier (corrected M007). |
 
 Document or project defaults go under one metadata key:
 
@@ -158,9 +158,9 @@ passes (corrected M003):
    gets a `.wrapped-image` box that holds that opening (corrected M005).
 5. In HTML it groups each wrapped figure with the paragraphs after it in a
    `.wrap-group` div. The group's `display: flow-root` gives the stop rule.
-   In LaTeX it groups as in HTML, puts an image with no caption in a raw
-   `wrappedfigure`, and writes no div: a raw `\wrappedstop` follows each
-   group's last paragraph (corrected M007). In Typst it writes each group as raw Typst blocks around the figure and the
+   In LaTeX it finds the same groups by the stop rule but writes no div: it
+   puts an image with no caption in a raw `wrappedfigure`, and a raw
+   `\wrappedstop` follows each group's last paragraph (corrected M007). In Typst it writes each group as raw Typst blocks around the figure and the
    paragraphs, which make one `wrap-content(..., box(width: 100%)[figure],
    [paragraphs])` call. The width sets wrap-it's grid column. A percent of
    100% or more takes the default width with a warning. A code cell keeps

@@ -179,7 +179,8 @@ The `width` and `wrap-gap` values change to LaTeX lengths:
 The `wrap-lines` attribute sets the number of lines beside the figure. It
 works only in LaTeX. Without it, wrapfig counts the lines from the height
 of the figure. A block that stops the wrap ends it before that number of
-lines. That block starts below the figure, as it does without `wrap-lines`.
+lines. With a value larger than the figure needs, that block starts below
+the figure, as it does without `wrap-lines`.
 
 ```markdown
 ![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right wrap-lines="12"}
@@ -196,19 +197,17 @@ wrapfig has limits, and the extension keeps some of them:
   that the figure still needs. If the text beside the figure is shorter
   than the figure, the space beside the figure stays empty.
 - A figure that does not fit at the bottom of a page moves to the start of
-  a paragraph on the next page. The text before it fills the page. If the
-  paragraphs after it all end on that page, the figure renders after them,
-  centered, with no text beside it. If it still does not fit there, it goes
-  to the top of the next page. The block that stops the wrap starts below
-  it.
+  a paragraph on the next page. The text before it fills the page. If its
+  paragraphs all end before it is placed, it renders with no text beside
+  it. The block that stops the wrap starts below it.
 - If a page break comes while lines are still narrowed, the first lines on
   the next page are narrowed with no figure beside them. A `wrap-lines`
   value larger than the figure needs can narrow lines past a page break in
   the same way.
-- Figures in a row: a wrapped figure is a block that stops the wrap of an
-  earlier figure, so the new figure starts below the earlier one. A figure
-  that moved to the next page waits for one of its own paragraphs. A
-  heading or the end of a callout does not take it.
+- Figures in a row: a figure after the paragraphs of a wrapped figure is a
+  block that stops its wrap, so it starts below the wrapped figure. A
+  figure that moved to the next page waits for one of its own paragraphs.
+  A heading or the end of a callout does not take it.
 - In a two-column document, set with `classoption: twocolumn`, wrapped
   figures render as normal figures, and the render prints one warning. The
   extension reads only `classoption`. A class that sets two columns by

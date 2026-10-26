@@ -45,9 +45,13 @@
   \wrapped@restorecolsep}
 % wrapfig counts the lines beside a figure from \WF@size, the figure's
 % height, or takes the wrap-lines value. \wrapped@startlines keeps the count
-% that the wrap started with.
+% that the wrap started with, and \wrapped@startbs the \baselineskip that
+% wrapfig counted with.
 \newcount\wrapped@startlines
-\g@addto@macro\WF@startwrapping{\global\wrapped@startlines\c@WF@wrappedlines}
+\newdimen\wrapped@startbs
+\g@addto@macro\WF@startwrapping{%
+  \global\wrapped@startlines\c@WF@wrappedlines
+  \global\wrapped@startbs\baselineskip}
 % The lines skipped are the lines that wrapfig counts from the height, less
 % the lines already set beside the figure, less one. A wrap-lines value
 % larger than the height needs adds no space.
@@ -55,11 +59,11 @@
   \ifvoid\WF@box\else \WFclear \fi
   \ifx\parshape\WF@fudgeparshape
     \par
-    \@tempdima\WF@size \advance\@tempdima1.1\baselineskip
-    \divide\@tempdima\baselineskip \@tempcnta\@tempdima
+    \@tempdima\WF@size \advance\@tempdima1.1\wrapped@startbs
+    \divide\@tempdima\wrapped@startbs \@tempcnta\@tempdima
     \advance\@tempcnta-\wrapped@startlines
     \advance\@tempcnta\c@WF@wrappedlines \advance\@tempcnta\m@ne
-    \ifnum\@tempcnta>\z@ \vspace{\@tempcnta\baselineskip}\fi
+    \ifnum\@tempcnta>\z@ \vspace{\@tempcnta\wrapped@startbs}\fi
     \WFclear
   \fi}
 \newcommand*\wrappedstop{\wrapped@endwrap}

@@ -45,9 +45,10 @@ Details by row:
   blocks instead.
 - W2 limits: `wrapfig` fails inside lists. If a page break falls in the
   wrapped area, the first lines on the next page stay narrowed with no
-  figure beside them (corrected M004). It narrows a heading that comes before the
-  figure's bottom edge. Two wrapped figures in a row break it. It does not
-  work in `twocolumn` documents.
+  figure beside them (corrected M004). On its own it narrows a heading that
+  comes before the figure's bottom edge, and two wrapped figures in a row
+  break it. The extension's `\wrappedstop` ends the wrap at the stop block
+  (corrected M007). It does not work in `twocolumn` documents.
 - W3: typst#553 is closed. It moved to float placement, not text wrap. The
   Typst label stays inside a content block (`[...]`), so `@fig-` links work.
   Lists break in wrap-it issues #12, #19, and #3. First-line indents change
@@ -150,8 +151,8 @@ The filter has two entry points (corrected M006):
 | E6 | Wrapped figure is the last block before a heading | No text to wrap. Normal figure, no warning. |
 | E7 | Two wrapped figures with no text between them | The first figure falls back with no warning, and the second wraps the text after it (corrected 2026-10-24, D-003). |
 | E8 | Wrapped figure inside a list, callout, column layout, or tabset | Normal figure. One warning. |
-| E9 | Text shorter than the figure | HTML and Word clear at the stop point. Typst wraps the text it has. LaTeX narrows the blocks that follow. |
-| E10 | Figure taller than the rest of the page | LaTeX, Typst, and Word move it to the next page. In LaTeX the text before it leaves no gap. In Typst the `wrap-content` box moves whole and the rest of the page stays blank (corrected M005). Word moves the frame and the paragraph after it, and the rest of the page stays blank (corrected M006). |
+| E9 | Text shorter than the figure | HTML and Word clear at the stop point. Typst wraps the text it has. LaTeX skips to the figure's bottom at the stop point (corrected M007). |
+| E10 | Figure taller than the rest of the page | LaTeX, Typst, and Word move it to the next page. In LaTeX the text before it leaves no gap. A figure whose paragraphs all end before it is placed renders with no text beside it, before the stop block (corrected M007). In Typst the `wrap-content` box moves whole and the rest of the page stays blank (corrected M005). Word moves the frame and the paragraph after it, and the rest of the page stays blank (corrected M006). |
 | E11 | Long caption | The caption wraps inside the box width in all formats. |
 | E12 | `pdf-standard: ua-1` or `ua-2` | A test makes sure that alt text and tags stay. Quarto 1.10.19 ignores `ua-1` for LaTeX, so that PDF has no tags. The LaTeX test uses `ua-2` with `documentclass: article` (corrected M004). |
 | E13 | Book projects and cross-chapter `@fig-` links | No change expected. The test book includes one. |

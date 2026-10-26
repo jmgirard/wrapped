@@ -6,7 +6,8 @@
 -- figures that keep a normal layout: those in a context that cannot wrap,
 -- such as a list or the margin, and those with no paragraph after them.
 -- LaTeX output puts each wrapped figure in the wrappedfigure environment of
--- wrapped.tex, which calls wrapfig. Typst output puts each wrapped figure
+-- wrapped.tex, which calls wrapfig, and writes \wrappedstop after the
+-- paragraphs of its group. Typst output puts each wrapped figure
 -- and the paragraphs of its group in a wrap-content call from the bundled
 -- wrap-it package. Word output groups each wrapped figure with its
 -- paragraphs as in HTML, and marks the group with the frame's side, width,
@@ -1043,7 +1044,8 @@ local function group_blocks(blocks)
       else
         strip_wrap(img.classes)
       end
-    elseif b.t == "Div" and b.classes:includes("wrapped-image") then
+    elseif not is_latex and b.t == "Div" and b.classes:includes("wrapped-image") then
+      -- In LaTeX the filter makes no .wrapped-image box.
       members = pandoc.List({ b })
     elseif is_latex and b.t == "Figure" and b.attributes["fig-env"] == "wrappedfigure" then
       -- In LaTeX, a captioned image with no id stays a Figure.

@@ -24,18 +24,21 @@ python3 tests/verify.py
 It renders the fixtures under `tests/` to HTML, revealjs, PDF through
 LaTeX, PDF through Typst, and docx, and the book project under `tests/book/`
 to HTML. It compares the parts that the filter changes with
-the snapshots in `tests/_snapshots/`. It exits with status 1 on a failed
-render or a difference. It needs Quarto, R with knitr, and TinyTeX. After an
-intended output change, run it with `--update` and review the snapshot diff.
-Layout is not in this command. Measure it in a browser with
-`tests/layout.js`, as its header says.
+the snapshots in `tests/_snapshots/`. For the fixtures in its `LAYOUT`
+list, it also reads where text starts beside and below each wrapped figure
+in the PDF through LaTeX (D-006). It exits with status 1 on a failed render,
+a difference, or a failed layout case. It needs Quarto, R with knitr,
+TinyTeX, and poppler. After an intended output change, run it with
+`--update` and review the snapshot diff. Other layout is not in this
+command. Measure HTML layout in a browser with `tests/layout.js`, as its
+header says (corrected M007).
 
 ## consistency-gate
 Toolchain tests that `/milestone-review` runs *in addition to* the universal
 cairn-file tests (`cairn_validate`, coverage completeness, `cairn_impact`):
 - Every version marker that `release-walk` names holds the same version.
 - The verify command passes on the review head: every fixture renders with
-  no errors, and every snapshot matches.
+  no errors, every snapshot matches, and every layout case passes.
 - The changelog slot says "none", so the gate reads no changelog entry.
 
 ## test-doctrine

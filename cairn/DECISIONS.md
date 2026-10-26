@@ -77,3 +77,18 @@ the filter puts a command. The user chose it over a position log that TeX
 writes from a header that only a test file loads, which needs more test
 code and depends on the PDF engine, and over page images checked by eye,
 which no test fails on.
+
+### D-007: LaTeX wraps end at the stop block, a waiting figure included
+
+2026-10-26, M007, narrowing M004's LaTeX behavior. The user chose at the
+M007 plan's question set that PDF through LaTeX ends a wrap at every block
+that the stop rule names, as HTML, Typst, and Word do, over ending it only
+at a `wrap-clear` div and before an unwrapped figure. The filter writes
+`\wrappedstop` after each group's last paragraph. Where the wrap is still
+narrowed, it skips the lines that the figure's height still needs. A
+figure that moved because it did not fit and still waits for a paragraph
+is put out there with no text beside it, before the stop block. Under M004
+such a figure waited for any later paragraph on its group level, which
+could put it beside text after a heading that is not its own. The cost is
+that a figure near a page's end wraps less often: when its paragraphs end
+before it can be placed, it renders as a normal figure.
