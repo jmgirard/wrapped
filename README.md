@@ -212,7 +212,7 @@ wrapfig has limits, and the extension keeps some of them:
 - Where the text runs in columns, wrapped figures do not wrap. Each keeps
   its width as a share of the column. With `classoption: twocolumn`, they
   render as normal figures, and the render prints one warning. LaTeX loses
-  such a figure inside `multicols`.
+  a figure from that document inside `multicols`.
 - A class that sets two columns by default, such as IEEEtran, a
   `\twocolumn` command, and a `multicols` environment are found only while
   LaTeX runs. In two-column text, a captioned figure floats as a normal

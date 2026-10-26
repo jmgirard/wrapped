@@ -700,7 +700,7 @@ def log_check(fixture):
     two_column, in_multicols = LOGS[fixture]
     log = (TESTS / f"{fixture}.log").read_text(encoding="utf-8", errors="replace")
     # With TeX Live's default max_print_line of 79, TeX breaks a log line
-    # after 79 characters (TinyTeX sets 10000), so a line of exactly 79
+    # after 79 characters (TinyTeX sets 10000). A line of exactly 79
     # characters joins the next.
     log = re.sub(r"(?m)^(.{79})\n", r"\1", log)
     found = LOG_WARNING.findall(log)
