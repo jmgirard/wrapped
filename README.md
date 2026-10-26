@@ -286,12 +286,24 @@ The `width` and `wrap-gap` values change to Word lengths:
   its size. A `px` length, or a number with no unit, is 1/96 in for each
   `px`. An `em` is 12 pt.
 - Any other unit, such as `ex`, `vw`, or `rem`, a `calc()`, `min()`,
-  `max()`, or `clamp()` value, and a percent of 0%, or of 100% or more,
-  print a warning, and the document default applies.
+  `max()`, or `clamp()` value, and a percent of 0% print a warning, and
+  the document default applies.
+- A width or gap as wide as the text or wider, such as `100%` or `10in`,
+  leaves no room for the text. It prints a warning, and the document
+  default applies.
+
+The text width is the page width less the left and right margins and the
+gutter. A reference doc with more than one column keeps normal figures,
+and the render prints one warning.
 
 The image takes the width of the frame and keeps its shape. The extension
 does not use an image's `height` in a wrapped figure in Word, and the
 render prints a warning. The `wrap-lines` attribute does nothing in Word.
+
+A list in a figure div goes in the frame with the image and the caption.
+Word cannot put a code block, a table, a heading, a horizontal rule, or
+raw content in a frame. A figure div that holds one keeps its normal
+layout, and the render prints a warning.
 
 A frame does not break across pages. If a frame does not fit at the bottom
 of a page, Word moves it and the paragraph after it to the next page. The
@@ -319,8 +331,9 @@ Right-to-left Word documents are not tested.
 - In HTML, LaTeX, Typst, and Word, a `width` or `wrap-gap` value that is
   not a length or a percent prints a warning, and the document default
   applies.
-- The sides are physical. In a right-to-left document, `.wrap-right` still
-  puts the figure on the right.
+- In HTML, LaTeX, and Typst the sides are physical. In a right-to-left
+  document, `.wrap-right` still puts the figure on the right. Right-to-left
+  Word documents are not tested.
 - A long caption wraps inside the figure box.
 - If a page has margin content, such as a `.column-margin` note, a figure
   in the body of the page still wraps.

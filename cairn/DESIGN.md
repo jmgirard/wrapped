@@ -196,3 +196,7 @@ snapshot difference. The mechanism for each other format is in
   of a page moves to the next page with the text beside it, and the rest of
   the page stays blank. wrap-it puts the group in a `box`, which does not
   break across pages. The README states this limit (M005).
+- Word: a frame that does not fit at the bottom of a page moves to the next
+  page with the paragraph after it, and the rest of the page stays blank. A
+  Word frame does not break across pages. The README states this limit
+  (M006).

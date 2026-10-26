@@ -266,10 +266,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor i
 \vspace{0.75\textheight}
 ```
 
-```{=openxml}
-<w:p><w:pPr><w:spacing w:before="9720" w:after="0"/></w:pPr></w:p>
-```
-
 ![A figure with wrap-lines that starts too near the bottom of a page.](plot.png){#fig-break-lines .wrap-right wrap-lines="12"}
 
 The figure sets wrap-lines and starts too near the bottom of the page to fit there. See @fig-break-lines. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
