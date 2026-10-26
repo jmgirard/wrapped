@@ -46,9 +46,7 @@ new fixtures with layout and log checks; README and DESIGN text. The
   environment: the README says they are not detected; no row.
 
 ## Acceptance criteria
-<!-- owner: plan · create/amend-via-gate; review reads, never reinterprets.
-     Every item opens with its positional label — `ACn:` — the item's
-     position counted top-to-bottom, the number Coverage cites. -->
+<!-- owner: plan · create/amend-via-gate; review reads, never reinterprets. -->
 
 - [x] AC1: In `tests/twocolumn-class.qmd`, whose class file beside it
       loads `article` with `twocolumn` and which sets no `classoption`, a
