@@ -81,7 +81,7 @@ not part of the verify command. Branch protection that requires the check
       steps and `version: pre-release`, triggered by `schedule` (weekly) and
       `workflow_dispatch`. A shared reusable workflow is allowed if it keeps
       both files short.
-- [ ] T3: Run `python3 tests/verify.py` on this Mac, commit, push the
+- [x] T3: Run `python3 tests/verify.py` on this Mac, commit, push the
       `m008-ci-verify` branch, and open a draft PR (`gh pr create --draft`);
       record its URL in the Branch/PR header. Watch the check. Fix each
       Linux-only failure in the workflow or in `tests/verify.py` so the same
@@ -118,6 +118,8 @@ not part of the verify command. Branch protection that requires the check
 - 2026-10-26: T1/T2 written: two full workflow files instead of a shared reusable workflow, so each check's name and steps read from one file (about 45 lines each); actions pinned to major tags checkout@v7, quarto-actions/setup@v2, upload-artifact@v7; verify.yml cancels a superseded run on the same ref. T5 text written in PROFILE.md and DESIGN.md. Checkpoint before the local verify run finishes; no task ticked yet.
 - 2026-10-26: T1, T2 done: `python3 tests/verify.py` on this Mac at 1e2e843 printed `all 36 renders pass`. Branch pushed; draft PR #8 opened (question-set grant); first CI run watched in the background. This commit stays local until that run ends, since a push would cancel it.
 - 2026-10-26: T3 first CI run (40309346844, at 1e2e843) failed on one render: contexts.docx, the E3 margin cell plot at cx=4620126 against the snapshot's 5334000. Cause: Linux's R PNG device writes a 96-dpi pHYs tag and the macOS quartz device writes none, so Pandoc sized the plot from different dpi values (480x384 px in both). The cairo device was tried for both systems and fails on this Mac (no X11 libraries, LESSONS 2026-10-25 M002). Fix: that cell sets `out-width` to 5in for docx only (`!expr if (knitr::pandoc_to("docx")) "5in"`), so Word's size comes from the attribute; `--update` changed one line of contexts.docx.txt (5334000 to 4572000) and no other snapshot.
+- 2026-10-26: T3 done: CI run 40310313074 at f8ffcbb succeeded, its verify step printing `all 36 renders pass`; local `python3 tests/verify.py` at f8ffcbb also printed `all 36 renders pass`.
+- 2026-10-26: T4 planted change (6fd85b1, meta-string.html.txt breakpoint 576px to 577px): CI run 40310746574 failed with `FAIL meta-string.html: output differs from tests/_snapshots/meta-string.html.txt`, and `gh run download` of its `rendered-outputs` artifact listed `meta-string.html`. This commit restores the line.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
