@@ -126,6 +126,7 @@ not part of the verify command. Branch protection that requires the check
 - 2026-10-26: implement complete; status review.
 - 2026-10-26: cairn_validate failed weight caps after 79e118f (PROFILE.md 123 lines, cap <120, from T5's CI paragraph); the paragraph was compressed to 3 lines (118 lines), and validate passes.
 - 2026-10-26: step-7 approval: m008-ci-verify approved for merge
+- 2026-10-26: step 8: PR #8 marked ready and its body given the `Candidate row:` line; merge marker written; the CI wait on c650248 (run 40322532367) passed the 590 s ceiling with the check still pending, so the watcher was stopped and the review stopped before the merge. This line is committed locally only, so the PR head stays c650248.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
