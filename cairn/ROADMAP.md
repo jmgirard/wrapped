@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-26 (M007 done: LaTeX stop row graduated, M004 row pruned, three LaTeX follow-up rows added and one row extended, three lessons captured, five marked used)_
+_Last hygiene check: 2026-10-26 (M008 done: CI row graduated, M005 row pruned, two CI follow-up rows added, two lessons captured, two marked used)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-26 (M007 done: LaTeX stop row graduated, M004 row p
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M008 | Run the fixture renders in CI | review | — | normal | milestones/M008-ci-verify.md |
+| M008 | Run the fixture renders in CI | done | — | normal | milestones/archive/M008-ci-verify.md |
 | M007 | Stop LaTeX wraps at every stop block | done | — | normal | milestones/archive/M007-latex-stops.md |
 | M006 | Wrap figures in Word output with frames | done | — | high | milestones/archive/M006-word-wrap.md |
-| M005 | Wrap figures in Typst PDF output | done | — | high | milestones/archive/M005-typst-wrap.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -34,7 +33,6 @@ _Last hygiene check: 2026-10-26 (M007 done: LaTeX stop row graduated, M004 row p
 - Warn when a figure width is zero: `width="0%"` passes the length checks, and in Typst it gives an empty box and a caption broken into a zero-width column with no warning; HTML takes the same value (M005 review pass 2, diff-bug #5) — added 2026-10-25 — milestones/M005-typst-wrap.md
 - Check wrapped figures in Typst columns: a Typst document with `columns:` set puts the text in columns, and no one has tested a `wrap-content` call there. Make wrapping work there or keep a normal figure with a warning, as LaTeX does for two columns. Left out of M005 — added 2026-10-25 — milestones/M005-typst-wrap.md
 - Check CSS function lengths before use: `css_length` passes any `calc()`, `min()`, `max()`, or `clamp()` text unread, so `width="calc(banana)"` or `breakpoint: calc(50%)` reaches the CSS with no warning (M003 review, prior-review #1; same class as M002 review pass 1 finding 7) — added 2026-10-25 — milestones/archive/M003-context-fallbacks.md
-- Run the fixture renders in CI: a GitHub Actions workflow that runs `tests/verify.py` against the Quarto release and pre-release channels, with TinyTeX, R with knitr, and poppler installed (research page, test plan; poppler since M007, D-006). Chosen for later at the M002 plan's question set — added 2026-10-24 — references/wrap-mechanisms.md — started M008
 - Cut the Ubuntu mirror from CI setup: `r-lib/actions/setup-r` still runs `apt-get update` and installs about 175 Ubuntu packages (gdebi-core, qpdf, devscripts, ghostscript), and the poppler step runs `apt-get update` too, so a slow mirror day can still stretch the job toward its 45-minute timeout. The Ubuntu R packages took 35m56s in one run before D-009 (M008 review pass 2, diff-bug #1, blame-history #1) — added 2026-10-26 — milestones/M008-ci-verify.md
 - Test the minimum Quarto version in CI: `quarto-required` says 1.9.36, but only 1.10.19 and later are tested (DESIGN.md, Quarto version). A CI job pinned to 1.9.36 would test the claim or show that the floor must rise. Left out of M008 — added 2026-10-26 — milestones/M008-ci-verify.md
 - Fit images in wide Word frames: Pandoc caps an image at 8400 twips with the default reference doc, so a Word frame between 8400 twips and the text width (such as `width="95%"`) holds a narrower image. Widths at or above the text width take the default since M006 (M006 review, diff-bug #4) — added 2026-10-26 — milestones/archive/M006-word-wrap.md
