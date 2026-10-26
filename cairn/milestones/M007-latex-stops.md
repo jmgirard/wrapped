@@ -87,7 +87,7 @@ horizontal rule beside a figure is not checked.
       the book project's HTML, render as before: `python3 tests/verify.py`
       passes, and `git diff <plan commit> --stat -- tests/_snapshots/` lists
       only `.pdf.txt` files.
-- [ ] AC6: The README's "Where wrapping stops" section says that wrapping
+- [x] AC6: The README's "Where wrapping stops" section says that wrapping
       stops, and a `wrap-clear` div works, in PDF through LaTeX as in the
       other formats. Its "PDF through LaTeX" limits no longer say that
       wrapping stops in part, they say what AC4's figure does, and the
@@ -246,3 +246,9 @@ Review pass 1, 2026-10-26, on ea4b4a5 (main at c681043 + plan f071331, not moved
 - ripple #10: DESIGN.md pass 5 says LaTeX "groups as in HTML" and "writes no div" — fix now: reword
 - ripple #11: wrapped.lua's file header omits the LaTeX group — fix now
 - ripple #12: a long DESIGN.md line — reject (style)
+- Fixes from pass 1, all in bf8f24a and b451ff7: diff-bug #1, #2, #3, #4, #6; blame-history #1 (D-007); prior-review #1, #3; ripple #1, #2, #4 to #11 — fixed bf8f24a (diff-bug #3 wording corrected again in b451ff7).
+
+Review pass 2, 2026-10-26, on 340e636 (main at c681043, not moved; code last changed in bf8f24a).
+
+- AC1 to AC5 evidence (pass 2): `python3 tests/verify.py` at bf8f24a, whose extension and tests are the same as 340e636 (`git diff --stat bf8f24a HEAD -- _extensions tests` is empty), passed all 36 renders with no snapshot change and printed `ok` for all 21 layout cases (stop-rule cases 1 to 11; stop-latex forms A to D on both sides, wrap-lines, page bottom). The check now leaves out the caption's own box, and a synthetic heading beside a caption fails it. AC3's premise is unchanged (13 lines from the height, wrap-lines 25).
+- AC6 evidence: each changed README sentence matched to a measured case. "In PDF through LaTeX … wrapping stops as in HTML, and a `wrap-clear` div works": AC1, cases 1 to 11. "A block that stops the wrap ends it before that number of lines. With a value larger than the figure needs, that block starts below the figure, as it does without `wrap-lines`": AC3. "At the block that stops the wrap, the extension skips the lines that the figure still needs. If the text beside the figure is shorter than the figure, the space beside the figure stays empty": AC1 and AC2 (one-line paragraphs, stop text below). "If its paragraphs all end before it is placed, it renders with no text beside it. It renders before the block that stops the wrap, and that block starts below it": AC4. "a figure after the paragraphs of a wrapped figure is a block that stops its wrap, so it starts below the wrapped figure": AC1 case 8. "A figure that moved to the next page waits for one of its own paragraphs": AC4 (the stop heading is below it). The limits no longer say wrapping stops in part, they say what AC4's figure does, and "Figures in a row" says what the stop does.
