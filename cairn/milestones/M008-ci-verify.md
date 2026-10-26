@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M008: Run the fixture renders in CI
 
-- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -58,7 +58,7 @@ not part of the verify command. Branch protection that requires the check
      top-to-bottom). Review reads to fence evidence — tracking-rules "AC fencing". -->
 
 - AC1 → T1
-- AC2 → T3
+- AC2 → T3, T6
 - AC3 → T2
 - AC4 → T1, T4
 
@@ -94,6 +94,11 @@ not part of the verify command. Branch protection that requires the check
 - [x] T5: Update `cairn/PROFILE.md` (the verify slot names both workflows
       and the CI channels) and `cairn/DESIGN.md` Conventions (tests also
       run in CI).
+- [ ] T6: Install R and its packages from binaries in both workflows
+      (`r-lib/actions/setup-r` with Posit's public package manager, then
+      `r-lib/actions/setup-r-dependencies` for knitr and rmarkdown), and
+      keep apt for `poppler-utils` alone. Record D-009, rerun CI, and log
+      the install step's time.
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates.
@@ -127,6 +132,9 @@ not part of the verify command. Branch protection that requires the check
 - 2026-10-26: cairn_validate failed weight caps after 79e118f (PROFILE.md 123 lines, cap <120, from T5's CI paragraph); the paragraph was compressed to 3 lines (118 lines), and validate passes.
 - 2026-10-26: step-7 approval: m008-ci-verify approved for merge
 - 2026-10-26: step 8: PR #8 marked ready and its body given the `Candidate row:` line; merge marker written; the CI wait on c650248 (run 40322532367) passed the 590 s ceiling with the check still pending, so the watcher was stopped and the review stopped before the merge. This line is committed locally only, so the PR head stays c650248.
+- 2026-10-26: resume (route c): PR #8 open, run 40322532367 at c650248 passed in 38m47s, of which "Install R, knitr, rmarkdown, and poppler" took 35m56s (12:26:47 to 13:02:43) and verify.py 2m23s; earlier install times were 19 s and about 12 min, against the 45-minute job timeout. PR conversation empty. Merge question re-posed with this fact.
+- 2026-10-26: step-7 decline: fix the slow install before merging — move R, knitr, and rmarkdown to r-lib's binary install (the alternative the plan gate recorded against apt), rerun CI, then re-pose the merge question. Added T6 and mapped it to AC2 (minor amendment); merge marker removed; status in-progress.
+- 2026-10-26: plan-gate choice reversed: apt for R was falsified by install times (35m56s in run 40322532367), a different falsifier than the one the plan recorded; the user chose r-lib/actions/setup-r at the re-posed merge question. D-009 records the dependency change.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
