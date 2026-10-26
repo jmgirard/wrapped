@@ -86,6 +86,7 @@ RENDERS = [
     ("stop-rule", "typst", True),
     ("stop-rule", "docx", True),
     ("stop-latex", "pdf", True),
+    ("multicols", "pdf", True),
     ("twocolumn", "pdf", True),
     ("twocolumn-list", "pdf", True),
     ("pdf-ua", "pdf", True),
@@ -519,8 +520,57 @@ def stop_latex_cases():
     yield "page bottom", page_bottom_case
 
 
+def column_gap(boxes, edges, words):
+    """The distance between the left edges of the two columns of the
+    multicols whose first line holds `words`."""
+    first = find_text(boxes, words)
+    middle = (edges[0] + edges[1]) / 2
+    lines = [b for b in boxes if b.kind == "text" and b.page == first.page and b.top >= first.top - NEAR]
+    right = [b.left for b in lines if b.left > middle]
+    if not right:
+        raise LayoutError(f"the columns that start with {words!r} have no second column")
+    return min(right) - min(b.left for b in lines)
+
+
+def local_colsep_case(boxes, edges, lh):
+    """A group that sets \\columnsep around a wrapped figure leaves it as it
+    was outside the group."""
+    want = column_gap(boxes, edges, "Reference columns.")
+    got = column_gap(boxes, edges, "Columns after the group.")
+    if abs(got - want) > NEAR:
+        raise LayoutError(f"the columns after the group are {got:.0f} px apart, not {want:.0f} px")
+
+
+# The wrap-gap of the wide gap figures, 30pt, in pdftohtml's 1.5 px per pt.
+WIDE_GAP = 45
+
+
+def wide_gap_case(side):
+    """The text beside a figure with a wide wrap-gap starts that gap from the
+    image."""
+    def case(boxes, edges, lh):
+        p = find_text(boxes, f"A paragraph beside the wide gap {side}.")
+        fig = find_figure(boxes, f"Wide gap {side}.", p)
+        check_beside(fig, p, side, edges, lh)
+        lines = [b for b in boxes if b.kind == "text" and b.page == fig.page and b is not fig.caption
+                 and b.top < fig.image.bottom and b.bottom > fig.image.top]
+        if side == "left":
+            gap = min(b.left for b in lines) - fig.image.right
+        else:
+            gap = fig.image.left - max(b.right for b in lines)
+        if abs(gap - WIDE_GAP) > NEAR:
+            raise LayoutError(f"the text is {gap:.0f} px from the image, not {WIDE_GAP} px")
+    return case
+
+
+def multicols_cases():
+    yield "local columnsep", local_colsep_case
+    yield "wide gap left", wide_gap_case("left")
+    yield "wide gap right", wide_gap_case("right")
+
+
 # The fixtures whose PDF through LaTeX the layout check reads, with their cases.
-LAYOUT = {"stop-rule": stop_rule_cases, "stop-latex": stop_latex_cases}
+LAYOUT = {"stop-rule": stop_rule_cases, "stop-latex": stop_latex_cases, "multicols": multicols_cases}
 
 
 def layout_check(fixture):

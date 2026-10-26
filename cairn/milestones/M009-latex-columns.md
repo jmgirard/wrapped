@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M009: Keep LaTeX column layouts intact
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — it changes the PDF that users of the extension get through LaTeX   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m009-latex-columns   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -114,7 +114,7 @@ new fixtures with layout and log checks; README and DESIGN text. The
 <!-- owner: plan (create) / implement (check-off, minor edits); substantive
      change is amend-via-gate. Every item opens with its positional label. -->
 
-- [ ] T1: Gap. Write `tests/multicols.qmd` with the `\columnsep` group case
+- [x] T1: Gap. Write `tests/multicols.qmd` with the `\columnsep` group case
       and the two `wrap-gap` cases of AC5, add their layout cases, and see
       the `\columnsep` case fail. In `_extensions/wrapped/wrapped.tex`, keep
       each figure's gap in a global macro at the environment's end and set
@@ -157,6 +157,8 @@ new fixtures with layout and log checks; README and DESIGN text. The
 - 2026-10-26: plan gate chose a local `\columnsep` inside `\WF@putfigmaybe` over the global set and restore because wrapfig reads `\columnsep` only there; falsified by a wrapfig version that reads it elsewhere.
 - 2026-10-26: plan gate chose a class file in `tests/` that loads `article` with `twocolumn` over IEEEtran because it adds no TeX package to the test setup; falsified by a class whose two columns the TeX check misses. IEEEtran gets a by-hand render at implement.
 - 2026-10-26: criteria audit (full mode, fresh Opus reader): 11 findings, all fixed. AC1 and AC2 narrowed to the fixtures; AC3 uses separate raw blocks, first-column text, and an uncaptioned case; AC4 became an output property checked by `verify.py` through `latex-clean: false` (confirmed to keep the `.log`), names `\begin{wrappedfigure}`, joins TeX's line breaks, and warns per the DESIGN goal's render and context rules; AC5 requires a gap apart from 1em and `\columnsep`, captioned figures, both sides; AC6 names `latex-clean: false`, drops the IEEEtran sentence, and covers DESIGN; T2 tests `multicols` first by a hook, since `\if@twocolumn` stays true inside `multicols` in two-column text. AC7 no finding.
+- 2026-10-26: implement started on branch m009-latex-columns.
+- 2026-10-26: T1 done. `wrapped.tex` keeps the gap in `\wrapped@gap` and sets `\columnsep` inside `\WF@putfigmaybe`; the global set and restore are gone. `tests/multicols.qmd` and 3 layout cases: the local-group case failed before the change (364 px against 341 px) and passes after; with the gap line removed from `\WF@putfigmaybe` both wide-gap cases fail (15 px against 45 px). `tests/.gitignore` ignores the `.log` and `.aux` that `latex-clean: false` keeps. verify: 37 renders pass, 24 layout cases pass, no snapshot changed but the new one.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. EXEMPT from

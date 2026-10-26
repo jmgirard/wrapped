@@ -1,0 +1,75 @@
+---
+title: "wrapped fixture: multicols and the gap in LaTeX"
+filters:
+  - wrapped
+format:
+  pdf:
+    keep-tex: true
+    latex-clean: false
+    fig-format: png
+header-includes: |
+  \usepackage{multicol}
+---
+
+This page has no figure, so its full lines show the width of the text block. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## Columns with no figure before them
+
+```{=latex}
+\begin{multicols}{2}
+```
+
+Reference columns. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+```{=latex}
+\end{multicols}
+\clearpage
+```
+
+## A local column gap around a figure
+
+```{=latex}
+\begingroup\setlength{\columnsep}{40pt}
+```
+
+![Local gap.](plot.png){#fig-local-gap .wrap-right width="30%"}
+
+A short paragraph beside the local gap figure.
+
+```{=latex}
+\endgroup
+\clearpage
+```
+
+## Columns after the group
+
+```{=latex}
+\begin{multicols}{2}
+```
+
+Columns after the group. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+```{=latex}
+\end{multicols}
+\clearpage
+```
+
+## A wide gap on the left
+
+![Wide gap left.](plot.png){#fig-gap-left .wrap-left width="30%" wrap-gap="30pt"}
+
+A paragraph beside the wide gap left. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+## A wide gap on the right
+
+![Wide gap right.](plot.png){#fig-gap-right .wrap-right width="30%" wrap-gap="30pt"}
+
+A paragraph beside the wide gap right. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.

@@ -5,11 +5,13 @@
 % The sides are wrapfig's floating placements, R and L: a figure that does
 % not fit on the page moves to the start of a paragraph on the next page.
 %
-% wrapfig puts \columnsep between the figure and the text, and it reads
-% \columnsep when it places the figure, at the start of a later paragraph.
-% So the environment sets \columnsep to the gap when it ends, and wrapfig's
-% \WF@startwrapping and \WFclear put the document's value back once the
-% figure is placed or put out without text.
+% wrapfig puts \columnsep between the figure and the text. It reads
+% \columnsep only in \WF@putfigmaybe, when it places the figure at the start
+% of a later paragraph, inside a group that \WF@floathand opens. So the
+% environment keeps its gap in \wrapped@gap when it ends, and
+% \WF@putfigmaybe sets \columnsep to it inside that group. The document's
+% \columnsep never changes. \WF@startwrapping and \WFclear drop the kept gap
+% once the figure is placed or put out without text.
 %
 % The filter writes \wrappedstop after the paragraphs beside a figure, at
 % the block that stops the wrap, so that block starts below the figure.
@@ -22,16 +24,12 @@
 % ends it again after the group.
 \usepackage{wrapfig}
 \makeatletter
-\let\wrapped@colsep\relax
-\newcommand*\wrapped@setcolsep[1]{%
-  \ifx\wrapped@colsep\relax \xdef\wrapped@colsep{\the\columnsep}\fi
-  \global\columnsep=\dimexpr #1\relax}
-\newcommand*\wrapped@restorecolsep{%
-  \ifx\wrapped@colsep\relax\else
-    \global\columnsep=\wrapped@colsep\relax
-    \global\let\wrapped@colsep\relax
-  \fi}
-\g@addto@macro\WF@startwrapping{\wrapped@restorecolsep}
+\def\wrapped@gap{\columnsep}
+\newcommand*\wrapped@setgap[1]{\xdef\wrapped@gap{\the\dimexpr #1\relax}}
+\newcommand*\wrapped@cleargap{\gdef\wrapped@gap{\columnsep}}
+\let\wrapped@putfigmaybe\WF@putfigmaybe
+\def\WF@putfigmaybe{\columnsep=\wrapped@gap\relax \wrapped@putfigmaybe}
+\g@addto@macro\WF@startwrapping{\wrapped@cleargap}
 % \WFclear as in wrapfig, but a figure that waits is centered. LaTeX runs
 % \WFclear at each \clearpage, the end of the document included.
 \renewcommand\WFclear{\par
@@ -42,7 +40,7 @@
     \let\everypar\WF@@everypar \everypar\expandafter{\the\WF@everypar}%
   \fi
   \global\c@WF@wrappedlines\z@ \WF@finale
-  \wrapped@restorecolsep}
+  \wrapped@cleargap}
 % wrapfig counts the lines beside a figure from \WF@size, the figure's
 % height, or takes the wrap-lines value. \wrapped@startlines keeps the count
 % that the wrap started with, and \wrapped@startbs the \baselineskip that
@@ -120,6 +118,6 @@
   }
   {
     \endwrapfigure
-    \use:c { wrapped@setcolsep } { \l__wrapped_gap_tl }
+    \use:c { wrapped@setgap } { \l__wrapped_gap_tl }
   }
 \ExplSyntaxOff
