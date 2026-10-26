@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M007: Stop LaTeX wraps at every stop block
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -191,6 +191,7 @@ a callout frame, or a horizontal rule beside a figure is not checked.
 - 2026-10-26: substantive amendment: Terms now define a line height (two consecutive lines of the page 1 paragraph), the text block's edges (a full line of that paragraph; page 1 must hold no image), and beside (top above the figure's bottom, bottom less than half a line height above the image's top, no horizontal overlap, image edge within 2 pt of the text block's edge on its wrap side); AC1 says the short paragraph fits on one line; AC3 uses the Terms line height. The user chose this wording at the stop for the third change to AC1 and AC2; what the user sees from the plan is unchanged.
 - 2026-10-26: claim audit: 37 claims read, 2 corrected — README.md (the moved figure renders after its paragraphs and goes to the next page only if it still does not fit, shown by a scratch compile at 0.69\textheight), tests/verify.py (pdf_boxes docstring); the reader re-read both as correct.
 - 2026-10-26: re-audit: AC3 (full) — third reader on the amended AC3: reachable, met now (gaps equal, 341/425 on pages 10 and 11); findings: name the one fixture case (3), no probe had shown the gap check red (4), the 13-line premise rests on one scratch log (5). Settled without rewording, since a further change to AC3 would go to the user: (3) AC3 already scopes to stop-latex.qmd, which holds one such case; (4) a scratch probe whose stop skips by the remaining wrap-lines count fails the gap check (326 px with wrap-lines against 62 px without); (5) review re-runs the compile log for the premise.
+- 2026-10-26: implement done: `python3 tests/verify.py` on the branch passed all 36 renders and 21 layout cases with no snapshot change; status review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
