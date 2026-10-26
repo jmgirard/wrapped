@@ -33,14 +33,9 @@ TinyTeX, and poppler. After an intended output change, run it with
 command. Measure HTML layout in a browser with `tests/layout.js`, as its
 header says (corrected M007).
 
-GitHub Actions also runs this command on an Ubuntu runner (D-008).
-`.github/workflows/verify.yml` uses Quarto's release channel and runs on
-pull requests to `main`, on pushes to `main` outside `cairn/`, and by hand.
-`.github/workflows/verify-prerelease.yml` uses the pre-release channel and
-runs weekly and by hand, never on a pull request, so its failure blocks no
-merge. A failed run keeps the rendered outputs under `tests/` as the
-artifact `rendered-outputs`. The same snapshots must pass on macOS and in
-CI.
+CI runs it on Ubuntu (D-008): `.github/workflows/verify.yml` (release
+channel, on pull requests and pushes to `main`) and `verify-prerelease.yml`
+(weekly, blocks no merge). The same snapshots must pass on macOS and in CI.
 
 ## consistency-gate
 Toolchain tests that `/milestone-review` runs *in addition to* the universal

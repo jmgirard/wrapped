@@ -124,6 +124,7 @@ not part of the verify command. Branch protection that requires the check
 - 2026-10-26: resumed. CI run 40312839783 at be641d8 succeeded (`all 36 renders pass`); T4 done. T5 done (text in 1e2e843). `git diff f8ffcbb HEAD -- . ':!cairn'` is empty, so the local verify pass at f8ffcbb covers the code at this head; main has not moved since the cut.
 - 2026-10-26: claim audit: not owed — internal tier.
 - 2026-10-26: implement complete; status review.
+- 2026-10-26: cairn_validate failed weight caps after 79e118f (PROFILE.md 123 lines, cap <120, from T5's CI paragraph); the paragraph was compressed to 3 lines (118 lines), and validate passes.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
