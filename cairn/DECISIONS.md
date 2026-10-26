@@ -91,4 +91,4 @@ is put out there with no text beside it, before the stop block. Under M004
 such a figure waited for any later paragraph on its group level, which
 could put it beside text after a heading that is not its own. The cost is
 that a figure near a page's end wraps less often: when its paragraphs end
-before it can be placed, it renders as a normal figure.
+before it can be placed, it renders centered with no text beside it.

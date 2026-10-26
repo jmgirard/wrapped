@@ -199,7 +199,8 @@ wrapfig has limits, and the extension keeps some of them:
 - A figure that does not fit at the bottom of a page moves to the start of
   a paragraph on the next page. The text before it fills the page. If its
   paragraphs all end before it is placed, it renders with no text beside
-  it. The block that stops the wrap starts below it.
+  it. It renders before the block that stops the wrap, and that block
+  starts below it.
 - If a page break comes while lines are still narrowed, the first lines on
   the next page are narrowed with no figure beside them. A `wrap-lines`
   value larger than the figure needs can narrow lines past a page break in
