@@ -84,7 +84,7 @@ new fixtures with layout and log checks; README and DESIGN text. The
       layout check's tolerance, a layout case finds the distance between
       the image's edge and its paragraph's lines equal to that gap within
       that tolerance.
-- [ ] AC6: The README's "PDF through LaTeX" section says that a wrapped
+- [x] AC6: The README's "PDF through LaTeX" section says that a wrapped
       figure where the text runs in columns, set by `classoption`, a class
       default, `\twocolumn`, or `multicols`, renders as a normal figure;
       that only `classoption` gives a warning in Quarto's output and the
@@ -223,3 +223,14 @@ Pass 1, on d142e36 (level with origin/main e1f0cf3). `python3 tests/verify.py`, 
 - ripple #3: README lines 166-167 say the extension puts each wrapped figure in a `wrapfigure` — fix now
 - ripple #4: `cairn/references/wrap-mechanisms.md` W2 says `wrappedfigure` calls `wrapfigure` — fix now (mark corrected M009)
 - ripple #5: PROFILE.md line 56 "the `LAYOUT` list" names a dict — reject (style): a pre-existing word choice, "list" read as a list of fixtures
+
+Pass 2, on 716d163 (level with origin/main e1f0cf3), after review return 1 (T6). `python3 tests/verify.py`, fresh run: all 39 renders pass, every snapshot matches, 32 layout cases and 4 log checks pass. The pass-1 fix-now items landed in 43e1cf9 and ec1734e (diff-bug #1, #2, #4, #5, #6, #7, blame-history #5, prior-review #1, #2, ripple #2, #3, #4).
+
+- AC1 evidence (pass 2): `ok layout twocolumn-class figure`, `image`, and the new `figure in a box`.
+- AC2 evidence (pass 2): `ok layout twocolumn-switch before twocolumn`, `in two columns`, `after onecolumn`.
+- AC3 evidence (pass 2): `ok layout multicols figure in multicols`, `image in multicols`.
+- AC4 evidence (pass 2): `ok log` for twocolumn-class, twocolumn-switch, multicols, stop-latex; the check now reads the log with line breaks removed, fails on a missing log, and deletes a stale log before each render.
+- AC5 evidence (pass 2): `ok layout multicols local columnsep`, `wide gap left`, `wide gap right`.
+- AC6 evidence (pass 2, README.md lines 213-227 and DESIGN.md Architecture step 1 on 716d163): "Where the text runs in columns, set by `classoption: twocolumn`, a class default, `\twocolumn`, or `multicols`, wrapped figures render as normal figures"; only `classoption` prints a warning in the render, the others write to the LaTeX log kept with `latex-clean: false`; "A column layout from a LaTeX class or package that neither turns on LaTeX's two-column mode nor opens a `multicols` environment is not detected"; no paracol; no "IEEEtran is not detected" sentence (IEEEtran now appears as found). DESIGN step 1 names the check in `wrapped.tex`. Pass.
+- AC7 evidence (macOS part, pass 2): the run above. CI half at step 8.
+- Gate (pass 2): `cairn_validate.py` all checks pass (after 882e1cc brought PROFILE.md to 119 lines and the milestone body under 150); version marker 0.1.0 unchanged; changelog "none".
