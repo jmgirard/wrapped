@@ -1,0 +1,41 @@
+# Runs python3 tests/verify.py with Quarto's pre-release channel. It runs
+# weekly and by hand, never on a pull request, so a failure here reports a
+# coming Quarto change and blocks no merge.
+name: verify-prerelease
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: pre-release
+          tinytex: true
+
+      - name: Install R, knitr, rmarkdown, and poppler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends r-base r-cran-knitr r-cran-rmarkdown poppler-utils
+
+      - name: Run verify.py
+        run: python3 tests/verify.py
+
+      - name: Keep the rendered outputs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: rendered-outputs
+          path: |
+            tests/**/*.html
+            tests/**/*.pdf
+            tests/**/*.tex
+            tests/**/*.typ
+            tests/**/*.docx
+          if-no-files-found: ignore

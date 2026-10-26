@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-26 (M007 done: LaTeX stop row graduated, M004 row p
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M008 | Run the fixture renders in CI | planned | — | normal | milestones/M008-ci-verify.md |
+| M008 | Run the fixture renders in CI | in-progress | — | normal | milestones/M008-ci-verify.md |
 | M007 | Stop LaTeX wraps at every stop block | done | — | normal | milestones/archive/M007-latex-stops.md |
 | M006 | Wrap figures in Word output with frames | done | — | high | milestones/archive/M006-word-wrap.md |
 | M005 | Wrap figures in Typst PDF output | done | — | high | milestones/archive/M005-typst-wrap.md |

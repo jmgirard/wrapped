@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M008: Run the fixture renders in CI
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** internal — CI over the repo's own fixture tests, which no user of the extension runs or relies on   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m008-ci-verify   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -114,6 +114,8 @@ not part of the verify command. Branch protection that requires the check
 - 2026-10-26: plan gate chose a separate scheduled pre-release workflow over a pull-request job with `continue-on-error` because that job still shows a failed check in the PR, which the merge rule reads as red CI; falsified by a run where a failed `continue-on-error` job leaves `gh pr checks` exiting 0.
 - 2026-10-26: plan gate chose Ubuntu packages for R, knitr, rmarkdown, and poppler over `r-lib/actions/setup-r` because apt needs no second third-party action; falsified by a CI render that fails on the Ubuntu R or knitr version.
 - 2026-10-26: plan gate chose an Ubuntu runner only over adding a macOS runner because AC2 already requires a local macOS pass and macOS runner minutes cost more; falsified by a merged commit that passes CI and fails the verify command on macOS.
+- 2026-10-26: implement started; branch m008-ci-verify cut from main at 2a92353.
+- 2026-10-26: T1/T2 written: two full workflow files instead of a shared reusable workflow, so each check's name and steps read from one file (about 45 lines each); actions pinned to major tags checkout@v7, quarto-actions/setup@v2, upload-artifact@v7; verify.yml cancels a superseded run on the same ref. T5 text written in PROFILE.md and DESIGN.md. Checkpoint before the local verify run finishes; no task ticked yet.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

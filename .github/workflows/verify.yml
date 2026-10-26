@@ -1,0 +1,50 @@
+# Renders the test fixtures with Quarto's release channel and compares them
+# with the snapshots in tests/_snapshots/ (python3 tests/verify.py).
+name: verify
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths-ignore:
+      - "cairn/**"
+  workflow_dispatch:
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: release
+          tinytex: true
+
+      - name: Install R, knitr, rmarkdown, and poppler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends r-base r-cran-knitr r-cran-rmarkdown poppler-utils
+
+      - name: Run verify.py
+        run: python3 tests/verify.py
+
+      # The fixture.pdf left here is the Typst render, which overwrites the
+      # LaTeX one.
+      - name: Keep the rendered outputs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: rendered-outputs
+          path: |
+            tests/**/*.html
+            tests/**/*.pdf
+            tests/**/*.tex
+            tests/**/*.typ
+            tests/**/*.docx
+          if-no-files-found: ignore
