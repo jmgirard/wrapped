@@ -40,8 +40,6 @@ two-column LaTeX classes and gaps". Running `tests/verify.py` in CI stays
 with the candidate row "Run the fixture renders in CI".
 
 ## Acceptance criteria
-<!-- owner: plan · create/amend-via-gate; review reads, never reinterprets.
-     `ACn:` labels count top-to-bottom and renumber with Coverage. -->
 
 Terms. A figure's bottom is the lowest edge of its image and its caption
 text. A line height is the distance between the tops of two consecutive
