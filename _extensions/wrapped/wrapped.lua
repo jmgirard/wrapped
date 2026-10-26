@@ -12,9 +12,10 @@
 -- wrap-it package. Word output groups each wrapped figure with its
 -- paragraphs as in HTML, and marks the group with the frame's side, width,
 -- and gap in twips; wrapped-docx.lua turns the group into a Word frame at
--- post-render. A two-column LaTeX document and every other format keep a
--- normal figure. A figure with no wrap class is left as it is in every
--- format.
+-- post-render. A LaTeX document with classoption: twocolumn and every other
+-- format keep a normal figure. In LaTeX, wrapped.tex also sets a normal
+-- figure where it finds columns while LaTeX runs. A figure with no wrap
+-- class is left as it is in every format.
 
 local SIDES = { ["wrap-left"] = "left", ["wrap-right"] = "right" }
 
@@ -873,11 +874,13 @@ end
 -- In LaTeX, an image with no caption goes in a raw wrappedfigure. The image
 -- stays a Pandoc image, so the LaTeX writer keeps its alt text. Quarto
 -- writes fig-alt as alt text only for a figure, so an image with fig-alt
--- and no description takes fig-alt as its description.
+-- and no description takes fig-alt as its description. The caption=false
+-- option sets the image in place, not as a float, where the text runs in
+-- columns.
 local function wrapped_image_tex(img)
   local class = wrap_class(img.classes)
   local opts = tex_options(class, img.attributes.width, img.attributes["wrap-gap"],
-    img.attributes["wrap-lines"], pandoc.utils.stringify(img.src))
+    img.attributes["wrap-lines"], pandoc.utils.stringify(img.src)) .. ",caption=false"
   clean_image(img)
   local alt = img.attributes["fig-alt"]
   if alt and #img.caption == 0 then

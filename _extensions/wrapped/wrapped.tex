@@ -5,11 +5,13 @@
 % The sides are wrapfig's floating placements, R and L: a figure that does
 % not fit on the page moves to the start of a paragraph on the next page.
 %
-% wrapfig puts \columnsep between the figure and the text, and it reads
-% \columnsep when it places the figure, at the start of a later paragraph.
-% So the environment sets \columnsep to the gap when it ends, and wrapfig's
-% \WF@startwrapping and \WFclear put the document's value back once the
-% figure is placed or put out without text.
+% wrapfig puts \columnsep between the figure and the text. It reads
+% \columnsep only in \WF@putfigmaybe, when it places the figure at the start
+% of a later paragraph, inside a group that \WF@floathand opens. So the
+% environment keeps its gap in \wrapped@gap when it ends, and
+% \WF@putfigmaybe sets \columnsep to it inside that group. The document's
+% \columnsep never changes. \WF@startwrapping and \WFclear drop the kept gap
+% once the figure is placed or put out without text.
 %
 % The filter writes \wrappedstop after the paragraphs beside a figure, at
 % the block that stops the wrap, so that block starts below the figure.
@@ -20,18 +22,20 @@
 % still needs are skipped, and \WFclear ends the wrap. In a wrappedfigure,
 % \WFclear ends it inside the environment's group, so \wrapped@afterenv
 % ends it again after the group.
+%
+% Where the text runs in columns, inside multicols or where \if@twocolumn
+% is true, a wrappedfigure does not wrap: it floats as a normal figure, or
+% it is set in place inside multicols, or in two-column text inside a box
+% or when it has no caption. LaTeX writes a warning to its log: once for
+% two-column text, and once for each figure in multicols.
 \usepackage{wrapfig}
 \makeatletter
-\let\wrapped@colsep\relax
-\newcommand*\wrapped@setcolsep[1]{%
-  \ifx\wrapped@colsep\relax \xdef\wrapped@colsep{\the\columnsep}\fi
-  \global\columnsep=\dimexpr #1\relax}
-\newcommand*\wrapped@restorecolsep{%
-  \ifx\wrapped@colsep\relax\else
-    \global\columnsep=\wrapped@colsep\relax
-    \global\let\wrapped@colsep\relax
-  \fi}
-\g@addto@macro\WF@startwrapping{\wrapped@restorecolsep}
+\def\wrapped@gap{\columnsep}
+\newcommand*\wrapped@setgap[1]{\xdef\wrapped@gap{\the\dimexpr #1\relax}}
+\newcommand*\wrapped@cleargap{\gdef\wrapped@gap{\columnsep}}
+\let\wrapped@putfigmaybe\WF@putfigmaybe
+\def\WF@putfigmaybe{\columnsep=\wrapped@gap\relax \wrapped@putfigmaybe}
+\g@addto@macro\WF@startwrapping{\wrapped@cleargap}
 % \WFclear as in wrapfig, but a figure that waits is centered. LaTeX runs
 % \WFclear at each \clearpage, the end of the document included.
 \renewcommand\WFclear{\par
@@ -42,7 +46,7 @@
     \let\everypar\WF@@everypar \everypar\expandafter{\the\WF@everypar}%
   \fi
   \global\c@WF@wrappedlines\z@ \WF@finale
-  \wrapped@restorecolsep}
+  \wrapped@cleargap}
 % wrapfig counts the lines beside a figure from \WF@size, the figure's
 % height, or takes the wrap-lines value. \wrapped@startlines keeps the count
 % that the wrap started with, and \wrapped@startbs the \baselineskip that
@@ -86,9 +90,26 @@
   \ifnum\currentgrouplevel=\wrapped@level\relax
     \expandafter\wrapped@floathand
   \fi}
+% Where the text runs in columns, a wrappedfigure does not wrap. The
+% hooks mark the inside of a multicols environment, where a float is lost,
+% and the mark ends with the environment's group. \if@twocolumn stays true
+% inside multicols in two-column text, so the mark is tested first.
+\newif\ifwrapped@multicols
+\AddToHook{env/multicols/begin}{\wrapped@multicolstrue}
+\AddToHook{env/multicols*/begin}{\wrapped@multicolstrue}
+\newif\ifwrapped@twowarned
+\newcommand*\wrapped@warnmulticols{%
+  \PackageWarning{wrapped}{Figure in multicols set as normal figure}}
+\newcommand*\wrapped@warntwocolumn{%
+  \ifwrapped@twowarned\else
+    \global\wrapped@twowarnedtrue
+    \PackageWarningNoLine{wrapped}{Two-column text: figures set as normal figures}%
+  \fi}
 \makeatother
 \ExplSyntaxOn
 \tl_new:N \l__wrapped_side_tl
+\tl_new:N \l__wrapped_mode_tl
+\bool_new:N \l__wrapped_caption_bool
 \keys_define:nn { wrapped }
   {
     side .choice:,
@@ -101,25 +122,82 @@
     gap .initial:n = 1em,
     lines .tl_set:N = \l__wrapped_lines_tl,
     lines .initial:n = ,
+    caption .bool_set:N = \l__wrapped_caption_bool,
+    caption .initial:n = true,
+  }
+% The mode of a wrappedfigure: w wraps, f is a figure float in two-column
+% text, and p sets the figure in place: inside multicols, and in two-column
+% text inside a box, where a float is lost, or for an image with no
+% caption.
+\cs_new_protected:Npn \__wrapped_set_mode:
+  {
+    \legacy_if:nTF { wrapped@multicols }
+      {
+        \tl_set:Nn \l__wrapped_mode_tl { p }
+        \use:c { wrapped@warnmulticols }
+      }
+      {
+        \legacy_if:nTF { @twocolumn }
+          {
+            \bool_lazy_and:nnTF
+              { \l__wrapped_caption_bool }
+              { ! \mode_if_inner_p: }
+              { \tl_set:Nn \l__wrapped_mode_tl { f } }
+              { \tl_set:Nn \l__wrapped_mode_tl { p } }
+            \use:c { wrapped@warntwocolumn }
+          }
+          { \tl_set:Nn \l__wrapped_mode_tl { w } }
+      }
   }
 \NewDocumentEnvironment { wrappedfigure } { O{} }
   {
     \keys_set:nn { wrapped } { #1 }
     \use:c { wrapped@endwrap }
-    % A caption in a narrow box reads better set plain and ragged-right.
-    \cs_if_exist:NT \captionsetup
-      { \captionsetup { format = plain, justification = raggedright } }
-    \use:e
+    \__wrapped_set_mode:
+    \exp_args:NV \str_case:nn \l__wrapped_mode_tl
       {
-        \exp_not:N \wrapfigure
-        \tl_if_empty:NF \l__wrapped_lines_tl
-          { [ \exp_not:V \l__wrapped_lines_tl ] }
-        { \exp_not:V \l__wrapped_side_tl }
-        { \exp_not:V \l__wrapped_width_tl }
+        { w }
+          {
+            % A caption in a narrow box reads better set plain and
+            % ragged-right.
+            \cs_if_exist:NT \captionsetup
+              { \captionsetup { format = plain, justification = raggedright } }
+            \use:e
+              {
+                \exp_not:N \wrapfigure
+                \tl_if_empty:NF \l__wrapped_lines_tl
+                  { [ \exp_not:V \l__wrapped_lines_tl ] }
+                { \exp_not:V \l__wrapped_side_tl }
+                { \exp_not:V \l__wrapped_width_tl }
+              }
+          }
+        { f }
+          {
+            \begin { figure }
+            \centering
+            \begin { minipage } { \l__wrapped_width_tl }
+          }
+        { p }
+          {
+            \begin { center }
+            \begin { minipage } { \l__wrapped_width_tl }
+            \cs_set:cpn { @captype } { figure }
+            % No float begins here, so the caption package has no anchor
+            % to move a link to; the link goes to the caption.
+            \cs_if_exist:NT \captionsetup { \captionsetup { hypcap = false } }
+          }
       }
   }
   {
-    \endwrapfigure
-    \use:c { wrapped@setcolsep } { \l__wrapped_gap_tl }
+    \exp_args:NV \str_case:nn \l__wrapped_mode_tl
+      {
+        { w }
+          {
+            \endwrapfigure
+            \use:c { wrapped@setgap } { \l__wrapped_gap_tl }
+          }
+        { f } { \end { minipage } \end { figure } }
+        { p } { \end { minipage } \end { center } }
+      }
   }
 \ExplSyntaxOff

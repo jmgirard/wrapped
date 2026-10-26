@@ -1,0 +1,36 @@
+---
+title: "wrapped fixture: switching columns in LaTeX"
+filters:
+  - wrapped
+format:
+  pdf:
+    keep-tex: true
+    latex-clean: false
+    fig-format: png
+---
+
+This page has no figure, so its full lines show the width of the text block. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
+
+![Before twocolumn.](plot.png){#fig-before .wrap-right width="30%"}
+
+A short paragraph beside the figure before twocolumn.
+
+```{=latex}
+\twocolumn
+```
+
+![Fig T.](plot.png){#fig-two-columns .wrap-right width="40%"}
+
+After figure T. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+```{=latex}
+\onecolumn
+```
+
+![After onecolumn.](plot.png){#fig-after .wrap-left width="30%"}
+
+A short paragraph beside the figure after onecolumn.

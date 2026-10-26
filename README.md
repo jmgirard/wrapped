@@ -164,12 +164,14 @@ Ratings rose in both conditions.
 ## PDF through LaTeX
 
 In PDF through LaTeX, the extension puts each wrapped figure in a
-`wrapfigure` from the LaTeX package wrapfig. If your TeX distribution does
+`wrapfigure` from the LaTeX package wrapfig. Where the text runs in
+columns, it does not (see below). If your TeX distribution does
 not have wrapfig, install it, for example with `tlmgr install wrapfig`.
 
 The `width` and `wrap-gap` values change to LaTeX lengths:
 
-- A percent is that share of the text width, so `40%` is `0.4\linewidth`.
+- A percent is that share of the line width, so `40%` is `0.4\linewidth`.
+  In one column, the line width is the text width.
 - A `px` length is 0.75 `pt` for each `px`, so `200px` is `150pt`.
 - A length in `pt`, `pc`, `in`, `cm`, `mm`, `em`, or `ex` stays as it is.
 - Any other CSS unit, such as `vw` or `rem`, and a `calc()`, `min()`,
@@ -209,10 +211,23 @@ wrapfig has limits, and the extension keeps some of them:
   block that stops its wrap, so it starts below the wrapped figure. A
   figure that moved to the next page waits for one of its own paragraphs.
   A heading or the end of a callout does not take it.
-- In a two-column document, set with `classoption: twocolumn`, wrapped
-  figures render as normal figures, and the render prints one warning. The
-  extension reads only `classoption`. A class that sets two columns by
-  default, such as IEEEtran, is not detected.
+- Where the text runs in columns, set by `classoption: twocolumn`, a class
+  default, `\twocolumn`, or `multicols`, wrapped figures render as normal
+  figures: they do not wrap. A percent width is a share of the column, or
+  of the box that holds the figure. With `classoption: twocolumn`, the
+  filter writes Quarto's normal figure, and the render prints one warning.
+- In other documents, a class that sets two columns by default, such as
+  IEEEtran, a
+  `\twocolumn` command, and a `multicols` environment are found only while
+  LaTeX runs. In two-column text, a captioned figure floats as a normal
+  figure does. An image with no caption, or a figure inside a box such as
+  a `minipage`, stays in place. Inside
+  `multicols`, where LaTeX loses floats, each figure stays in place. After
+  `\onecolumn`, figures wrap again.
+- In those cases the render prints no warning. LaTeX writes the warning to
+  its log, and Quarto keeps the log with `latex-clean: false`. A column
+  layout from a LaTeX class or package that neither turns on LaTeX's
+  two-column mode nor opens a `multicols` environment is not detected.
 - A figure in a list keeps its normal layout, as in HTML.
 
 Tagged PDF: Quarto 1.10.19 ignores `pdf-standard: ua-1` in LaTeX, so that

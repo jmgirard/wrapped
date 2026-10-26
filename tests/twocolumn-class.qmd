@@ -1,0 +1,49 @@
+---
+filters:
+  - wrapped
+documentclass: twocol
+format:
+  pdf:
+    keep-tex: true
+    latex-clean: false
+    fig-format: png
+---
+
+This page has no figure, so its full lines in two columns span the width of the text block. The class twocol, beside this file, loads article with twocolumn, and the document sets no classoption. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\newpage
+```
+
+This paragraph starts the second column, so page 1 shows both columns. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+```{=latex}
+\clearpage
+```
+
+![Fig C.](plot.png){#fig-class .wrap-right width="40%"}
+
+After figure C. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. See @fig-class.
+
+```{=latex}
+\clearpage
+```
+
+```{=latex}
+\noindent\begin{minipage}{0.8\linewidth}
+```
+
+![Fig B.](plot.png){#fig-box .wrap-right width="40%"}
+
+After figure B. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+```{=latex}
+\end{minipage}
+\clearpage
+```
+
+A paragraph before the class image. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![](plot.png){.wrap-left width="40%"}
+
+After image C. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

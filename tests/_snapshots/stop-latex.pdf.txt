@@ -8,9 +8,9 @@ wrappedfigure: - [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewid
 wrappedstop
 wrappedfigure: - [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
-wrappedfigure: - [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: - [side=left,width=0.35\linewidth,gap=1em,caption=false] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
-wrappedfigure: - [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedfigure: - [side=right,width=0.35\linewidth,gap=1em,caption=false] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
 wrappedfigure: fig-form-d-left [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop

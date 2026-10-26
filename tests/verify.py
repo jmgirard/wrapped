@@ -32,7 +32,7 @@ and the href of each cross-reference link. For a fixture in MARGIN_IDS, the
 script also renders a copy with no filters and records whether the nearest
 column-margin div around each named figure has the same classes in both
 renders. The script exits with status 1 on a failed render, a snapshot
-difference, or a failed layout case.
+difference, or a failed layout case or log check.
 
 Some fixtures exist only for the browser checks in tests/layout.js, which
 measure layout. Those fixtures are rendered here, so their HTML is current,
@@ -43,9 +43,16 @@ after its render, before the Typst render writes the same path, and checks
 where each case's text starts beside and below its wrapped figure. It reads
 the boxes of text lines and images with poppler's pdftohtml (brew install
 poppler, or apt install poppler-utils). It prints one line for each case it measured.
+
+For a fixture in LOGS, rendered with latex-clean: false so its LaTeX log
+stays, the script also reads the warnings that wrapped.tex writes to that
+log: the count of two-column warnings, and the line of each multicols
+warning against the lines of the wrappedfigure environments inside
+multicols in the kept .tex.
 """
 
 import difflib
+import os
 import re
 import shutil
 import statistics
@@ -86,6 +93,9 @@ RENDERS = [
     ("stop-rule", "typst", True),
     ("stop-rule", "docx", True),
     ("stop-latex", "pdf", True),
+    ("multicols", "pdf", True),
+    ("twocolumn-class", "pdf", True),
+    ("twocolumn-switch", "pdf", True),
     ("twocolumn", "pdf", True),
     ("twocolumn-list", "pdf", True),
     ("pdf-ua", "pdf", True),
@@ -519,8 +529,141 @@ def stop_latex_cases():
     yield "page bottom", page_bottom_case
 
 
+def column_gap(boxes, edges, words):
+    """The distance between the left edges of the two columns of the
+    multicols whose first line holds `words`."""
+    first = find_text(boxes, words)
+    middle = (edges[0] + edges[1]) / 2
+    lines = [b for b in boxes if b.kind == "text" and b.page == first.page and b.top >= first.top - NEAR]
+    right = [b.left for b in lines if b.left > middle]
+    if not right:
+        raise LayoutError(f"the columns that start with {words!r} have no second column")
+    return min(right) - min(b.left for b in lines)
+
+
+def local_colsep_case(boxes, edges, lh):
+    """A group that sets \\columnsep around a wrapped figure leaves it as it
+    was outside the group."""
+    want = column_gap(boxes, edges, "Reference columns.")
+    got = column_gap(boxes, edges, "Columns after the group.")
+    if abs(got - want) > NEAR:
+        raise LayoutError(f"the columns after the group are {got:.0f} px apart, not {want:.0f} px")
+
+
+# The wrap-gap of the wide gap figures, 30pt, in pdftohtml's 1.5 px per pt.
+WIDE_GAP = 45
+
+
+def wide_gap_case(side):
+    """The text beside a figure with a wide wrap-gap starts that gap from the
+    image."""
+    def case(boxes, edges, lh):
+        p = find_text(boxes, f"A paragraph beside the wide gap {side}.")
+        fig = find_figure(boxes, f"Wide gap {side}.", p)
+        check_beside(fig, p, side, edges, lh)
+        lines = [b for b in boxes if b.kind == "text" and b.page == fig.page and b is not fig.caption
+                 and b.top < fig.image.bottom and b.bottom > fig.image.top]
+        if side == "left":
+            gap = min(b.left for b in lines) - fig.image.right
+        else:
+            gap = fig.image.left - max(b.right for b in lines)
+        if abs(gap - WIDE_GAP) > NEAR:
+            raise LayoutError(f"the text is {gap:.0f} px from the image, not {WIDE_GAP} px")
+    return case
+
+
+def column_lines(boxes, fig, edges):
+    """The text lines on the figure's page in the image's column, the
+    caption left out."""
+    middle = (edges[0] + edges[1]) / 2
+    left, right = (edges[0], middle) if fig.image.right <= middle + NEAR else (
+        (middle, edges[1]) if fig.image.left >= middle - NEAR else edges)
+    return [b for b in boxes if b.kind == "text" and b.page == fig.page and b is not fig.caption
+            and b.left >= left - NEAR and b.right <= right + NEAR]
+
+
+def check_alone(boxes, fig, edges):
+    """No text line of the image's column sits beside the image."""
+    beside = [b for b in column_lines(boxes, fig, edges)
+              if b.top < fig.image.bottom and b.bottom > fig.image.top]
+    if beside:
+        raise LayoutError(f"{beside[0].text!r} is beside the image")
+
+
+# The width of each figure in the column fixtures, as a share of its column
+# or box.
+COLUMN_SHARE = 0.4
+
+
+def normal_case(caption, para):
+    """A wrapped figure that keeps a normal figure: no text of its column
+    beside its image, and the image a share of the width of the text lines
+    around it, its column or box. find_figure finds a caption only below
+    its image."""
+    def case(boxes, edges, lh):
+        fig = find_figure(boxes, caption, find_text(boxes, para))
+        check_alone(boxes, fig, edges)
+        lines = column_lines(boxes, fig, edges)
+        width = max(b.right for b in lines) - min(b.left for b in lines)
+        want = COLUMN_SHARE * width
+        got = fig.image.right - fig.image.left
+        if abs(got - want) > NEAR:
+            raise LayoutError(f"the image is {got:.0f} px wide, not {want:.0f} px")
+    return case
+
+
+def in_place_case(caption, before, after_words):
+    """A figure in multicols sits in its column between the paragraph
+    before it and the paragraph after it, with no text beside it."""
+    def case(boxes, edges, lh):
+        end = find_text(boxes, before)
+        fig = find_figure(boxes, caption, end)
+        nxt = find_text(boxes, after_words)
+        if not (end.page == fig.page == nxt.page):
+            raise LayoutError(f"the paragraphs and the figure are on pages {end.page}, {fig.page}, {nxt.page}")
+        if not end.bottom <= fig.image.top + NEAR:
+            raise LayoutError("the image starts above the end of the paragraph before it")
+        if not fig.bottom <= nxt.top + NEAR:
+            raise LayoutError("the paragraph after the figure starts above the figure's bottom")
+        if not overlaps(end.left, end.right, fig.image.left, fig.image.right) or not overlaps(
+                nxt.left, nxt.right, fig.image.left, fig.image.right):
+            raise LayoutError("the figure is not in the column of the paragraphs around it")
+        check_alone(boxes, fig, edges)
+    return case
+
+
+def multicols_cases():
+    yield "local columnsep", local_colsep_case
+    yield "wide gap left", wide_gap_case("left")
+    yield "wide gap right", wide_gap_case("right")
+    yield "figure in multicols", in_place_case("In multicols.", "Before figure M.", "After figure M.")
+    yield "image in multicols", in_place_case(None, "Before image M.", "After image M.")
+
+
+def twocolumn_class_cases():
+    yield "figure", normal_case("Fig C.", "After figure C.")
+    yield "figure in a box", normal_case("Fig B.", "After figure B.")
+    yield "image", normal_case(None, "After image C.")
+
+
+def twocolumn_switch_cases():
+    yield "before twocolumn", lambda bx, e, lh: check_beside(
+        find_figure(bx, "Before twocolumn.", None),
+        find_text(bx, "A short paragraph beside the figure before twocolumn."), "right", e, lh)
+    yield "in two columns", normal_case("Fig T.", "After figure T.")
+    yield "after onecolumn", lambda bx, e, lh: check_beside(
+        find_figure(bx, "After onecolumn.", None),
+        find_text(bx, "A short paragraph beside the figure after onecolumn."), "left", e, lh)
+
+
 # The fixtures whose PDF through LaTeX the layout check reads, with their cases.
-LAYOUT = {"stop-rule": stop_rule_cases, "stop-latex": stop_latex_cases}
+LAYOUT = {
+    "stop-rule": stop_rule_cases,
+    "stop-latex": stop_latex_cases,
+    "multicols": multicols_cases,
+    "twocolumn-class": twocolumn_class_cases,
+    "twocolumn-switch": twocolumn_switch_cases,
+}
 
 
 def layout_check(fixture):
@@ -540,6 +683,69 @@ def layout_check(fixture):
             print(f"FAIL layout {fixture} {name}: {err}")
             failed.append(f"layout {fixture} {name}")
     return failed
+
+
+# The fixtures whose LaTeX log the log check reads, rendered with
+# latex-clean: false so the log stays: the number of two-column warnings
+# and the number of wrapped figures inside multicols.
+LOGS = {
+    "twocolumn-class": (1, 0),
+    "twocolumn-switch": (1, 0),
+    "multicols": (0, 2),
+    "stop-latex": (0, 0),
+}
+TWO_COLUMN_WARNING = "Two-column text: figures set as normal figures"
+MULTICOLS_WARNING = "Figure in multicols set as normal figure"
+LOG_WARNING = re.compile(r"Package wrapped Warning: (.*?)(?: on input line (\d+))?\.")
+
+
+def multicols_figures(tex):
+    """The line numbers of the wrappedfigure environments inside multicols."""
+    depth, found = 0, []
+    for n, line in enumerate(tex.read_text(encoding="utf-8").splitlines(), 1):
+        if line.startswith("\\begin{multicols"):
+            depth += 1
+        elif line.startswith("\\end{multicols"):
+            depth -= 1
+        elif line.startswith("\\begin{wrappedfigure}") and depth > 0:
+            found.append(n)
+    return found
+
+
+def log_check(fixture):
+    """Checks the wrapped warnings in a fixture's LaTeX log: the two-column
+    warning, and a multicols warning that names the line of each wrapped
+    figure inside multicols. Returns the names of the failed checks."""
+    two_column, in_multicols = LOGS[fixture]
+    path = TESTS / f"{fixture}.log"
+    if not path.exists():
+        print(f"FAIL log {fixture}: no {path.name} after the render")
+        return [f"log {fixture}"]
+    # TeX breaks a long log line at max_print_line, 79 in TeX Live and 10000
+    # in TinyTeX, with no mark, so the log is read with its line breaks
+    # removed.
+    log = path.read_text(encoding="utf-8", errors="replace").replace("\n", "")
+    found = LOG_WARNING.findall(log)
+    two = [w for w in found if w[0] == TWO_COLUMN_WARNING]
+    multi = sorted(int(n) if n else 0 for msg, n in found if msg == MULTICOLS_WARNING)
+    other = [msg for msg, n in found if msg not in (TWO_COLUMN_WARNING, MULTICOLS_WARNING)]
+    want = multicols_figures(TESTS / f"{fixture}.tex")
+    problems = []
+    if len(want) != in_multicols:
+        problems.append(f"the .tex has {len(want)} wrapped figures in multicols, not {in_multicols}")
+    if len(two) != two_column:
+        problems.append(f"{len(two)} two-column warnings, not {two_column}")
+    if multi != want:
+        problems.append(f"multicols warnings on lines {multi}, not {want}")
+    if other:
+        problems.append(f"other wrapped warnings: {other}")
+    if "`hypcap=true' will be ignored" in log:
+        problems.append("a caption package hypcap warning")
+    if problems:
+        print(f"FAIL log {fixture}: {'; '.join(problems)}")
+        return [f"log {fixture}"]
+    print(f"ok   log {fixture}")
+    return []
 
 
 TYPST_WRAP_START = re.compile(r"^#context wrap-content\(", re.M)
@@ -718,7 +924,12 @@ def render(fixture, fmt):
     # A fixture that is a folder is a project, rendered whole.
     target = fixture if (TESTS / fixture).is_dir() else f"{fixture}.qmd"
     cmd = ["quarto", "render", target, "--to", fmt]
-    result = subprocess.run(cmd, cwd=TESTS, capture_output=True, text=True)
+    env = os.environ.copy()
+    if fmt == "pdf" and fixture in LOGS:
+        # TeX Live's default log line length, which TinyTeX raises to 10000,
+        # so the log check reads warnings that TeX breaks across lines.
+        env["max_print_line"] = "79"
+    result = subprocess.run(cmd, cwd=TESTS, capture_output=True, text=True, env=env)
     log = ANSI.sub("", result.stdout + result.stderr)
     return result.returncode, log
 
@@ -752,6 +963,9 @@ def main():
     failed = []
     for fixture, fmt, compare in RENDERS:
         name = f"{fixture}.{fmt}"
+        if fmt == "pdf" and fixture in LOGS:
+            # A log left by an earlier run must not pass for this one.
+            (TESTS / f"{fixture}.log").unlink(missing_ok=True)
         code, log = render(fixture, fmt)
         if code != 0:
             print(f"FAIL {name}: quarto render exited with status {code}")
@@ -760,6 +974,8 @@ def main():
             continue
         if fmt == "pdf" and fixture in LAYOUT:
             failed += layout_check(fixture)
+        if fmt == "pdf" and fixture in LOGS:
+            failed += log_check(fixture)
         if not compare:
             print(f"ok   {name} (rendered, no snapshot)")
             continue

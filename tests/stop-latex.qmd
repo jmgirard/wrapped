@@ -5,6 +5,7 @@ filters:
 format:
   pdf:
     keep-tex: true
+    latex-clean: false
     fig-format: png
 ---
 
