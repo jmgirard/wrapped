@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M008: Run the fixture renders in CI
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -87,11 +87,11 @@ not part of the verify command. Branch protection that requires the check
       Linux-only failure in the workflow or in `tests/verify.py` so the same
       snapshots pass on both systems, never by writing a Linux-only
       snapshot; log each fix and rerun on this Mac.
-- [ ] T4: Prove the check can fail: push a commit that changes one line of
+- [x] T4: Prove the check can fail: push a commit that changes one line of
       `tests/_snapshots/meta-string.html.txt`, confirm the failed run, its `FAIL` line, and the
       artifact (`gh run download`), then push a commit that restores the
       line and see the check pass again.
-- [ ] T5: Update `cairn/PROFILE.md` (the verify slot names both workflows
+- [x] T5: Update `cairn/PROFILE.md` (the verify slot names both workflows
       and the CI channels) and `cairn/DESIGN.md` Conventions (tests also
       run in CI).
 
@@ -121,6 +121,9 @@ not part of the verify command. Branch protection that requires the check
 - 2026-10-26: T3 done: CI run 40310313074 at f8ffcbb succeeded, its verify step printing `all 36 renders pass`; local `python3 tests/verify.py` at f8ffcbb also printed `all 36 renders pass`.
 - 2026-10-26: T4 planted change (6fd85b1, meta-string.html.txt breakpoint 576px to 577px): CI run 40310746574 failed with `FAIL meta-string.html: output differs from tests/_snapshots/meta-string.html.txt`, and `gh run download` of its `rendered-outputs` artifact listed `meta-string.html`. This commit restores the line.
 - 2026-10-26: paused at the user's request. Restore commit be641d8 is pushed; its CI run 40312839783 was in progress, and its watcher was stopped. On resume: read that run (`gh run view 40312839783`); on success tick T4, tick T5 (PROFILE.md and DESIGN.md text is already committed in 1e2e843), then set status review. This line's commit is local only, since a push would cancel that run.
+- 2026-10-26: resumed. CI run 40312839783 at be641d8 succeeded (`all 36 renders pass`); T4 done. T5 done (text in 1e2e843). `git diff f8ffcbb HEAD -- . ':!cairn'` is empty, so the local verify pass at f8ffcbb covers the code at this head; main has not moved since the cut.
+- 2026-10-26: claim audit: not owed — internal tier.
+- 2026-10-26: implement complete; status review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
