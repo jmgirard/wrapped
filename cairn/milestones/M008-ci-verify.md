@@ -184,3 +184,22 @@ Pass 2, 2026-10-26, at d52a2a5 (code head 923adc5; main at 2a92353, unmoved). Re
 - AC3 (re-read): `verify-prerelease.yml` at 923adc5 keeps only `schedule` (weekly) and `workflow_dispatch`, the same R steps, `version: pre-release`, and `python3 tests/verify.py`. Pass.
 - AC4: the pass-1 evidence (run 40310746574) stands; T6 changed the install steps only, not the verify step or the `if: failure()` artifact step.
 - Consistency gate at d52a2a5: `cairn_validate` all checks passed; version marker unchanged (`0.1.0`); verify as AC2; changelog "none". Pass.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: the Ubuntu mirror is still in the path: setup-r installs about 175 apt packages, and pak installs pandoc, cmake, make, libuv1-dev as system requirements — fix now in part: `PKG_SYSREQS: false` on setup-r-dependencies in both files, fixed 6d8c1ab; follow-up for setup-r's own apt use: candidate row "Cut the Ubuntu mirror from CI setup"
+- diff-bug #2: setup-r-dependencies defaults to `install-quarto: auto` with release Quarto, so a future knitr or rmarkdown that needs the quarto R package would make the pre-release check test release Quarto — fix now: `install-quarto: false` in both files, fixed 6d8c1ab
+- diff-bug #3: knitr, rmarkdown, and R float with CRAN and R releases, so a new knitr can fail a PR that changed nothing — reject, planned change: CI follows release channels by design (Quarto release, `ubuntu-latest`); a failure there is the early notice
+- diff-bug #4: the PR head (923adc5) is behind the local branch (two cairn-only commits), and a push starts a new pull_request run — reject, false as a defect: step 8 waits for green CI on the head it merges
+- diff-bug #5: the package cache is scoped to the PR, so main and the weekly run start cold (about 30 s) — reject, style: the cost is seconds
+- diff-bug #6: setup-r's apt step adds Ubuntu's pandoc and ghostscript to the runner — reject, false as a defect: Quarto uses its bundled pandoc; with `PKG_SYSREQS: false` pak no longer installs pandoc
+- diff-bug #7: `@v2` tags can move — reject, style: the repo has no rule for pinning actions by commit hash, and every action here uses a major tag
+- diff-bug #8: the 45-minute timeout is loose for a 3.5-minute job — reject, planned change: setup-r's apt step still uses the mirror (row "Cut the Ubuntu mirror from CI setup"), so the margin stays until that row lands
+- diff-bug #9: PROFILE.md and DESIGN.md cite only D-008 — fix now: both cite D-008, D-009, fixed 6d8c1ab
+- diff-bug #10: the Branch/PR header still says "(draft)" — fix now: removed, fixed 6d8c1ab
+- diff-bug #11: setup-r-dependencies leaves `.github/pkg.lock` behind if its install fails — reject, edge: only a failed install leaves it, outside the uploaded paths, on a throwaway runner, and it causes no error or wrong result
+- blame-history #1: D-009 blames the mirror, but `apt-get update` still runs — same as diff-bug #1, settled there
+- blame-history #2: R moved from Ubuntu's 4.5.2 to 4.6.1 and now follows R releases, which D-009 does not say — reject, planned change: as diff-bug #3; this Mac also runs R 4.6.1
+- blame-history #3: pointers to D-008 do not name D-009 — same as diff-bug #9, fixed 6d8c1ab
+- prior-review #1: the pass-1 reason for diff-bug #11 ("D-008 names the actions at major tags") is false; D-008 names no tags — correction: that finding's reject ground is style, as diff-bug #7 of this pass states; the disposition stands
+- prior-review #2: the poppler step's `apt-get update` still uses the mirror — same as diff-bug #1, settled there
+- ripple: no ripple evidence
+- conversation: PR #8 — empty (0 reviews, 0 comments, 0 review threads), read on resume before the re-posed question
