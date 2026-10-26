@@ -50,33 +50,33 @@ new fixtures with layout and log checks; README and DESIGN text. The
      Every item opens with its positional label — `ACn:` — the item's
      position counted top-to-bottom, the number Coverage cites. -->
 
-- [ ] AC1: In `tests/twocolumn-class.qmd`, whose class file beside it
+- [x] AC1: In `tests/twocolumn-class.qmd`, whose class file beside it
       loads `article` with `twocolumn` and which sets no `classoption`, a
       captioned wrapped figure and an uncaptioned wrapped image render as
       normal figures: layout cases in the `LAYOUT` list of `tests/verify.py`
       find no text line of each image's column beside that image, and the
       captioned figure's caption below its image.
-- [ ] AC2: A wrapped figure follows a raw `\twocolumn` or `\onecolumn`
+- [x] AC2: A wrapped figure follows a raw `\twocolumn` or `\onecolumn`
       before it. In `tests/twocolumn-switch.qmd`, layout cases find the
       paragraph after a wrapped figure before a raw `\twocolumn` beside that
       figure, no text line of its column beside a wrapped figure after that
       `\twocolumn`, and the paragraph after a wrapped figure after a later
       raw `\onecolumn` beside that figure.
-- [ ] AC3: In `tests/multicols.qmd`, a captioned wrapped figure and an
+- [x] AC3: In `tests/multicols.qmd`, a captioned wrapped figure and an
       uncaptioned wrapped image inside a two-column `multicols` opened and
       closed by separate `{=latex}` raw blocks are in the PDF in place. The
       text around them is long enough that each image and the paragraphs
       before and after it sit in the first column, and a layout case finds
       each image below the paragraph before it and above the paragraph
       after it, with no text line of that column beside it.
-- [ ] AC4: A fallback in `wrapped.tex` writes its LaTeX warning. With
+- [x] AC4: A fallback in `wrapped.tex` writes its LaTeX warning. With
       `latex-clean: false`, which keeps the `.log` beside the `.qmd`,
       `tests/verify.py` reads each fixture's log, joined across TeX's line
       breaks, and finds: one `Package wrapped Warning` for two-column text
       in `twocolumn-class` and in `twocolumn-switch`, one `multicols`
       warning naming the line of each figure's `\begin{wrappedfigure}` in
       `multicols`, and no `Package wrapped Warning` in `stop-latex`.
-- [ ] AC5: Wrapped figures set the gap only where wrapfig places them. In
+- [x] AC5: Wrapped figures set the gap only where wrapfig places them. In
       `tests/multicols.qmd`, a layout case finds that a `multicols` after a
       raw group that sets `\columnsep` locally around a wrapped figure has
       the column gap of a `multicols` with no wrapped figure before it,
@@ -181,3 +181,14 @@ new fixtures with layout and log checks; README and DESIGN text. The
 ## Review
 <!-- owner: review · exclusive; evidence per criterion, consistency-gate
      results, review findings + triage. EXEMPT from the 150-line cap. -->
+
+Pass 1, on d142e36 (level with origin/main e1f0cf3). `python3 tests/verify.py`, fresh run: all 39 renders pass, every snapshot matches.
+
+- AC1 evidence: `ok layout twocolumn-class figure` and `ok layout twocolumn-class image` (check_alone finds no text of the image's column beside each image; the figure's caption is below its image). The fixture's class file `tests/twocol.cls` loads article with twocolumn; the fixture sets no classoption.
+- AC2 evidence: `ok layout twocolumn-switch before twocolumn` (paragraph beside), `in two columns` (no column text beside), `after onecolumn` (paragraph beside).
+- AC3 evidence: `ok layout multicols figure in multicols` and `image in multicols` (same page as the paragraphs before and after, below the one and above the other, in their column, nothing beside). The `multicols` is opened and closed by separate `{=latex}` blocks.
+- AC4 evidence: `ok log twocolumn-class`, `ok log twocolumn-switch` (one two-column warning each), `ok log multicols` (multicols warnings on the lines of the two `\begin{wrappedfigure}` inside multicols, checked against the kept .tex; the check also asserts that count is 2), `ok log stop-latex` (no wrapped warning). The fixtures set `latex-clean: false`; the check joins 79-character lines.
+- AC5 evidence: `ok layout multicols local columnsep` (gap after the group equals the reference, 341 px), `wide gap left` and `wide gap right` (captioned figures, `wrap-gap="30pt"`, text 45 px from the image within 3 px; 30pt differs from 1em and from \columnsep, 10pt, by 30 px).
+- AC6 evidence (README.md lines 212-225, DESIGN.md Architecture step 1, read on d142e36): the README names the four column sources, says only `classoption` warns in Quarto's output and the others write to the LaTeX log kept with `latex-clean: false`, has the not-detected sentence for a class or package layout with neither two-column mode nor `multicols`, names no paracol, and has no "IEEEtran is not detected" sentence; DESIGN step 1 names the check in `wrapped.tex`. FAIL on one clause: since the claim-audit correction, the README says wrapped figures in columns "do not wrap" and names "normal figures" only for the `classoption` case and for a captioned float in two-column text; it no longer says that a figure in columns set by a class default, `\twocolumn`, or `multicols` renders as a normal figure. Not ticked.
+- AC7 evidence (macOS part): the run above, 39 renders, 31 layout cases, 4 log checks pass. The CI half needs the PR, which step 8 opens. Not ticked yet.
+- Gate: `cairn_validate.py` all checks pass; one version marker (`_extension.yml` 0.1.0, unchanged by the branch); verify passes (above); changelog slot "none". No DESIGN principle changed, so no impact report.
