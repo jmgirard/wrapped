@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M010: Check figure widths before use
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -95,6 +95,8 @@ A wrapped figure whose width is zero, is CSS that the filter cannot check, or is
 - 2026-10-26: T6 done. README states the zero rule and zero-gap exception and the function rules (Width and gap), the metadata rules (Document defaults), the zero rule (LaTeX, Typst), the Typst wide-width rule with no warning, and Word's zero rule. DESIGN.md Architecture steps 5 and 7 name the `layout` call and `wrapped-width` (corrected M010).
 - 2026-10-26: checkpoint, T7 in progress: `python3 tests/verify.py` passed all 49 renders on 4306181. The verify.py docstring and PROFILE.md's verify slot now name TYPST_LAYOUT. Paused at the user's request (low battery); the claim audit and the hand-off to review are left.
 - 2026-10-26: resumed after the pause; origin/main has not moved since the cut. PROFILE.md's verify sentence split in two. T7 done: `python3 tests/verify.py` passed all 49 renders and every layout and log case; `cairn_validate` passed.
+- 2026-10-26: claim audit: 41 claims read, 4 corrected — README.md (zero gap and metadata zero gap: Word warns on a 0% gap), tests/verify.py (find_words docstring: double spaces only in some lines), tests/typst-wide.qmd (the 2in figure does not match 40%). The reader re-read the four corrections once and found each holds. `python3 tests/verify.py` passed all 49 renders after them.
+- 2026-10-26: implement done; status set to review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

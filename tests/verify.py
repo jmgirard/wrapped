@@ -672,7 +672,8 @@ def twocolumn_switch_cases():
 
 def find_words(boxes, words):
     """The one text line that holds `words`, with runs of spaces in the line
-    read as one space. pdftohtml writes Typst's word gaps as two spaces."""
+    read as one space. pdftohtml can write Typst's word gaps as two spaces,
+    as in a justified line."""
     found = [b for b in boxes if b.kind == "text" and words in " ".join(b.text.split())]
     if len(found) != 1:
         raise LayoutError(f"{len(found)} lines hold {words!r}")

@@ -77,7 +77,8 @@ default width is 40%. A width of zero, such as `0%`, `0in`, or `0`, prints a
 warning, and the document default applies.
 
 The `wrap-gap` attribute sets the space between the figure and the text.
-The default gap is `1em`. A gap of zero stays as it is.
+The default gap is `1em`. A gap of zero stays as it is. In Word, a gap of
+0% prints a warning (see Word below).
 
 In HTML, a width or gap can also be a `calc()`, `min()`, `max()`, or
 `clamp()` value, such as `calc(100% - 2em)` or `min(40%, 300px)`. The
@@ -119,7 +120,8 @@ take the full width of the text column. The default breakpoint is `576px`.
 
 The keys follow the rules of the attributes. A `width` of zero prints a
 warning, and the built-in 40% applies. A `gap` or `breakpoint` of zero stays
-as it is. A `width`, `gap`, or `breakpoint` can be a `calc()`, `min()`,
+as it is. In Word, a `gap` of 0% prints a warning, and the built-in `1em`
+applies. A `width`, `gap`, or `breakpoint` can be a `calc()`, `min()`,
 `max()`, or `clamp()` value, checked as above. A media query takes no
 percent, so a `breakpoint` with a percent, such as `calc(50%)`, prints a
 warning, and `576px` applies.
