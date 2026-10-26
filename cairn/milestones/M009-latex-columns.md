@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M009: Keep LaTeX column layouts intact
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -143,7 +143,7 @@ new fixtures with layout and log checks; README and DESIGN text. The
       `wrapped.tex`, and step 1 of DESIGN.md's Architecture.
 - [x] T5: Run `python3 tests/verify.py` on macOS and see `verify.yml` pass
       on the PR.
-- [ ] T6: Review return 1: README states that figures in columns render
+- [x] T6: Review return 1: README states that figures in columns render
       as normal figures (AC6), and the fix-now findings listed in the
       Review section: mode p in inner mode, hypcap in mode p, width claim,
       log parser, dead caption check, README and PROFILE text, W2 row.
@@ -180,6 +180,7 @@ new fixtures with layout and log checks; README and DESIGN text. The
 - 2026-10-26: review return 1: AC6 fails as written: the README says figures in columns "do not wrap" and no longer says that a figure in columns set by a class default, `\twocolumn`, or `multicols` renders as a normal figure. Also the review's fix-now findings: diff-bug #1 (mode p in inner mode), #2 (hypcap in mode p), #4 (width claim), #5 and #6 (log parser), #7 (dead caption check), prior-review #1 (untested README sentence), prior-review #2 and ripple #2 (PROFILE and docstring), ripple #3 (README wrapfigure sentence), ripple #4 (wrap-mechanisms W2). See the Review section.
 - 2026-10-26: T6 added for review return 1 (minor amendment).
 - 2026-10-26: T6 checkpoint: `wrapped.tex` sets mode p for a captioned figure in inner mode in two-column text, and turns hypcap off in mode p; verify.py reads the log with line breaks removed, fails on a missing log, deletes a stale log before the render, drops the dead caption check, and fails on the caption package's hypcap warning; new case "figure in a box" in twocolumn-class (a raw minipage). With the T5 `wrapped.tex`, the twocolumn-class render exits 1 (Float(s) lost) and the multicols log check fails on the hypcap warning; with the fix both pass. README: figures in columns "render as normal figures: they do not wrap", a percent width is a share of the column, a figure inside a box stays in place, the wrapfigure sentence names the column case, the untested classoption-multicols sentence is gone. PROFILE.md and the verify.py docstring name the log check; wrap-mechanisms W2 corrected M009. Full verify with `--update` running; snapshots not in this commit.
+- 2026-10-26: T6 done: full verify with `--update`: 39 renders pass, 32 layout cases and 4 log checks pass; the one snapshot change is the new `fig-box` environment in twocolumn-class. Status set to review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. EXEMPT from
