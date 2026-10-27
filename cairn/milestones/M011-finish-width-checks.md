@@ -129,15 +129,15 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 - [x] T2: Add the AC1 and AC3 values to `tests/css-functions.qmd` and the
       AC2 width and breakpoint to a metadata fixture; update the snapshots
       and read the diff.
-- [ ] T3: Give `wrapped-width` in `TYPST_HEADER` (`wrapped.lua:386`) the gap,
+- [x] T3: Give `wrapped-width` in `TYPST_HEADER` (`wrapped.lua:386`) the gap,
       and resolve each width and the gap to an absolute length in `layout`
       (a ratio as a share of `size.width`). Add the percent-sum warning in
       `typst_open` (`wrapped.lua:361`) and `read_meta`
       (`wrapped.lua:821-829`).
-- [ ] T4: Add Typst fixtures for AC4 and AC5 and their `TYPST_LAYOUT` cases
+- [x] T4: Add Typst fixtures for AC4 and AC5 and their `TYPST_LAYOUT` cases
       in `tests/verify.py`, with widths set from the measured text width;
       update the snapshots.
-- [ ] T5: Update README "Width and gap" and the Typst section, DESIGN.md
+- [x] T5: Update README "Width and gap" and the Typst section, DESIGN.md
       Known issues, and the comments on the changed functions, each against
       a render's observed output.
 - [ ] T6: Run `python3 tests/verify.py` on macOS, then push and read CI.
@@ -164,6 +164,9 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 - 2026-10-27: T1 done: each calc parser function also returns a bound (lower and upper sums by unit, exact, or not finite); never_positive warns on a width whose upper sum is zero or below or that is not finite, and any var() leaves no bound. A scratch harness gave the expected result on 44 probe values; all 52 renders pass.
 - 2026-10-27: T2 done: css-functions.qmd gains 13 never-above-zero widths and 8 passing values; new meta-calc-zero.qmd (width calc(0%), breakpoint calc(0px)). Only those two snapshots changed. With main's wrapped.lua, meta-calc-zero prints no warning, so its snapshot fails there.
 - 2026-10-27: checkpoint: T3 code (wrapped-abs, wrapped-width with the gap, percent-sum warnings) and T5 docs written; new Typst layout cases pass in targeted renders and failed 6 of 7 before T3; full suite with --update running, no box ticked yet.
+- 2026-10-27: T3 done: typst_open and read_meta warn on a percent width and gap with a sum of 100% or more; wrapped-width takes the gap and returns the first width that fits with it, else 40%. Percent gaps measured 158 and 162 px against 162 px for 25% of the text, so a percent gap is a share of the text width.
+- 2026-10-27: T4 done: fixtures typst-gap (default 3in), typst-gap-meta (default 5in with 1.5in gap), typst-gap-percent; 8 TYPST_LAYOUT cases and typst_image_case for the no-room case. Before T3, 7 of 8 failed (all but the case that fits). The case where the default also fills the text moved to typst-gap-meta, since with a 3in default 40% plus such a gap leaves under 1 in for the marker words. The older Typst snapshots changed only by the new gap argument (55 lines). All 55 renders pass on macOS.
+- 2026-10-27: T5 done: README "Width and gap" and Typst section, DESIGN.md steps 5 and 7 and Known issues, wrap-mechanisms W3 example, each written against the renders above; the simple-english hook flags an older "would" at wrap-mechanisms.md line 164, left as is.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

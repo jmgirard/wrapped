@@ -1,0 +1,6 @@
+# warnings
+1x wrapped: width "70%" and gap "40%" in the wrapped metadata leave no room for text in Typst, so the width is 40%.
+# typ
+figure: fig-gap-percent image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 40%, 40%, 40%, 40%)), column-gutter: 40% | fig-gap-percent no-alt | p | cites=0

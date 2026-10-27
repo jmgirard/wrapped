@@ -1,0 +1,16 @@
+# warnings
+1x wrapped: width "75%" and wrap-gap "25%" on #fig-g70 leave no room for text in Typst, so the width is 3in.
+# typ
+figure: fig-g5in image-width=yes
+figure: fig-g99 image-width=yes
+figure: fig-g4in image-width=yes
+figure: fig-g2in image-width=yes
+figure: fig-g70 image-width=yes
+figure: fig-gwide image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1.5in, 5in, 3in, 40%)), column-gutter: 1.5in | fig-g5in no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 99%, 3in, 40%)), column-gutter: 1em | fig-g99 no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 25%, 4.5in, 3in, 40%)), column-gutter: 25% | fig-g4in no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 2em, 2in, 3in, 40%)), column-gutter: 2em | fig-g2in no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 25%, 3in, 3in, 40%)), column-gutter: 25% | fig-g70 no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 4in, 5in, 3in, 40%)), column-gutter: 4in | fig-gwide no-alt | p | cites=0

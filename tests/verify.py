@@ -115,6 +115,9 @@ RENDERS = [
     ("typst-options", "typst", True),
     ("typst-wide", "typst", True),
     ("typst-wide-meta", "typst", True),
+    ("typst-gap", "typst", True),
+    ("typst-gap-meta", "typst", True),
+    ("typst-gap-percent", "typst", True),
     ("zero-meta", "html", True),
     ("zero-meta", "pdf", True),
     ("zero-meta", "typst", True),
@@ -723,6 +726,35 @@ def typst_wide_meta_cases():
     yield "10in takes the 2in default", typst_width_case("Fig M10in.", "Marker default", TYPST_2IN)
 
 
+# 3 in is 216 pt, or 324 px.
+TYPST_3IN = 324
+
+
+def typst_image_case(caption, want):
+    """A Typst figure whose image is `want` px wide, with no test of the
+    text beside it."""
+    def case(boxes, edges, lh):
+        fig = find_figure(boxes, caption, None)
+        got = fig.image.right - fig.image.left
+        if abs(got - want) > NEAR:
+            raise LayoutError(f"the image is {got:.0f} px wide, not {want:.0f} px")
+    return case
+
+
+def typst_gap_cases():
+    yield "5in with 1.5in gap", typst_width_case("Fig G5in.", "Marker inches", TYPST_3IN)
+    yield "99% with 1em gap", typst_width_case("Fig G99.", "Marker percent", TYPST_3IN)
+    yield "4.5in with 25% gap", typst_width_case("Fig G4in.", "Marker share", TYPST_3IN)
+    yield "2in with 2em gap", typst_width_case("Fig G2in.", "Marker fits", TYPST_2IN)
+    yield "75% with 25% gap", typst_width_case("Fig G70.", "Marker sum", TYPST_3IN)
+    yield "40% with gap too wide", typst_image_case("Fig GWide.", TYPST_40)
+
+
+def typst_gap_meta_cases():
+    yield "5in with 1.5in gap takes 40%", typst_width_case("Fig MGap.", "Marker metadata", TYPST_40)
+    yield "default with gap too wide", typst_width_case("Fig MDefault.", "Marker fallback", TYPST_40)
+
+
 # The fixtures whose PDF through LaTeX the layout check reads, with their cases.
 LAYOUT = {
     "stop-rule": stop_rule_cases,
@@ -736,6 +768,8 @@ LAYOUT = {
 TYPST_LAYOUT = {
     "typst-wide": typst_wide_cases,
     "typst-wide-meta": typst_wide_meta_cases,
+    "typst-gap": typst_gap_cases,
+    "typst-gap-meta": typst_gap_meta_cases,
 }
 
 

@@ -3,4 +3,4 @@
 # typ
 figure: fig-zero-meta image-width=yes
 # wraps
-align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 0pt | fig-zero-meta no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 0pt, 40%, 40%, 40%)), column-gutter: 0pt | fig-zero-meta no-alt | p | cites=0
