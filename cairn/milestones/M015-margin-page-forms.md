@@ -195,3 +195,35 @@ Evidence read 2026-10-27 at 3e97223 from the committed snapshots by a Python che
 - AC5: `column-meta` HTML and LaTeX snapshots — `fig-col-page`, `fig-col-cell`, `fig-col-body-cell` each have one `is page-wide` warning in both, read `- style=-` in HTML with no group, and have no `wrappedfigure:` line; the no-id image wraps in both. Pass.
 - AC6: README "Where a figure keeps its normal layout" — the margin item (in the four-format list) covers document `fig-column: margin`; the margin-caption item (HTML) names `.margin-caption` and `.caption-margin`; the page-wide item names document `fig-column` and `column` with HTML, LaTeX, and Typst rules and Word wrapping, as AC1 to AC5 test. Pass.
 - Gate (partial, 2026-10-27): `cairn_validate.py` all checks passed; the one version marker (`_extension.yml` `version: 0.1.0`) is unchanged; no IP/GP changed, so no impact report. The verify run on the review head and the four-lens review are in progress at this checkpoint.
+- Gate: `python3 tests/verify.py` on the review head (c867abd, code as 3e97223) exits 0, all 87 renders pass. Gate passes.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: `fig-capclass-cell` runs the same attribute path as `fig-cap-cell` — reject (planned change: AC1 names the case, and it tests the README claim that the class works on a code cell).
+- diff-bug #2: same-path cases in the new fixtures (`-div` beside image form, the `fig-column: body` cells, column-meta) — reject (planned change: AC1 to AC5 name them, and the `body` cells test the README claim "even a cell with `#| fig-column: body`").
+- diff-bug #3: a figure's own `.column-body` under document `column: page` falls back though Quarto keeps it in the body — follow-up, absorbed into the row "Read fig-column over a figure's class".
+- diff-bug #4: `fig-column: ""` beside `column: page` wrapped with no warning while Quarto makes the figure page-wide (render confirmed); a list value was stringified — fix now (`meta_column` treats an empty value as unset and reads a list's first item, as Quarto's `columnOption` does; `column-meta` gains `fig-column: ""` and `typst-inset-meta` takes `[page-inset, margin]`; with the old read both lose their warnings).
+- diff-bug #5: a document margin key keeps every slide figure normal in revealjs, which has no margin — follow-up, new row "Let slides wrap under margin settings" (the class form does the same since M013).
+- diff-bug #6: a multi-figure cell under a document key prints one warning per figure, not one for the cell — follow-up, new row "Warn once per cell under a context" (contexts already did this since M014).
+- diff-bug #7: DESIGN step 4 says any float falls back under a page-wide document value, broader than the code in Word and Typst — fix now (step 4 limits it to step 2's page-wide rule).
+- diff-bug #8: `fig-cap-location` read before `cap-location` — follow-up, the existing row "Read cap-location before fig-cap-location" (pre-existing since M013); the new comment states the code's order, not Quarto's.
+- blame-history #1: the caption order bug remains — follow-up, row "Read cap-location before fig-cap-location".
+- blame-history #2: Typst page-wide fallback reverses M013's choice — reject (planned change: the user chose it at the AC4 stop; Quarto sets those figures wider than the text in Typst, so M013's premise was wrong).
+- blame-history #3: D-010's one cell warning under a document key — follow-up, row "Warn once per cell under a context".
+- blame-history #4: document margin keys reach slides — follow-up, row "Let slides wrap under margin settings".
+- blame-history #5: `column: margin` has no fixture — follow-up, row "Read fig-column over a figure's class".
+- blame-history #6: own class read before the document key — follow-up, row "Read fig-column over a figure's class".
+- prior-review #1: `fig-figcap-first` and the README pin the caption order the new row calls a bug — follow-up, row "Read cap-location before fig-cap-location", which names that fixture.
+- prior-review #2: document margin keys reach revealjs — follow-up, row "Let slides wrap under margin settings".
+- prior-review #3: no D-entry records reversing M013's Typst choice — reject (planned change: user-approved at the AC4 stop and recorded in the work log; it corrects a factual premise, and M013 recorded no D-entry for the choice).
+- prior-review #4: the Typst div claim is tested for 3 of 16 names — reject (false: the 16 names share one `PAGE_WIDE` lookup, and the diff-bug lens read Quarto's Typst div handler covering all 16; more cases would repeat one path).
+- prior-review #5: list items say a no-id image "stays in the body and wraps" under a lead that says those places do not wrap — fix now (both items now say the value does not apply to a captioned image with no id).
+- prior-review #6: `column: margin` works in code but is undocumented and untested — follow-up, row "Read fig-column over a figure's class".
+- ripple #1: `tests/cap-margin.qmd` `fig-figcap-first` pins the order the new row calls a bug — follow-up, row "Read cap-location before fig-cap-location".
+- ripple #2: README states `fig-cap-location` before `cap-location` — follow-up, same row.
+- ripple #3: README Notes "A captioned image with no `#fig-` id wraps too" is false for `.margin-caption` in HTML — fix now (the line names the places that keep a normal layout).
+- ripple #4: the new row said the README names `column` only for page-wide, but it names a cell's `#| column: margin` — fix now (the row says "the document-level `column` key").
+- ripple #5: README lead says first-list places do not wrap in Word and Typst — reject (false: the page-wide item is in the second list, whose lead says it holds only in the formats named).
+- ripple #6: a cell's `#| fig-column: page-inset` might wrap in Typst — reject (false: a render shows "#fig-c is page-wide" and no `wrap-content`).
+- ripple #7: DESIGN step 2 and step 4 disagree — fix now (with diff-bug #7).
+- ripple #8: E3 names only a `fig-column: margin` cell — fix now (E3 points to E21 for a document value).
+- ripple #9: the started row "Fall back in more margin and page forms" still calls these forms unchecked — reject (planned change: step 9's hygiene graduates the row).
+- ripple #10: `tests/page-wide.qmd` intro on Typst — reject (false: "where Quarto makes the figure page-wide" holds for both the div and own-class rules).

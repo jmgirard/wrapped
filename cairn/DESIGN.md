@@ -164,7 +164,9 @@ passes (corrected M003):
    floats and moves an image's class to its float. A float that step 2 or
    3 recorded, a table, a float with a margin or page-wide class or a
    layout attribute, any figure float when the document's `fig-column` or
-   `column` names the margin or a page-wide column (`meta_column_context`),
+   `column` names the margin, or a page-wide column in a format where step
+   2's page-wide rule holds for it (`meta_column_context`, which reads a
+   code cell's float as a cell and any other float as a float's own class),
    or a figure of a code cell with more than one float outside other
    floats keeps its normal layout (corrected M014, M015). In HTML, each other float gets its
    box width and gap as CSS custom properties, and a captioned image with

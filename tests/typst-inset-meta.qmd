@@ -2,14 +2,15 @@
 title: "wrapped fixture: a document-level fig-column page-inset in Typst"
 filters:
   - wrapped
-fig-column: page-inset
+fig-column: [page-inset, margin]
 format:
   typst:
     keep-typ: true
     fig-format: png
 ---
 
-With `fig-column: page-inset` in the document, Typst sets a code cell's
+With `fig-column: [page-inset, margin]` in the document, Quarto reads the
+first item, `page-inset`. Typst sets a code cell's
 figure wider than the text, so a wrapped cell keeps its normal layout with a
 warning. Typst keeps an image-form figure in the body, so it wraps.
 

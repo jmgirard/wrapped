@@ -207,8 +207,8 @@ file or says that the figure has no id.
   no margin column, so there the figure is in the body. This item also
   covers `fig-column: margin` in the document metadata. That value applies
   to every figure with a `#fig-` id and every code cell figure, even a
-  cell with `#| fig-column: body`. A captioned image with no id stays in
-  the body and wraps.
+  cell with `#| fig-column: body`. It does not apply to a captioned image
+  with no id, which stays in the body.
 - A subfigure panel, such as a figure div with `layout-ncol`, or a
   subfigure inside a panel.
 - A panel layout: a div or a code cell with `layout-ncol`, `layout-nrow`,
@@ -261,8 +261,8 @@ prints the same warning there, and the figure wraps in the other formats.
   such as `fig-column: page`. That value applies to every figure with a
   `#fig-` id and every code cell figure, even a cell with
   `#| fig-column: body`. In PDF through Typst it applies as a class on the
-  figure itself does, except on a code cell figure. A captioned image with
-  no id stays in the body and wraps.
+  figure itself does, except on a code cell figure. It does not apply to a
+  captioned image with no id, which stays in the body.
 
 ## Slides
 
@@ -489,7 +489,9 @@ Right-to-left Word documents are not tested.
 
 ## Notes
 
-- A captioned image with no `#fig-` id wraps too. In HTML and Word it has
+- A captioned image with no `#fig-` id wraps too, unless a place in the
+  section "Where a figure keeps its normal layout" applies to it, such as
+  a caption in the margin. In HTML and Word it has
   no figure number. In PDF through LaTeX and Typst, Quarto numbers it.
 - An image inside a link, or beside other content in its paragraph, does
   not wrap. In HTML, LaTeX, Typst, and Word the render prints a warning for

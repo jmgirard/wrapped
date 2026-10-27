@@ -1125,6 +1125,16 @@ local meta_cap_location = nil
 -- which is no float.
 local meta_column_context = {}
 
+-- The text of a fig-column or column metadata value, or nil. As Quarto's
+-- columnOption does, it reads the first item of a list and treats an empty
+-- value as unset.
+local function meta_column(value)
+  if pandoc.utils.type(value) == "List" then value = value[1] end
+  local text = meta_text(value)
+  if text ~= "" then return text end
+  return nil
+end
+
 -- Whether a class sends a caption to the margin. Quarto reads both
 -- margin-caption and caption-margin on a float, but moves the caption of a
 -- captioned image with no id only for margin-caption (Quarto 1.10.19).
@@ -1157,7 +1167,7 @@ local function read_meta(meta)
     is_latex = false
     two_column = true
   end
-  local column = meta_text(meta["fig-column"]) or meta_text(meta.column)
+  local column = meta_column(meta["fig-column"]) or meta_column(meta.column)
   if column then
     local classes = pandoc.List({ "column-" .. column })
     meta_column_context = { float = class_context(classes, true), cell = class_context(classes) }
