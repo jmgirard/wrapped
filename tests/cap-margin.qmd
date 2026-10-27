@@ -105,3 +105,15 @@ plot(1:10)
 ```
 
 The paragraph after the cell with the caption-margin class. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## The margin-caption class on a cell
+
+```{r}
+#| label: fig-margincap-cell
+#| fig-cap: "A cell figure with the margin-caption class."
+#| classes: wrap-right .margin-caption
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+```
+
+The paragraph after the cell with the margin-caption class. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

@@ -14,7 +14,8 @@ format:
 ---
 
 With `fig-column: margin` in the document, Quarto puts each figure float in
-the margin, a cell's float with its own `fig-column: body` included. A
+the margin in HTML, PDF through LaTeX, and PDF through Typst, a cell's
+float with its own `fig-column: body` included. Word has no margin. A
 wrapped float keeps its normal layout with a warning in every format. A
 captioned image with no id is not a float, so it stays in the body and wraps.
 

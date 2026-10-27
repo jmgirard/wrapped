@@ -913,12 +913,13 @@ end
 -- cell with `column: page` carries the column-page class, and one with
 -- `fig-column: page` the fig-column-page class. LaTeX makes a figure
 -- page-wide only for the names that start with column-page or
--- column-screen and do not end in -left, as Quarto's isStarEnv does, and
--- Typst and Word keep the figure in the body.
+-- column-screen and do not end in -left, as Quarto's isStarEnv does. Typst
+-- sets each name wider than the text, in a wideblock or a column function
+-- (Quarto 1.10.19), and Word keeps the figure in the body.
 local function page_context(classes)
   for _, class in ipairs(classes) do
     local name = class:gsub("^fig%-", "")
-    if PAGE_WIDE[name] and (has_page_layout or is_latex and not name:match("%-left$")
+    if PAGE_WIDE[name] and (has_page_layout or is_typst or is_latex and not name:match("%-left$")
         and (name:match("^column%-page") or name:match("^column%-screen"))) then
       return "is page-wide"
     end
@@ -1124,8 +1125,8 @@ local function margin_caption_class(classes, is_float)
   return classes:includes("margin-caption") or (is_float and classes:includes("caption-margin"))
 end
 
--- Where a figure's caption goes, read in Quarto's order: a margin caption
--- class on the float or its image, the figure's own fig-cap-location, its
+-- Where a figure's caption goes: a margin caption class on the float or
+-- its image comes first, then the figure's own fig-cap-location, its
 -- cap-location, then the document's. Quarto has already copied a code
 -- cell's caption location, and its caption-margin class, to the cell's
 -- figure as cap-location.
@@ -1235,7 +1236,10 @@ local function cell_div(div)
   if n > 0 then
     next_token = next_token + 1
     local token = tostring(next_token)
-    carry = { class = c, remaining = n, token = token, several = count_top_floats(div) > 1 }
+    -- Quarto turns a cell's caption-margin class into the cap-location of
+    -- its figure, but not its margin-caption class, so that one is carried.
+    carry = { class = c, remaining = n, token = token, several = count_top_floats(div) > 1,
+      margin_caption = div.classes:includes("margin-caption") }
     if wraps() then div.attributes["data-wrap-anchor"] = token end
   end
   return div
@@ -1279,7 +1283,8 @@ local function float_target(float)
     or class_context(float.classes)
     or (layout and "is a subfigure panel")
     or meta_column_context
-    or (has_page_layout and caption_location(float) == "margin" and "has its caption in the margin")
+    or (has_page_layout and (caption_location(float) == "margin" or (cell and cell.margin_caption))
+      and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
   if context or no_text[custom_id or ""] then

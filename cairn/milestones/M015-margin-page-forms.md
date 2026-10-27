@@ -92,8 +92,8 @@ line is absent. A warning line reads
 - [ ] AC4: In `tests/page-wide-meta.qmd` (document `fig-column: page`), the
       image-form float `fig-meta-page`, the knitr cell `fig-meta-page-cell`,
       and the knitr cell `fig-meta-page-body` (`#| fig-column: body`) keep
-      their normal layout in the HTML and LaTeX snapshots, each with one
-      warning whose reason is `is page-wide`, and wrap in Typst and Word. A
+      their normal layout in the HTML, LaTeX, and Typst snapshots, each with
+      one warning whose reason is `is page-wide`, and wrap in Word. A
       captioned image with no id wraps in all four.
 - [ ] AC5: In the `column-meta` HTML and LaTeX snapshots (document
       `column: page`), the float `fig-col-page`, the knitr cell `fig-col-cell`
@@ -174,6 +174,9 @@ line is absent. A warning line reads
 - 2026-10-27: plan's choice reversed: the document key now reaches every figure float, not only one with no `fig-column-*` class, because Quarto 1.10.19 puts a `fig-column: body` cell's float in the margin or page-wide under a document key (T1 render); falsified by a Quarto release that lets a cell's own `fig-column` win.
 - 2026-10-27: plan-owned body was 154 lines after the amendment; the Acceptance criteria section was rewrapped once, and AC5 lost the redundant file name.
 - 2026-10-27: T4: `python3 tests/verify.py --update` wrote the 4 `cap-margin` and the `revealjs` snapshots and 10 new ones, and no other snapshot changed; each read against AC1 to AC5; the run without `--update` passes all 86 renders. A planted bug (reading `.caption-margin` on a no-id image) turned the no-id warning to `2x` and removed the wrapping `(box)` line in the `cap-margin` HTML render.
+- 2026-10-27: claim audit: 21 claims read, 5 corrected — README.md, wrapped.lua, tests/cap-margin.qmd, tests/margin-meta.qmd, tests/page-wide-meta.qmd, tests/page-wide.qmd. A cell's `.margin-caption` moved the caption but wrapped (fixed: the cell's class is carried to its float, case `fig-margincap-cell` added); the README margin item's sentence order (fixed); margin-meta's "every format" for Quarto's margin (fixed: Word has none); the `caption_location` comment called the attribute order Quarto's (fixed); Typst page-wide figures overlap the text (stop, below).
+- 2026-10-27: substantive amendment: AC4 — the page-wide floats now keep their normal layout in Typst too, and wrap in Word. The user chose this at the stop: Quarto 1.10.19 sets all 16 page-wide classes wider than the text in Typst (`wideblock` or a column function), and a wrapped figure there overlapped the paragraph beside it (claim audit render). `page_context` now covers Typst, which also changes M013's `page-wide` Typst snapshot, the README page-wide item, E21, and DESIGN step 2.
+- 2026-10-27: pre-existing bug found by the claim audit and checked by a render: Quarto 1.10.19 follows `cap-location` over `fig-cap-location`, but `caption_location` and the README read `fig-cap-location` first, so `fig-figcap-first` in `cap-margin` wraps while its caption sits in the margin. Recorded as the candidate row "Read cap-location before fig-cap-location", whose door is `/hotfix`.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

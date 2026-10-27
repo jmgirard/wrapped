@@ -12,9 +12,9 @@ format:
   docx: default
 ---
 
-In HTML, a wrapped figure in a page-wide column keeps its normal layout,
-with a warning. In PDF through LaTeX it does so where Quarto makes the figure
-page-wide. It wraps in PDF through Typst and Word.
+In HTML and PDF through Typst, a wrapped figure in a page-wide column keeps
+its normal layout, with a warning. In PDF through LaTeX it does so where
+Quarto makes the figure page-wide. It wraps in Word.
 
 ## A column-page div
 

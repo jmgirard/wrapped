@@ -148,8 +148,9 @@ passes (corrected M003):
    included), callouts, column layouts, panel layouts, tabsets, asides,
    margin blocks (a `fig-column: margin` cell included), and subfigure
    panels. Some contexts depend on the format: a block quote in LaTeX, a
-   table in LaTeX and Word, and a page-wide column class in HTML, and in
-   LaTeX for the classes Quarto sets page-wide there (`page_context`). It
+   table in LaTeX and Word, and a page-wide column class in HTML and Typst,
+   and in LaTeX for the classes Quarto sets page-wide there
+   (`page_context`) (corrected M015). It
    records each float there by its custom id, and it removes the wrap class
    from a captioned image with no id or an image there, with a warning. In
    HTML, step 4 also keeps a float whose caption goes to the margin in its

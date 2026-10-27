@@ -201,13 +201,14 @@ file or says that the figure has no id.
 
 - The margin: a figure with the `.column-margin` class, a figure in a
   `.column-margin` or `.aside` div, or a code cell with `#| column: margin`
-  or `#| fig-column: margin`. It also covers `fig-column: margin` in the
-  document metadata. That value applies to every figure with a `#fig-` id
-  and every code cell figure, even a cell with `#| fig-column: body`. A
-  captioned image with no id stays in the body and wraps. The figure stays in the margin. In PDF through LaTeX, Quarto puts a
-  captioned image that has the `.column-margin` class and no `#fig-` id
-  in the body instead. Word has no margin column, so there the figure is
-  in the body.
+  or `#| fig-column: margin`. The figure stays in the margin. In PDF
+  through LaTeX, Quarto puts a captioned image that has the
+  `.column-margin` class and no `#fig-` id in the body instead. Word has
+  no margin column, so there the figure is in the body. This item also
+  covers `fig-column: margin` in the document metadata. That value applies
+  to every figure with a `#fig-` id and every code cell figure, even a
+  cell with `#| fig-column: body`. A captioned image with no id stays in
+  the body and wraps.
 - A subfigure panel, such as a figure div with `layout-ncol`, or a
   subfigure inside a panel.
 - A panel layout: a div or a code cell with `layout-ncol`, `layout-nrow`,
@@ -248,8 +249,9 @@ prints the same warning there, and the figure wraps in the other formats.
   it, or a code cell with `#| column: page` or `#| fig-column: page`. The
   classes are `.column-body-outset`, `.column-page-inset`, `.column-page`,
   `.column-screen-inset`, and `.column-screen`, each alone or with `-left`
-  or `-right`, and `.column-screen-inset-shaded`. In HTML this covers all of
-  them. In PDF through LaTeX it covers the classes that Quarto makes
+  or `-right`, and `.column-screen-inset-shaded`. In HTML and in PDF
+  through Typst this covers all of them, and Word keeps the figure in the
+  body, where it wraps. In PDF through LaTeX it covers the classes that Quarto makes
   page-wide there: those that start with `.column-page` or
   `.column-screen` and do not end in `-left`. It also covers a page-wide
   value of `fig-column` or `column` in the document metadata, such as
