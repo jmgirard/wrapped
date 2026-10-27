@@ -99,7 +99,7 @@ not its engine).
       the style of `context_warning` (near line 946), naming the label (the
       float ids less their `-N` ending) or the ids. Leave the subcap path,
       table cells, and one-figure cells as they are.
-- [ ] T3: Run `python3 tests/verify.py --update`, read the snapshot diff
+- [x] T3: Run `python3 tests/verify.py --update`, read the snapshot diff
       (only the new cells' lines may change), and run it again without
       `--update` until it exits 0. Show that the new check can fail: with
       the T2 change undone, the new snapshots must differ.
@@ -125,6 +125,7 @@ not its engine).
 - 2026-10-27: T2 done: a float Div inside a cell carries no type or id in a user filter (dump at pre-quarto), so cell_div counts the cell's top-level floats (count_top_floats) and float_target keeps each Figure of such a cell normal, before clean_images, with one warning at the first figure: "the code cell #<label> makes more than one figure", the label being the float id less its -N ending. Table floats keep the "is not a figure" path; context and next-block paths run first. Scratch renders of contexts.qmd show the five figures with no wrap in all four formats and each cell warning once.
 - 2026-10-27: T4 done (ahead of T3, while the verify run goes): README paragraph after the fallback list, E4 row in references/wrap-mechanisms.md, next-block note in DESIGN.md, each citing what T2's renders showed. The simple-english hook also split the README's first fallback sentence (same meaning); its "would" hit in wrap-mechanisms.md is a quoted Typst error, left as is.
 - 2026-10-27: T3 in progress: verify --update passed 76 renders; the diff adds lines to the four contexts snapshots only, all for the three new cells. With main's wrapped.lua swapped in, all four contexts summaries differ from the new snapshots (the check can fail); filter restored. Final verify run without --update pending.
+- 2026-10-27: T3 done: python3 tests/verify.py without --update: "all 76 renders pass".
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
