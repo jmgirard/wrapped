@@ -119,9 +119,12 @@ A gap that the check can show is such a gap prints a warning, and the
 document default applies. Examples are `calc(-1em)`, `min(-1px, 10%)`, and
 `calc(1px / 0)`. A gap that is zero at every size, such as
 `calc(1em - 1em)`, stays as it is. A gap that can be zero or above, such
-as `calc(1em - 20px)`, prints no warning. A `max()` over two units, such as
-`max(-2px, -1%)`, also prints no warning, because the check cannot show
-that it is below zero.
+as `calc(1em - 20px)`, prints no warning. The check cannot show that a
+`max()` or `clamp()` over two units is below zero. So such a gap, as
+`max(-2px, -1%)` or `clamp(-3px, -2%, -1px)`, also prints no warning. LaTeX,
+Typst, and Word take no function gap, so such a gap prints a warning
+there in any case. For a gap that the check shows is below zero, that
+warning says so.
 
 ```markdown
 ![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-left width="3in" wrap-gap="2em"}
@@ -148,12 +151,12 @@ The keys follow the rules of the attributes. A `width` of zero prints a
 warning, and the built-in 40% applies. A `gap` or `breakpoint` of zero stays
 as it is. A function `gap` that is negative or not finite at every size
 prints a warning, and the built-in `1em` applies. In Word, a `gap` of 0%
-prints a warning, and the built-in `1em` applies. In Word, a `width` plus
-its `gap` as wide as the text or wider prints a warning, and the built-in
-40% applies. With only a `gap` set, the width is already 40%, and 40% plus
-that gap can still leave no room. A `width`, `gap`, or `breakpoint` can be
-a `calc()`, `min()`, `max()`, or `clamp()` value, checked as above. A media query takes no
-percent and no `var()`. So a `breakpoint` with a percent or a `var()`, such
+prints a warning, and the built-in `1em` applies. In Word, a `width` that
+with the `gap` is as wide as the text or wider prints a warning, and the
+built-in 40% applies. With only a `gap` set, the width is already 40%, and
+40% plus that gap can leave no room with no warning. A `width`, `gap`, or
+`breakpoint` can be a `calc()`, `min()`, `max()`, or `clamp()` value,
+checked as above. A media query takes no percent and no `var()`. So a `breakpoint` with a percent or a `var()`, such
 as `calc(50%)`, prints a warning, and `576px` applies.
 
 Quarto reads the YAML values as Markdown. In a function value, put a space
@@ -379,7 +382,9 @@ The `width` and `wrap-gap` values change to Word lengths:
   `px`. An `em` is 12 pt.
 - Any other unit, such as `ex`, `vw`, or `rem`, a `calc()`, `min()`,
   `max()`, or `clamp()` value, a width of zero, and a gap of 0% print a
-  warning, and the document default applies.
+  warning, and the document default applies. A figure can set its own gap
+  with which the document default leaves no room, as in the next items.
+  Then the width takes 40% instead.
 - A width or gap as wide as the text or wider, such as `100%` or `10in`,
   leaves no room for the text. It prints a warning, and the document
   default applies. In the cases that the next item names, a width takes
@@ -392,9 +397,11 @@ The `width` and `wrap-gap` values change to Word lengths:
   that wide too, the figure takes 40% and keeps the gap. This is so even
   when its own width was narrower than 40%. The extension rounds
   each value to twips (1/20 pt) before it adds them.
-- A `wrapped:` width plus gap that is as wide as the text or wider prints
-  one warning, and the document default width becomes 40%. A figure that
-  sets neither its own width nor its own gap prints no warning of its own.
+- A `wrapped:` width that with the gap is as wide as the text or wider
+  prints one warning, and the document default width becomes 40%. A
+  `wrapped:` width that already printed its own warning prints no second
+  one. A figure that sets neither its own width nor its own gap prints no
+  warning of its own.
 
 The text width is the page width less the left and right margins and the
 gutter. A reference doc with more than one column keeps normal figures,

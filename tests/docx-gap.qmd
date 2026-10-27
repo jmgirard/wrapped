@@ -51,3 +51,21 @@ The gap rounds to 720 twips, so the sum is the text width. The figure takes the 
 ![A figure 10 in wide with a 3 in gap.](plot.png){#fig-wide .wrap-right width="10in" wrap-gap="3in"}
 
 The figure takes 40%, with one warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A narrow width with a gap that fills the text
+
+![A figure 0.5 in wide with a 6 in gap.](plot.png){#fig-narrow .wrap-left width="0.5in" wrap-gap="6in"}
+
+No width fits with the gap, so the figure takes 40% and keeps the gap, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A width that is not a length, with a gap
+
+![A figure with a width that is not a length and a 3 in gap.](plot.png){#fig-bad-width .wrap-right width="wide" wrap-gap="3in"}
+
+The document default with the gap fills the text, so the figure takes 40%, with one warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A function gap below zero
+
+![A figure with a gap of `calc(-1em)`.](plot.png){#fig-negative-gap .wrap-left wrap-gap="calc(-1em)"}
+
+The gap takes the default, with a warning, and the figure keeps the document default width. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

@@ -711,20 +711,23 @@ local function checked_docx_twips(value, fallback, what, where, positive, gap)
 end
 
 -- A frame's side, width, and gap in twips, as "right 3744 240", and its
--- width. A figure that sets its own width or gap, and whose width plus gap
--- is as wide as the text or wider, takes the first of the document default
--- and 40% that with the gap is narrower than the text, or 40% when neither
--- is, with a warning, as Typst does. Each value is rounded to twips before
--- the sum. A figure with neither was checked with the metadata, which can
--- leave 40% plus the gap still as wide as the text.
+-- width. A figure that sets its own width or a gap that Word can use, and
+-- whose width plus gap is as wide as the text or wider, takes the first of
+-- the document default and 40% that with the gap is narrower than the
+-- text, or 40% when neither is, with a warning. Typst picks its width in
+-- the same order. A width that Word cannot use takes that same width. Each
+-- value is rounded to twips before the sum. A figure with neither was
+-- checked with the metadata, which can leave 40% plus the gap still as
+-- wide as the text.
 local function docx_frame(class, width, gap, where)
   local g, g_fell = checked_docx_twips(gap, options.gap, "wrap-gap", where)
-  local g_length = (gap == nil or g_fell) and options.gap or css_length(gap)
+  local own_gap = gap ~= nil and not g_fell
+  local g_length = own_gap and css_length(gap) or options.gap
   local fallback = DEFAULTS.width
   if docx_twips(options.width, true) + g < docx_text_width then fallback = options.width end
   local asked = width or options.width
-  local w, fell = checked_docx_twips(asked, fallback, "width", where, true, gap ~= nil and g_length)
-  if not fell and (width ~= nil or gap ~= nil) and w + g >= docx_text_width then
+  local w, fell = checked_docx_twips(asked, fallback, "width", where, true, own_gap and g_length)
+  if not fell and (width ~= nil or own_gap) and w + g >= docx_text_width then
     quarto.log.warning(string.format(
       'wrapped: width "%s" and wrap-gap "%s" on %s leave no room for text in Word, so the width is %s.',
       css_length(asked), g_length, where, fallback))
@@ -1070,12 +1073,15 @@ local function read_meta(meta)
       options.width = DEFAULTS.width
     end
   elseif is_docx then
+    local asked = m.width ~= nil and css_length(meta_text(m.width))
     format_default("width", "width", function(l) return docx_twips(l, true) end, "Word")
     format_default("gap", "gap", docx_twips, "Word")
-    -- A width and gap as wide as the text or wider leave no room for text,
-    -- so the document default becomes 40%. Each figure with its own width
-    -- or gap is checked again in docx_frame.
-    if (m.width ~= nil or m.gap ~= nil)
+    -- A metadata width that with the gap is as wide as the text or wider
+    -- leaves no room for text, so the document default becomes 40%, as in
+    -- Typst. A width that already gave way, with its own warning, is not
+    -- checked again. Each figure with its own width or gap is checked again
+    -- in docx_frame.
+    if asked and asked == options.width
         and docx_twips(options.width, true) + docx_twips(options.gap) >= docx_text_width then
       quarto.log.warning(string.format(
         'wrapped: width "%s" and gap "%s" in the wrapped metadata leave no room for text in Word, so the width is %s.',

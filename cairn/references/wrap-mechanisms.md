@@ -111,7 +111,7 @@ Paragraph two.
 ]))
 ```
 
-Word frame (W4), on the image paragraph and the caption paragraph (corrected M012). `w:hSpace` holds the gap. The frame sits at the margin. The text beside it has the text width less the frame width and the gap. If the frame width plus the gap fills the text width, the filter warns. The frame then takes the document default or 40%, the first that leaves room, else 40%:
+Word frame (W4), on the image paragraph and the caption paragraph (corrected M012). `w:hSpace` holds the gap. The frame sits at the margin. The text beside it has the text width less the frame width and the gap. If a figure sets its own width or gap, and the frame width plus the gap fills the text width, the filter warns. The frame then takes the document default or 40%, the first that leaves room, else 40%:
 
 ```xml
 <w:framePr w:w="<twips>" w:wrap="around" w:hSpace="<twips>" w:vAnchor="text" w:hAnchor="margin" w:xAlign="right"/>

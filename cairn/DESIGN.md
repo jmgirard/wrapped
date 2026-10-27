@@ -73,7 +73,7 @@ filter carries it to the figure (`references/wrap-mechanisms.md`, S1; D-001).
 |---|---|---|---|
 | `.wrap-left`, `.wrap-right` | class | none | Turns wrapping on and picks the side. |
 | `width` | percent of text width, or an absolute length | `40%` | Width of the figure box, caption included. |
-| `wrap-gap` | length | `1em` | Space between the figure and the text. |
+| `wrap-gap` | length | `1em` | Space between the figure and the text. A gap below zero takes the default with a warning (corrected M012). |
 | `wrap-lines` | integer | auto | LaTeX only. The most narrowed lines; a stop block ends the wrap earlier (changed M007, D-007). |
 
 Document or project defaults go under one metadata key:
@@ -180,8 +180,10 @@ passes (corrected M003):
    the document default and 40% that with the gap is narrower, else 40%,
    with a warning: in `docx_frame` for a figure that sets its own width or
    gap, and in `read_meta` for the `wrapped` metadata (corrected M012).
-   In HTML a function gap that is below zero or not finite at every size
-   takes the default gap with a warning (corrected M012).
+   A function gap that is below zero or not finite at every size takes the
+   default gap with a warning that says so. The check is in
+   `checked_length`, so it runs in every format, but only HTML takes a
+   function gap; elsewhere such a gap warns in any case (corrected M012).
 6. It warns for a wrap class on an image or a div that it cannot place.
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
    wraps. In LaTeX it adds wrapfig and `wrapped.tex`, which defines
@@ -240,7 +242,11 @@ snapshot difference. The mechanism for each other format is in
   keeps one term's limit for `min()` and `max()`, reads each relative unit
   as unrelated to the others, and adds in floating point. The README says
   the check warns only where it can show the result (M011).
-- HTML: a `max()` gap over two units whose terms are all below zero, such
-  as `max(-2px, -1%)`, prints no warning. The check reads such a `max()`
-  as zero or below, not as below zero, and a gap of zero stays. The README
-  states this limit (M012).
+- HTML: a `max()` or `clamp()` gap over two units whose terms are all
+  below zero, such as `max(-2px, -1%)` or `clamp(-3px, -2%, -1px)`, prints
+  no warning. The check reads such a value as zero or below, not as below
+  zero, and a gap of zero stays. The README states this limit (M012).
+- Word: with only a `wrapped:` gap set, 40% plus that gap can be as wide
+  as the text, and a figure that sets neither its own width nor its own
+  gap then has no room for text, with no warning. The README states this
+  limit (M012).
