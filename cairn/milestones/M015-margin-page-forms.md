@@ -69,7 +69,7 @@ line is absent. A warning line reads
 `1x wrapped: the figure #<id> <reason>, so it does not wrap.`, or
 `1x wrapped: a figure with no id <reason>, so it does not wrap.`
 
-- [ ] AC1: In the `cap-margin` HTML snapshot, five figures added to
+- [x] AC1: In the `cap-margin` HTML snapshot, five figures added to
       `tests/cap-margin.qmd` keep their normal layout, each with one warning
       whose reason is `has its caption in the margin`: `fig-margincap-class`
       (image form, `.margin-caption`), `fig-capmargin-class` (image form,
@@ -78,29 +78,29 @@ line is absent. A warning line reads
       knitr cell `fig-capclass-cell` (`#| classes: wrap-right .caption-margin`).
       A no-id image with `.caption-margin` (`wrap-left`, `width="30%"`) wraps,
       and the warning line for a figure with no id reads `1x`.
-- [ ] AC2: The six figures AC1 names wrap in the `cap-margin` LaTeX, Typst, and
+- [x] AC2: The six figures AC1 names wrap in the `cap-margin` LaTeX, Typst, and
       Word snapshots, whose `# warnings` blocks stay empty. The figure
       `fig-slide-margincap` (`.margin-caption`) added to `tests/revealjs.qmd`
       wraps, and the `revealjs` `# warnings` block stays empty.
-- [ ] AC3: In `tests/margin-meta.qmd` (document `fig-column: margin`), the
+- [x] AC3: In `tests/margin-meta.qmd` (document `fig-column: margin`), the
       image-form float `fig-meta-margin`, the div-form float
       `fig-meta-margin-div`, the knitr cell `fig-meta-margin-cell`, and the
       knitr cell `fig-meta-body-cell` (`#| fig-column: body`) keep their normal
       layout in the HTML, LaTeX, Typst, and Word snapshots, each with one
       warning whose reason is `is in the margin`. A captioned image with no id
       wraps in all four.
-- [ ] AC4: In `tests/page-wide-meta.qmd` (document `fig-column: page`), the
+- [x] AC4: In `tests/page-wide-meta.qmd` (document `fig-column: page`), the
       image-form float `fig-meta-page`, the knitr cell `fig-meta-page-cell`,
       and the knitr cell `fig-meta-page-body` (`#| fig-column: body`) keep
       their normal layout in the HTML, LaTeX, and Typst snapshots, each with
       one warning whose reason is `is page-wide`, and wrap in Word. A
       captioned image with no id wraps in all four.
-- [ ] AC5: In the `column-meta` HTML and LaTeX snapshots (document
+- [x] AC5: In the `column-meta` HTML and LaTeX snapshots (document
       `column: page`), the float `fig-col-page`, the knitr cell `fig-col-cell`
       (no column option), and the knitr cell `fig-col-body-cell`
       (`#| fig-column: body`) keep their normal layout, each with one warning
       whose reason is `is page-wide`. A no-id captioned image wraps in both.
-- [ ] AC6: The README section "Where a figure keeps its normal layout" names
+- [x] AC6: The README section "Where a figure keeps its normal layout" names
       the two caption classes in the margin-caption item, the document
       `fig-column` key in the margin and page-wide items, and the document
       `column` key in the page-wide item, each with the formats AC1 to AC5
@@ -185,3 +185,13 @@ line is absent. A warning line reads
 
 ## Review
 <!-- owner: review · exclusive. -->
+
+Evidence read 2026-10-27 at 3e97223 from the committed snapshots by a Python check of each criterion's lines, with a negative control (`fig-figcap-first`, which wraps, fails the normal-layout test).
+
+- AC1: `cap-margin.html.txt` — `fig-margincap-class`, `fig-capmargin-class`, `fig-margincap-div`, `fig-capclass-cell` each read `<id>: - style=-` with no `# groups` line and one `has its caption in the margin` warning; the no-id warning line reads `1x`; the one `(box)` line is `wrap-left` at 30%, and no `wrap-right` box exists. Pass.
+- AC2: `cap-margin` LaTeX, Typst, and Word snapshots — the four ids each have a `wrappedfigure:` line, a `# wraps` box field, and a `# frames` bookmark field; the two no-id images show as `wrappedfigure: -` with `side=right,width=0.4` and `side=left,width=0.3` (no `caption=false`), Typst boxes `plot.png` right and left 30%, and Word frames `-` at `right w=3744` and `left w=2808`; all three `# warnings` blocks are empty. `revealjs.revealjs.txt` shows `fig-slide-margincap: wrap-right` and an empty `# warnings` block. Pass.
+- AC3: `margin-meta` HTML, LaTeX, Typst, and Word snapshots — `fig-meta-margin`, `fig-meta-margin-div`, `fig-meta-margin-cell`, `fig-meta-body-cell` each have one `is in the margin` warning in all four, read `- style=-` in HTML with no group, and have no wrap line in LaTeX, Typst, or Word; the no-id image wraps in all four (`(box)`, `wrappedfigure: -`, box `plot.png`, frame `-`). Pass.
+- AC4: `page-wide-meta` snapshots — `fig-meta-page`, `fig-meta-page-cell`, `fig-meta-page-body` each have one `is page-wide` warning in HTML, LaTeX, and Typst, read `- style=-` in HTML with no group, and have no LaTeX or Typst wrap line; all three have Word frames and the Word `# warnings` block is empty; the no-id image wraps in all four. Pass.
+- AC5: `column-meta` HTML and LaTeX snapshots — `fig-col-page`, `fig-col-cell`, `fig-col-body-cell` each have one `is page-wide` warning in both, read `- style=-` in HTML with no group, and have no `wrappedfigure:` line; the no-id image wraps in both. Pass.
+- AC6: README "Where a figure keeps its normal layout" — the margin item (in the four-format list) covers document `fig-column: margin`; the margin-caption item (HTML) names `.margin-caption` and `.caption-margin`; the page-wide item names document `fig-column` and `column` with HTML, LaTeX, and Typst rules and Word wrapping, as AC1 to AC5 test. Pass.
+- Gate (partial, 2026-10-27): `cairn_validate.py` all checks passed; the one version marker (`_extension.yml` `version: 0.1.0`) is unchanged; no IP/GP changed, so no impact report. The verify run on the review head and the four-lens review are in progress at this checkpoint.
