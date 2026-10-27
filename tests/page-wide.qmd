@@ -1,0 +1,79 @@
+---
+title: "wrapped fixture: page-wide columns"
+filters:
+  - wrapped
+format:
+  html: default
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
+  docx: default
+---
+
+In HTML, a wrapped figure in a page-wide column keeps its normal layout,
+with a warning. In PDF through LaTeX it does so where Quarto makes the figure
+page-wide. It wraps in PDF through Typst and Word.
+
+## A column-page div
+
+::: {.column-page}
+![A figure in a column-page div.](plot.png){#fig-page-div .wrap-right}
+
+The paragraph after the figure in the column-page div. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+
+## A column-page-left div
+
+::: {.column-page-left}
+![A figure in a column-page-left div.](plot.png){#fig-page-left .wrap-right}
+
+The paragraph after the figure in the column-page-left div. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+
+## A column-body-outset div
+
+::: {.column-body-outset}
+![A figure in a column-body-outset div.](plot.png){#fig-outset .wrap-right}
+
+The paragraph after the figure in the column-body-outset div. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+
+## A figure with its own column-page class
+
+![A figure with its own column-page class.](plot.png){#fig-own-page .wrap-right .column-page}
+
+The paragraph after the figure with its own column-page class. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## An image with its own column-page class
+
+![](plot.png){.wrap-left .column-page width="30%"}
+
+The paragraph after the image with its own column-page class, which wraps in every format, because Quarto makes only floats and divs page-wide. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A fig-column page cell
+
+```{r}
+#| label: fig-page-cell
+#| fig-cap: "A fig-column page cell figure."
+#| fig-column: page
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+```
+
+The paragraph after the fig-column page cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A column page cell
+
+```{r}
+#| label: fig-column-cell
+#| fig-cap: "A column page cell figure."
+#| column: page
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+```
+
+The paragraph after the column page cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit.

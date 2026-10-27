@@ -1,0 +1,21 @@
+# warnings
+1x wrapped: the figure #fig-cap-attr has its caption in the margin, so it does not wrap.
+1x wrapped: the figure #fig-cap-cell has its caption in the margin, so it does not wrap.
+1x wrapped: the figure #fig-figcap-attr has its caption in the margin, so it does not wrap.
+1x wrapped: the figure #fig-figcap-cell has its caption in the margin, so it does not wrap.
+# breakpoint
+576px
+# figures
+fig-cap-attr: - style=-
+fig-figcap-attr: - style=-
+fig-figcap-first: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-cap-cell: - style=-
+fig-figcap-cell: - style=-
+# images
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+fig-cap-cell-1.png: wrap=- style=- width=672
+fig-figcap-cell-1.png: wrap=- style=- width=672
+# groups
+fig-figcap-first, p

@@ -4,6 +4,8 @@
 1x wrapped: the figure #fig-aside is in an aside, so it does not wrap.
 1x wrapped: the figure #fig-callout is in a callout, so it does not wrap.
 1x wrapped: the figure #fig-column is in a column layout, so it does not wrap.
+1x wrapped: the figure #fig-deflist is in a list, so it does not wrap.
+1x wrapped: the figure #fig-figcol-margin is in the margin, so it does not wrap.
 1x wrapped: the figure #fig-layout-cell is in a panel layout, so it does not wrap.
 1x wrapped: the figure #fig-list is in a list, so it does not wrap.
 1x wrapped: the figure #fig-margin is in the margin, so it does not wrap.
@@ -11,6 +13,7 @@
 1x wrapped: the figure #fig-panel is a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-sub-wrapped is in a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-tab is in a tabset, so it does not wrap.
+1x wrapped: the image deflist.png is in a list, so it does not wrap.
 1x wrapped: the image plot.png is in a list, so it does not wrap.
 1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
 # breakpoint
@@ -28,6 +31,9 @@ fig-sub-plain: - style=-
 fig-layout-cell: - style=-
 tbl-wrapped: - style=-
 fig-list: - style=-
+fig-deflist: - style=-
+fig-quote: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-figcol-margin: - style=-
 fig-callout: - style=-
 fig-column: - style=-
 fig-tab: - style=-
@@ -47,6 +53,10 @@ plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=width:20.0% width=-
 plot.png: wrap=- style=- width=-
+deflist.png: wrap=- style=width:20.0% width=-
+plot.png: wrap=- style=- width=-
+fig-figcol-margin-1.png: wrap=- style=- width=672
+plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
@@ -56,6 +66,7 @@ plot.png: wrap=- style=width:20.0% width=-
 plot.png: wrap=- style=width:30.0% width=-
 plot.png: wrap=- style=- width=-
 # groups
+fig-quote, p
 fig-second, p, p
 # margin containers
 fig-margin: same as without the extension: no-row-height column-margin column-container

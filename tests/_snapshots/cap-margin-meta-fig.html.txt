@@ -1,0 +1,9 @@
+# warnings
+1x wrapped: the figure #fig-meta-figcap has its caption in the margin, so it does not wrap.
+# breakpoint
+(none)
+# figures
+fig-meta-figcap: - style=-
+# images
+plot.png: wrap=- style=- width=-
+# groups

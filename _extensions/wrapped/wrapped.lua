@@ -33,6 +33,9 @@ local options = {
 }
 
 local is_html = quarto.doc.is_format("html:js")
+-- An HTML page with Quarto's page layout. revealjs slides have no margin
+-- captions and no page-wide columns.
+local has_page_layout = is_html and not quarto.doc.is_format("revealjs")
 -- PDF through LaTeX. Beamer is a separate format and keeps a normal figure.
 -- The first pass sets is_latex to false for a two-column document.
 local is_latex = FORMAT == "latex"
@@ -482,7 +485,7 @@ local function tex_length(length)
   if not num then return nil end
   if unit == "%" then return tex_number(tonumber(num) / 100) .. "\\linewidth" end
   unit = unit:lower()
-  if unit == "px" then return tex_number(tonumber(num) * 0.75) .. "pt" end
+  if unit == "px" then return tex_number((tonumber(num) + 0.0) * 0.75) .. "pt" end
   if TEX_UNITS[unit] then return num .. unit end
   return nil
 end
@@ -512,8 +515,9 @@ local function typst_length(length)
   if not num then return nil end
   if unit == "%" then return num .. "%" end
   unit = unit:lower()
-  if unit == "px" then return tex_number(tonumber(num) * 0.75) .. "pt" end
-  if unit == "pc" then return tex_number(tonumber(num) * 12) .. "pt" end
+  -- A float, so a large number does not wrap around as an integer.
+  if unit == "px" then return tex_number((tonumber(num) + 0.0) * 0.75) .. "pt" end
+  if unit == "pc" then return tex_number((tonumber(num) + 0.0) * 12) .. "pt" end
   if TYPST_UNITS[unit] then return num .. unit end
   return nil
 end
@@ -543,7 +547,7 @@ end
 local function typst_fills(width, gap)
   local w = width:match("^(%d*%.?%d+)%%$")
   local g = gap:match("^(%d*%.?%d+)%%$")
-  return w ~= nil and g ~= nil and tonumber(w) + tonumber(g) >= 100
+  return w ~= nil and g ~= nil and (tonumber(w) + 0.0) + (tonumber(g) + 0.0) >= 100
 end
 
 -- The opening of a wrap-content call, which takes the figure box as its
@@ -667,7 +671,8 @@ end
 local function docx_measure(length, positive)
   local num, unit = length:match("^(%d*%.?%d+)(%a*%%?)$")
   if not num then return nil end
-  local n = tonumber(num)
+  -- A float, so a large number does not wrap around as an integer.
+  local n = tonumber(num) + 0.0
   local twips
   if unit == "%" then
     if n >= 100 then return nil, "wide" end
@@ -868,17 +873,58 @@ local no_text = {}
 -- normal layout and a warning.
 local context_of_float = {}
 
--- Returns the context that a margin class names, or nil.
+-- Returns the context that a margin class names, or nil. A code cell with
+-- `fig-column: margin` carries the fig-column-margin class.
 local function margin_context(classes)
-  if classes:includes("column-margin") then return "is in the margin" end
+  if classes:includes("column-margin") or classes:includes("fig-column-margin") then
+    return "is in the margin"
+  end
   if classes:includes("aside") then return "is in an aside" end
   return nil
+end
+
+-- Quarto's page-wide column classes. An HTML page sets each one wider than
+-- the body text, where a wrapped figure does not float.
+local PAGE_WIDE = { ["column-screen-inset-shaded"] = true }
+for _, name in ipairs({ "column-body-outset", "column-page-inset", "column-page",
+    "column-screen-inset", "column-screen" }) do
+  PAGE_WIDE[name], PAGE_WIDE[name .. "-left"], PAGE_WIDE[name .. "-right"] = true, true, true
+end
+
+-- Returns the context that a page-wide column class names, or nil. A code
+-- cell with `column: page` carries the column-page class, and one with
+-- `fig-column: page` the fig-column-page class. LaTeX makes a figure
+-- page-wide only for the names that start with column-page or
+-- column-screen and do not end in -left, as Quarto's isStarEnv does, and
+-- Typst and Word keep the figure in the body.
+local function page_context(classes)
+  for _, class in ipairs(classes) do
+    local name = class:gsub("^fig%-", "")
+    if PAGE_WIDE[name] and (has_page_layout or is_latex and not name:match("%-left$")
+        and (name:match("^column%-page") or name:match("^column%-screen"))) then
+      return "is page-wide"
+    end
+  end
+  return nil
+end
+
+-- Returns the context that a margin or page-wide column class names, or nil.
+local function class_context(classes)
+  return margin_context(classes) or page_context(classes)
 end
 
 -- Returns the context that a block sets for the blocks inside it, or nil.
 -- A code cell with `column: margin` carries the column-margin class.
 local function block_context(block)
-  if block.t == "BulletList" or block.t == "OrderedList" then return "is in a list" end
+  if block.t == "BulletList" or block.t == "OrderedList" or block.t == "DefinitionList" then
+    return "is in a list"
+  end
+  -- wrapfig does not wrap in a block quote, which LaTeX sets as a list.
+  if block.t == "BlockQuote" then return is_latex and "is in a block quote" or nil end
+  -- A Word frame in a table cell rendered with no text beside it in a
+  -- LibreOffice render of the docx, and a wrappedfigure in a LaTeX
+  -- longtable breaks the build.
+  if block.t == "Table" then return (is_latex or is_docx) and "is in a table" or nil end
   if block.t ~= "Div" then return nil end
   local kind = block.attributes.__quarto_custom_type
   if kind == "Callout" then return "is in a callout" end
@@ -892,7 +938,7 @@ local function block_context(block)
   if attrs["layout-ncol"] or attrs["layout-nrow"] or attrs.layout then
     return "is in a panel layout"
   end
-  return margin_context(block.classes)
+  return class_context(block.classes)
 end
 
 -- A context warning, printed in a format that wraps. Other formats print
@@ -945,11 +991,12 @@ local function mark_context(blocks, context)
 end
 
 -- Finds the lists, callouts, column layouts, panel layouts, tabsets,
--- asides, margin blocks, and subfigure panels, outermost first, and marks
+-- asides, margin blocks, page-wide columns, subfigure panels, and the block
+-- quotes and tables of the formats that cannot wrap there, outermost first, and marks
 -- what is inside each one. A float that holds other floats is a subfigure
 -- panel. A captioned image with no id, or an image, with its own margin
--- class is in the margin too. A float's own margin class is read in the
--- float pass.
+-- class is in the margin too. Quarto makes only floats and divs page-wide,
+-- so a float's own margin or page-wide class is read in the float pass.
 local function find_contexts(doc)
   local function mark(block)
     if block.t == "Div" and is_float_div(block) then
@@ -968,10 +1015,15 @@ local function find_contexts(doc)
     if not context then return nil end
     if block.t == "Div" then
       block.content = mark_context(block.content, context)
-    else
+    elseif block.t == "BulletList" or block.t == "OrderedList" then
       for i, item in ipairs(block.content) do
         block.content[i] = mark_context(item, context)
       end
+    else
+      -- A definition list's items hold a term and a list of definitions,
+      -- and a table's cells sit in its head, bodies, and foot, so the walk
+      -- marks the whole block.
+      block = mark_context(pandoc.Blocks({ block }), context)[1]
     end
     return block, false
   end
@@ -988,6 +1040,9 @@ local function find_contexts(doc)
     Div = mark,
     BulletList = mark,
     OrderedList = mark,
+    DefinitionList = mark,
+    BlockQuote = mark,
+    Table = mark,
     Figure = own_margin,
     Image = function(img)
       local context = margin_context(img.classes)
@@ -1035,7 +1090,19 @@ local function meta_text(value)
   return (pandoc.utils.stringify(value):gsub("\u{2013}", "--"))
 end
 
+-- The document's caption location for figures, read in the first pass.
+local meta_cap_location = nil
+
+-- Where a figure's caption goes, read in Quarto's order: the figure's own
+-- fig-cap-location, its cap-location, then the document's. Quarto has
+-- already copied a code cell's caption location to the cell's figure.
+local function caption_location(float)
+  return float.attributes["fig-cap-location"] or float.attributes["cap-location"]
+    or meta_cap_location
+end
+
 local function read_meta(meta)
+  meta_cap_location = meta_text(meta["fig-cap-location"]) or meta_text(meta["cap-location"])
   if is_docx then
     docx_text_width, docx_columns = read_docx_text_width()
     if docx_columns then is_docx = false end
@@ -1147,15 +1214,18 @@ local function float_target(float)
   strip_wrap(float.classes)
   -- Only figures wrap. A table float keeps its normal layout, and Quarto
   -- copies a cell's classes onto a table float, so the wrap class goes.
-  -- A figure in a context keeps its normal layout too.
+  -- A figure in a context keeps its normal layout too, and so does an HTML
+  -- figure whose caption goes to the margin: CSS places the caption in the
+  -- margin, outside the figure's box, and no text sits beside the figure.
   local node = float.__quarto_custom_node
   local custom_id = node and node.attributes and node.attributes.__quarto_custom_id
   local layout = float.attributes["layout-ncol"] or float.attributes["layout-nrow"]
     or float.attributes.layout
   local context = (float.type ~= "Figure" and "is not a figure")
     or context_of_float[custom_id or ""]
-    or margin_context(float.classes)
+    or class_context(float.classes)
     or (layout and "is a subfigure panel")
+    or (has_page_layout and caption_location(float) == "margin" and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
   if context or no_text[custom_id or ""] then
@@ -1218,6 +1288,24 @@ local function figure_block(fig)
   if not class then return nil end
   found_wrap = true
   strip_wrap(fig.classes)
+  local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
+  -- As for a float, a caption in the margin of an HTML page leaves no text
+  -- beside the figure. The image may carry the caption location instead of
+  -- the figure.
+  if has_page_layout then
+    local loc = caption_location(fig)
+    fig.content:walk({
+      Image = function(img)
+        loc = img.attributes["fig-cap-location"] or img.attributes["cap-location"] or loc
+      end,
+    })
+    if loc == "margin" then
+      fig.content = fig.content:walk({ Image = drop_wrap })
+      context_warning(where == "a figure with no id" and where or ("the figure " .. where),
+        "has its caption in the margin")
+      return fig, false
+    end
+  end
   fig.content = clean_images(fig.content)
   if not wraps() then return fig end
   local width = fig.attributes.width or img_width
@@ -1226,7 +1314,6 @@ local function figure_block(fig)
   fig.attributes.width = nil
   fig.attributes["wrap-gap"] = nil
   fig.attributes["wrap-lines"] = nil
-  local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
   placed = true
   if is_latex then
     fig.attributes["fig-env"] = "wrappedfigure"

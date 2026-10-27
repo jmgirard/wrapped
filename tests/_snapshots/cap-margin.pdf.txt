@@ -1,0 +1,12 @@
+# warnings
+# tex
+wrappedfigure: fig-cap-attr [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-figcap-attr [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-figcap-first [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-cap-cell [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-figcap-cell [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

@@ -89,6 +89,7 @@ RENDERS = [
     ("docx-gap", "docx", True),
     ("docx-gap-meta", "docx", True),
     ("docx-gap-meta-wide", "docx", True),
+    ("docx-overflow", "docx", True),
     ("meta-breakpoint", "html", True),
     ("meta-string", "html", True),
     ("meta-calc-bad", "html", True),
@@ -101,6 +102,20 @@ RENDERS = [
     ("contexts", "pdf", True),
     ("contexts", "typst", True),
     ("contexts", "docx", True),
+    ("table-cell", "html", True),
+    ("table-cell", "typst", True),
+    ("table-cell", "docx", True),
+    ("table-cell-image", "pdf", True),
+    ("cap-margin", "html", True),
+    ("cap-margin", "pdf", True),
+    ("cap-margin", "typst", True),
+    ("cap-margin", "docx", True),
+    ("cap-margin-meta", "html", True),
+    ("cap-margin-meta-fig", "html", True),
+    ("page-wide", "html", True),
+    ("page-wide", "pdf", True),
+    ("page-wide", "typst", True),
+    ("page-wide", "docx", True),
     ("stop-rule", "pdf", True),
     ("stop-rule", "typst", True),
     ("stop-rule", "docx", True),
@@ -123,6 +138,7 @@ RENDERS = [
     ("typst-gap-meta", "typst", True),
     ("typst-gap-percent", "typst", True),
     ("typst-gap-default", "typst", True),
+    ("typst-overflow", "typst", True),
     ("zero-meta", "html", True),
     ("zero-meta", "pdf", True),
     ("zero-meta", "typst", True),
@@ -860,9 +876,13 @@ def log_check(fixture):
     return []
 
 
-TYPST_WRAP_START = re.compile(r"^#layout\(wrapped-size => wrap-content\(", re.M)
+# A call in a table cell is indented and opens the cell's `[`, so its lines
+# carry the indent of its first line, and its last line closes the cell
+# with `],`.
+TYPST_WRAP_START = re.compile(r"^[ \t]*\[?#layout\(wrapped-size => wrap-content\(", re.M)
 TYPST_WRAP = re.compile(
-    r"^#layout\(wrapped-size => wrap-content\(([^\n]*), box\(width: 100%\)\[\n(.*?)^\], \[\n(.*?)^\]\)\)$",
+    r"^(?P<indent>[ \t]*)\[?#layout\(wrapped-size => wrap-content\(([^\n]*), box\(width: 100%\)\[\n"
+    r"(.*?)^(?P=indent)\], \[\n(.*?)^(?P=indent)\]\)\)[\],]*$",
     re.M | re.S,
 )
 # Typst calls that Pandoc and Quarto write as blocks. Any other text, inline
@@ -888,14 +908,15 @@ def typ_block_kind(block):
 
 
 def typ_summary(path):
-    # A body figure's #figure( call starts a line, unlike the one in Quarto's
-    # template. Each chunk runs to the next call, and the figure's label is
-    # the first one in it. The figure's content ends before its `kind:` line.
+    # A body figure's #figure( call starts a line, or follows the indent of
+    # a table cell, unlike the `[#figure(` in Quarto's template. Each chunk
+    # runs to the next call, and the figure's label is the first one in it.
+    # The figure's content ends before its `kind:` line.
     source = path.read_text(encoding="utf-8")
-    chunks = re.split(r"^#figure\(", source, flags=re.M)[1:]
+    chunks = re.split(r"^[ \t]*#figure\(", source, flags=re.M)[1:]
     lines = []
     for chunk in chunks:
-        label = re.search(r"^<((?:fig|tbl)-[\w-]+)>", chunk, re.M)
+        label = re.search(r"^[ \t]*<((?:fig|tbl)-[\w-]+)>", chunk, re.M)
         content = chunk.split("\nkind: ", 1)[0]
         width = re.search(r"image\([^)]*width:", content) is not None
         lines.append(f"figure: {label.group(1) if label else '-'} image-width={'yes' if width else 'no'}")
@@ -905,8 +926,8 @@ def typ_summary(path):
     # citations follows. A call that the pattern cannot read is counted.
     lines.append("# wraps")
     calls = TYPST_WRAP.findall(source)
-    for options, fixed, body in calls:
-        label = re.search(r"^<((?:fig|tbl)-[\w-]+)>", fixed, re.M)
+    for _, options, fixed, body in calls:
+        label = re.search(r"^[ \t]*<((?:fig|tbl)-[\w-]+)>", fixed, re.M)
         image = re.search(r'image\("([^"]*)"', fixed)
         box = label.group(1) if label else Path(image.group(1)).name if image else "-"
         alt_text = re.search(r'image\([^)]*alt: "([^"]*)"', fixed)

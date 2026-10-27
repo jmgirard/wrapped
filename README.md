@@ -191,14 +191,14 @@ in HTML, and a `wrap-clear` div works.
 ## Where a figure keeps its normal layout
 
 In HTML, in PDF through LaTeX, in PDF through Typst, and in Word, a wrapped
-figure in one of these places does not wrap. It keeps
+figure in one of the places in this first list does not wrap. It keeps
 its normal layout, and the render prints one warning for it. The warning
 names the figure's id. If the figure has no id, the warning names its image
 file or says that the figure has no id.
 
 - The margin: a figure with the `.column-margin` class, a figure in a
-  `.column-margin` or `.aside` div, or a code cell with `#| column: margin`.
-  The figure stays in the margin. In PDF through LaTeX, Quarto puts a
+  `.column-margin` or `.aside` div, or a code cell with `#| column: margin`
+  or `#| fig-column: margin`. The figure stays in the margin. In PDF through LaTeX, Quarto puts a
   captioned image that has the `.column-margin` class and no `#fig-` id
   in the body instead. Word has no margin column, so there the figure is
   in the body.
@@ -206,11 +206,33 @@ file or says that the figure has no id.
   subfigure inside a panel.
 - A panel layout: a div or a code cell with `layout-ncol`, `layout-nrow`,
   or `layout`.
-- A list, a callout, a `.columns` layout, or a tabset.
+- A list, a definition list included, a callout, a `.columns` layout, or a
+  tabset.
 
 A table float does not wrap either, and the render prints one warning that
 names it. A `#tbl-` div or a code cell with a `tbl-` label makes a table
 float.
+
+These places keep the normal layout only in the formats named. The render
+prints the same warning there, and the figure wraps in the other formats.
+
+- A block quote: in PDF through LaTeX.
+- A table cell: in Word and in PDF through LaTeX. In PDF through LaTeX, a
+  captioned figure in a table cell fails to render, with or without the
+  extension, so only an image with no caption renders there.
+- A caption in the margin: in HTML. The caption goes to the margin when
+  `cap-location` or `fig-cap-location` is `margin` on the figure, on its
+  code cell, or in the document metadata. The figure's own value comes
+  before the metadata's, and `fig-cap-location` comes before
+  `cap-location`.
+- A page-wide column: a page-wide class on the figure or on a div around
+  it, or a code cell with `#| column: page` or `#| fig-column: page`. The
+  classes are `.column-body-outset`, `.column-page-inset`, `.column-page`,
+  `.column-screen-inset`, and `.column-screen`, each alone or with `-left`
+  or `-right`, and `.column-screen-inset-shaded`. In HTML this covers all of
+  them. In PDF through LaTeX it covers the classes that Quarto makes
+  page-wide there: those that start with `.column-page` or
+  `.column-screen` and do not end in `-left`.
 
 ## Slides
 
@@ -224,6 +246,9 @@ on the same slide, as on an HTML page:
 
 Ratings rose in both conditions.
 ```
+
+Slides have no margin captions and no page-wide columns, so a figure with
+a margin caption or a page-wide class still wraps on a slide.
 
 ## PDF through LaTeX
 

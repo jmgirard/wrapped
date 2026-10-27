@@ -1,0 +1,61 @@
+---
+title: "wrapped fixture: captions in the margin"
+filters:
+  - wrapped
+format:
+  html: default
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
+  docx: default
+---
+
+In HTML, a wrapped figure whose caption goes to the margin keeps its normal
+layout, with a warning. It wraps in PDF through LaTeX, PDF through Typst, and
+Word.
+
+## The cap-location attribute
+
+![A figure with cap-location.](plot.png){#fig-cap-attr .wrap-right cap-location="margin"}
+
+The paragraph after the figure with cap-location. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## The fig-cap-location attribute
+
+![A figure with fig-cap-location.](plot.png){#fig-figcap-attr .wrap-right fig-cap-location="margin"}
+
+The paragraph after the figure with fig-cap-location. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## fig-cap-location before cap-location
+
+![A figure whose fig-cap-location overrides its cap-location.](plot.png){#fig-figcap-first .wrap-right cap-location="margin" fig-cap-location="bottom"}
+
+The paragraph after the figure whose caption stays below it, so it wraps in every format. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## The cap-location cell option
+
+```{r}
+#| label: fig-cap-cell
+#| fig-cap: "A cell figure with cap-location."
+#| cap-location: margin
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+```
+
+The paragraph after the cell with cap-location. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## The fig-cap-location cell option
+
+```{r}
+#| label: fig-figcap-cell
+#| fig-cap: "A cell figure with fig-cap-location."
+#| fig-cap-location: margin
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+```
+
+The paragraph after the cell with fig-cap-location. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

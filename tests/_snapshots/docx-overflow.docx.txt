@@ -1,0 +1,15 @@
+# warnings
+1x wrapped: width "9223372036854775807in" on #fig-huge-width leaves no room for text in Word, so it is 40%.
+1x wrapped: width "9999in" on #fig-big-width leaves no room for text in Word, so it is 40%.
+1x wrapped: wrap-gap "9223372036854775807in" on #fig-huge-gap leaves no room for text in Word, so it is 1em.
+1x wrapped: wrap-gap "9999in" on #fig-big-gap leaves no room for text in Word, so it is 1em.
+# docx
+image: cx=2377440
+image: cx=2377440
+image: cx=2377440
+image: cx=2377440
+# frames
+frame right w=3744 gap=240 anchor=margin | fig-huge-width | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=3744 gap=240 anchor=margin | fig-big-width | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=3744 gap=240 anchor=margin | fig-huge-gap | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=3744 gap=240 anchor=margin | fig-big-gap | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0

@@ -1,0 +1,17 @@
+# warnings
+# docx
+image: cx=2377440
+image: cx=2377440
+image: cx=2377440
+image: cx=2377440
+image: cx=1783080
+image: cx=4572000
+image: cx=4572000
+# frames
+frame right w=3744 gap=240 anchor=margin | fig-page-div | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=3744 gap=240 anchor=margin | fig-page-left | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=3744 gap=240 anchor=margin | fig-outset | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=3744 gap=240 anchor=margin | fig-own-page | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=2808 gap=240 anchor=margin | - | image plot.png fills=yes alt='' | p, clear | links=- cites=0
+frame right w=7200 gap=240 anchor=margin | fig-page-cell | image fig-page-cell-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=7200 gap=240 anchor=margin | fig-column-cell | image fig-column-cell-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
