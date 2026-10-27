@@ -4,7 +4,7 @@
      plan-owned body. -->
 # M013: Fall back where a format cannot wrap
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -60,7 +60,7 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 - [x] T4: Fall back for page-wide columns: in HTML for the 16 classes, in LaTeX for the 9 page-wide ones. Read the class on a div, on the figure, and in a cell's `column` or `fig-column` option. Add the five cases to a fixture rendered in four formats.
 - [x] T5: Remove integer arithmetic on CSS numbers: `docx_measure` (`wrapped.lua:667`), the `px` and `pc` cases of `typst_length` (`wrapped.lua:510`), and `typst_fills` (`wrapped.lua:543`). Add regression fixtures for Word and Typst, and show each failing on `main` first. Record the `grep -n 'tonumber('` ledger in the work log.
 - [x] T6: Update the README from this milestone's renders, in the section "Where a figure keeps its normal layout". Update DESIGN.md's Architecture step 2.
-- [ ] T7: Run `python3 tests/verify.py` in full. CI runs on the PR, which `/milestone-review` opens after the merge approval.
+- [x] T7: Run `python3 tests/verify.py` in full. CI runs on the PR, which `/milestone-review` opens after the merge approval.
 
 ## Work log
 
@@ -95,6 +95,7 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 - 2026-10-27: minor amendment: T7 no longer pushes; the git model pushes the branch and opens the PR at `/milestone-review` after the merge approval, and AC7's CI half is read there.
 - 2026-10-27: T6 done: the full suite passed (76 renders).
 - 2026-10-27: claim audit: 44 claims read, 2 corrected — _extensions/wrapped/wrapped.lua (the Word table-cell comment now names the LibreOffice render it rests on; the margin-caption comment now says CSS places the caption in the margin). The same reader re-read both and found that they hold.
+- 2026-10-27: T7 done: the full suite passed on ab1925c (76 renders). All tasks done; status set to review.
 
 ## Decisions
 
