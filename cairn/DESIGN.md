@@ -155,8 +155,12 @@ passes (corrected M003):
    records each float there by its custom id, and it removes the wrap class
    from a captioned image with no id or an image there, with a warning. In
    HTML, step 4 also keeps a float whose caption goes to the margin in its
-   normal layout (`caption_location`), by a caption location or by the
-   `margin-caption` or `caption-margin` class (corrected M013, M015).
+   normal layout (`caption_in_margin`), by a caption location or by the
+   `margin-caption` or `caption-margin` class (corrected M013, M015). It
+   reads the caption locations in Quarto's order: the figure's own
+   `cap-location` decides when set, and otherwise any one of the figure's
+   `fig-cap-location` and the two document keys set to `margin` sends the
+   caption there (corrected by the cap-location hotfix).
 3. It applies the next-block rule: it records each float with no paragraph
    after it, and removes the wrap class from such a captioned image with no
    id or image.

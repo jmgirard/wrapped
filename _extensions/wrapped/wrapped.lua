@@ -1114,7 +1114,8 @@ local function meta_text(value)
   return (pandoc.utils.stringify(value):gsub("\u{2013}", "--"))
 end
 
--- The document's caption location for figures, read in the first pass.
+-- The document's fig-cap-location and cap-location, read in the first pass.
+local meta_fig_cap_location = nil
 local meta_cap_location = nil
 
 -- The contexts that the document's fig-column, or else its column, gives a
@@ -1142,23 +1143,29 @@ local function margin_caption_class(classes, is_float)
   return classes:includes("margin-caption") or (is_float and classes:includes("caption-margin"))
 end
 
--- Where a figure's caption goes: a margin caption class on the float or
--- its image comes first, then the figure's own fig-cap-location, its
--- cap-location, then the document's. Quarto has already copied a code
--- cell's caption location, and its caption-margin class, to the cell's
--- figure as cap-location.
-local function caption_location(float)
+-- Whether a figure's caption goes to the margin of an HTML page, as
+-- Quarto 1.10.19 decides it. A margin caption class on the float or its
+-- image sends it there. Otherwise the figure's own cap-location decides
+-- when it is set. Without one, the caption goes to the margin when the
+-- figure's fig-cap-location or either document key is margin, and a
+-- value other than margin in one of them overrides none of the others.
+-- Quarto has already copied a code cell's caption location, and its
+-- caption-margin class, to the cell's figure as cap-location.
+local function caption_in_margin(float)
   local by_class = margin_caption_class(float.classes, true)
   float.content:walk({
     Image = function(img) by_class = by_class or margin_caption_class(img.classes, true) end,
   })
-  if by_class then return "margin" end
-  return float.attributes["fig-cap-location"] or float.attributes["cap-location"]
-    or meta_cap_location
+  if by_class then return true end
+  local own = float.attributes["cap-location"]
+  if own then return own == "margin" end
+  return float.attributes["fig-cap-location"] == "margin" or meta_fig_cap_location == "margin"
+    or meta_cap_location == "margin"
 end
 
 local function read_meta(meta)
-  meta_cap_location = meta_text(meta["fig-cap-location"]) or meta_text(meta["cap-location"])
+  meta_fig_cap_location = meta_text(meta["fig-cap-location"])
+  meta_cap_location = meta_text(meta["cap-location"])
   if is_docx then
     docx_text_width, docx_columns = read_docx_text_width()
     if docx_columns then is_docx = false end
@@ -1303,7 +1310,7 @@ local function float_target(float)
     or class_context(float.classes, true)
     or (layout and "is a subfigure panel")
     or (cell and meta_column_context.cell or meta_column_context.float)
-    or (has_page_layout and (caption_location(float) == "margin" or (cell and cell.margin_caption))
+    or (has_page_layout and (caption_in_margin(float) or (cell and cell.margin_caption))
       and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
@@ -1381,19 +1388,16 @@ local function figure_block(fig)
   strip_wrap(fig.classes)
   local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
   -- As for a float, a caption in the margin of an HTML page leaves no text
-  -- beside the figure. The image may carry the caption location or the
-  -- margin-caption class instead of the figure.
+  -- beside the figure. The image may carry the margin-caption class instead
+  -- of the figure. Quarto 1.10.19 reads no caption location on the figure
+  -- or its image, only the document's fig-cap-location, else its
+  -- cap-location.
   if has_page_layout then
     local by_class = margin_caption_class(fig.classes, false)
-    local loc = fig.attributes["fig-cap-location"] or fig.attributes["cap-location"]
-      or meta_cap_location
     fig.content:walk({
-      Image = function(img)
-        by_class = by_class or margin_caption_class(img.classes, false)
-        loc = img.attributes["fig-cap-location"] or img.attributes["cap-location"] or loc
-      end,
+      Image = function(img) by_class = by_class or margin_caption_class(img.classes, false) end,
     })
-    if by_class or loc == "margin" then
+    if by_class or (meta_fig_cap_location or meta_cap_location) == "margin" then
       fig.content = fig.content:walk({ Image = drop_wrap })
       context_warning(where == "a figure with no id" and where or ("the figure " .. where),
         "has its caption in the margin")

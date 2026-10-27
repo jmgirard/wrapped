@@ -28,11 +28,21 @@ The paragraph after the figure with cap-location. Lorem ipsum dolor sit amet, co
 
 The paragraph after the figure with fig-cap-location. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-## fig-cap-location before cap-location
+## cap-location before fig-cap-location
 
-![A figure whose fig-cap-location overrides its cap-location.](plot.png){#fig-figcap-first .wrap-right cap-location="margin" fig-cap-location="bottom"}
+![A figure whose cap-location overrides its fig-cap-location.](plot.png){#fig-figcap-first .wrap-right cap-location="margin" fig-cap-location="bottom"}
+
+The paragraph after the figure whose cap-location puts its caption in the margin. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A figure whose cap-location keeps its caption below.](plot.png){#fig-cap-below .wrap-right fig-cap-location="margin" cap-location="bottom"}
 
 The paragraph after the figure whose caption stays below it, so it wraps in every format. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A captioned image with no id and cap-location
+
+![A captioned image with no id and cap-location.](plot.png){.wrap-right cap-location="margin"}
+
+The paragraph after the captioned image with no id and cap-location, which wraps in every format, because Quarto keeps its caption below it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ## The cap-location cell option
 
