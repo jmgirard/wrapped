@@ -127,3 +127,15 @@ job timeout, so a slow mirror could fail a pull request that changed
 nothing. D-008 chose the Ubuntu packages to keep Quarto's action the only
 third-party action; that reason no longer outweighs the install time.
 `poppler-utils` stays an Ubuntu package. The rest of D-008 stands.
+
+### D-010: A wrapped code cell with more than one figure keeps them all normal (narrows D-003)
+
+2026-10-27, plan of M014. A code cell with a wrap class that makes two or
+more figures without `fig-subcap` keeps every one of its figures in the
+normal layout, in every format, and the render prints one warning for the
+cell. D-003's rule for back-to-back figures, where the first keeps a normal
+figure and the second wraps, does not apply to the figures of one cell. The
+user chose this at the plan's question set over D-003's rule and over
+stacking the figures on one side. One rule holds in all four formats, and
+LaTeX's wrapfig and a Word frame each hold one figure, so a stack would
+need its own fallback there.
