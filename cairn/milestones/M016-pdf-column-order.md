@@ -144,6 +144,7 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 - 2026-10-27: checkpoint: T2 to T4 written (`column_context` and a cell rule in `block_context`, the eight snapshots, README, DESIGN, E21). The eight new summaries match T1's placements. Tasks stay unchecked until the full verify run passes.
 - 2026-10-27: implementation choice: `column_context` keeps HTML and Word on the old chain (own class, then layout, then the document value), so their reasons and snapshots stay as on main. In LaTeX and Typst the column is read before a layout attribute.
 - 2026-10-27: T2 to T5 done. `python3 tests/verify.py`: all 95 renders pass. Against main, `tests/_snapshots/` adds the eight column-order files and changes no other file.
+- 2026-10-27: checkpoint: claim audit pass done, one README claim corrected (HTML and Word read a margin or page-wide class first; a body class does not override the document key), same wording fixed in DESIGN step 4 and E21; the HTML row gained the audit's bare-HTML evidence. Re-read of the corrected claim pending.
 
 ## Decisions
 
