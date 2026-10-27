@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-27 (M012 done: two started rows graduated, M009 row pruned, one lesson captured, one evicted, three marked used, two Known issues added, two follow-up rows added)_
+_Last hygiene check: 2026-10-27 (M013 done: two started rows graduated, M010 row pruned, two follow-up rows added, one lesson captured, one evicted, four marked used, one Known issue added)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-27 (M012 done: two started rows graduated, M009 row
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M013 | Fall back where a format cannot wrap | review | — | normal | milestones/M013-format-fallbacks.md |
+| M013 | Fall back where a format cannot wrap | done | — | normal | milestones/archive/M013-format-fallbacks.md |
 | M012 | Finish the gap checks | done | — | normal | milestones/archive/M012-gap-checks.md |
 | M011 | Finish the figure width checks | done | — | normal | milestones/archive/M011-finish-width-checks.md |
-| M010 | Check figure widths before use | done | — | normal | milestones/archive/M010-width-checks.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -28,7 +27,6 @@ _Last hygiene check: 2026-10-27 (M012 done: two started rows graduated, M009 row
      with fewer than 5 words or more than 40 characters; tracking-rules "Candidate short title" has the whole rule -->
 - Handle a wrapped cell with two figures: a code cell with `#| classes: wrap-right` that makes two figures floats both side by side in HTML. Decide whether such a cell wraps its first figure, falls back with a warning, or joins the subfigure fallback (E4). Found at M002 review (diff-bug #5, blame-history #3). A cell with `fig-subcap` or `layout-ncol` now keeps a normal panel with a warning (M003). In Typst both figures go in one box with the first figure's side and width (M005 review, blame-history #3) — added 2026-10-24, narrowed 2026-10-25 by M003 review — milestones/M002-html-wrap.md
 - Check wrapped figures in dashboards: in a Quarto dashboard the `.wrap-group` div likely gets `html-fill-container`, a flex container, where a float has no effect. Not verified. Make wrapping work there or fall back with a warning. Found at M002 review (diff-bug #9) — added 2026-10-24 — milestones/M002-html-wrap.md
-- Fall back in other margin and list forms: a cell with `#| fig-column: margin` floats inside the margin with no warning, and a figure in a loose definition list wraps. `cap-location: margin` and `.column-page` are untested. M003 left these out of scope (M003 review, diff-bug #4 and #6). In Typst a figure in a definition list or a table cell wraps too, and a call in a table cell is indented, so the `.typ` summary does not read it (M005 review pass 2, diff-bug #4). A wrapped figure in a block quote never wraps in LaTeX and prints no warning (M007 review pass 2, diff-bug #6) — added 2026-10-25 — milestones/archive/M003-context-fallbacks.md — started M013
 - Check wrapped figures in Typst columns: a Typst document with `columns:` set puts the text in columns, and no one has tested a `wrap-content` call there. Make wrapping work there or keep a normal figure with a warning, as LaTeX does for two columns. Left out of M005 — added 2026-10-25 — milestones/M005-typst-wrap.md
 - Cut the Ubuntu mirror from CI setup: `r-lib/actions/setup-r` still runs `apt-get update` and installs about 175 Ubuntu packages (gdebi-core, qpdf, devscripts, ghostscript), and the poppler step runs `apt-get update` too, so a slow mirror day can still stretch the job toward its 45-minute timeout. The Ubuntu R packages took 35m56s in one run before D-009 (M008 review pass 2, diff-bug #1, blame-history #1) — added 2026-10-26 — milestones/M008-ci-verify.md
 - Test the minimum Quarto version in CI: `quarto-required` says 1.9.36, but only 1.10.19 and later are tested (DESIGN.md, Quarto version). A CI job pinned to 1.9.36 would test the claim or show that the floor must rise. Left out of M008 — added 2026-10-26 — milestones/M008-ci-verify.md
@@ -40,7 +38,6 @@ _Last hygiene check: 2026-10-27 (M012 done: two started rows graduated, M009 row
 - Fix the overfull LaTeX fixture page: in tests/fixture.qmd's PDF through LaTeX, page 4 runs past the page bottom (Figure 7 off the page) when a floating figure lands on the page with the knitr longtable. M007's stop spacing moved the fixture's content so that this happens; `main` renders it within bounds but overflows the same way with an 8-line hand shift, so the clash between the float and the longtable predates M007 (M007 review, prior-review #2 in both passes) — added 2026-10-26 — milestones/M007-latex-stops.md
 - Keep wrapped figures in multicols: with `classoption: twocolumn` the filter writes Quarto's normal float for a wrapped figure, and LaTeX drops it inside a raw `multicols` (multicol's "Floats and marginpars not allowed" warning; by-hand render at M009 implement). Letting `wrapped.tex` set it in place there, as M009 does without `classoption`, would keep it (M009 claim audit) — added 2026-10-26 — milestones/M009-latex-columns.md
 - Keep narrow widths when no width fits: in Word and in Typst, when the figure width, the document default, and 40% each fill the text with the gap, the figure takes 40%, so `width="0.5in"` with a `6in` gap widens to 40% (M012 claim audit). Keeping the narrower of the asked width and 40% would leave more room; the README states the current rule — added 2026-10-27 — milestones/M012-gap-checks.md
-- Read Word lengths as floats in twips: `docx_measure` reads a number with `tonumber` and no `+ 0.0`, so `9223372036854775807in` wraps past 2^63 to -1440 twips, and as a gap it passes with no warning. M011 fixed the same overflow in the CSS parser only (M012 review, prior-review #3) — added 2026-10-27 — milestones/M012-gap-checks.md — started M013
 - Fall back in more margin and page forms: Quarto also puts a caption in the margin for the `.margin-caption` and `.caption-margin` classes, and a document-level `fig-column` makes figures page-wide (corrected M013: a cell's `cap-location-margin` classes reach the figure as its `cap-location`, so M013 covers them). M013 checks only the `cap-location` and `fig-cap-location` keys and page-wide classes on a div, a figure, or a cell, so these forms wrap with no check (M013 criteria audit) — added 2026-10-27 — milestones/M013-format-fallbacks.md
 - Check wrapped figures in table cells: M013 keeps a figure in a table cell wrapping in Typst, where the probe render squeezed the caption into a narrow cell, and falls back in Word on the evidence of a LibreOffice render of the docx only. Check both in Typst's PDF and in Word itself (M013 review, prior-review #1 and #3) — added 2026-10-27 — milestones/M013-format-fallbacks.md
 - Reject infinite widths and gaps: a width or gap with 310 or more digits reads as inf, so Typst gets `infpt` and LaTeX a dimension that TeX rejects ("Dimension too large"). This predates M013, which fixed integer overflow only (M013 review, diff-bug #7) — added 2026-10-27 — milestones/M013-format-fallbacks.md

@@ -256,3 +256,8 @@ snapshot difference. The mechanism for each other format is in
   as the text, and a figure that sets neither its own width nor its own
   gap then has no room for text, with no warning. The README states this
   limit (M012).
+- PDF through LaTeX: a captioned figure in a table cell fails the build
+  ("Not in outer par mode") with or without the extension, because Quarto
+  puts a figure float in a `longtable`. The extension keeps a wrapped one
+  in its normal layout with a warning, so the failure is Quarto's. The
+  README states this limit (M013).
