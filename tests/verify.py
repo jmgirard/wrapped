@@ -86,6 +86,7 @@ RENDERS = [
     ("docx-reference", "docx", True),
     ("docx-options", "docx", True),
     ("docx-columns", "docx", True),
+    ("docx-gap", "docx", True),
     ("meta-breakpoint", "html", True),
     ("meta-string", "html", True),
     ("meta-calc-bad", "html", True),

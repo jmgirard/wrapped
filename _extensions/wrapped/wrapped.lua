@@ -662,23 +662,45 @@ local function docx_twips(length, positive)
 end
 
 -- Returns the twips for a value, or the twips of `fallback` with a warning
--- when the value is not a length that Word can use.
-local function checked_docx_twips(value, fallback, what, where, positive)
+-- when the value is not a length that Word can use. Also returns true when
+-- the value gave way to `fallback`. A width as wide as the text or wider
+-- with `gap`, a figure's own gap, names the gap in its warning.
+local function checked_docx_twips(value, fallback, what, where, positive, gap)
   local length = checked_length(value, fallback, what, where)
   local twips, why = docx_measure(length, positive)
-  if twips then return twips end
-  quarto.log.warning(string.format(
-    'wrapped: %s "%s" on %s %s, so it is %s.', what, length, where,
-    why == "wide" and "leaves no room for text in Word" or "is not a length that Word can use",
-    fallback))
-  return docx_twips(fallback, positive)
+  if twips then return twips, value ~= nil and length ~= css_length(value) end
+  if why == "wide" and gap then
+    quarto.log.warning(string.format(
+      'wrapped: %s "%s" and wrap-gap "%s" on %s leave no room for text in Word, so the width is %s.',
+      what, length, gap, where, fallback))
+  else
+    quarto.log.warning(string.format(
+      'wrapped: %s "%s" on %s %s, so it is %s.', what, length, where,
+      why == "wide" and "leaves no room for text in Word" or "is not a length that Word can use",
+      fallback))
+  end
+  return docx_twips(fallback, positive), true
 end
 
 -- A frame's side, width, and gap in twips, as "right 3744 240", and its
--- width.
+-- width. A figure that sets its own width or gap, and whose width plus gap
+-- is as wide as the text or wider, takes the first of the document default
+-- and 40% that with the gap is narrower than the text, or 40% when neither
+-- is, with a warning, as Typst does. Each value is rounded to twips before
+-- the sum. A figure with neither was checked with the metadata.
 local function docx_frame(class, width, gap, where)
-  local w = checked_docx_twips(width, options.width, "width", where, true)
-  local g = checked_docx_twips(gap, options.gap, "wrap-gap", where)
+  local g, g_fell = checked_docx_twips(gap, options.gap, "wrap-gap", where)
+  local g_length = (gap == nil or g_fell) and options.gap or css_length(gap)
+  local fallback = DEFAULTS.width
+  if docx_twips(options.width, true) + g < docx_text_width then fallback = options.width end
+  local asked = width or options.width
+  local w, fell = checked_docx_twips(asked, fallback, "width", where, true, gap ~= nil and g_length)
+  if not fell and (width ~= nil or gap ~= nil) and w + g >= docx_text_width then
+    quarto.log.warning(string.format(
+      'wrapped: width "%s" and wrap-gap "%s" on %s leave no room for text in Word, so the width is %s.',
+      css_length(asked), g_length, where, fallback))
+    w = docx_twips(fallback, true)
+  end
   return string.format("%s %d %d", SIDES[class], w, g), w
 end
 

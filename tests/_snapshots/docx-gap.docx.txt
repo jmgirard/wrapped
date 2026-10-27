@@ -1,0 +1,23 @@
+# warnings
+1x wrapped: width "10in" and wrap-gap "3in" on #fig-wide leave no room for text in Word, so the width is 40%.
+1x wrapped: width "4in" and wrap-gap "3in" on #fig-default-fills leave no room for text in Word, so the width is 40%.
+1x wrapped: width "4in" and wrap-gap "4in" on #fig-all-fill leave no room for text in Word, so the width is 40%.
+1x wrapped: width "5in" and wrap-gap "2in" on #fig-abs leave no room for text in Word, so the width is 4in.
+1x wrapped: width "6in" and wrap-gap "12.699mm" on #fig-equal leave no room for text in Word, so the width is 4in.
+1x wrapped: width "95%" and wrap-gap "2em" on #fig-percent leave no room for text in Word, so the width is 4in.
+# docx
+image: cx=3657600
+image: cx=3657600
+image: cx=2377440
+image: cx=2377440
+image: cx=5334000
+image: cx=3657600
+image: cx=2377440
+# frames
+frame right w=5760 gap=2880 anchor=margin | fig-abs | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=5760 gap=480 anchor=margin | fig-percent | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=3744 gap=4320 anchor=margin | fig-default-fills | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=3744 gap=5760 anchor=margin | fig-all-fill | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=8640 gap=719 anchor=margin | fig-below | image plot.png fills=no alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=5760 gap=720 anchor=margin | fig-equal | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=3744 gap=4320 anchor=margin | fig-wide | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0

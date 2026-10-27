@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M012: Finish the gap checks
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — the filter's warnings, frame widths, and gaps reach every user   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m012-gap-checks   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -158,3 +158,5 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 - 2026-10-27: plan gate chose to check only figures that set their own width or gap, with one metadata warning for the rest, over checking every figure, because a filling metadata would print one warning per figure (M011 review fixed that repeat in Typst); falsified by a figure that takes both values from the document and fills the text with no warning.
 - 2026-10-27: plan gate chose a gap warning only when the gap is below zero at every size, reusing M011's bound, over a warning when it can be below zero at some size, because M011's question set chose warnings only when certain; falsified by a passing gap that puts text over the figure at the default font size in a user's document.
 - 2026-10-27: criteria audit (full mode, fresh Opus reader): 11 findings, all fixed. AC1 names its snapshot file, pins its values, adds a rounding case (f) and a wide-width case (g), and no width in (d); `max(-2px, -1%)` cannot warn under M011's bound, so AC3 uses `max(-2px, -1px)` and the mixed-unit case moved to Out and a Known issue; AC3 adds viewport, percent, product, and nested probes; AC4 adds zero-at-every-size gaps; AC2 pins its metadata; Scope names the shared `checked_length` message change; AC6 names what each doc states, comments included; T1 expects no change in (e). AC5 and AC7 had none.
+- 2026-10-27: implement started on branch m012-gap-checks; status in-progress.
+- 2026-10-27: T1 checkpoint (not ticked): `docx_frame` counts the gap and `checked_docx_twips` reports a fallback and names a figure's gap for a too-wide width; `tests/docx-gap.qmd` gives the seven AC1 widths and warnings (before the change all but (e) differed); full verify running.
