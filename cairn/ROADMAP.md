@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-27 (M014 done: one started row graduated, M011 row pruned, one lesson captured, one evicted, six marked used)_
+_Last hygiene check: 2026-10-27 (M015 done: one started row graduated, four rows added, M012 row pruned, two lessons captured, two evicted, four marked used)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-27 (M014 done: one started row graduated, M011 row 
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M015 | Fall back in more margin and page forms | review | — | normal | milestones/M015-margin-page-forms.md |
+| M015 | Fall back in more margin and page forms | done | — | normal | milestones/archive/M015-margin-page-forms.md |
 | M014 | Keep two-figure cells unwrapped | done | — | normal | milestones/archive/M014-two-figure-cells.md |
 | M013 | Fall back where a format cannot wrap | done | — | normal | milestones/archive/M013-format-fallbacks.md |
-| M012 | Finish the gap checks | done | — | normal | milestones/archive/M012-gap-checks.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -38,7 +37,6 @@ _Last hygiene check: 2026-10-27 (M014 done: one started row graduated, M011 row 
 - Fix the overfull LaTeX fixture page: in tests/fixture.qmd's PDF through LaTeX, page 4 runs past the page bottom (Figure 7 off the page) when a floating figure lands on the page with the knitr longtable. M007's stop spacing moved the fixture's content so that this happens; `main` renders it within bounds but overflows the same way with an 8-line hand shift, so the clash between the float and the longtable predates M007 (M007 review, prior-review #2 in both passes) — added 2026-10-26 — milestones/M007-latex-stops.md
 - Keep wrapped figures in multicols: with `classoption: twocolumn` the filter writes Quarto's normal float for a wrapped figure, and LaTeX drops it inside a raw `multicols` (multicol's "Floats and marginpars not allowed" warning; by-hand render at M009 implement). Letting `wrapped.tex` set it in place there, as M009 does without `classoption`, would keep it (M009 claim audit) — added 2026-10-26 — milestones/M009-latex-columns.md
 - Keep narrow widths when no width fits: in Word and in Typst, when the figure width, the document default, and 40% each fill the text with the gap, the figure takes 40%, so `width="0.5in"` with a `6in` gap widens to 40% (M012 claim audit). Keeping the narrower of the asked width and 40% would leave more room; the README states the current rule — added 2026-10-27 — milestones/M012-gap-checks.md
-- Fall back in more margin and page forms: Quarto also puts a caption in the margin for the `.margin-caption` and `.caption-margin` classes, and a document-level `fig-column` makes figures page-wide (corrected M013: a cell's `cap-location-margin` classes reach the figure as its `cap-location`, so M013 covers them). M013 checks only the `cap-location` and `fig-cap-location` keys and page-wide classes on a div, a figure, or a cell, so these forms wrap with no check (M013 criteria audit) — added 2026-10-27 — milestones/M013-format-fallbacks.md — started M015
 - Read cap-location before fig-cap-location: Quarto 1.10.19 puts a figure's caption in the margin by `cap-location` when it also sets `fig-cap-location`, but `caption_location` and the README read `fig-cap-location` first, so in HTML `fig-figcap-first` in `tests/cap-margin.qmd` wraps while its caption sits in the margin. A user-visible bug since M013; door: `/hotfix` (M015 claim audit) — added 2026-10-27 — milestones/M015-margin-page-forms.md
 - Read fig-column over a figure's class: Quarto reads a figure's own `fig-column-*` class, then the document's `fig-column`, then the figure's own `column-*` class, then the document's `column`; the filter reads a figure's own class first and then the document key. Where they name different places, it can keep a figure normal with the wrong reason, or where Quarto puts it in the body: a `.column-margin` figure in a `fig-column: body` document, or a `.column-body` figure in a `column: page` document. No fixture sets both document keys, and none sets `column: margin`; the README names the document-level `column` key only for page-wide columns (M015 criteria audits; review diff-bug #3) — added 2026-10-27 — milestones/M015-margin-page-forms.md
 - Let slides wrap under margin settings: in revealjs a `.column-margin` class (since M013) and a document `fig-column: margin` or `column: margin` (since M015) keep each wrapped figure normal with an "is in the margin" warning, though revealjs has no margin column and the README says slides have none. No revealjs fixture sets a document key (M015 review, diff-bug #5, blame-history #4, prior-review #2) — added 2026-10-27 — milestones/M015-margin-page-forms.md
