@@ -1,0 +1,10 @@
+# warnings
+1x wrapped: breakpoint "calc(var(--bp))" on the wrapped metadata is not a length, so it is 576px.
+# breakpoint
+576px
+# figures
+fig-meta-calc-var: wrap-right style=--wrap-gap: 1em; --wrap-width: calc(var(--w) * 0.5)
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-meta-calc-var, p

@@ -1,0 +1,25 @@
+# warnings
+1x wrapped: width ".0" on #fig-zero-dot is zero, so it is 25%.
+1x wrapped: width "0" on #fig-zero-unitless is zero, so it is 25%.
+1x wrapped: width "0%" on #fig-zero-percent is zero, so it is 25%.
+1x wrapped: width "0.0px" on #fig-zero-px is zero, so it is 25%.
+1x wrapped: width "0IN" on #fig-zero-upper is zero, so it is 25%.
+1x wrapped: width "0in" on #fig-zero-in is zero, so it is 25%.
+# typ
+figure: fig-zero-percent image-width=yes
+figure: fig-zero-in image-width=yes
+figure: fig-zero-upper image-width=yes
+figure: fig-zero-unitless image-width=yes
+figure: fig-zero-px image-width=yes
+figure: fig-zero-dot image-width=yes
+figure: fig-gap-zero-pt image-width=yes
+figure: fig-gap-zero image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 25%, 25%, 40%)), column-gutter: 1em | fig-zero-percent no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 25%, 25%, 40%)), column-gutter: 1em | fig-zero-in no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 25%, 25%, 40%)), column-gutter: 1em | fig-zero-upper no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 25%, 25%, 40%)), column-gutter: 1em | fig-zero-unitless no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 25%, 25%, 40%)), column-gutter: 1em | fig-zero-px no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 25%, 25%, 40%)), column-gutter: 1em | fig-zero-dot no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 30%, 25%, 40%)), column-gutter: 0pt | fig-gap-zero-pt no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 30%, 25%, 40%)), column-gutter: 0pt | fig-gap-zero no-alt | p | cites=0

@@ -7,6 +7,6 @@
 figure: fig-meta image-width=yes
 figure: fig-full image-width=yes
 # wraps
-align: top + wrapped-side(right), columns: wrapped-columns(right, 40%), column-gutter: 1em | fig-meta no-alt | p | cites=0
-align: top + wrapped-side(left), columns: wrapped-columns(left, 40%), column-gutter: 1em | fig-full no-alt | p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, 25%), column-gutter: 1em | plot.png alt="A small scatter plot" | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em | fig-meta no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em | fig-full no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 25%, 40%, 40%)), column-gutter: 1em | plot.png alt="A small scatter plot" | p | cites=0

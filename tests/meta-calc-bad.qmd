@@ -1,0 +1,13 @@
+---
+title: "wrapped fixture: metadata function values that print a warning"
+filters:
+  - wrapped
+format: html
+wrapped:
+  breakpoint: calc(50%)
+  width: calc(1px + 2)
+---
+
+![A wrapped figure.](plot.png){#fig-meta-calc-bad .wrap-right}
+
+A media query takes no percent, so the breakpoint stays at its default, with a warning. A length plus a number is not a length, so the width stays at its default, with a warning.

@@ -1,0 +1,36 @@
+# warnings
+1x wrapped: width ".0" on #fig-zero-dot is zero, so it is 25%.
+1x wrapped: width "0" on #fig-zero-unitless is zero, so it is 25%.
+1x wrapped: width "0%" on #fig-zero-percent is zero, so it is 25%.
+1x wrapped: width "0.0px" on #fig-zero-px is zero, so it is 25%.
+1x wrapped: width "0IN" on #fig-zero-upper is zero, so it is 25%.
+1x wrapped: width "0in" on #fig-zero-in is zero, so it is 25%.
+# breakpoint
+576px
+# figures
+fig-zero-percent: wrap-right style=--wrap-gap: 1em; --wrap-width: 25%
+fig-zero-in: wrap-left style=--wrap-gap: 1em; --wrap-width: 25%
+fig-zero-upper: wrap-right style=--wrap-gap: 1em; --wrap-width: 25%
+fig-zero-unitless: wrap-left style=--wrap-gap: 1em; --wrap-width: 25%
+fig-zero-px: wrap-right style=--wrap-gap: 1em; --wrap-width: 25%
+fig-zero-dot: wrap-left style=--wrap-gap: 1em; --wrap-width: 25%
+fig-gap-zero-pt: wrap-right style=--wrap-gap: 0pt; --wrap-width: 30%
+fig-gap-zero: wrap-left style=--wrap-gap: 0px; --wrap-width: 30%
+# images
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+# groups
+fig-zero-percent, p
+fig-zero-in, p
+fig-zero-upper, p
+fig-zero-unitless, p
+fig-zero-px, p
+fig-zero-dot, p
+fig-gap-zero-pt, p
+fig-gap-zero, p

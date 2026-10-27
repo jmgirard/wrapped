@@ -1,0 +1,5 @@
+# warnings
+1x wrapped: width "0%" on the wrapped metadata is zero, so it is 40%.
+# tex
+wrappedfigure: fig-zero-meta [side=right,width=0.4\linewidth,gap=0pt] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

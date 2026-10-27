@@ -25,8 +25,8 @@ It renders the fixtures under `tests/` to HTML, revealjs, PDF through
 LaTeX, PDF through Typst, and docx, and the book project under `tests/book/`
 to HTML. It compares the parts that the filter changes with the snapshots
 in `tests/_snapshots/`. For `LAYOUT` fixtures, it reads where text starts
-beside and below each wrapped figure in the PDF through LaTeX (D-006). For
-`LOGS` fixtures, it reads the LaTeX log's warnings (corrected M009). It
+beside and below each wrapped figure in the PDF through LaTeX (D-006). It reads
+`TYPST_LAYOUT` fixtures in the Typst PDF too (corrected M010). For `LOGS` fixtures, it reads the LaTeX log's warnings (corrected M009). It
 exits with status 1 on a failed render, difference, layout case, or log
 check. It needs Quarto, R with knitr, TinyTeX, and poppler. After an
 intended output change, run it with `--update` and review the snapshot
@@ -52,8 +52,8 @@ tracking-rules. An extension is tested by rendering, not by calling functions:
 - A filter change is tested by rendering a fixture document that uses it and
   reading the output in each format the change touches. The test is a string
   in the HTML, or a snapshot of the kept `.tex`, the kept `.typ`, or the docx's
-  `word/document.xml`. Where LaTeX layout is the behavior, it is a position
-  case in the `LAYOUT` list of `tests/verify.py` (corrected M007).
+  `word/document.xml`. Where LaTeX or Typst layout is the behavior, it is a
+  case in the `LAYOUT` or `TYPST_LAYOUT` table of `tests/verify.py` (corrected M010).
 - A bug fix gets a fixture document that renders wrong before the fix.
 - A change to `wrapped.css` keeps the version as it is until release (see
   `release-walk`), because the version rises at release.

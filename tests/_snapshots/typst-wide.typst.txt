@@ -1,0 +1,13 @@
+# warnings
+# typ
+figure: fig-w40 image-width=yes
+figure: fig-wnone image-width=yes
+figure: fig-w10in image-width=yes
+figure: fig-w60em image-width=yes
+figure: fig-w2in image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 40%, 10in, 40%)), column-gutter: 1em | fig-w40 no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 10in, 10in, 40%)), column-gutter: 1em | fig-wnone no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 10in, 10in, 40%)), column-gutter: 1em | fig-w10in no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 60em, 10in, 40%)), column-gutter: 1em | fig-w60em no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 2in, 10in, 40%)), column-gutter: 1em | fig-w2in no-alt | p | cites=0

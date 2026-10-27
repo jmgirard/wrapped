@@ -1,0 +1,10 @@
+# warnings
+1x wrapped: width "0%" on the wrapped metadata is zero, so it is 40%.
+# breakpoint
+0px
+# figures
+fig-zero-meta: wrap-right style=--wrap-gap: 0px; --wrap-width: 40%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-zero-meta, p

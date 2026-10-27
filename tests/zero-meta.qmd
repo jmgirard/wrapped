@@ -1,0 +1,21 @@
+---
+title: "wrapped fixture: zero metadata values"
+filters:
+  - wrapped
+format:
+  html: default
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+wrapped:
+  width: 0%
+  gap: 0
+  breakpoint: 0px
+---
+
+## A figure that takes the document defaults
+
+![A figure with no width or gap attribute.](plot.png){#fig-zero-meta .wrap-right}
+
+A width of zero is not a width, so the metadata width prints a warning and the figure takes the built-in width, 40%. A gap of zero and a breakpoint of zero stay as they are. See @fig-zero-meta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
