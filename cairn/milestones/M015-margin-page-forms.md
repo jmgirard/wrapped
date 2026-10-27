@@ -179,6 +179,7 @@ line is absent. A warning line reads
 - 2026-10-27: pre-existing bug found by the claim audit and checked by a render: Quarto 1.10.19 follows `cap-location` over `fig-cap-location`, but `caption_location` and the README read `fig-cap-location` first, so `fig-figcap-first` in `cap-margin` wraps while its caption sits in the margin. Recorded as the candidate row "Read cap-location before fig-cap-location", whose door is `/hotfix`.
 - 2026-10-27: claim audit re-read: 4 of the 5 corrected claims hold. The Typst page-wide claim held for the fixtures but was too broad: Quarto 1.10.19 widens a float's own inset or outset class, and a document value on a float outside a code cell, only for the 6 `column-page` and `column-screen` names (reader's renders; checked by a render of `fig-column: page-inset`). Narrowed: `page_context` takes an `own` flag, `meta_column_context` keeps a float and a cell context, the README, E21, DESIGN step 2, and the page-wide intro say so, and the cases `fig-own-inset` (`tests/page-wide.qmd`) and `tests/typst-inset-meta.qmd` pin both branches. No second pass, per the stopping rule.
 - 2026-10-27: `python3 tests/verify.py --update` after the narrowing: 87 renders pass; only the 4 `page-wide` snapshots (the `fig-own-inset` case) and the new `typst-inset-meta` snapshot changed.
+- 2026-10-27: step-7 approval: m015-margin-page-forms approved for merge
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
