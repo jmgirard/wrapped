@@ -18,8 +18,9 @@ install it with `quarto add jmgirard/wrapped`.
 - Wrap text around an uncaptioned image.
 - Use one width value for all formats.
 - In a format or context that cannot wrap, keep a normal figure and warn
-  once: once for each render in a format, and once for each figure in a
-  context (corrected M003).
+  once: once for each render in a format, once for each figure in a
+  context, and once for a code cell that makes more than one figure
+  (corrected M003, M014).
 
 **Non-goals for version 1.**
 
@@ -158,8 +159,9 @@ passes (corrected M003):
    id or image.
 4. In a top-down pass, it carries a code cell's wrap class to that cell's
    floats and moves an image's class to its float. A float that step 2 or
-   3 recorded, a table, or a float with a margin or page-wide class or a
-   layout attribute keeps its normal layout. In HTML, each other float gets its
+   3 recorded, a table, a float with a margin or page-wide class or a
+   layout attribute, or a figure of a code cell with more than one float
+   outside other floats keeps its normal layout (corrected M014). In HTML, each other float gets its
    box width and gap as CSS custom properties, and a captioned image with
    no id gets a `.wrapped-image` box. In LaTeX, each other float and
    captioned image gets `fig-env="wrappedfigure"` and a `fig-pos` that

@@ -128,6 +128,7 @@ not its engine).
 - 2026-10-27: T3 done: python3 tests/verify.py without --update: "all 76 renders pass".
 - 2026-10-27: claim audit: 11 claims read, 2 corrected — README.md, _extensions/wrapped/wrapped.lua. Both from one cause: a multi-figure cell with no paragraph after it takes the next-block branch and prints no warning (scratch render of a two-plot cell before a heading: no warning, no wrap class). README and the Lua comment now say so; the README's split fallback sentence got its format scope back; the re-read found 0 wrong, and its one optional point (the next-block paragraph's "exception" and back-to-back sentences) was applied.
 - 2026-10-27: implement done: verify on 1eeef97 "all 76 renders pass"; status review.
+- 2026-10-27: review fix-now edits committed (checkpoint): keep_normal helper and comments in wrapped.lua, README wording, DESIGN.md goals and step 4, wrap-mechanisms E7, fixture cell fig-two-before-heading; snapshot update and verify pending.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

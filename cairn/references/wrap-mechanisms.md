@@ -150,7 +150,7 @@ The filter has two entry points (corrected M006):
 | E4 | Subfigure panel (`layout-ncol`) | Normal panel. One warning. A wrapped code cell that makes more than one figure without `fig-subcap` keeps each figure normal, with one warning for the cell (corrected M014, D-010). |
 | E5 | `#tbl-` float with a wrap class | Normal table. One warning. |
 | E6 | Wrapped figure is the last block before a heading | No text to wrap. Normal figure, no warning. |
-| E7 | Two wrapped figures with no text between them | The first figure falls back with no warning, and the second wraps the text after it (corrected 2026-10-24, D-003). |
+| E7 | Two wrapped figures with no text between them | The first figure falls back with no warning, and the second wraps the text after it (corrected 2026-10-24, D-003). The figures of one code cell follow E4 instead (corrected M014, D-010). |
 | E8 | Wrapped figure inside a list (a definition list included), callout, column layout, or tabset | Normal figure. One warning (corrected M013). |
 | E9 | Text shorter than the figure | HTML and Word clear at the stop point. Typst wraps the text it has. LaTeX skips the lines that the figure's height still needs at the stop point (corrected M007). |
 | E10 | Figure taller than the rest of the page | LaTeX, Typst, and Word move it to the next page. In LaTeX the text before it leaves no gap. A figure whose paragraphs all end before it is placed renders with no text beside it, before the stop block (corrected M007). In Typst the `wrap-content` box moves whole and the rest of the page stays blank (corrected M005). Word moves the frame and the paragraph after it, and the rest of the page stays blank (corrected M006). |
