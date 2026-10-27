@@ -89,7 +89,7 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
       through LaTeX and PDF through Typst, with the four sources that the
       Scope names. It states that HTML and Word read a figure's own class
       first. Its margin item names a document `column: margin`.
-- [ ] AC3: `python3 tests/verify.py` exits 0 locally and in the verify
+- [x] AC3: `python3 tests/verify.py` exits 0 locally and in the verify
       workflow on the PR. Against `main`, the change to `tests/_snapshots/`
       adds the snapshot files of the four new fixtures and changes no
       other file.
@@ -150,6 +150,7 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 - 2026-10-27: implement done, status review. No code change since the 95-render verify pass; later edits touched README.md and cairn/ only.
 - 2026-10-28: review resumed at the merge question (no PR, main unmoved, no code change since 5260ed7's 95-render run); the first chip was dismissed without an answer.
 - 2026-10-28: step-7 approval: m016-pdf-column-order approved for merge
+- 2026-10-28: PR #17 opened, CI green, squash-merged as c8b6613; post-merge hygiene on main.
 
 ## Decisions
 
@@ -189,3 +190,4 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 - gate: `cairn_validate.py` all checks passed; `_extension.yml` is the one version marker (0.1.0, unchanged); `python3 tests/verify.py` on 5260ed7: all 95 renders pass, tree clean after the run; changelog slot is none; no principle changed, so `cairn_impact` is skipped.
 - AC1 after the fixes: the placement check re-run on 5260ed7's snapshots passes all 40 AC1 figure-format checks and the new fig-page-asis-margin; fig-page-panel, outside AC1's list, keeps its normal layout as a subfigure panel.
 - snapshot: tests/_snapshots/column-order*.{pdf,typst}.txt — 8 new files; AC1 and AC3 call for them, and column-order-page's two also hold the fix-now cases fig-page-asis-margin (`is in the margin`) and fig-page-panel (`is a subfigure panel`)
+- AC3: `python3 tests/verify.py` on 5260ed7: all 95 renders pass. The verify workflow on PR #17 (run 40599709769) passed in 7m31s. `git diff --name-status main` before the merge listed only the 8 added column-order snapshot files under `tests/_snapshots/`.
