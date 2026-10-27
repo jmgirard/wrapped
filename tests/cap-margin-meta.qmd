@@ -1,0 +1,15 @@
+---
+title: "wrapped fixture: cap-location margin in the metadata"
+filters:
+  - wrapped
+format: html
+cap-location: margin
+---
+
+![A figure with its caption in the margin.](plot.png){#fig-meta-margin .wrap-right}
+
+The paragraph after the figure, which keeps its normal layout with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A figure with its caption below.](plot.png){#fig-meta-bottom .wrap-right fig-cap-location="bottom"}
+
+The paragraph after the figure, which wraps, because its own fig-cap-location overrides the metadata. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

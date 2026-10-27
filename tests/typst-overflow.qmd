@@ -1,0 +1,25 @@
+---
+title: "wrapped fixture: Typst lengths past the integer range"
+filters:
+  - wrapped
+format:
+  typst:
+    keep-typ: true
+    fig-format: png
+---
+
+A product or sum that passes 2^63 stays positive. A huge `pc` width is a
+positive `pt` width, and a huge percent gap beside a percent width warns as
+a 100% gap does.
+
+![A figure 768614336404564651 pc wide.](plot.png){#fig-huge-pc .wrap-right width="768614336404564651pc"}
+
+The paragraph after the figure with the huge pc width. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+![A figure with a huge percent gap.](plot.png){#fig-huge-percent .wrap-left width="50%" wrap-gap="9223372036854775807%"}
+
+The paragraph after the figure with the huge percent gap. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+![A figure with a 100% gap.](plot.png){#fig-full-percent .wrap-right width="50%" wrap-gap="100%"}
+
+The paragraph after the figure with the 100% gap. Lorem ipsum dolor sit amet, consectetur adipiscing elit.

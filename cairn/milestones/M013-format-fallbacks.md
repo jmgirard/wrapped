@@ -4,14 +4,14 @@
      plan-owned body. -->
 # M013: Fall back where a format cannot wrap
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — users see the layout and the warnings
-- **Branch/PR:** —
+- **Branch/PR:** m013-format-fallbacks
 
 ## Goal
 
@@ -76,6 +76,9 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 - 2026-10-27: plan gate chose falling back per format over falling back in all formats because the second removes wraps that render correctly today; falsified by a render where a wrap kept as working renders wrong in that format.
 - 2026-10-27: plan chose the LaTeX page-wide fallback for the 9 `isStarEnv` classes over all 16 because Quarto does not make the other 7 page-wide in LaTeX; falsified by a LaTeX render where one of the 7 fails to wrap.
 - 2026-10-27: plan kept a figure's own page-wide class in scope, because the float pass already reads a float's own margin class, and moved the margin caption classes and document-level `fig-column` to the new candidate row "Fall back in more margin and page forms".
+
+- 2026-10-27: implement started on m013-format-fallbacks. A pre-quarto dump shows that Quarto already copies a cell's cap-location options onto the float's `cap-location` attribute, and that `fig-column: margin` and `fig-column: page` reach the cell as the classes `fig-column-margin` and `fig-column-page`.
+- 2026-10-27: checkpoint (T1 not checked off): definition lists and `fig-column-margin` cells are contexts, and the contexts fixture and its four snapshots are updated (each format renders with status 0). The fixtures for T2 to T5 are written but not yet in `tests/verify.py`. The full suite is running.
 
 ## Decisions
 

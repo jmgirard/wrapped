@@ -102,6 +102,31 @@ The paragraph after the table. Lorem ipsum dolor sit amet, consectetur adipiscin
 
   The paragraph after an image with no caption in the list item. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
+## E8: a definition list
+
+Term
+:   ![A definition list figure.](plot.png){#fig-deflist .wrap-right}
+
+    The paragraph after the figure in the definition. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+Another term
+:   ![](deflist.png){.wrap-left width="20%"}
+
+    The paragraph after an image with no caption in the definition. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## E3: a fig-column margin cell
+
+```{r}
+#| label: fig-figcol-margin
+#| fig-cap: "A fig-column margin cell figure."
+#| fig-column: margin
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+```
+
+The paragraph after the fig-column margin cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ## E8: a callout
 
 ::: {.callout-note}

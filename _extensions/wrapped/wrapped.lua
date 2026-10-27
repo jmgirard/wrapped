@@ -868,9 +868,12 @@ local no_text = {}
 -- normal layout and a warning.
 local context_of_float = {}
 
--- Returns the context that a margin class names, or nil.
+-- Returns the context that a margin class names, or nil. A code cell with
+-- `fig-column: margin` carries the fig-column-margin class.
 local function margin_context(classes)
-  if classes:includes("column-margin") then return "is in the margin" end
+  if classes:includes("column-margin") or classes:includes("fig-column-margin") then
+    return "is in the margin"
+  end
   if classes:includes("aside") then return "is in an aside" end
   return nil
 end
@@ -878,7 +881,9 @@ end
 -- Returns the context that a block sets for the blocks inside it, or nil.
 -- A code cell with `column: margin` carries the column-margin class.
 local function block_context(block)
-  if block.t == "BulletList" or block.t == "OrderedList" then return "is in a list" end
+  if block.t == "BulletList" or block.t == "OrderedList" or block.t == "DefinitionList" then
+    return "is in a list"
+  end
   if block.t ~= "Div" then return nil end
   local kind = block.attributes.__quarto_custom_type
   if kind == "Callout" then return "is in a callout" end
@@ -968,10 +973,14 @@ local function find_contexts(doc)
     if not context then return nil end
     if block.t == "Div" then
       block.content = mark_context(block.content, context)
-    else
+    elseif block.t == "BulletList" or block.t == "OrderedList" then
       for i, item in ipairs(block.content) do
         block.content[i] = mark_context(item, context)
       end
+    else
+      -- A definition list's items hold a term and a list of definitions,
+      -- so the walk marks the whole block.
+      block = mark_context(pandoc.Blocks({ block }), context)[1]
     end
     return block, false
   end
@@ -988,6 +997,7 @@ local function find_contexts(doc)
     Div = mark,
     BulletList = mark,
     OrderedList = mark,
+    DefinitionList = mark,
     Figure = own_margin,
     Image = function(img)
       local context = margin_context(img.classes)

@@ -1,0 +1,25 @@
+---
+title: "wrapped fixture: Word lengths past the integer range"
+filters:
+  - wrapped
+format: docx
+---
+
+A number whose twips pass 2^63 reads as a float, so each pair below gives
+the same width and the same warning.
+
+![A figure 9223372036854775807 in wide.](plot.png){#fig-huge-width .wrap-right width="9223372036854775807in"}
+
+The paragraph after the figure with the huge width. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+![A figure 9999 in wide.](plot.png){#fig-big-width .wrap-right width="9999in"}
+
+The paragraph after the figure with the large width. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+![A figure with a 9223372036854775807 in gap.](plot.png){#fig-huge-gap .wrap-left wrap-gap="9223372036854775807in"}
+
+The paragraph after the figure with the huge gap. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+![A figure with a 9999 in gap.](plot.png){#fig-big-gap .wrap-left wrap-gap="9999in"}
+
+The paragraph after the figure with the large gap. Lorem ipsum dolor sit amet, consectetur adipiscing elit.

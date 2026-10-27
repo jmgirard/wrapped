@@ -1,0 +1,20 @@
+---
+title: "wrapped fixture: an image in a LaTeX table cell"
+filters:
+  - wrapped
+format:
+  pdf:
+    keep-tex: true
+---
+
+A wrapped image with no caption in a table cell keeps its normal layout in
+PDF through LaTeX, with a warning, and the render succeeds.
+
++------------------------------------------------------------+
+| Cell                                                       |
++============================================================+
+| ![](cell.png){.wrap-left width="20%"}                      |
+|                                                            |
+| The paragraph after an image with no caption in the cell.  |
+| Lorem ipsum dolor sit amet, consectetur adipiscing elit.   |
++------------------------------------------------------------+

@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-27 (M012 done: two started rows graduated, M009 row
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M013 | Fall back where a format cannot wrap | planned | — | normal | milestones/M013-format-fallbacks.md |
+| M013 | Fall back where a format cannot wrap | in-progress | — | normal | milestones/M013-format-fallbacks.md |
 | M012 | Finish the gap checks | done | — | normal | milestones/archive/M012-gap-checks.md |
 | M011 | Finish the figure width checks | done | — | normal | milestones/archive/M011-finish-width-checks.md |
 | M010 | Check figure widths before use | done | — | normal | milestones/archive/M010-width-checks.md |
