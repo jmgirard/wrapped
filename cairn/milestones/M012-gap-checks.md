@@ -185,17 +185,17 @@ Sync: `main` at 1d240c7, unmoved since the cut. Copilot review is off (no
 spawned: diff-bug, blame-history, prior-review, ripple
 
 Findings and dispositions:
-- prior-review #1, blame-history #3, diff-bug #4: a gap-only `wrapped:` metadata ran the Word check and warned "so the width is 40%" with no change, against M011's Typst fix — fix now: the check needs a metadata width, as in Typst.
-- blame-history #1, diff-bug #5: a metadata width that `format_default` replaced (`10in` with a `5in` gap) warned a second time — fix now: the check runs only on a metadata width that stayed as written; new fixture `docx-gap-meta-wide.qmd` shows one warning.
-- diff-bug #6: a figure whose own gap fell back (`wrap-gap="abc"`) still ran the sum check and could warn twice — fix now: only a gap that Word can use counts as the figure's own.
-- diff-bug #2: an unusable width with the figure's own gap now takes the gap-aware fallback (40% where the default fills), unstated and untested — fix now: README Word bullet states it; `fig-bad-width` case in docx-gap.qmd.
-- prior-review #4: README "even when its own width was narrower than 40%" had no fixture — fix now: `fig-narrow` (`0.5in` with `6in`) in docx-gap.qmd.
-- diff-bug #3, prior-review #2, blame-history #4, ripple #4: the negative gap check sits in the shared `checked_length`, so LaTeX, Typst, and Word change their message, with no fixture outside HTML and docs saying HTML only — fix now: `fig-negative-gap` (`calc(-1em)`) in docx-gap.qmd; README and DESIGN step 5 say the check runs in every format.
-- diff-bug #9: `clamp(-3px, -2%, -1px)` passes too, while the docs name only `max()` — fix now: README and the DESIGN Known issue name `max()` and `clamp()`.
-- diff-bug #10, ripple #6: wrap-mechanisms W4 said every filling frame warns, and DESIGN lacked the gap-only metadata limit — fix now: W4 names a figure with its own width or gap; new Known issue.
-- ripple #3: the `docx_frame` comment said "as Typst does", while Typst warns only for percents — fix now: the comment says Typst picks its width in the same order.
-- ripple #5: DESIGN's Syntax table did not say a negative gap warns — fix now.
-- ripple #7: README's metadata bullet read as covering a gap-only metadata — fix now: it names a `wrapped:` width.
+- prior-review #1, blame-history #3, diff-bug #4: a gap-only `wrapped:` metadata ran the Word check and warned "so the width is 40%" with no change, against M011's Typst fix — fix now, fixed 69037e6: the check needs a metadata width, as in Typst.
+- blame-history #1, diff-bug #5: a metadata width that `format_default` replaced (`10in` with a `5in` gap) warned a second time — fix now, fixed 69037e6: the check runs only on a metadata width that stayed as written; new fixture `docx-gap-meta-wide.qmd` shows one warning.
+- diff-bug #6: a figure whose own gap fell back (`wrap-gap="abc"`) still ran the sum check and could warn twice — fix now, fixed 69037e6: only a gap that Word can use counts as the figure's own.
+- diff-bug #2: an unusable width with the figure's own gap now takes the gap-aware fallback (40% where the default fills), unstated and untested — fix now, fixed 69037e6: README Word bullet states it; `fig-bad-width` case in docx-gap.qmd.
+- prior-review #4: README "even when its own width was narrower than 40%" had no fixture — fix now, fixed 69037e6: `fig-narrow` (`0.5in` with `6in`) in docx-gap.qmd.
+- diff-bug #3, prior-review #2, blame-history #4, ripple #4: the negative gap check sits in the shared `checked_length`, so LaTeX, Typst, and Word change their message, with no fixture outside HTML and docs saying HTML only — fix now, fixed 69037e6: `fig-negative-gap` (`calc(-1em)`) in docx-gap.qmd; README and DESIGN step 5 say the check runs in every format.
+- diff-bug #9: `clamp(-3px, -2%, -1px)` passes too, while the docs name only `max()` — fix now, fixed 69037e6: README and the DESIGN Known issue name `max()` and `clamp()`.
+- diff-bug #10, ripple #6: wrap-mechanisms W4 said every filling frame warns, and DESIGN lacked the gap-only metadata limit — fix now, fixed 69037e6: W4 names a figure with its own width or gap; new Known issue.
+- ripple #3: the `docx_frame` comment said "as Typst does", while Typst warns only for percents — fix now, fixed 69037e6: the comment says Typst picks its width in the same order.
+- ripple #5: DESIGN's Syntax table did not say a negative gap warns — fix now, fixed 69037e6.
+- ripple #7: README's metadata bullet read as covering a gap-only metadata — fix now, fixed 69037e6: it names a `wrapped:` width.
 - diff-bug #1: `fig-below` records an 8400-twip image in an 8640-twip frame (`fills=no`) — follow-up: absorbed into the row "Fit images in wide Word frames", which predates M012.
 - prior-review #3: `docx_measure` reads `9223372036854775807in` as an integer and wraps to -1440 twips — follow-up: new row "Read Word lengths as floats in twips"; M012 did not add it.
 - blame-history #6: a narrow own width widens to 40% when no width fits — follow-up: row "Keep narrow widths when no width fits" (from the claim audit).
