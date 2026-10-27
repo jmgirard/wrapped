@@ -172,6 +172,8 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 - 2026-10-27: kept the percent-sum warning for a figure with no width and a large percent gap (claim audit note): it says the width is 40%, which it already is, but its "no room for text" holds.
 - 2026-10-27: checkpoint (review): fix-now work for blame-history #1 and #4 and diff-bug #1, #3, #4, and #6 committed; full suite with --update running for the changed and new snapshots.
 - 2026-10-27: T6: all 55 renders pass on macOS after the audit fixes. CI does not run on branch pushes (verify.yml runs on pull requests and main), so CI is read at review's merge step; T6's push-and-CI half moves there (minor task edit).
+- 2026-10-27: the line on line 172 is superseded by blame-history #1's fix: a figure with no width of its own no longer gets the percent-sum warning.
+- 2026-10-27: step-7 approval: m011-finish-width-checks approved for merge
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
