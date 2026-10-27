@@ -68,14 +68,14 @@ normal layout**. A warning line reads `1x wrapped: the figure #<id>
 
 ## Tasks
 
-- [ ] T1: Add the cases of AC1 and AC2 to `tests/revealjs.qmd`, each
+- [x] T1: Add the cases of AC1 and AC2 to `tests/revealjs.qmd`, each
       followed by a paragraph, and write the two new fixtures. Render a bare
       copy of each and confirm in the HTML that no figure of AC1 sits in an
       element that the revealjs stylesheet moves. Write one work-log line.
-- [ ] T2: On revealjs, make `margin_context` return no place for
+- [x] T2: On revealjs, make `margin_context` return no place for
       `column-margin` and `fig-column-margin`, and keep `aside`. Add the
       `tests/verify.py` entries and write the snapshots.
-- [ ] T3: Update the README section "Slides" and rows E3 and E15 of
+- [x] T3: Update the README section "Slides" and rows E3 and E15 of
       `cairn/references/wrap-mechanisms.md`.
 - [ ] T4: Run `python3 tests/verify.py` and compare `tests/_snapshots/`
       with `main`.
@@ -93,6 +93,7 @@ normal layout**. A warning line reads `1x wrapped: the figure #<id>
 - 2026-10-28: T1 bare render (Quarto 1.10.19, filters removed): every AC1 figure sits in the slide's section, `fig-slide-margin-div` in a `div.column-margin`; no file under the revealjs libs names `column-margin`; `fig-slide-aside` sits in an `aside`, which the theme sets `position:absolute; bottom:20px`.
 - 2026-10-28: T2 choice: a module-level `is_revealjs` flag, also used by `has_page_layout`; `margin_context` skips the two margin classes when it is set.
 - 2026-10-28: checkpoint, half-done: T1–T3 edits on disk, T1/T2 unchecked until `verify.py --update` finishes and the snapshot diff is read.
+- 2026-10-28: T1–T3 done: `verify.py --update` passed all 97 renders; the revealjs snapshot gains only added lines, the five AC1 figures wrap and `fig-slide-aside` warns `is in an aside`. With main's filter all seven AC1 figures warn `is in the margin`, so the fixtures fail on main.
 
 ## Decisions
 

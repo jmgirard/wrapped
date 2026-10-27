@@ -1,4 +1,5 @@
 # warnings
+1x wrapped: the figure #fig-slide-aside is in an aside, so it does not wrap.
 # breakpoint
 576px
 # figures
@@ -6,13 +7,30 @@ fig-slide: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-slide-page: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-slide-cap: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-slide-margincap: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-slide-margin: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-slide-figmargin: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-slide-margin-div: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-slide-margin-cell: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-slide-figmargin-cell: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-slide-aside: - style=-
 # images
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+fig-slide-margin-cell-1.png: wrap=- style=- width=-
+fig-slide-figmargin-cell-1.png: wrap=- style=- width=-
+plot.png: wrap=- style=width:40.0% width=-
 # groups
 fig-slide, p
 fig-slide-page, p
 fig-slide-cap, p
 fig-slide-margincap, p
+fig-slide-margin, p
+fig-slide-figmargin, p
+fig-slide-margin-div, p
+cell, p
+cell, p
