@@ -211,6 +211,8 @@ file or says that the figure has no id.
   `#fig-` id and every code cell figure, even a cell with
   `#| fig-column: body`. In PDF, the order after this list decides. It
   does not apply to a captioned image with no id, which stays in the body.
+  Slides have no margin column, so on a slide only the aside div keeps
+  the figure normal (see "Slides").
 - A subfigure panel, such as a figure div with `layout-ncol`, or a
   subfigure inside a panel.
 - A panel layout: a div or a code cell with `layout-ncol`, `layout-nrow`,

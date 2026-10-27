@@ -147,7 +147,10 @@ passes (corrected M003):
 2. It finds the contexts that cannot wrap: lists (definition lists
    included), callouts, column layouts, panel layouts, tabsets, asides,
    margin blocks (a `fig-column: margin` cell included), and subfigure
-   panels. Some contexts depend on the format: a block quote in LaTeX, a
+   panels. revealjs slides have no margin column, so there the margin
+   classes and a document margin value name no context, and an aside still
+   does (`margin_context`) (corrected M017). Some contexts depend on the
+   format: a block quote in LaTeX, a
    table in LaTeX and Word, and a page-wide column class in HTML, and in
    LaTeX and Typst for the classes Quarto sets page-wide there
    (`page_context`; in Typst a float's own class counts only for the
@@ -185,7 +188,9 @@ passes (corrected M003):
    document value, so a panel warns as a subfigure panel. HTML reads a
    margin or page-wide class on the float or its cell, and Word a margin
    class, then the document's value, so a body class does not override the
-   document there (corrected M016). In HTML,
+   document there (corrected M016). On revealjs slides a margin class or a
+   document margin value keeps no float normal, by step 2's rule
+   (corrected M017). In HTML,
    each other float gets its
    box width and gap as CSS custom properties, and a captioned image with
    no id gets a `.wrapped-image` box. In LaTeX, each other float and

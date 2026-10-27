@@ -82,3 +82,15 @@ The paragraph after the cell sits beside its figure, because slides have no marg
 
 The paragraph after the figure. By default, revealjs puts an aside at the foot of the slide, so the figure keeps its normal layout.
 :::
+
+## A captioned image with no id and a margin class on a slide
+
+![A captioned image with no id and the column-margin class on a slide.](plot.png){.wrap-left width="30%" .column-margin}
+
+The paragraph after the captioned image sits beside it, because slides have no margin column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## An image with a margin class on a slide
+
+![](plot.png){.wrap-right width="30%" .column-margin}
+
+The paragraph after the image sits beside it, because slides have no margin column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.

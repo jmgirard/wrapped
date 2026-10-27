@@ -37,7 +37,7 @@ local options = {
 local is_html = quarto.doc.is_format("html:js")
 local is_revealjs = quarto.doc.is_format("revealjs")
 -- An HTML page with Quarto's page layout. revealjs slides have no margin
--- captions and no page-wide columns.
+-- column, no margin captions, and no page-wide columns.
 local has_page_layout = is_html and not is_revealjs
 -- PDF through LaTeX. Beamer is a separate format and keeps a normal figure.
 -- The first pass sets is_latex to false for a two-column document.
@@ -1030,8 +1030,9 @@ end
 -- quotes and tables of the formats that cannot wrap there, outermost first, and marks
 -- what is inside each one. A float that holds other floats is a subfigure
 -- panel. A captioned image with no id, or an image, with its own margin
--- class is in the margin too. Quarto makes only floats and divs page-wide,
--- so a float's own margin or page-wide class is read in the float pass.
+-- class is in the margin too, except on revealjs slides. Quarto makes only
+-- floats and divs page-wide, so a float's own margin or page-wide class is
+-- read in the float pass.
 local function find_contexts(doc)
   local function mark(block)
     if block.t == "Div" and is_float_div(block) then
