@@ -1,8 +1,14 @@
 # warnings
+1x wrapped: a figure with no id has its caption in the margin, so it does not wrap.
 1x wrapped: the figure #fig-cap-attr has its caption in the margin, so it does not wrap.
 1x wrapped: the figure #fig-cap-cell has its caption in the margin, so it does not wrap.
+1x wrapped: the figure #fig-capclass-cell has its caption in the margin, so it does not wrap.
+1x wrapped: the figure #fig-capmargin-class has its caption in the margin, so it does not wrap.
 1x wrapped: the figure #fig-figcap-attr has its caption in the margin, so it does not wrap.
 1x wrapped: the figure #fig-figcap-cell has its caption in the margin, so it does not wrap.
+1x wrapped: the figure #fig-margincap-cell has its caption in the margin, so it does not wrap.
+1x wrapped: the figure #fig-margincap-class has its caption in the margin, so it does not wrap.
+1x wrapped: the figure #fig-margincap-div has its caption in the margin, so it does not wrap.
 # breakpoint
 576px
 # figures
@@ -11,11 +17,25 @@ fig-figcap-attr: - style=-
 fig-figcap-first: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-cap-cell: - style=-
 fig-figcap-cell: - style=-
+fig-margincap-class: - style=-
+fig-capmargin-class: - style=-
+fig-margincap-div: - style=-
+(box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
+fig-capclass-cell: - style=-
+fig-margincap-cell: - style=-
 # images
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 fig-cap-cell-1.png: wrap=- style=- width=672
 fig-figcap-cell-1.png: wrap=- style=- width=672
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+fig-capclass-cell-1.png: wrap=- style=- width=672
+fig-margincap-cell-1.png: wrap=- style=- width=672
 # groups
 fig-figcap-first, p
+wrapped-image, p

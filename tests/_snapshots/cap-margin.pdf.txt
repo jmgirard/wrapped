@@ -10,3 +10,17 @@ wrappedfigure: fig-cap-cell [side=right,width=0.4\linewidth,gap=1em] image=[widt
 wrappedstop
 wrappedfigure: fig-figcap-cell [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+wrappedfigure: fig-margincap-class [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-capmargin-class [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-margincap-div [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: - [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: - [side=left,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-capclass-cell [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-margincap-cell [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

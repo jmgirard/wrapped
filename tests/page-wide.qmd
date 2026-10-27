@@ -13,8 +13,8 @@ format:
 ---
 
 In HTML, a wrapped figure in a page-wide column keeps its normal layout,
-with a warning. In PDF through LaTeX it does so where Quarto makes the figure
-page-wide. It wraps in PDF through Typst and Word.
+with a warning. In PDF through LaTeX and PDF through Typst it does so where
+Quarto makes the figure page-wide. It wraps in Word.
 
 ## A column-page div
 
@@ -45,6 +45,12 @@ The paragraph after the figure in the column-body-outset div. Lorem ipsum dolor 
 ![A figure with its own column-page class.](plot.png){#fig-own-page .wrap-right .column-page}
 
 The paragraph after the figure with its own column-page class. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A figure with its own column-page-inset class
+
+![A figure with its own column-page-inset class.](plot.png){#fig-own-inset .wrap-right .column-page-inset}
+
+The paragraph after the figure with its own column-page-inset class, which wraps in PDF through Typst, because Typst sets a figure's own inset class in the body. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## An image with its own column-page class
 

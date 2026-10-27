@@ -1,0 +1,21 @@
+# warnings
+1x wrapped: the figure #fig-meta-body-cell is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-meta-margin is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-meta-margin-cell is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-meta-margin-div is in the margin, so it does not wrap.
+# breakpoint
+576px
+# figures
+fig-meta-margin: - style=-
+fig-meta-margin-div: - style=-
+fig-meta-margin-cell: - style=-
+fig-meta-body-cell: - style=-
+(box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
+# images
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+fig-meta-margin-cell-1.png: wrap=- style=- width=672
+fig-meta-body-cell-1.png: wrap=- style=- width=672
+plot.png: wrap=- style=- width=-
+# groups
+wrapped-image, p

@@ -201,10 +201,14 @@ file or says that the figure has no id.
 
 - The margin: a figure with the `.column-margin` class, a figure in a
   `.column-margin` or `.aside` div, or a code cell with `#| column: margin`
-  or `#| fig-column: margin`. The figure stays in the margin. In PDF through LaTeX, Quarto puts a
-  captioned image that has the `.column-margin` class and no `#fig-` id
-  in the body instead. Word has no margin column, so there the figure is
-  in the body.
+  or `#| fig-column: margin`. The figure stays in the margin. In PDF
+  through LaTeX, Quarto puts a captioned image that has the
+  `.column-margin` class and no `#fig-` id in the body instead. Word has
+  no margin column, so there the figure is in the body. This item also
+  covers `fig-column: margin` in the document metadata. That value applies
+  to every figure with a `#fig-` id and every code cell figure, even a
+  cell with `#| fig-column: body`. It does not apply to a captioned image
+  with no id, which stays in the body.
 - A subfigure panel, such as a figure div with `layout-ncol`, or a
   subfigure inside a panel.
 - A panel layout: a div or a code cell with `layout-ncol`, `layout-nrow`,
@@ -237,15 +241,28 @@ prints the same warning there, and the figure wraps in the other formats.
   `cap-location` or `fig-cap-location` is `margin` on the figure, on its
   code cell, or in the document metadata. The figure's own value comes
   before the metadata's, and `fig-cap-location` comes before
-  `cap-location`.
+  `cap-location`. The `.margin-caption` and `.caption-margin` classes also
+  send the caption to the margin. They work on the figure, on its image,
+  and on its code cell, as in `#| classes: wrap-right .caption-margin`. For
+  a captioned image with no id, only `.margin-caption` does this.
 - A page-wide column: a page-wide class on the figure or on a div around
   it, or a code cell with `#| column: page` or `#| fig-column: page`. The
   classes are `.column-body-outset`, `.column-page-inset`, `.column-page`,
   `.column-screen-inset`, and `.column-screen`, each alone or with `-left`
-  or `-right`, and `.column-screen-inset-shaded`. In HTML this covers all of
-  them. In PDF through LaTeX it covers the classes that Quarto makes
-  page-wide there: those that start with `.column-page` or
-  `.column-screen` and do not end in `-left`.
+  or `-right`, and `.column-screen-inset-shaded`. In HTML this covers all
+  of them. In PDF through Typst it covers all of them on a div or a code
+  cell. For a class on the figure itself, it covers only `.column-page`
+  and `.column-screen`, each alone or with `-left` or `-right`. Quarto
+  keeps the figure in the body for the others. In PDF through LaTeX
+  it covers the classes that Quarto makes page-wide there: those that
+  start with `.column-page` or `.column-screen` and do not end in `-left`.
+  Word keeps the figure in the body, where it wraps. This item also covers
+  a page-wide value of `fig-column` or `column` in the document metadata,
+  such as `fig-column: page`. That value applies to every figure with a
+  `#fig-` id and every code cell figure, even a cell with
+  `#| fig-column: body`. In PDF through Typst it applies as a class on the
+  figure itself does, except on a code cell figure. It does not apply to a
+  captioned image with no id, which stays in the body.
 
 ## Slides
 
@@ -472,7 +489,9 @@ Right-to-left Word documents are not tested.
 
 ## Notes
 
-- A captioned image with no `#fig-` id wraps too. In HTML and Word it has
+- A captioned image with no `#fig-` id wraps too, unless a place in the
+  section "Where a figure keeps its normal layout" applies to it, such as
+  a caption in the margin. In HTML and Word it has
   no figure number. In PDF through LaTeX and Typst, Quarto numbers it.
 - An image inside a link, or beside other content in its paragraph, does
   not wrap. In HTML, LaTeX, Typst, and Word the render prints a warning for

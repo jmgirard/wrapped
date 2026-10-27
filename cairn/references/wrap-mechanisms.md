@@ -146,7 +146,7 @@ The filter has two entry points (corrected M006):
 |---|---|---|
 | E1 | Wrap class on the image, not the float | The filter moves it to the float. |
 | E2 | `fig-align` set | Ignored for the box position. It still aligns the image inside the box. |
-| E3 | `.column-margin` or `.aside` with a wrap class, or a `fig-column: margin` cell | Margin wins. One warning (corrected M013). |
+| E3 | `.column-margin` or `.aside` with a wrap class, or a `fig-column: margin` cell or document | Margin wins. One warning (corrected M013). A document-level value is E21's (M015). |
 | E4 | Subfigure panel (`layout-ncol`) | Normal panel. One warning. A wrapped code cell that makes more than one figure without `fig-subcap` keeps each figure normal, with one warning for the cell (corrected M014, D-010). |
 | E5 | `#tbl-` float with a wrap class | Normal table. One warning. |
 | E6 | Wrapped figure is the last block before a heading | No text to wrap. Normal figure, no warning. |
@@ -163,8 +163,8 @@ The filter has two entry points (corrected M006):
 | E17 | `classoption: twocolumn` in LaTeX | Normal figure. One warning. |
 | E18 | Wrapped figure in a block quote | Normal figure with one warning in LaTeX, where wrapfig does not wrap. Wraps in HTML, Typst, and Word (M013). |
 | E19 | Wrapped figure in a table cell | Normal figure with one warning in Word and LaTeX. A captioned figure in a LaTeX table cell fails to build with or without the extension. Wraps in HTML and Typst (M013). |
-| E20 | Caption in the margin (`cap-location` or `fig-cap-location`) | Normal figure with one warning on an HTML page, where no text sits beside it. Wraps in LaTeX, Typst, Word, and slides (M013). |
-| E21 | Page-wide column class | Normal figure with one warning on an HTML page for all 16 classes, and in LaTeX for those Quarto makes page-wide. Wraps in Typst, Word, and slides (M013). |
+| E20 | Caption in the margin (`cap-location`, `fig-cap-location`, or the `.margin-caption` or `.caption-margin` class) | Normal figure with one warning on an HTML page, where no text sits beside it. Wraps in LaTeX, Typst, Word, and slides (M013). A captioned image with no id moves its caption only for `.margin-caption` (M015). |
+| E21 | Page-wide column class, or a document-level `fig-column` or `column` | Normal figure with one warning on an HTML page for all 16 classes, and in LaTeX for those Quarto makes page-wide. Wraps in Word and slides (M013). In Typst, Quarto 1.10.19 sets a div or a code cell wider than the text for all 16. It sets a figure with its own class wider only for `column-page` and `column-screen`, with or without `-left` or `-right`. The figure is normal in those cases (corrected M015). A document-level value applies to every figure float, even a cell with `fig-column: body`. A margin value keeps the figure normal in every format, as a margin class does. A captioned image with no id is no float and wraps (M015). |
 
 ## Test plan
 

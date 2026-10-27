@@ -913,13 +913,18 @@ end
 -- cell with `column: page` carries the column-page class, and one with
 -- `fig-column: page` the fig-column-page class. LaTeX makes a figure
 -- page-wide only for the names that start with column-page or
--- column-screen and do not end in -left, as Quarto's isStarEnv does, and
--- Typst and Word keep the figure in the body.
-local function page_context(classes)
+-- column-screen and do not end in -left, as Quarto's isStarEnv does. Typst
+-- sets a div or a code cell wider than the text for each name, in a
+-- wideblock or a column function, but a float's own class only for the
+-- column-page and column-screen names without -inset (Quarto 1.10.19). Word
+-- keeps the figure in the body.
+local function page_context(classes, own)
   for _, class in ipairs(classes) do
     local name = class:gsub("^fig%-", "")
-    if PAGE_WIDE[name] and (has_page_layout or is_latex and not name:match("%-left$")
-        and (name:match("^column%-page") or name:match("^column%-screen"))) then
+    local starred = name:match("^column%-page") or name:match("^column%-screen")
+    if PAGE_WIDE[name] and (has_page_layout
+        or is_typst and not (own and (not starred or name:match("%-inset")))
+        or is_latex and not name:match("%-left$") and starred) then
       return "is page-wide"
     end
   end
@@ -927,8 +932,9 @@ local function page_context(classes)
 end
 
 -- Returns the context that a margin or page-wide column class names, or nil.
-local function class_context(classes)
-  return margin_context(classes) or page_context(classes)
+-- `own` is true for a float's own classes.
+local function class_context(classes, own)
+  return margin_context(classes) or page_context(classes, own)
 end
 
 -- Returns the context that a block sets for the blocks inside it, or nil.
@@ -1111,10 +1117,42 @@ end
 -- The document's caption location for figures, read in the first pass.
 local meta_cap_location = nil
 
--- Where a figure's caption goes, read in Quarto's order: the figure's own
--- fig-cap-location, its cap-location, then the document's. Quarto has
--- already copied a code cell's caption location to the cell's figure.
+-- The contexts that the document's fig-column, or else its column, gives a
+-- code cell's figure float (cell) and any other figure float (float); each
+-- is nil when the value names neither the margin nor a page-wide column
+-- there. Quarto 1.10.19 applies the value to a code cell's float even when
+-- the cell sets fig-column: body, and not to a captioned image with no id,
+-- which is no float.
+local meta_column_context = {}
+
+-- The text of a fig-column or column metadata value, or nil. As Quarto's
+-- columnOption does, it reads the first item of a list and treats an empty
+-- value as unset.
+local function meta_column(value)
+  if pandoc.utils.type(value) == "List" then value = value[1] end
+  local text = meta_text(value)
+  if text ~= "" then return text end
+  return nil
+end
+
+-- Whether a class sends a caption to the margin. Quarto reads both
+-- margin-caption and caption-margin on a float, but moves the caption of a
+-- captioned image with no id only for margin-caption (Quarto 1.10.19).
+local function margin_caption_class(classes, is_float)
+  return classes:includes("margin-caption") or (is_float and classes:includes("caption-margin"))
+end
+
+-- Where a figure's caption goes: a margin caption class on the float or
+-- its image comes first, then the figure's own fig-cap-location, its
+-- cap-location, then the document's. Quarto has already copied a code
+-- cell's caption location, and its caption-margin class, to the cell's
+-- figure as cap-location.
 local function caption_location(float)
+  local by_class = margin_caption_class(float.classes, true)
+  float.content:walk({
+    Image = function(img) by_class = by_class or margin_caption_class(img.classes, true) end,
+  })
+  if by_class then return "margin" end
   return float.attributes["fig-cap-location"] or float.attributes["cap-location"]
     or meta_cap_location
 end
@@ -1128,6 +1166,11 @@ local function read_meta(meta)
   if is_latex and names_two_column(meta.classoption) then
     is_latex = false
     two_column = true
+  end
+  local column = meta_column(meta["fig-column"]) or meta_column(meta.column)
+  if column then
+    local classes = pandoc.List({ "column-" .. column })
+    meta_column_context = { float = class_context(classes, true), cell = class_context(classes) }
   end
   local m = meta.wrapped
   if m == nil then return end
@@ -1213,7 +1256,10 @@ local function cell_div(div)
   if n > 0 then
     next_token = next_token + 1
     local token = tostring(next_token)
-    carry = { class = c, remaining = n, token = token, several = count_top_floats(div) > 1 }
+    -- Quarto turns a cell's caption-margin class into the cap-location of
+    -- its figure, but not its margin-caption class, so that one is carried.
+    carry = { class = c, remaining = n, token = token, several = count_top_floats(div) > 1,
+      margin_caption = div.classes:includes("margin-caption") }
     if wraps() then div.attributes["data-wrap-anchor"] = token end
   end
   return div
@@ -1246,15 +1292,19 @@ local function float_target(float)
   -- A figure in a context keeps its normal layout too, and so does an HTML
   -- figure whose caption goes to the margin: CSS places the caption in the
   -- margin, outside the figure's box, and no text sits beside the figure.
+  -- A document-level fig-column or column puts the float in the margin or
+  -- a page-wide column.
   local node = float.__quarto_custom_node
   local custom_id = node and node.attributes and node.attributes.__quarto_custom_id
   local layout = float.attributes["layout-ncol"] or float.attributes["layout-nrow"]
     or float.attributes.layout
   local context = (float.type ~= "Figure" and "is not a figure")
     or context_of_float[custom_id or ""]
-    or class_context(float.classes)
+    or class_context(float.classes, true)
     or (layout and "is a subfigure panel")
-    or (has_page_layout and caption_location(float) == "margin" and "has its caption in the margin")
+    or (cell and meta_column_context.cell or meta_column_context.float)
+    or (has_page_layout and (caption_location(float) == "margin" or (cell and cell.margin_caption))
+      and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
   if context or no_text[custom_id or ""] then
@@ -1331,16 +1381,19 @@ local function figure_block(fig)
   strip_wrap(fig.classes)
   local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
   -- As for a float, a caption in the margin of an HTML page leaves no text
-  -- beside the figure. The image may carry the caption location instead of
-  -- the figure.
+  -- beside the figure. The image may carry the caption location or the
+  -- margin-caption class instead of the figure.
   if has_page_layout then
-    local loc = caption_location(fig)
+    local by_class = margin_caption_class(fig.classes, false)
+    local loc = fig.attributes["fig-cap-location"] or fig.attributes["cap-location"]
+      or meta_cap_location
     fig.content:walk({
       Image = function(img)
+        by_class = by_class or margin_caption_class(img.classes, false)
         loc = img.attributes["fig-cap-location"] or img.attributes["cap-location"] or loc
       end,
     })
-    if loc == "margin" then
+    if by_class or loc == "margin" then
       fig.content = fig.content:walk({ Image = drop_wrap })
       context_warning(where == "a figure with no id" and where or ("the figure " .. where),
         "has its caption in the margin")

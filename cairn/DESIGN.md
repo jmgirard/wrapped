@@ -149,19 +149,26 @@ passes (corrected M003):
    margin blocks (a `fig-column: margin` cell included), and subfigure
    panels. Some contexts depend on the format: a block quote in LaTeX, a
    table in LaTeX and Word, and a page-wide column class in HTML, and in
-   LaTeX for the classes Quarto sets page-wide there (`page_context`). It
+   LaTeX and Typst for the classes Quarto sets page-wide there
+   (`page_context`; in Typst a float's own class counts only for the
+   column-page and column-screen names without -inset) (corrected M015). It
    records each float there by its custom id, and it removes the wrap class
    from a captioned image with no id or an image there, with a warning. In
    HTML, step 4 also keeps a float whose caption goes to the margin in its
-   normal layout (`caption_location`) (corrected M013).
+   normal layout (`caption_location`), by a caption location or by the
+   `margin-caption` or `caption-margin` class (corrected M013, M015).
 3. It applies the next-block rule: it records each float with no paragraph
    after it, and removes the wrap class from such a captioned image with no
    id or image.
 4. In a top-down pass, it carries a code cell's wrap class to that cell's
    floats and moves an image's class to its float. A float that step 2 or
    3 recorded, a table, a float with a margin or page-wide class or a
-   layout attribute, or a figure of a code cell with more than one float
-   outside other floats keeps its normal layout (corrected M014). In HTML, each other float gets its
+   layout attribute, any figure float when the document's `fig-column` or
+   `column` names the margin, or a page-wide column in a format where step
+   2's page-wide rule holds for it (`meta_column_context`, which reads a
+   code cell's float as a cell and any other float as a float's own class),
+   or a figure of a code cell with more than one float outside other
+   floats keeps its normal layout (corrected M014, M015). In HTML, each other float gets its
    box width and gap as CSS custom properties, and a captioned image with
    no id gets a `.wrapped-image` box. In LaTeX, each other float and
    captioned image gets `fig-env="wrappedfigure"` and a `fig-pos` that

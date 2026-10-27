@@ -1,0 +1,7 @@
+# warnings
+1x wrapped: the figure #fig-inset-cell is page-wide, so it does not wrap.
+# typ
+figure: fig-inset-float image-width=yes
+figure: fig-inset-cell image-width=no
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-inset-float no-alt | p | cites=0
