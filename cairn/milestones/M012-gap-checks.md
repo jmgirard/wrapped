@@ -131,16 +131,16 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
       `options.width` to 40% when the metadata width plus gap fills the
       text. New fixture `tests/docx-gap-meta.qmd` with the AC2 metadata
       and one figure with no width or gap; add to `RENDERS` and snapshot.
-- [ ] T3: HTML gap check. In `checked_length` (`wrapped.lua:418`), warn
+- [x] T3: HTML gap check. In `checked_length` (`wrapped.lua:418`), warn
       for a gap (`wrap-gap` or `gap`) whose bound from `calc_length` is
       `bad` or whose upper sum is below zero at every base (each
       coefficient zero or below, one below zero); a gap whose upper sum is
       zero stays. Add the AC3 warning section and the AC4 passing gaps to
       `tests/css-functions.qmd`; update the snapshot.
-- [ ] T4: HTML metadata gap. New fixture `tests/meta-calc-gap.qmd` with
+- [x] T4: HTML metadata gap. New fixture `tests/meta-calc-gap.qmd` with
       `wrapped: gap: calc(-1em)` and one figure; add to `RENDERS` and
       snapshot.
-- [ ] T5: Docs. README "Width and gap", "Document defaults", and Word
+- [x] T5: Docs. README "Width and gap", "Document defaults", and Word
       sections; DESIGN.md Architecture step 5 and Known issues;
       `wrap-mechanisms.md`; comments on `docx_frame`, `read_meta`, and
       `checked_length`. Run `python3 tests/verify.py` and push for CI.
@@ -166,3 +166,4 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 - 2026-10-27: T3 and T4 checkpoint (not ticked): `sum_negative` and `always_negative` make `checked_length` warn for a `wrap-gap` or metadata `gap` below zero or not finite at every size; before the change the ten AC3 gaps reached the style, after it each warns and takes 1em, and the seven AC4 gaps are unchanged; `tests/meta-calc-gap.qmd` gives one warning and a 1em gap; full verify running.
 - 2026-10-27: T5 checkpoint (not ticked): DESIGN.md Architecture step 5 and a Known issue for the mixed-unit `max()` gap, and `wrap-mechanisms.md` W4 text, describe the new checks; README next.
 - 2026-10-27: T5 checkpoint (not ticked): README "Width and gap", "Document defaults", and Word sections state the Word sum rule with its fallback order and the HTML negative gap rule with its limits.
+- 2026-10-27: T3, T4, and T5 done: verify passed, 59 renders, on the code at f592718; later commits change only README.md and cairn/ docs, which no fixture renders (readme.qmd copies the README examples). The CI half of T5 moves to review: verify.yml runs on pull requests and pushes to main, so a branch push starts no check.
