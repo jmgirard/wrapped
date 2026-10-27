@@ -140,7 +140,7 @@ line is absent. A warning line reads
       float pass's checks (about line 1277), after the class and panel
       checks. A dump filter after `wrapped` (lesson 2026-10-27, M013)
       shows which classes reach the float.
-- [ ] T4: Run `python3 tests/verify.py --update`, read each new and
+- [x] T4: Run `python3 tests/verify.py --update`, read each new and
       changed snapshot against AC1 to AC5, and run it again without
       `--update`.
 - [x] T5: Update the README section, rows E20 and E21 of
@@ -173,6 +173,7 @@ line is absent. A warning line reads
 - 2026-10-27: substantive amendment: AC1, AC3, AC4, AC5, the lead paragraph, Scope, and T3 follow T1's render without the extension. A cell's `fig-column: body` keeps its normal layout under a document key, a no-id image is tested with `.margin-caption` (falls back) and `.caption-margin` (wraps), the cell uses `wrap-right .caption-margin`, and `column-meta` adds a no-id image. What the user gets is unchanged: a figure keeps its normal layout where Quarto moves it.
 - 2026-10-27: plan's choice reversed: the document key now reaches every figure float, not only one with no `fig-column-*` class, because Quarto 1.10.19 puts a `fig-column: body` cell's float in the margin or page-wide under a document key (T1 render); falsified by a Quarto release that lets a cell's own `fig-column` win.
 - 2026-10-27: plan-owned body was 154 lines after the amendment; the Acceptance criteria section was rewrapped once, and AC5 lost the redundant file name.
+- 2026-10-27: T4: `python3 tests/verify.py --update` wrote the 4 `cap-margin` and the `revealjs` snapshots and 10 new ones, and no other snapshot changed; each read against AC1 to AC5; the run without `--update` passes all 86 renders. A planted bug (reading `.caption-margin` on a no-id image) turned the no-id warning to `2x` and removed the wrapping `(box)` line in the `cap-margin` HTML render.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
