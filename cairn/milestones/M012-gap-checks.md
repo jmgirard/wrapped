@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M012: Finish the gap checks
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -168,3 +168,5 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 - 2026-10-27: T5 checkpoint (not ticked): README "Width and gap", "Document defaults", and Word sections state the Word sum rule with its fallback order and the HTML negative gap rule with its limits.
 - 2026-10-27: T3, T4, and T5 done: verify passed, 59 renders, on the code at f592718; later commits change only README.md and cairn/ docs, which no fixture renders (readme.qmd copies the README examples). The CI half of T5 moves to review: verify.yml runs on pull requests and pushes to main, so a branch push starts no check.
 - 2026-10-27: claim audit corrections (re-read pending, verify running): README gap-only metadata note and "takes 40% and keeps the gap" wording, two comments in `checked_docx_twips` and `docx_frame`, and `fig-valid-27` (`max(-2px, -1%)` passes) in css-functions.qmd; new candidate row "Keep narrow widths when no width fits" for the widening to 40% that the plan chose.
+- 2026-10-27: claim audit: 30 claims read, 4 corrected — README.md, _extensions/wrapped/wrapped.lua; one more true claim (`max(-2px, -1%)` passes) gained fixture `fig-valid-27`; the same reader re-read the five and found each true.
+- 2026-10-27: verify passed, 59 renders, on the corrected code; status review.

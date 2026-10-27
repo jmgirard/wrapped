@@ -151,8 +151,8 @@ prints a warning, and the built-in `1em` applies. In Word, a `gap` of 0%
 prints a warning, and the built-in `1em` applies. In Word, a `width` plus
 its `gap` as wide as the text or wider prints a warning, and the built-in
 40% applies. With only a `gap` set, the width is already 40%, and 40% plus
-that gap can still leave no room. A `width`, `gap`, or `breakpoint` can be a `calc()`, `min()`,
-`max()`, or `clamp()` value, checked as above. A media query takes no
+that gap can still leave no room. A `width`, `gap`, or `breakpoint` can be
+a `calc()`, `min()`, `max()`, or `clamp()` value, checked as above. A media query takes no
 percent and no `var()`. So a `breakpoint` with a percent or a `var()`, such
 as `calc(50%)`, prints a warning, and `576px` applies.
 

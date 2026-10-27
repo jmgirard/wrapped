@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-27 (M011 done: two started rows graduated, M008 row
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M012 | Finish the gap checks | in-progress | — | normal | milestones/M012-gap-checks.md |
+| M012 | Finish the gap checks | review | — | normal | milestones/M012-gap-checks.md |
 | M011 | Finish the figure width checks | done | — | normal | milestones/archive/M011-finish-width-checks.md |
 | M010 | Check figure widths before use | done | — | normal | milestones/archive/M010-width-checks.md |
 | M009 | Keep LaTeX column layouts intact | done | — | normal | milestones/archive/M009-latex-columns.md |
