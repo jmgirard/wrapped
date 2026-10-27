@@ -41,16 +41,16 @@ revealjs `# figures` line shows `wrap-right` or `wrap-left`, a figure
 normal layout**. A warning line reads `1x wrapped: the figure #<id>
 <reason>, so it does not wrap.`.
 
-- [ ] AC1: In the revealjs snapshots, these figures wrap, and no warning
+- [x] AC1: In the revealjs snapshots, these figures wrap, and no warning
       names them:
   - in `tests/revealjs.qmd`, a float with `.column-margin`, a float with
     `.fig-column-margin`, a float in a `.column-margin` div, a knitr cell
     with `#| column: margin`, and a knitr cell with `#| fig-column: margin`.
   - the float in `tests/revealjs-margin-meta.qmd`.
   - the float in `tests/revealjs-column-margin.qmd`.
-- [ ] AC2: A float in an `.aside` div, added to `tests/revealjs.qmd`, keeps
+- [x] AC2: A float in an `.aside` div, added to `tests/revealjs.qmd`, keeps
       its normal layout with one warning whose reason is `is in an aside`.
-- [ ] AC3: The README section "Slides" states two facts. A margin class
+- [x] AC3: The README section "Slides" states two facts. A margin class
       or a document margin value does not stop a figure from wrapping on a
       slide. A figure in an aside div does not wrap.
 - [ ] AC4: `python3 tests/verify.py` exits 0 locally and in the verify
@@ -101,3 +101,38 @@ normal layout**. A warning line reads `1x wrapped: the figure #<id>
 ## Decisions
 
 ## Review
+
+Evidence gathered 2026-10-28 at aaf6f5c (Quarto 1.10.19). Fresh `python3 tests/verify.py`: all 97 renders pass, no FAIL line; `revealjs.revealjs`, `revealjs-margin-meta.revealjs`, `revealjs-column-margin.revealjs` each `ok`.
+
+- AC1: `revealjs.revealjs.txt` reads `wrap-right` for fig-slide-margin, fig-slide-figmargin, fig-slide-margin-div, fig-slide-margin-cell, fig-slide-figmargin-cell; `revealjs-margin-meta.revealjs.txt` for fig-slide-meta-margin; `revealjs-column-margin.revealjs.txt` for fig-slide-col-margin. The two new snapshots have empty `# warnings`, and the one warning in `revealjs.revealjs.txt` names fig-slide-aside only. With main's filter all seven warned `is in the margin` (work log, T1–T3). Pass.
+- AC2: `revealjs.revealjs.txt` reads `fig-slide-aside: - style=-` and holds exactly one warning, `1x wrapped: the figure #fig-slide-aside is in an aside, so it does not wrap.` Pass.
+- AC3: README.md section "Slides" (read at aaf6f5c) says "A margin setting does not stop a figure from wrapping on a slide either", naming the two margin classes, the margin div, both margin cell options, and `fig-column: margin` and `column: margin` in the document metadata, and says "A figure in an aside div does not wrap." Both facts stated. Pass.
+- Gate: `cairn_validate.py` exit 0, all checks passed. Profile gate: the one version marker (`_extension.yml` `version: 0.1.0`) is unchanged on the branch; verify passes (above); changelog slot "none", no entry read. Pass.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: the captioned image with no id and the bare image with `.column-margin` on a slide (own_margin and the find_contexts Image handler) changed behavior with no fixture — fix now: two cases added to `tests/revealjs.qmd`.
+- diff-bug #2: README "Where a figure keeps its normal layout" says the margin item holds "In HTML" with no slide exception, while README line 7 counts slides as HTML — fix now: the margin item points to "Slides".
+- diff-bug #3: with `center: true` or on a `.scrollable` slide the aside sits in the slide's text, yet a figure there still falls back with a warning — follow-up: candidate row "Let asides wrap on centered slides".
+- diff-bug #4: DESIGN.md steps 2 and 4 and the wrapped.lua comments above `has_page_layout` and `find_contexts` miss the slide margin rule — fix now.
+- diff-bug #5: `is_revealjs` covers revealjs only, but Quarto's `renderDivColumn` skips every HTML slide format (slidy, s5, dzslides, slideous) — follow-up: candidate row "Check margins in slidy and other slides" (predates the branch; the README claims revealjs only).
+- diff-bug #6: `revealjs-column-margin.qmd` runs the same code path as `revealjs-margin-meta.qmd` on revealjs — reject (planned change): AC1 names both fixtures.
+- diff-bug #7: the `.column-margin`/`.fig-column-margin` and `column`/`fig-column` margin pairs in `tests/revealjs.qmd` are near duplicates — reject (planned change): AC1 names all four.
+- diff-bug #8: the two knitr cells make `tests/revealjs.qmd` need R — reject (planned change): AC1 names knitr cells in that fixture, and CI installs R (D-009).
+- blame-history #1: DESIGN.md steps 2 and 4 stale for slides — fix now (same fix as diff-bug #4).
+- blame-history #2: README fallback list has no slide exception for the margin item — fix now (same fix as diff-bug #2).
+- blame-history #3: the comment above `has_page_layout` omits the margin column — fix now (same fix as diff-bug #4).
+- blame-history #4: no D-entry for the slide margin rule — reject (false): no D-entry is owed; the change applies M013's rule that slides lack the page layout, and DESIGN and the README record the behavior.
+- prior-review #1: the change reverses M013's "slide fallbacks" fix — reject (false): M013 diff-bug #2 stopped the page-wide and margin-caption fallbacks firing on slides, the same direction as this change.
+- prior-review #2: the Quarto 1.10.19 stylesheet claims may lack a source — reject (false): the claim audit read the deck's CSS files and quarto.scss for both claims (work log).
+- prior-review #3: E3 has been edited by two earlier fixes — reject (false): the reviewer found the text consistent with the code, and no defect is named.
+- ripple #1: README fallback list's margin item contradicts "Slides" — fix now (same fix as diff-bug #2).
+- ripple #2: wrap-mechanisms.md E21 says a margin value keeps the figure normal in every format where it decides, and HTML reads an own margin class first — fix now: E21 notes slides.
+- ripple #3: DESIGN.md step 2 — fix now (same fix as diff-bug #4).
+- ripple #4: DESIGN.md step 4 — fix now (same fix as diff-bug #4).
+- ripple #5: ROADMAP row "Let slides wrap under margin settings" still states the old behavior — reject (planned change): post-merge hygiene graduates that row.
+- ripple #6: the `column_context` comment says HTML reads an own margin class — reject (false): it states the read order, which holds on slides; `margin_context`'s comment states that the classes name no place there.
+- ripple #7: the `find_contexts` comment says an image with its own margin class is in the margin — fix now (same fix as diff-bug #4).
+- ripple #8: the file header names the margin as a context, "such as a list or the margin" — reject (false): it gives examples of contexts, and the format limits sit at `margin_context` and `page_context`, as for page-wide columns.
+- ripple #9: the comment at wrapped.lua:1339 says a column class "can put the float in the margin" — reject (false): "can" holds in the formats with a margin.
+- ripple #10: ROADMAP row "Warn once per cell under a context" says a document margin value prints one warning per figure — reject (false): the row covers the formats where the value names a context.
+- ripple #11: `tests/margin-meta.qmd` prose says the float keeps its normal layout in every format — reject (false): that fixture renders html, pdf, typst, and docx only.
+- Note: the diff-bug reviewer's render showed Quarto moves a float with its own `.aside` class into an `<aside>` after the slide's paragraphs, so the Out item's "No render has shown where revealjs puts it" is out of date; the rule it keeps (warn `is in an aside`) is the one that render supports. No change.
