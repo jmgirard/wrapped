@@ -99,6 +99,16 @@ local function sum_not_positive(f)
   return true
 end
 
+-- True when a sum is below zero for every base above zero: each
+-- coefficient is zero or below, and one is below zero.
+local function sum_negative(f)
+  if not sum_not_positive(f) then return false end
+  for _, c in pairs(f) do
+    if c < 0 then return true end
+  end
+  return false
+end
+
 -- The unit and coefficient of a sum with one unit or none, or nil.
 local function sum_term(f)
   local unit, coef = "", 0
@@ -409,11 +419,22 @@ local function never_positive(length)
   return b ~= nil and (b.bad or sum_not_positive(b.hi))
 end
 
+-- True for a function value from css_length whose result is below zero, or
+-- not finite, at every page and font size. A negative gap pulls the text
+-- over the figure. A value with var() is never read so, and a result of
+-- zero is not below zero.
+local function always_negative(length)
+  if not length:match("^%a+%(") then return false end
+  local _, b = calc_length(length)
+  return b ~= nil and (b.bad or sum_negative(b.hi))
+end
+
 -- Returns the CSS length for a value, or `fallback` with a warning when the
 -- value is not a length. `what` and `where` name the value in the warning.
 -- A width of zero is not a width, because a box with no width leaves the
--- figure nothing to fill. A gap or a breakpoint of zero is a length.
--- A breakpoint passes `no_percent`, because a media query takes no percent.
+-- figure nothing to fill. A gap or a breakpoint of zero is a length, but a
+-- gap below zero is not a gap. A breakpoint passes `no_percent`, because a
+-- media query takes no percent.
 local function checked_length(value, fallback, what, where, no_percent)
   if value == nil then return fallback end
   local length = css_length(value, no_percent)
@@ -427,6 +448,12 @@ local function checked_length(value, fallback, what, where, no_percent)
     quarto.log.warning(string.format(
       'wrapped: width "%s" on %s is zero, negative, or not finite, so it is %s.',
       pandoc.utils.stringify(value), where, fallback))
+    return fallback
+  end
+  if length and (what == "wrap-gap" or what == "gap") and always_negative(length) then
+    quarto.log.warning(string.format(
+      'wrapped: %s "%s" on %s is negative or not finite, so it is %s.',
+      what, pandoc.utils.stringify(value), where, fallback))
     return fallback
   end
   if length then return length end
@@ -662,23 +689,50 @@ local function docx_twips(length, positive)
 end
 
 -- Returns the twips for a value, or the twips of `fallback` with a warning
--- when the value is not a length that Word can use.
-local function checked_docx_twips(value, fallback, what, where, positive)
+-- when the value is not a length that Word can use. Also returns true when
+-- the value gave way to `fallback`. A width as wide as the text or wider
+-- with `gap`, the gap that a figure with its own gap ends up with, names
+-- that gap in its warning.
+local function checked_docx_twips(value, fallback, what, where, positive, gap)
   local length = checked_length(value, fallback, what, where)
   local twips, why = docx_measure(length, positive)
-  if twips then return twips end
-  quarto.log.warning(string.format(
-    'wrapped: %s "%s" on %s %s, so it is %s.', what, length, where,
-    why == "wide" and "leaves no room for text in Word" or "is not a length that Word can use",
-    fallback))
-  return docx_twips(fallback, positive)
+  if twips then return twips, value ~= nil and length ~= css_length(value) end
+  if why == "wide" and gap then
+    quarto.log.warning(string.format(
+      'wrapped: %s "%s" and wrap-gap "%s" on %s leave no room for text in Word, so the width is %s.',
+      what, length, gap, where, fallback))
+  else
+    quarto.log.warning(string.format(
+      'wrapped: %s "%s" on %s %s, so it is %s.', what, length, where,
+      why == "wide" and "leaves no room for text in Word" or "is not a length that Word can use",
+      fallback))
+  end
+  return docx_twips(fallback, positive), true
 end
 
 -- A frame's side, width, and gap in twips, as "right 3744 240", and its
--- width.
+-- width. A figure that sets its own width or a gap that Word can use, and
+-- whose width plus gap is as wide as the text or wider, takes the first of
+-- the document default and 40% that with the gap is narrower than the
+-- text, or 40% when neither is, with a warning. Typst picks its width in
+-- the same order. A width that Word cannot use takes that same width. Each
+-- value is rounded to twips before the sum. A figure with neither was
+-- checked with the metadata, which can leave 40% plus the gap still as
+-- wide as the text.
 local function docx_frame(class, width, gap, where)
-  local w = checked_docx_twips(width, options.width, "width", where, true)
-  local g = checked_docx_twips(gap, options.gap, "wrap-gap", where)
+  local g, g_fell = checked_docx_twips(gap, options.gap, "wrap-gap", where)
+  local own_gap = gap ~= nil and not g_fell
+  local g_length = own_gap and css_length(gap) or options.gap
+  local fallback = DEFAULTS.width
+  if docx_twips(options.width, true) + g < docx_text_width then fallback = options.width end
+  local asked = width or options.width
+  local w, fell = checked_docx_twips(asked, fallback, "width", where, true, own_gap and g_length)
+  if not fell and (width ~= nil or own_gap) and w + g >= docx_text_width then
+    quarto.log.warning(string.format(
+      'wrapped: width "%s" and wrap-gap "%s" on %s leave no room for text in Word, so the width is %s.',
+      css_length(asked), g_length, where, fallback))
+    w = docx_twips(fallback, true)
+  end
   return string.format("%s %d %d", SIDES[class], w, g), w
 end
 
@@ -1019,8 +1073,21 @@ local function read_meta(meta)
       options.width = DEFAULTS.width
     end
   elseif is_docx then
+    local asked = m.width ~= nil and css_length(meta_text(m.width))
     format_default("width", "width", function(l) return docx_twips(l, true) end, "Word")
     format_default("gap", "gap", docx_twips, "Word")
+    -- A metadata width that with the gap is as wide as the text or wider
+    -- leaves no room for text, so the document default becomes 40%, as in
+    -- Typst. A width that already gave way, with its own warning, is not
+    -- checked again. Each figure with its own width or gap is checked again
+    -- in docx_frame.
+    if asked and asked == options.width
+        and docx_twips(options.width, true) + docx_twips(options.gap) >= docx_text_width then
+      quarto.log.warning(string.format(
+        'wrapped: width "%s" and gap "%s" in the wrapped metadata leave no room for text in Word, so the width is %s.',
+        options.width, options.gap, DEFAULTS.width))
+      options.width = DEFAULTS.width
+    end
   end
 end
 

@@ -1,0 +1,71 @@
+---
+title: "wrapped fixture: Word width plus gap"
+filters:
+  - wrapped
+format: docx
+wrapped:
+  width: 4in
+---
+
+With no reference doc the text is 9360 twips wide. The document default is
+4in (5760 twips), and 40% is 3744 twips.
+
+## A width and gap wider than the text
+
+![A figure 5 in wide with a 2 in gap.](plot.png){#fig-abs .wrap-right width="5in" wrap-gap="2in"}
+
+The figure takes the document default, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A percent width and an em gap
+
+![A figure 95% wide with a 2em gap.](plot.png){#fig-percent .wrap-left width="95%" wrap-gap="2em"}
+
+The figure takes the document default, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A gap that fills the text with the document default
+
+![A figure with a 3 in gap.](plot.png){#fig-default-fills .wrap-right wrap-gap="3in"}
+
+The figure takes 40%, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A gap that fills the text with 40%
+
+![A figure with a 4 in gap.](plot.png){#fig-all-fill .wrap-left wrap-gap="4in"}
+
+The figure keeps 40% and the gap, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A sum one twip below the text width
+
+![A figure 6 in wide with a 35.95 pt gap.](plot.png){#fig-below .wrap-right width="6in" wrap-gap="35.95pt"}
+
+The figure keeps its width. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A sum at the text width once rounded
+
+![A figure 6 in wide with a 12.699 mm gap.](plot.png){#fig-equal .wrap-left width="6in" wrap-gap="12.699mm"}
+
+The gap rounds to 720 twips, so the sum is the text width. The figure takes the document default, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A width wider than the text with a gap
+
+![A figure 10 in wide with a 3 in gap.](plot.png){#fig-wide .wrap-right width="10in" wrap-gap="3in"}
+
+The figure takes 40%, with one warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A narrow width with a gap that fills the text
+
+![A figure 0.5 in wide with a 6 in gap.](plot.png){#fig-narrow .wrap-left width="0.5in" wrap-gap="6in"}
+
+No width fits with the gap, so the figure takes 40% and keeps the gap, with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A width that is not a length, with a gap
+
+![A figure with a width that is not a length and a 3 in gap.](plot.png){#fig-bad-width .wrap-right width="wide" wrap-gap="3in"}
+
+The document default with the gap fills the text, so the figure takes 40%, with one warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A function gap below zero
+
+![A figure with a gap of `calc(-1em)`.](plot.png){#fig-negative-gap .wrap-left wrap-gap="calc(-1em)"}
+
+The gap takes the default, with a warning, and the figure keeps the document default width. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

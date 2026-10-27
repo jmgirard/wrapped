@@ -1,0 +1,6 @@
+# warnings
+1x wrapped: width "5in" and gap "2in" in the wrapped metadata leave no room for text in Word, so the width is 40%.
+# docx
+image: cx=2377440
+# frames
+frame right w=3744 gap=2880 anchor=margin | fig-meta | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0

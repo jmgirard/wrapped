@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M012: Finish the gap checks
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — the filter's warnings, frame widths, and gaps reach every user   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m012-gap-checks   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -52,7 +52,7 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 ## Acceptance criteria
 <!-- owner: plan · create/amend-via-gate; review reads, never reinterprets. -->
 
-- [ ] AC1: In Word, a new fixture `tests/docx-gap.qmd`, rendered with no
+- [x] AC1: In Word, a new fixture `tests/docx-gap.qmd`, rendered with no
       reference doc (text width 9360 twips) and `wrapped: width: 4in`,
       gives these frame widths and warnings in its snapshot
       `tests/_snapshots/docx-gap.docx.txt` (frame lines and `# warnings`)
@@ -67,12 +67,12 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
       (f) `width="6in" wrap-gap="12.699mm"` (720 twips once rounded, sum
       9360) takes 4in;
       (g) `width="10in" wrap-gap="3in"` takes 40% with one warning in all.
-- [ ] AC2: In Word, a fixture with `wrapped: {width: 5in, gap: 2in}` (7200
+- [x] AC2: In Word, a fixture with `wrapped: {width: 5in, gap: 2in}` (7200
       plus 2880 twips, at or above 9360) prints one metadata warning, and a
       figure with no `width` and no `wrap-gap` prints no warning of its own
       and gets a 3744-twip frame. Evidence: the fixture's snapshot under
       `python3 tests/verify.py`.
-- [ ] AC3: In HTML, each `wrap-gap` value in a new warning section of
+- [x] AC3: In HTML, each `wrap-gap` value in a new warning section of
       `tests/css-functions.qmd` prints a warning that names the value and
       takes the document default gap, as the snapshot's style shows. The
       values: `calc(-1em)`, `calc(-1vw)`, `calc(10% / -2)`,
@@ -80,17 +80,17 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
       `clamp(-3px, -2px, -1px)`, `calc(min(0px, 1em) - 1px)`,
       `calc(1px / 0)`, and `calc(0px / 0)`. Evidence: the fixture's
       snapshot and warning lines under `python3 tests/verify.py`.
-- [ ] AC4: In HTML, each gap in the "Values that pass" section of
+- [x] AC4: In HTML, each gap in the "Values that pass" section of
       `tests/css-functions.qmd` reaches the style as written with no
       warning. The section keeps `calc(0px)` and gains `calc(1em - 1em)`,
       `calc(1in - 96px)`, `min(0px, 10%)`, `max(-1em, 0px)`,
       `calc(1em - 20px)`, `calc(50% - 1in)`, and `calc(var(--g) - 1px)` as
       gaps. Evidence: the fixture's snapshot.
-- [ ] AC5: In HTML, a `wrapped: gap` of `calc(-1em)` prints one warning,
+- [x] AC5: In HTML, a `wrapped: gap` of `calc(-1em)` prints one warning,
       and the built-in `1em` gap applies to a figure with no `wrap-gap`.
       Evidence: a metadata fixture's snapshot and warning lines under
       `python3 tests/verify.py`.
-- [ ] AC6: The README's "Width and gap" section states both rules,
+- [x] AC6: The README's "Width and gap" section states both rules,
       "Document defaults" states the metadata forms, and the Word section
       states the sum rule and the fallback order (document default, then
       40% with the gap kept). DESIGN.md's Architecture describes both
@@ -117,7 +117,7 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 <!-- owner: plan (create) / implement (check-off, minor edits); substantive
      change is amend-via-gate. -->
 
-- [ ] T1: Word figure check. Write `tests/docx-gap.qmd` with the seven
+- [x] T1: Word figure check. Write `tests/docx-gap.qmd` with the seven
       AC1 cases and add it to `RENDERS` in `tests/verify.py`; render it
       before the change and see each case but (e) differ from the wanted
       widths. In `docx_frame` (`wrapped.lua:679`), when the figure sets its
@@ -126,21 +126,21 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
       `DEFAULTS.width` that fits with `g`, else 40%. A width already
       replaced by the wide-width check gets one warning, not two. Update
       the snapshot and read the diff.
-- [ ] T2: Word metadata check. In `read_meta`'s Word branch
+- [x] T2: Word metadata check. In `read_meta`'s Word branch
       (`wrapped.lua:1021`), after `format_default`, warn once and set
       `options.width` to 40% when the metadata width plus gap fills the
       text. New fixture `tests/docx-gap-meta.qmd` with the AC2 metadata
       and one figure with no width or gap; add to `RENDERS` and snapshot.
-- [ ] T3: HTML gap check. In `checked_length` (`wrapped.lua:418`), warn
+- [x] T3: HTML gap check. In `checked_length` (`wrapped.lua:418`), warn
       for a gap (`wrap-gap` or `gap`) whose bound from `calc_length` is
       `bad` or whose upper sum is below zero at every base (each
       coefficient zero or below, one below zero); a gap whose upper sum is
       zero stays. Add the AC3 warning section and the AC4 passing gaps to
       `tests/css-functions.qmd`; update the snapshot.
-- [ ] T4: HTML metadata gap. New fixture `tests/meta-calc-gap.qmd` with
+- [x] T4: HTML metadata gap. New fixture `tests/meta-calc-gap.qmd` with
       `wrapped: gap: calc(-1em)` and one figure; add to `RENDERS` and
       snapshot.
-- [ ] T5: Docs. README "Width and gap", "Document defaults", and Word
+- [x] T5: Docs. README "Width and gap", "Document defaults", and Word
       sections; DESIGN.md Architecture step 5 and Known issues;
       `wrap-mechanisms.md`; comments on `docx_frame`, `read_meta`, and
       `checked_length`. Run `python3 tests/verify.py` and push for CI.
@@ -158,3 +158,67 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 - 2026-10-27: plan gate chose to check only figures that set their own width or gap, with one metadata warning for the rest, over checking every figure, because a filling metadata would print one warning per figure (M011 review fixed that repeat in Typst); falsified by a figure that takes both values from the document and fills the text with no warning.
 - 2026-10-27: plan gate chose a gap warning only when the gap is below zero at every size, reusing M011's bound, over a warning when it can be below zero at some size, because M011's question set chose warnings only when certain; falsified by a passing gap that puts text over the figure at the default font size in a user's document.
 - 2026-10-27: criteria audit (full mode, fresh Opus reader): 11 findings, all fixed. AC1 names its snapshot file, pins its values, adds a rounding case (f) and a wide-width case (g), and no width in (d); `max(-2px, -1%)` cannot warn under M011's bound, so AC3 uses `max(-2px, -1px)` and the mixed-unit case moved to Out and a Known issue; AC3 adds viewport, percent, product, and nested probes; AC4 adds zero-at-every-size gaps; AC2 pins its metadata; Scope names the shared `checked_length` message change; AC6 names what each doc states, comments included; T1 expects no change in (e). AC5 and AC7 had none.
+- 2026-10-27: implement started on branch m012-gap-checks; status in-progress.
+- 2026-10-27: T1 checkpoint (not ticked): `docx_frame` counts the gap and `checked_docx_twips` reports a fallback and names a figure's gap for a too-wide width; `tests/docx-gap.qmd` gives the seven AC1 widths and warnings (before the change all but (e) differed); full verify running.
+- 2026-10-27: T1 done: verify passed, 57 renders.
+- 2026-10-27: T2 checkpoint (not ticked): `read_meta` warns once and sets the document default width to 40% when a `wrapped:` width or gap is set and the sum fills the text; `tests/docx-gap-meta.qmd` gave 7200 twips and no warning before, 3744 and one warning after; full verify running.
+- 2026-10-27: T2 done: verify passed, 58 renders.
+- 2026-10-27: T3 and T4 checkpoint (not ticked): `sum_negative` and `always_negative` make `checked_length` warn for a `wrap-gap` or metadata `gap` below zero or not finite at every size; before the change the ten AC3 gaps reached the style, after it each warns and takes 1em, and the seven AC4 gaps are unchanged; `tests/meta-calc-gap.qmd` gives one warning and a 1em gap; full verify running.
+- 2026-10-27: T5 checkpoint (not ticked): DESIGN.md Architecture step 5 and a Known issue for the mixed-unit `max()` gap, and `wrap-mechanisms.md` W4 text, describe the new checks; README next.
+- 2026-10-27: T5 checkpoint (not ticked): README "Width and gap", "Document defaults", and Word sections state the Word sum rule with its fallback order and the HTML negative gap rule with its limits.
+- 2026-10-27: T3, T4, and T5 done: verify passed, 59 renders, on the code at f592718; later commits change only README.md and cairn/ docs, which no fixture renders (readme.qmd copies the README examples). The CI half of T5 moves to review: verify.yml runs on pull requests and pushes to main, so a branch push starts no check.
+- 2026-10-27: claim audit corrections (re-read pending, verify running): README gap-only metadata note and "takes 40% and keeps the gap" wording, two comments in `checked_docx_twips` and `docx_frame`, and `fig-valid-27` (`max(-2px, -1%)` passes) in css-functions.qmd; new candidate row "Keep narrow widths when no width fits" for the widening to 40% that the plan chose.
+- 2026-10-27: claim audit: 30 claims read, 4 corrected — README.md, _extensions/wrapped/wrapped.lua; one more true claim (`max(-2px, -1%)` passes) gained fixture `fig-valid-27`; the same reader re-read the five and found each true.
+- 2026-10-27: verify passed, 59 renders, on the corrected code; status review.
+- 2026-10-27: review: the plan-time rewrite after the criteria audit dropped the empty `## Decisions` and `## Review` sections; review restores both below.
+- 2026-10-27: review checkpoint: fix-now work for 11 findings committed in 69037e6 (Word metadata check needs an unreplaced width, a fallen-back gap is not the figure's own, three docx-gap cases, fixture docx-gap-meta-wide, doc fixes); verify on it running; criteria not yet ticked.
+- 2026-10-27: step-7 approval: m012-gap-checks approved for merge
+
+## Decisions
+<!-- owner: implement / review · append-only; milestone-local. -->
+
+## Review
+<!-- owner: review · exclusive. -->
+
+Sync: `main` at 1d240c7, unmoved since the cut. Copilot review is off (no
+`# Copilot review:` line in PROFILE.md). Open-PR cap: 0 open PRs of mine.
+
+spawned: diff-bug, blame-history, prior-review, ripple
+
+Findings and dispositions:
+- prior-review #1, blame-history #3, diff-bug #4: a gap-only `wrapped:` metadata ran the Word check and warned "so the width is 40%" with no change, against M011's Typst fix — fix now, fixed 69037e6: the check needs a metadata width, as in Typst.
+- blame-history #1, diff-bug #5: a metadata width that `format_default` replaced (`10in` with a `5in` gap) warned a second time — fix now, fixed 69037e6: the check runs only on a metadata width that stayed as written; new fixture `docx-gap-meta-wide.qmd` shows one warning.
+- diff-bug #6: a figure whose own gap fell back (`wrap-gap="abc"`) still ran the sum check and could warn twice — fix now, fixed 69037e6: only a gap that Word can use counts as the figure's own.
+- diff-bug #2: an unusable width with the figure's own gap now takes the gap-aware fallback (40% where the default fills), unstated and untested — fix now, fixed 69037e6: README Word bullet states it; `fig-bad-width` case in docx-gap.qmd.
+- prior-review #4: README "even when its own width was narrower than 40%" had no fixture — fix now, fixed 69037e6: `fig-narrow` (`0.5in` with `6in`) in docx-gap.qmd.
+- diff-bug #3, prior-review #2, blame-history #4, ripple #4: the negative gap check sits in the shared `checked_length`, so LaTeX, Typst, and Word change their message, with no fixture outside HTML and docs saying HTML only — fix now, fixed 69037e6: `fig-negative-gap` (`calc(-1em)`) in docx-gap.qmd; README and DESIGN step 5 say the check runs in every format.
+- diff-bug #9: `clamp(-3px, -2%, -1px)` passes too, while the docs name only `max()` — fix now, fixed 69037e6: README and the DESIGN Known issue name `max()` and `clamp()`.
+- diff-bug #10, ripple #6: wrap-mechanisms W4 said every filling frame warns, and DESIGN lacked the gap-only metadata limit — fix now, fixed 69037e6: W4 names a figure with its own width or gap; new Known issue.
+- ripple #3: the `docx_frame` comment said "as Typst does", while Typst warns only for percents — fix now, fixed 69037e6: the comment says Typst picks its width in the same order.
+- ripple #5: DESIGN's Syntax table did not say a negative gap warns — fix now, fixed 69037e6.
+- ripple #7: README's metadata bullet read as covering a gap-only metadata — fix now, fixed 69037e6: it names a `wrapped:` width.
+- diff-bug #1: `fig-below` records an 8400-twip image in an 8640-twip frame (`fills=no`) — follow-up: absorbed into the row "Fit images in wide Word frames", which predates M012.
+- prior-review #3: `docx_measure` reads `9223372036854775807in` as an integer and wraps to -1440 twips — follow-up: new row "Read Word lengths as floats in twips"; M012 did not add it.
+- blame-history #6: a narrow own width widens to 40% when no width fits — follow-up: row "Keep narrow widths when no width fits" (from the claim audit).
+- blame-history #2, diff-bug #8: a too-wide width with its own gap now names the gap in the warning — reject, planned change: AC1 (g) asks for one warning naming the width and the gap.
+- blame-history #5, diff-bug #7: the sum warning names the gap the figure ends up with, which can be the document's — reject, planned change: the plan follows Typst, whose warning does the same.
+- diff-bug #11: `calc(0px / 0)` warns though CSS reads NaN as zero — reject, planned change: AC3 names it.
+- diff-bug #12: a number of more than 308 digits reads as infinite and warns — reject, edge: such a number is outside documented and common use, and the effect is a warning.
+- diff-bug test-rule note: pairs of AC3, AC4, and AC1 cases share a code path — reject, planned change: AC1, AC3, and AC4 name each case.
+- ripple #1, #2: the ROADMAP rows "Count the gap in Word width checks" and "Refuse negative gaps in CSS functions" still describe the old behavior — reject, planned change: they end with "started M012", and post-merge hygiene removes them.
+
+Criteria evidence (`python3 tests/verify.py` on 69037e6, macOS: "all 60
+renders pass", exit 0; later commits change only the milestone file):
+- AC1: `tests/_snapshots/docx-gap.docx.txt` matches the render. Frames and warnings: (a) fig-abs w=5760 gap=2880, warning names "5in" and "2in"; (b) fig-percent w=5760 gap=480, names "95%" and "2em"; (c) fig-default-fills w=3744 gap=4320, names "4in" and "3in"; (d) fig-all-fill w=3744 gap=5760, names "4in" and "4in"; (e) fig-below w=8640 gap=719, no warning; (f) fig-equal w=5760 gap=720, names "6in" and "12.699mm"; (g) fig-wide w=3744 gap=4320, one warning naming "10in" and "3in". Each warning appears once ("1x").
+- AC2: `tests/_snapshots/docx-gap-meta.docx.txt` matches: one warning, `width "5in" and gap "2in" in the wrapped metadata leave no room for text in Word, so the width is 40%.`, and fig-meta w=3744 gap=2880 with no warning of its own.
+- AC3: `tests/_snapshots/css-functions.html.txt` matches: fig-gap-1 to fig-gap-10 (the ten listed values) each have `--wrap-gap: 1em`, and the warnings section holds ten lines `wrap-gap "<value>" on #fig-gap-<n> is negative or not finite, so it is 1em.`, one per value.
+- AC4: the same snapshot shows fig-valid-18 `calc(0px)`, fig-valid-20 to 26 (`calc(1em - 1em)`, `calc(1in - 96px)`, `min(0px, 10%)`, `max(-1em, 0px)`, `calc(1em - 20px)`, `calc(50% - 1in)`, `calc(var(--g) - 1px)`) with each value as its `--wrap-gap`, and no warning names any of them; fig-valid-27 `max(-2px, -1%)` passes too.
+- AC5: `tests/_snapshots/meta-calc-gap.html.txt` matches: one warning, `gap "calc(-1em)" on the wrapped metadata is negative or not finite, so it is 1em.`, and fig-meta-calc-gap has `--wrap-gap: 1em`.
+- AC6: read by grep at 6921105. README "Width and gap" (line 71) states the Word sum rule (line 81) and the HTML negative gap rule (lines 116 to 128); "Document defaults" (line 135) states the metadata negative gap (line 152) and the Word metadata width plus gap (line 154); the Word section (line 365) states the sum rule (line 392), the order document default, then 40% with the gap kept (lines 395 to 398), and the metadata rule (line 400). DESIGN.md Architecture describes the Word check (line 179) and the gap check (line 183), and Known issues holds the mixed-unit `max()` and `clamp()` gap (line 245). `wrap-mechanisms.md` line 114 describes the Word sum check. Comments: `docx_frame` (wrapped.lua:714), the `read_meta` Word branch (1079), and `checked_length` (436).
+- AC7: macOS half: "all 60 renders pass" on 69037e6 (above). CI half: not yet run; `verify.yml` runs on the PR that step 8 opens, and its result is recorded before the merge. Box left unticked until then.
+
+Consistency gate: `cairn_validate.py` passes (all checks passed). The one
+version marker, `_extensions/wrapped/_extension.yml`, stays at 0.1.0
+(unchanged on the branch). The verify command passes on the review head
+(above). The changelog slot says "none". No DESIGN.md principle changed,
+so `cairn_impact` is skipped.

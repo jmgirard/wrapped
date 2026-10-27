@@ -1,0 +1,17 @@
+---
+title: "wrapped fixture: Word metadata width plus gap"
+filters:
+  - wrapped
+format: docx
+wrapped:
+  width: 5in
+  gap: 2in
+---
+
+With no reference doc the text is 9360 twips wide. The metadata width of
+5in (7200 twips) plus its gap of 2in (2880 twips) fills the text, so the
+document default width becomes 40% (3744 twips), with one warning.
+
+![A figure with the document's width and gap.](plot.png){#fig-meta .wrap-right}
+
+The figure takes 40% and the 2in gap, with no warning of its own. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

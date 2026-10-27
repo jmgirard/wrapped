@@ -1,0 +1,16 @@
+---
+title: "wrapped fixture: Word metadata width wider than the text, with a gap"
+filters:
+  - wrapped
+format: docx
+wrapped:
+  width: 10in
+  gap: 5in
+---
+
+The metadata width of 10in is wider than the 9360-twip text, so it takes
+40% with one warning. The width plus gap check does not warn again.
+
+![A figure with the document's width and gap.](plot.png){#fig-meta-wide .wrap-right}
+
+The figure takes 40% and the 5in gap, with no warning of its own. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
