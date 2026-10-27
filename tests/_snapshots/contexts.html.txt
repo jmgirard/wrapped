@@ -42,6 +42,8 @@ fig-three-plots-3: - style=-
 fig-two-subcap: - style=-
 fig-two-subcap-1: - style=-
 fig-two-subcap-2: - style=-
+fig-two-before-heading-1: - style=-
+fig-two-before-heading-2: - style=-
 tbl-wrapped: - style=-
 fig-list: - style=-
 fig-deflist: - style=-
@@ -70,6 +72,8 @@ fig-three-plots-2.png: wrap=- style=- width=672
 fig-three-plots-3.png: wrap=- style=- width=672
 fig-two-subcap-1.png: wrap=- style=- width=672
 fig-two-subcap-2.png: wrap=- style=- width=672
+fig-two-before-heading-1.png: wrap=- style=- width=672
+fig-two-before-heading-2.png: wrap=- style=- width=672
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=width:20.0% width=-
 plot.png: wrap=- style=- width=-
