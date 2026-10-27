@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M014: Keep two-figure cells unwrapped
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -127,6 +127,7 @@ not its engine).
 - 2026-10-27: T3 in progress: verify --update passed 76 renders; the diff adds lines to the four contexts snapshots only, all for the three new cells. With main's wrapped.lua swapped in, all four contexts summaries differ from the new snapshots (the check can fail); filter restored. Final verify run without --update pending.
 - 2026-10-27: T3 done: python3 tests/verify.py without --update: "all 76 renders pass".
 - 2026-10-27: claim audit: 11 claims read, 2 corrected — README.md, _extensions/wrapped/wrapped.lua. Both from one cause: a multi-figure cell with no paragraph after it takes the next-block branch and prints no warning (scratch render of a two-plot cell before a heading: no warning, no wrap class). README and the Lua comment now say so; the README's split fallback sentence got its format scope back; the re-read found 0 wrong, and its one optional point (the next-block paragraph's "exception" and back-to-back sentences) was applied.
+- 2026-10-27: implement done: verify on 1eeef97 "all 76 renders pass"; status review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
