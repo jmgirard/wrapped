@@ -96,7 +96,9 @@ text beside it (corrected M007).
 Next-block rule (D-003): a wrapped figure whose next block is not a
 paragraph has no text to wrap, so it keeps a normal figure with no warning.
 Of two wrapped figures in a row, the first keeps a normal figure and the
-second wraps.
+second wraps. The figures of one code cell are the exception: a wrapped
+cell that makes more than one figure without `fig-subcap` keeps all of them
+normal, with one warning for the cell (D-010, M014).
 
 ## Function Families
 

@@ -147,7 +147,7 @@ The filter has two entry points (corrected M006):
 | E1 | Wrap class on the image, not the float | The filter moves it to the float. |
 | E2 | `fig-align` set | Ignored for the box position. It still aligns the image inside the box. |
 | E3 | `.column-margin` or `.aside` with a wrap class, or a `fig-column: margin` cell | Margin wins. One warning (corrected M013). |
-| E4 | Subfigure panel (`layout-ncol`) | Normal panel. One warning. |
+| E4 | Subfigure panel (`layout-ncol`) | Normal panel. One warning. A wrapped code cell that makes more than one figure without `fig-subcap` keeps each figure normal, with one warning for the cell (corrected M014, D-010). |
 | E5 | `#tbl-` float with a wrap class | Normal table. One warning. |
 | E6 | Wrapped figure is the last block before a heading | No text to wrap. Normal figure, no warning. |
 | E7 | Two wrapped figures with no text between them | The first figure falls back with no warning, and the second wraps the text after it (corrected 2026-10-24, D-003). |

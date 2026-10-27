@@ -190,8 +190,8 @@ in HTML, and a `wrap-clear` div works.
 
 ## Where a figure keeps its normal layout
 
-In HTML, in PDF through LaTeX, in PDF through Typst, and in Word, a wrapped
-figure in one of the places in this first list does not wrap. It keeps
+A wrapped figure in one of the places in this first list does not wrap in
+HTML, PDF through LaTeX, PDF through Typst, or Word. It keeps
 its normal layout, and the render prints one warning for it. The warning
 names the figure's id. If the figure has no id, the warning names its image
 file or says that the figure has no id.
@@ -208,6 +208,12 @@ file or says that the figure has no id.
   or `layout`.
 - A list, a definition list included, a callout, a `.columns` layout, or a
   tabset.
+
+A code cell that makes more than one figure without `fig-subcap`, such as
+a cell that draws two plots, does not wrap either. Each of its figures
+keeps its normal layout, and the render prints one warning that names the
+cell's label. To wrap a plot, give it its own cell. A cell with
+`fig-subcap` makes a subfigure panel, which the list above covers.
 
 A table float does not wrap either, and the render prints one warning that
 names it. A `#tbl-` div or a code cell with a `tbl-` label makes a table

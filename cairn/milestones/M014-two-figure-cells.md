@@ -103,7 +103,7 @@ not its engine).
       (only the new cells' lines may change), and run it again without
       `--update` until it exits 0. Show that the new check can fail: with
       the T2 change undone, the new snapshots must differ.
-- [ ] T4: Add the case to the README list (near line 207), to the
+- [x] T4: Add the case to the README list (near line 207), to the
       edge-case table in `cairn/references/wrap-mechanisms.md` (beside E4
       and E7), and to the next-block rule note in `cairn/DESIGN.md` (near
       line 96), citing D-010. State only what T3's renders show.
@@ -123,6 +123,7 @@ not its engine).
 - 2026-10-27: lessons used: 2026-10-25 (M002) tests/_extensions symlink and Typst PNG; 2026-10-25 (M003) Blocks filter walk inside cells; 2026-10-27 (M012) one-fixture check; 2026-10-27 (M013) dump filter to see cell floats.
 - 2026-10-27: T1 done: three cells added to tests/contexts.qmd. Before state with main's filter: fig-two-plots-1/-2 and fig-three-plots-1/-2/-3 wrap in HTML (wrap class and style), LaTeX (wrappedfigure each), Typst (image-width=yes, one wraps line naming the first figure), and Word (one frame naming the first figure); fig-two-subcap prints its panel warning and one per subfigure in all four formats and does not wrap.
 - 2026-10-27: T2 done: a float Div inside a cell carries no type or id in a user filter (dump at pre-quarto), so cell_div counts the cell's top-level floats (count_top_floats) and float_target keeps each Figure of such a cell normal, before clean_images, with one warning at the first figure: "the code cell #<label> makes more than one figure", the label being the float id less its -N ending. Table floats keep the "is not a figure" path; context and next-block paths run first. Scratch renders of contexts.qmd show the five figures with no wrap in all four formats and each cell warning once.
+- 2026-10-27: T4 done (ahead of T3, while the verify run goes): README paragraph after the fallback list, E4 row in references/wrap-mechanisms.md, next-block note in DESIGN.md, each citing what T2's renders showed. The simple-english hook also split the README's first fallback sentence (same meaning); its "would" hit in wrap-mechanisms.md is a quoted Typst error, left as is.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
