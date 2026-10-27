@@ -216,3 +216,10 @@ snapshot difference. The mechanism for each other format is in
   page with the paragraph after it, and the rest of the page stays blank. A
   Word frame does not break across pages. The README states this limit
   (M006).
+- PDF through Typst: a wrapped figure whose width is as wide as the text or
+  wider takes the default width with no console warning, because Typst has
+  no function that prints one. The README states this limit (M010).
+- HTML: newer CSS forms that browsers accept, such as `round()`, `pi`, and
+  typed arithmetic, warn and take the default, because the filter checks
+  the CSS Values 3 rules and `min()`, `max()`, and `clamp()`. The README
+  lists what the check accepts (M010).
