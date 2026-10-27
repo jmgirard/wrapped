@@ -1,0 +1,7 @@
+# warnings
+1x wrapped: the figure #fig-col-body-cell is page-wide, so it does not wrap.
+1x wrapped: the figure #fig-col-cell is page-wide, so it does not wrap.
+1x wrapped: the figure #fig-col-page is page-wide, so it does not wrap.
+# tex
+wrappedfigure: - [side=left,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

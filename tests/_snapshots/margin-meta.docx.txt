@@ -1,0 +1,13 @@
+# warnings
+1x wrapped: the figure #fig-meta-body-cell is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-meta-margin is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-meta-margin-cell is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-meta-margin-div is in the margin, so it does not wrap.
+# docx
+image: cx=5334000
+image: cx=5334000
+image: cx=4572000
+image: cx=4572000
+image: cx=1783080
+# frames
+frame left w=2808 gap=240 anchor=margin | - | image plot.png fills=yes alt='A captioned image with no id in a fig-column margin document.'; caption style=ImageCaption | p, clear | links=- cites=0

@@ -1,0 +1,11 @@
+# warnings
+# docx
+image: cx=2377440
+image: cx=4572000
+image: cx=4572000
+image: cx=1783080
+# frames
+frame right w=3744 gap=240 anchor=margin | fig-meta-page | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=7200 gap=240 anchor=margin | fig-meta-page-cell | image fig-meta-page-cell-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=7200 gap=240 anchor=margin | fig-meta-page-body | image fig-meta-page-body-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=2808 gap=240 anchor=margin | - | image plot.png fills=yes alt='A captioned image with no id in a fig-column page document.'; caption style=ImageCaption | p, clear | links=- cites=0

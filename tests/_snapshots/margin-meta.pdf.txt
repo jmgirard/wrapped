@@ -1,0 +1,8 @@
+# warnings
+1x wrapped: the figure #fig-meta-body-cell is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-meta-margin is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-meta-margin-cell is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-meta-margin-div is in the margin, so it does not wrap.
+# tex
+wrappedfigure: - [side=left,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

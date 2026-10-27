@@ -5,7 +5,9 @@
 fig-slide: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-slide-page: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-slide-cap: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-slide-margincap: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 # images
+plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
@@ -13,3 +15,4 @@ plot.png: wrap=- style=- width=-
 fig-slide, p
 fig-slide-page, p
 fig-slide-cap, p
+fig-slide-margincap, p
