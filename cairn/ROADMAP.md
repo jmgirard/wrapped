@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-27 (M015 done: one started row graduated, four rows added, M012 row pruned, two lessons captured, two evicted, four marked used)_
+_Last hygiene check: 2026-10-27 (status audit clean; the PR #16 hotfix removed the cap-location row)_
 
 ## Milestones
 
