@@ -295,8 +295,10 @@ local function calc_product(s, i, no_percent)
     if op == "/" then
       if u == "length" then return nil end
       local k = u == "number" and bound_number(c)
-      if b and c and c.bad then
-        b = { bad = true }
+      if c and c.bad then
+        -- A value divided by a number that is not finite is zero or NaN,
+        -- so the bound leaves the result unknown.
+        b = nil
       elseif k == 0 then
         b = b and { bad = true }
       else
@@ -397,9 +399,9 @@ local function is_zero(length)
 end
 
 -- True for a function value from css_length whose result is zero or below,
--- or not finite, at every page and font size: CSS sets a negative width to
--- zero and an infinite one to the largest width. A value with var() is
--- never read so.
+-- or not finite, at every page and font size: CSS sets a negative width or
+-- a NaN to zero and an infinite one to the largest width. A value with
+-- var() is never read so.
 local function never_positive(length)
   if not length:match("^%a+%(") then return false end
   local _, b = calc_length(length)

@@ -102,8 +102,9 @@ Some CSS that browsers accept also prints a warning:
 - a number with an exponent, such as `1e2px`
 - an empty `var()` fallback, such as `var(--a,)`
 
-A function width that is zero, negative, or not finite at every page and
-font size also prints a warning, and the document default applies.
+The check also looks for a function width that is zero, negative, or not
+finite at every page and font size. A width that it can show is such a
+width prints a warning, and the document default applies.
 Examples are `calc(0%)`, `min(0px, 10%)`, `calc(-10px)`, and
 `calc(1px / 0)`. The check reads each unit other than an absolute unit as
 above zero and as not related to the other units. So a width such as

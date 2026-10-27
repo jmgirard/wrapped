@@ -10,7 +10,7 @@ wrapped:
   width: 3in
 ---
 
-The layout check reads the width of the text from the full lines of this first page, which holds no image. The text is 6 in wide. A figure whose width plus its gap is 6 in or more leaves no room for the text beside it, so it takes the document default of 3 in, or 40% when even 40% plus the gap is 6 in or more. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+The layout check reads the width of the text from the full lines of this first page, which holds no image. The text is 6 in wide. A figure whose width plus its gap is 6 in or more leaves no room for the text beside it, so it takes the document default of 3 in, or 40% when the 3 in default plus the gap is 6 in or more too. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 

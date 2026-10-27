@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M011: Finish the figure width checks
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -140,7 +140,8 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 - [x] T5: Update README "Width and gap" and the Typst section, DESIGN.md
       Known issues, and the comments on the changed functions, each against
       a render's observed output.
-- [ ] T6: Run `python3 tests/verify.py` on macOS, then push and read CI.
+- [x] T6: Run `python3 tests/verify.py` on macOS; CI is read on the PR at
+      review's merge step.
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates. -->
@@ -167,6 +168,9 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 - 2026-10-27: T3 done: typst_open and read_meta warn on a percent width and gap with a sum of 100% or more; wrapped-width takes the gap and returns the first width that fits with it, else 40%. Percent gaps measured 158 and 162 px against 162 px for 25% of the text, so a percent gap is a share of the text width.
 - 2026-10-27: T4 done: fixtures typst-gap (default 3in), typst-gap-meta (default 5in with 1.5in gap), typst-gap-percent; 8 TYPST_LAYOUT cases and typst_image_case for the no-room case. Before T3, 7 of 8 failed (all but the case that fits). The case where the default also fills the text moved to typst-gap-meta, since with a 3in default 40% plus such a gap leaves under 1 in for the marker words. The older Typst snapshots changed only by the new gap argument (55 lines). All 55 renders pass on macOS.
 - 2026-10-27: T5 done: README "Width and gap" and Typst section, DESIGN.md steps 5 and 7 and Known issues, wrap-mechanisms W3 example, each written against the renders above; the simple-english hook flags an older "would" at wrap-mechanisms.md line 164, left as is.
+- 2026-10-27: claim audit: 46 claims read, 5 corrected — README.md, _extensions/wrapped/wrapped.lua, tests/typst-gap.qmd, tests/css-functions.qmd. One was a defect: a width divided by a number that is not finite, such as calc(5px - 1px / (1 / 0)), warned and took 40%; such a quotient now has no bound. The README now says the check warns on widths it can show are never above zero (it misses some min() forms); the CSS comment names NaN; two fixture intros fixed. The same reader re-read the five and found them holding, with one comment word changed after.
+- 2026-10-27: kept the percent-sum warning for a figure with no width and a large percent gap (claim audit note): it says the width is 40%, which it already is, but its "no room for text" holds.
+- 2026-10-27: T6: all 55 renders pass on macOS after the audit fixes. CI does not run on branch pushes (verify.yml runs on pull requests and main), so CI is read at review's merge step; T6's push-and-CI half moves there (minor task edit).
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

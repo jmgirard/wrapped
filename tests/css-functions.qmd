@@ -5,7 +5,7 @@ filters:
 format: html
 ---
 
-Each value in the first part reaches the style as written. Each value in the second part is zero, negative, or not finite at every size, and each value in the third part is not a length; both print a warning, and their figures take the default.
+Each value in the first part reaches the style as written. Each value in the second part is zero, negative, or not finite at every size, and each value in the third part is one the filter does not read as a length; both print a warning, and the value takes its default.
 
 ## Values that pass
 

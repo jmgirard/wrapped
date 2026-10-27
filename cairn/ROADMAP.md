@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-27 (M010 done: three started rows graduated, two le
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M011 | Finish the figure width checks | in-progress | — | normal | milestones/M011-finish-width-checks.md |
+| M011 | Finish the figure width checks | review | — | normal | milestones/M011-finish-width-checks.md |
 | M010 | Check figure widths before use | done | — | normal | milestones/archive/M010-width-checks.md |
 | M009 | Keep LaTeX column layouts intact | done | — | normal | milestones/archive/M009-latex-columns.md |
 | M008 | Run the fixture renders in CI | done | — | normal | milestones/archive/M008-ci-verify.md |
