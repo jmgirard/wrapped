@@ -172,6 +172,7 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 - 2026-10-27: verify passed, 59 renders, on the corrected code; status review.
 - 2026-10-27: review: the plan-time rewrite after the criteria audit dropped the empty `## Decisions` and `## Review` sections; review restores both below.
 - 2026-10-27: review checkpoint: fix-now work for 11 findings committed in 69037e6 (Word metadata check needs an unreplaced width, a fallen-back gap is not the figure's own, three docx-gap cases, fixture docx-gap-meta-wide, doc fixes); verify on it running; criteria not yet ticked.
+- 2026-10-27: step-7 approval: m012-gap-checks approved for merge
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
