@@ -2,10 +2,12 @@
 # typ
 figure: fig-cap-attr image-width=yes
 figure: fig-figcap-attr image-width=yes
+figure: fig-figcap-first image-width=yes
 figure: fig-cap-cell image-width=yes
 figure: fig-figcap-cell image-width=yes
 # wraps
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-cap-attr no-alt | p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-figcap-attr no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-figcap-first no-alt | p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-cap-cell no-alt | p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-figcap-cell no-alt | p | cites=0

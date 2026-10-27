@@ -1,4 +1,5 @@
 # warnings
+1x wrapped: the figure #fig-column-cell is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-outset is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-own-page is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-page-cell is page-wide, so it does not wrap.
@@ -12,10 +13,12 @@ fig-page-left: - style=-
 fig-outset: - style=-
 fig-own-page: - style=-
 fig-page-cell: - style=-
+fig-column-cell: - style=-
 # images
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 fig-page-cell-1.png: wrap=- style=- width=672
+fig-column-cell-1.png: wrap=- style=- width=672
 # groups

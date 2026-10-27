@@ -141,17 +141,23 @@ passes (corrected M003):
    Columns that a class, `\twocolumn`, or `multicols` sets are found only
    while LaTeX runs, by the check in `wrapped.tex` at each figure (step 7)
    (corrected M009).
-2. It finds the contexts that cannot wrap: lists, callouts, column layouts,
-   panel layouts, tabsets, asides, margin blocks, and subfigure panels. It
+2. It finds the contexts that cannot wrap: lists (definition lists
+   included), callouts, column layouts, panel layouts, tabsets, asides,
+   margin blocks (a `fig-column: margin` cell included), and subfigure
+   panels. Some contexts depend on the format: a block quote in LaTeX, a
+   table in LaTeX and Word, and a page-wide column class in HTML, and in
+   LaTeX for the classes Quarto sets page-wide there (`page_context`). It
    records each float there by its custom id, and it removes the wrap class
-   from a captioned image with no id or an image there, with a warning.
+   from a captioned image with no id or an image there, with a warning. In
+   HTML, step 4 also keeps a float whose caption goes to the margin in its
+   normal layout (`caption_location`) (corrected M013).
 3. It applies the next-block rule: it records each float with no paragraph
    after it, and removes the wrap class from such a captioned image with no
    id or image.
 4. In a top-down pass, it carries a code cell's wrap class to that cell's
    floats and moves an image's class to its float. A float that step 2 or
-   3 recorded, a table, or a float with a margin class or a layout
-   attribute keeps its normal layout. In HTML, each other float gets its
+   3 recorded, a table, or a float with a margin or page-wide class or a
+   layout attribute keeps its normal layout. In HTML, each other float gets its
    box width and gap as CSS custom properties, and a captioned image with
    no id gets a `.wrapped-image` box. In LaTeX, each other float and
    captioned image gets `fig-env="wrappedfigure"` and a `fig-pos` that

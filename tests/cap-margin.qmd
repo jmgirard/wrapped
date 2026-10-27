@@ -28,6 +28,12 @@ The paragraph after the figure with cap-location. Lorem ipsum dolor sit amet, co
 
 The paragraph after the figure with fig-cap-location. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+## fig-cap-location before cap-location
+
+![A figure whose fig-cap-location overrides its cap-location.](plot.png){#fig-figcap-first .wrap-right cap-location="margin" fig-cap-location="bottom"}
+
+The paragraph after the figure whose caption stays below it, so it wraps in every format. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
 ## The cap-location cell option
 
 ```{r}

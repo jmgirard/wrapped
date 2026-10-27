@@ -2,10 +2,12 @@
 # docx
 image: cx=2377440
 image: cx=2377440
+image: cx=2377440
 image: cx=4572000
 image: cx=4572000
 # frames
 frame right w=3744 gap=240 anchor=margin | fig-cap-attr | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame right w=3744 gap=240 anchor=margin | fig-figcap-attr | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=3744 gap=240 anchor=margin | fig-figcap-first | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame right w=7200 gap=240 anchor=margin | fig-cap-cell | image fig-cap-cell-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame right w=7200 gap=240 anchor=margin | fig-figcap-cell | image fig-figcap-cell-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0

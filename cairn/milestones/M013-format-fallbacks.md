@@ -58,9 +58,9 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 - [x] T2: Add contexts that depend on the format: a block quote in LaTeX, and a table cell in Word and LaTeX. Add the block-quote case to `tests/contexts.qmd`. Add a new fixture with the captioned table-cell case, rendered to HTML, Typst, and Word, and a LaTeX fixture with the uncaptioned image. Make the `.typ` summary in `tests/verify.py` read an indented `wrap-content` call.
 - [x] T3: In HTML, fall back for a margin caption in its six forms, with the figure's own key taking precedence over the metadata. The in-document forms and the override are cases in a fixture. The two metadata forms are two small HTML fixtures. The attribute form also renders in LaTeX, Typst, and Word.
 - [x] T4: Fall back for page-wide columns: in HTML for the 16 classes, in LaTeX for the 9 page-wide ones. Read the class on a div, on the figure, and in a cell's `column` or `fig-column` option. Add the five cases to a fixture rendered in four formats.
-- [ ] T5: Remove integer arithmetic on CSS numbers: `docx_measure` (`wrapped.lua:667`), the `px` and `pc` cases of `typst_length` (`wrapped.lua:510`), and `typst_fills` (`wrapped.lua:543`). Add regression fixtures for Word and Typst, and show each failing on `main` first. Record the `grep -n 'tonumber('` ledger in the work log.
+- [x] T5: Remove integer arithmetic on CSS numbers: `docx_measure` (`wrapped.lua:667`), the `px` and `pc` cases of `typst_length` (`wrapped.lua:510`), and `typst_fills` (`wrapped.lua:543`). Add regression fixtures for Word and Typst, and show each failing on `main` first. Record the `grep -n 'tonumber('` ledger in the work log.
 - [ ] T6: Update the README from this milestone's renders, in the section "Where a figure keeps its normal layout". Update DESIGN.md's Architecture step 2.
-- [ ] T7: Run `python3 tests/verify.py` in full, then push and read CI.
+- [ ] T7: Run `python3 tests/verify.py` in full. CI runs on the PR, which `/milestone-review` opens after the merge approval.
 
 ## Work log
 
@@ -90,6 +90,9 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 - 2026-10-27: T4 done: the full suite passed (74 renders).
 - 2026-10-27: tonumber ledger (`grep -n 'tonumber('` on wrapped.lua before T5, 12 calls): CSS numbers into `*` or `+` now read as floats at 485 (tex px), 515 and 516 (Typst px and pc), 546 (typst_fills, both terms), 670 (docx_measure); already a float at 245 (CSS parser); comparisons only, no arithmetic, at 409, 538, 830; `/` gives a float already at 483; not CSS numbers at 651 and 658 (reference doc twips).
 - 2026-10-27: checkpoint (T5 not checked off): the overflow fixtures are in the runner. Word's huge width and gap now warn as 9999in does; Typst's huge pc width is `9223372036854775808pt` and renders, and its huge percent gap warns as 100% does. Each differs from the render before T5 recorded above. The full suite is running.
+- 2026-10-27: T5 done: the full suite passed (76 renders).
+- 2026-10-27: checkpoint (T6 not checked off): the README's "Where a figure keeps its normal layout" names `#| fig-column: margin` and definition lists, and a new list names the formats where block quotes, table cells, margin captions, and page-wide columns fall back. DESIGN.md's Architecture steps 2 and 4 say the same. Each claim is read from this milestone's renders; the margin figure sits in LaTeX's `marginfigure` and Typst's `notefigure`. Two claims the README adds got cases: a `#| column: page` cell (page-wide) and a figure whose `fig-cap-location="bottom"` overrides its own `cap-location="margin"` (cap-margin).
+- 2026-10-27: minor amendment: T7 no longer pushes; the git model pushes the branch and opens the PR at `/milestone-review` after the merge approval, and AC7's CI half is read there.
 
 ## Decisions
 

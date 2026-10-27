@@ -58,3 +58,16 @@ plot(1:10)
 ```
 
 The paragraph after the fig-column page cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A column page cell
+
+```{r}
+#| label: fig-column-cell
+#| fig-cap: "A column page cell figure."
+#| column: page
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+```
+
+The paragraph after the column page cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
