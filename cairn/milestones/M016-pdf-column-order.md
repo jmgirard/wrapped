@@ -146,6 +146,7 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 - 2026-10-27: T2 to T5 done. `python3 tests/verify.py`: all 95 renders pass. Against main, `tests/_snapshots/` adds the eight column-order files and changes no other file.
 - 2026-10-27: checkpoint: claim audit pass done, one README claim corrected (HTML and Word read a margin or page-wide class first; a body class does not override the document key), same wording fixed in DESIGN step 4 and E21; the HTML row gained the audit's bare-HTML evidence. Re-read of the corrected claim pending.
 - 2026-10-27: claim audit: 16 claims read, 1 corrected — README.md (the HTML and Word column sentence; the re-read found Word reads a margin class only, so the sentence, DESIGN step 4, and E21 now say so).
+- 2026-10-27: checkpoint (review): fix-now changes for the four-lens findings committed before the re-run of verify finished; the verify result is recorded next.
 - 2026-10-27: implement done, status review. No code change since the 95-render verify pass; later edits touched README.md and cairn/ only.
 
 ## Decisions
@@ -154,3 +155,33 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 
 - AC1: fresh bare renders of the four fixtures (scratchpad `review-bare`, LaTeX and Typst) read by `place.py` against the committed snapshots: 40 figure-format checks (the 20 figures AC1 lists, in two formats), 0 failures. Each body figure wraps with no warning, each margin figure warns `is in the margin`, each page-wide figure warns `is page-wide`, and no other warning appears. A planted copy (one wrap line removed, one reason changed) failed 4 checks, so the check can fail.
 - AC2: README.md:220-236 states the order in LaTeX and Typst with the four sources (lines 224-227), the cell rule, and HTML and Word reading a margin or page-wide class (HTML) or a margin class (Word) first; the margin item names a document `column: margin` (line 208).
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a wrapped cell whose output writes a float with its own `.column-margin` lost that class in PDF (`if cell then return document end`), so the figure wrapped where Quarto puts it in the margin — fix now (cell floats now take the float order; not judged load-bearing: it needs a cell that writes figure markdown)
+- diff-bug #2: a layout float under a document key warned `is page-wide` in Typst, where Quarto keeps it in the body — fix now (a document value is read after the layout check again, as on main)
+- diff-bug #3: README "That value applies to every figure with a `#fig-` id" (margin and page-wide items) is false in PDF under the new order — fix now
+- diff-bug #4: README "a `.column-margin` figure wraps in PDF" also covers a captioned image with no id, which does not wrap — fix now (now "with a `#fig-` id")
+- diff-bug #5: column-order fixtures repeat one filter code path across cases — reject, planned change: AC1 names each case, and the cases vary Quarto's placement input (form and source), which the plan's criteria audit asked for
+- diff-bug #6: no test for #1 or #2 — fix now (fig-page-asis-margin and fig-page-panel added to column-order-page.qmd)
+- blame-history #1: README "applies to every figure" contradicts the order — fix now (same as diff-bug #3)
+- blame-history #2: a panel under a document key changed its reason from M015's order — fix now (same as diff-bug #2); the M015 archive stays as history
+- blame-history #3: the cell skip keys on any document value, `column: body` included, and drops a cell's margin context for a bare image — reject in part, false: the claim audit's bare render of `column: body` puts a `#| column: margin` cell's figure in the body; the bare-image part is follow-up, row "Read cell images by column order in PDF"
+- blame-history #4: D-010's one warning per cell does not hold for a cell in a place, now also under PDF document keys — follow-up, row "Warn once per cell under a context" (M018)
+- blame-history #5: README step 3 omits `.aside`, which the code and Quarto's `isColumnClass` count — fix now
+- blame-history #6: README "in either format" can be read as PDF — fix now (now "In HTML and in Word")
+- blame-history #7: the `cell and .cell or .float` idiom — reject, false (the lens found no effect)
+- prior-review #1: the README's HTML and Word sentence has no new render — reject, planned change: AC2 asks for it, it describes main's unchanged HTML and Word code (claim audit), column-meta's HTML snapshot pins a body option not overriding the document key, and HTML placement is the row "Check HTML column order in a browser"
+- prior-review #2: a bare wrapped image in a margin cell under a document key — follow-up, row "Read cell images by column order in PDF"
+- prior-review #3: a layout float's reason under a document key — fix now (same as diff-bug #2)
+- prior-review #4: README HTML sentence lacks the bare-render caveat — reject, false: part of prior-review #1, and the row holds the caveat
+- ripple #1: E21 "A document-level value applies to every figure float" and "A margin value keeps the figure normal in every format" — fix now
+- ripple #2: E3 "Margin wins" — fix now (PDF exception added)
+- ripple #3: README page-wide and margin items say the value applies to every figure — fix now (same as diff-bug #3)
+- ripple #4: README margin item "The figure stays in the margin" — fix now (PDF exception named)
+- ripple #5: DESIGN step 4 "any figure float when the document's `fig-column` or `column` names the margin" — fix now
+- ripple #6: wrapped.lua comment in `float_target` "A document-level fig-column or column puts the float in the margin" — fix now
+- ripple #7: ROADMAP row "Read fig-column over a figure's class" states the old behavior — reject, planned change: the row graduates at this merge's hygiene
+- ripple #8: ROADMAP row "Warn once per cell under a context" says the context check runs before the cell check — reject, false: it still does in every format
+- ripple #9: margin-meta.qmd and page-wide-meta.qmd prose says every float is in the margin or page-wide — reject, false: those fixtures' floats carry no column class of their own
+- ripple #10: the `meta_fig_column_set` comment is garbled — fix now
+- ripple #11: the README order states no Quarto version — fix now (now "the order of Quarto 1.10.19")
+- snapshot: tests/_snapshots/column-order*.{pdf,typst}.txt — 8 new files; AC1 and AC3 call for them, and column-order-page's two also hold the fix-now cases fig-page-asis-margin (`is in the margin`) and fig-page-panel (`is a subfigure panel`)

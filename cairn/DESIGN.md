@@ -171,7 +171,8 @@ passes (corrected M003):
    floats and moves an image's class to its float. A float that step 2 or
    3 recorded, a table, a float with a margin or page-wide class or a
    layout attribute, any figure float when the document's `fig-column` or
-   `column` names the margin, or a page-wide column in a format where step
+   `column` decides its column (`column_context`, below) and names the
+   margin, or a page-wide column in a format where step
    2's page-wide rule holds for it (`meta_column_context`, which reads a
    code cell's float as a cell and any other float as a float's own class),
    or a figure of a code cell with more than one float outside other
@@ -179,7 +180,9 @@ passes (corrected M003):
    Typst, `column_context` reads a float's column in Quarto's order: its own
    `fig-column-*` class, the document's `fig-column`, its own `column-*` or
    `aside` class, then the document's `column`; the first one set decides.
-   A code cell's float takes the document's value. HTML reads a
+   A code cell's own column sits on the cell, which step 2 reads only when
+   the document sets neither key. A layout attribute comes before a
+   document value, so a panel warns as a subfigure panel. HTML reads a
    margin or page-wide class on the float or its cell, and Word a margin
    class, then the document's value, so a body class does not override the
    document there (corrected M016). In HTML,

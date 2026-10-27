@@ -45,6 +45,28 @@ plot(1:10)
 
 The paragraph after the cell with no column option. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+## A cell that writes a column-margin figure
+
+```{r}
+#| output: asis
+#| classes: wrap-right
+cat("![A figure that a cell writes with the column-margin class.](plot.png){#fig-page-asis-margin .column-margin}\n")
+```
+
+The paragraph after the cell that writes a figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A panel figure
+
+::: {#fig-page-panel layout-ncol=2 .wrap-right}
+![](plot.png)
+
+![](plot.png)
+
+A panel figure with two images.
+:::
+
+The paragraph after the panel figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
 ## A cell with column margin
 
 ```{r}

@@ -201,15 +201,16 @@ file or says that the figure has no id.
 
 - The margin: a figure with the `.column-margin` class, a figure in a
   `.column-margin` or `.aside` div, or a code cell with `#| column: margin`
-  or `#| fig-column: margin`. The figure stays in the margin. In PDF
+  or `#| fig-column: margin`. The figure stays in the margin, unless a
+  document key comes first in PDF (see the order after this list). In PDF
   through LaTeX, Quarto puts a captioned image that has the
   `.column-margin` class and no `#fig-` id in the body instead. Word has
   no margin column, so there the figure is in the body. This item also
   covers `fig-column: margin` and `column: margin` in the document
-  metadata. That value applies to every figure with a `#fig-` id and every
-  code cell figure, even a cell with `#| fig-column: body`. The paragraph
-  after this list gives the order. It does not apply to a
-  captioned image with no id, which stays in the body.
+  metadata. In HTML and Word, that value applies to every figure with a
+  `#fig-` id and every code cell figure, even a cell with
+  `#| fig-column: body`. In PDF, the order after this list decides. It
+  does not apply to a captioned image with no id, which stays in the body.
 - A subfigure panel, such as a figure div with `layout-ncol`, or a
   subfigure inside a panel.
 - A panel layout: a div or a code cell with `layout-ncol`, `layout-nrow`,
@@ -219,21 +220,22 @@ file or says that the figure has no id.
 
 A figure's own class and the document's `fig-column` or `column` can name
 different places. In PDF through LaTeX and PDF through Typst, the
-extension reads them in Quarto's order, and the first one set decides:
+extension reads them in the order of Quarto 1.10.19, and the first one set
+decides:
 
 1. the figure's own `fig-column-*` class, such as `.fig-column-margin`,
 2. the document's `fig-column`,
-3. the figure's own `column-*` class, such as `.column-margin`,
+3. the figure's own `column-*` or `.aside` class, such as `.column-margin`,
 4. the document's `column`.
 
 For a code cell's figure, the document's `fig-column`, else its `column`,
 decides over the cell's own `column` or `fig-column` option. If the
-document sets `fig-column: body`, a `.column-margin` figure wraps in PDF,
-because Quarto puts it in the body there. In HTML,
+document sets `fig-column: body`, a `.column-margin` figure with a `#fig-`
+id wraps in PDF, because Quarto puts it in the body there. In HTML,
 the extension reads a margin or page-wide class on the figure or its code
 cell before the document's key. In Word, it reads a margin class there
-first. A body class, such as `.column-body`, does not override the
-document's key in either format.
+first. In HTML and in Word, a body class, such as `.column-body`, does not
+override the document's key.
 
 A code cell that makes more than one figure without `fig-subcap` or a
 layout option does not wrap either. An example is a cell that draws two
@@ -282,10 +284,10 @@ prints the same warning there, and the figure wraps in the other formats.
   start with `.column-page` or `.column-screen` and do not end in `-left`.
   Word keeps the figure in the body, where it wraps. This item also covers
   a page-wide value of `fig-column` or `column` in the document metadata,
-  such as `fig-column: page`. That value applies to every figure with a
-  `#fig-` id and every code cell figure, even a cell with
-  `#| fig-column: body`. The paragraph after the first list gives the
-  order. In PDF through Typst it applies as a class on the
+  such as `fig-column: page`. In HTML, that value applies to every figure
+  with a `#fig-` id and every code cell figure, even a cell with
+  `#| fig-column: body`. In PDF, the order after the first list decides.
+  In PDF through Typst it applies as a class on the
   figure itself does, except on a code cell figure. It does not apply to a
   captioned image with no id, which stays in the body.
 

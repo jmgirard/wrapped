@@ -46,8 +46,8 @@ local is_typst = FORMAT == "typst"
 -- Word.
 local is_docx = FORMAT == "docx"
 local two_column = false
--- Set in the first pass: the document sets fig-column, and the document
--- sets fig-column or column.
+-- Set in the first pass: meta_fig_column_set when the document sets
+-- fig-column, and meta_column_set when it sets fig-column or column.
 local meta_fig_column_set, meta_column_set = false, false
 -- found_wrap: a figure or image carries a wrap class, so a format that
 -- cannot wrap prints its one warning. placed: a figure or image wraps, so
@@ -1174,20 +1174,25 @@ end
 -- Returns the context that a figure float's column gives it, or nil. In
 -- LaTeX and Typst, Quarto 1.10.19 reads a float's own fig-column-* class,
 -- the document's fig-column, its own column-* or aside class, and the
--- document's column, and the first one set decides. A code cell's float
--- takes the document's value when it has one; otherwise find_contexts has
--- read the cell's own column. HTML and Word read the float's own class
--- here, and float_target reads the document's value after a layout.
+-- document's column, and the first one set decides. A code cell's own
+-- column is on the cell, not its float, and find_contexts reads it when the
+-- document sets neither key. HTML and Word read a margin or page-wide class
+-- of the float's own, else the document's value. The second value is true
+-- when the document's value decides, which float_target reads after a
+-- layout.
 local function column_context(float, cell)
-  if not (is_latex or is_typst) then return class_context(float.classes, true) end
   local document = cell and meta_column_context.cell or meta_column_context.float
-  if cell then return document end
+  if not (is_latex or is_typst) then
+    local own = class_context(float.classes, true)
+    if own then return own, false end
+    return document, true
+  end
   local scoped = float.classes:filter(function(c) return c:match("^fig%-column%-") end)
-  if #scoped > 0 then return class_context(scoped, true) end
-  if meta_fig_column_set then return document end
+  if #scoped > 0 then return class_context(scoped, true), false end
+  if meta_fig_column_set then return document, true end
   local own = float.classes:filter(function(c) return c:match("^column%-") or c == "aside" end)
-  if #own > 0 then return class_context(own, true) end
-  return document
+  if #own > 0 then return class_context(own, true), false end
+  return document, true
 end
 
 local function read_meta(meta)
@@ -1328,17 +1333,18 @@ local function float_target(float)
   -- A figure in a context keeps its normal layout too, and so does an HTML
   -- figure whose caption goes to the margin: CSS places the caption in the
   -- margin, outside the figure's box, and no text sits beside the figure.
-  -- A document-level fig-column or column puts the float in the margin or
-  -- a page-wide column.
+  -- A figure's own column class, or the document's fig-column or column,
+  -- can put the float in the margin or a page-wide column (column_context).
   local node = float.__quarto_custom_node
   local custom_id = node and node.attributes and node.attributes.__quarto_custom_id
   local layout = float.attributes["layout-ncol"] or float.attributes["layout-nrow"]
     or float.attributes.layout
+  local column, by_document = column_context(float, cell)
   local context = (float.type ~= "Figure" and "is not a figure")
     or context_of_float[custom_id or ""]
-    or column_context(float, cell)
+    or (not by_document and column)
     or (layout and "is a subfigure panel")
-    or (not (is_latex or is_typst) and (cell and meta_column_context.cell or meta_column_context.float))
+    or (by_document and column)
     or (has_page_layout and (caption_in_margin(float) or (cell and cell.margin_caption))
       and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no
