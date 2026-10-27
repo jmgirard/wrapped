@@ -164,7 +164,7 @@ The filter has two entry points (corrected M006):
 | E18 | Wrapped figure in a block quote | Normal figure with one warning in LaTeX, where wrapfig does not wrap. Wraps in HTML, Typst, and Word (M013). |
 | E19 | Wrapped figure in a table cell | Normal figure with one warning in Word and LaTeX. A captioned figure in a LaTeX table cell fails to build with or without the extension. Wraps in HTML and Typst (M013). |
 | E20 | Caption in the margin (`cap-location`, `fig-cap-location`, or the `.margin-caption` or `.caption-margin` class) | Normal figure with one warning on an HTML page, where no text sits beside it. Wraps in LaTeX, Typst, Word, and slides (M013). A captioned image with no id moves its caption only for `.margin-caption` (M015). |
-| E21 | Page-wide column class, or a document-level `fig-column` or `column` | Normal figure with one warning on an HTML page for all 16 classes, and in LaTeX for those Quarto makes page-wide. Wraps in Typst, Word, and slides (M013). A document-level value applies to every figure float, even a cell with its own `fig-column`. A margin value keeps the figure normal in every format, as a margin class does. A captioned image with no id is no float and wraps (M015). |
+| E21 | Page-wide column class, or a document-level `fig-column` or `column` | Normal figure with one warning on an HTML page for all 16 classes, and in LaTeX for those Quarto makes page-wide. Wraps in Typst, Word, and slides (M013). A document-level value applies to every figure float, even a cell with `fig-column: body`. A margin value keeps the figure normal in every format, as a margin class does. A captioned image with no id is no float and wraps (M015). |
 
 ## Test plan
 

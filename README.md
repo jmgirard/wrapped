@@ -203,7 +203,7 @@ file or says that the figure has no id.
   `.column-margin` or `.aside` div, or a code cell with `#| column: margin`
   or `#| fig-column: margin`. It also covers `fig-column: margin` in the
   document metadata. That value applies to every figure with a `#fig-` id
-  and every code cell figure, even a cell with its own `fig-column`. A
+  and every code cell figure, even a cell with `#| fig-column: body`. A
   captioned image with no id stays in the body and wraps. The figure stays in the margin. In PDF through LaTeX, Quarto puts a
   captioned image that has the `.column-margin` class and no `#fig-` id
   in the body instead. Word has no margin column, so there the figure is
@@ -254,7 +254,7 @@ prints the same warning there, and the figure wraps in the other formats.
   `.column-screen` and do not end in `-left`. It also covers a page-wide
   value of `fig-column` or `column` in the document metadata, such as
   `fig-column: page`. That value applies to every figure with a `#fig-` id
-  and every code cell figure, even a cell with its own `fig-column`. A
+  and every code cell figure, even a cell with `#| fig-column: body`. A
   captioned image with no id stays in the body and wraps.
 
 ## Slides
