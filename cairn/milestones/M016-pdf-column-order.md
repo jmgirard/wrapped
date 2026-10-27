@@ -148,6 +148,8 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 - 2026-10-27: claim audit: 16 claims read, 1 corrected — README.md (the HTML and Word column sentence; the re-read found Word reads a margin class only, so the sentence, DESIGN step 4, and E21 now say so).
 - 2026-10-27: checkpoint (review): fix-now changes for the four-lens findings committed before the re-run of verify finished; the verify result is recorded next.
 - 2026-10-27: implement done, status review. No code change since the 95-render verify pass; later edits touched README.md and cairn/ only.
+- 2026-10-28: review resumed at the merge question (no PR, main unmoved, no code change since 5260ed7's 95-render run); the first chip was dismissed without an answer.
+- 2026-10-28: step-7 approval: m016-pdf-column-order approved for merge
 
 ## Decisions
 
