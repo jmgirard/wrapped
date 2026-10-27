@@ -311,9 +311,9 @@ either: a `.column-margin` or `.fig-column-margin` class, a `.column-margin`
 div, a code cell with `#| column: margin` or `#| fig-column: margin`, or
 `fig-column: margin` or `column: margin` in the document metadata.
 
-revealjs puts an `.aside` div at the foot of the slide, so a figure in an
-aside div does not wrap. It keeps its normal layout, and the render prints
-one warning for it.
+By default, revealjs puts an `.aside` div at the foot of the slide. A
+figure in an aside div does not wrap. It keeps its normal layout, and the
+render prints one warning for it.
 
 ## PDF through LaTeX
 

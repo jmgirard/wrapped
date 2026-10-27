@@ -898,7 +898,7 @@ local context_of_float = {}
 -- Returns the context that a margin class names, or nil. A code cell with
 -- `fig-column: margin` carries the fig-column-margin class. revealjs slides
 -- have no margin column, so the margin classes name no place there, but
--- revealjs sets an aside at the foot of the slide.
+-- revealjs sets an aside at the foot of the slide by default.
 local function margin_context(classes)
   if not is_revealjs and (classes:includes("column-margin") or classes:includes("fig-column-margin")) then
     return "is in the margin"

@@ -80,5 +80,5 @@ The paragraph after the cell sits beside its figure, because slides have no marg
 ::: {.aside}
 ![A figure in an aside on a slide.](plot.png){#fig-slide-aside .wrap-right width="40%"}
 
-The paragraph after the figure. revealjs puts an aside at the foot of the slide, so the figure keeps its normal layout.
+The paragraph after the figure. By default, revealjs puts an aside at the foot of the slide, so the figure keeps its normal layout.
 :::

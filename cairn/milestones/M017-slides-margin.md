@@ -94,6 +94,8 @@ normal layout**. A warning line reads `1x wrapped: the figure #<id>
 - 2026-10-28: T2 choice: a module-level `is_revealjs` flag, also used by `has_page_layout`; `margin_context` skips the two margin classes when it is set.
 - 2026-10-28: checkpoint, half-done: T1–T3 edits on disk, T1/T2 unchecked until `verify.py --update` finishes and the snapshot diff is read.
 - 2026-10-28: T1–T3 done: `verify.py --update` passed all 97 renders; the revealjs snapshot gains only added lines, the five AC1 figures wrap and `fig-slide-aside` warns `is in an aside`. With main's filter all seven AC1 figures warn `is in the margin`, so the fixtures fail on main.
+- 2026-10-28: claim audit: 19 claims read, 3 corrected — README.md, _extensions/wrapped/wrapped.lua, tests/revealjs.qmd (the aside sits at the slide's foot only by default: `center: true` and `.scrollable` slides place it otherwise; the reader re-read the three narrowed lines and all hold).
+- 2026-10-28: T4 run 1: `python3 tests/verify.py` passed all 97 renders; against main the snapshots add revealjs-margin-meta and revealjs-column-margin (9 lines each) and 18 lines to revealjs.revealjs.txt, with no line removed. The three audit edits landed during that run, so a second run checks the final head.
 
 ## Decisions
 
