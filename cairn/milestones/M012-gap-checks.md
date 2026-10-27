@@ -171,6 +171,7 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 - 2026-10-27: claim audit: 30 claims read, 4 corrected — README.md, _extensions/wrapped/wrapped.lua; one more true claim (`max(-2px, -1%)` passes) gained fixture `fig-valid-27`; the same reader re-read the five and found each true.
 - 2026-10-27: verify passed, 59 renders, on the corrected code; status review.
 - 2026-10-27: review: the plan-time rewrite after the criteria audit dropped the empty `## Decisions` and `## Review` sections; review restores both below.
+- 2026-10-27: review checkpoint: fix-now work for 11 findings committed in 69037e6 (Word metadata check needs an unreplaced width, a fallen-back gap is not the figure's own, three docx-gap cases, fixture docx-gap-meta-wide, doc fixes); verify on it running; criteria not yet ticked.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
@@ -204,4 +205,3 @@ Findings and dispositions:
 - diff-bug #12: a number of more than 308 digits reads as infinite and warns — reject, edge: such a number is outside documented and common use, and the effect is a warning.
 - diff-bug test-rule note: pairs of AC3, AC4, and AC1 cases share a code path — reject, planned change: AC1, AC3, and AC4 name each case.
 - ripple #1, #2: the ROADMAP rows "Count the gap in Word width checks" and "Refuse negative gaps in CSS functions" still describe the old behavior — reject, planned change: they end with "started M012", and post-merge hygiene removes them.
-- 2026-10-27: review checkpoint: fix-now work for 11 findings committed (Word metadata check needs an unreplaced width, a fallen-back gap is not the figure's own, three docx-gap cases, fixture docx-gap-meta-wide, doc fixes); verify on it running; criteria not yet ticked.
