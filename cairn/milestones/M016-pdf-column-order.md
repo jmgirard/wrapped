@@ -66,7 +66,7 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 `#wideblock` or a `#column-` function is a page-wide column, and any other
 `#figure` is the body.
 
-- [ ] AC1: This criterion covers the figures listed below, in the LaTeX
+- [x] AC1: This criterion covers the figures listed below, in the LaTeX
       and Typst snapshots. If the bare render of its fixture in that format
       puts the figure in the body, the figure wraps. If not, it keeps its
       normal layout with one warning. The reason is `is in the margin` for
@@ -84,7 +84,7 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
     `.fig-column-body`, and a knitr cell with `#| fig-column: body`.
   - `column-order-margin.qmd`: floats with `.column-body` and with no
     column class, and a knitr cell with no column option.
-- [ ] AC2: The README section "Where a figure keeps its normal layout"
+- [x] AC2: The README section "Where a figure keeps its normal layout"
       states the order in which the filter reads a figure's column in PDF
       through LaTeX and PDF through Typst, with the four sources that the
       Scope names. It states that HTML and Word read a figure's own class
@@ -151,3 +151,6 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 ## Decisions
 
 ## Review
+
+- AC1: fresh bare renders of the four fixtures (scratchpad `review-bare`, LaTeX and Typst) read by `place.py` against the committed snapshots: 40 figure-format checks (the 20 figures AC1 lists, in two formats), 0 failures. Each body figure wraps with no warning, each margin figure warns `is in the margin`, each page-wide figure warns `is page-wide`, and no other warning appears. A planted copy (one wrap line removed, one reason changed) failed 4 checks, so the check can fail.
+- AC2: README.md:220-236 states the order in LaTeX and Typst with the four sources (lines 224-227), the cell rule, and HTML and Word reading a margin or page-wide class (HTML) or a margin class (Word) first; the margin item names a document `column: margin` (line 208).
