@@ -878,6 +878,36 @@ local function margin_context(classes)
   return nil
 end
 
+-- Quarto's page-wide column classes. HTML sets each one wider than the body
+-- text, where a wrapped figure does not float.
+local PAGE_WIDE = { ["column-screen-inset-shaded"] = true }
+for _, name in ipairs({ "column-body-outset", "column-page-inset", "column-page",
+    "column-screen-inset", "column-screen" }) do
+  PAGE_WIDE[name], PAGE_WIDE[name .. "-left"], PAGE_WIDE[name .. "-right"] = true, true, true
+end
+
+-- Returns the context that a page-wide column class names, or nil. A code
+-- cell with `column: page` carries the column-page class, and one with
+-- `fig-column: page` the fig-column-page class. LaTeX makes a figure
+-- page-wide only for the names that start with column-page or
+-- column-screen and do not end in -left, as Quarto's isStarEnv does, and
+-- Typst and Word keep the figure in the body.
+local function page_context(classes)
+  for _, class in ipairs(classes) do
+    local name = class:gsub("^fig%-", "")
+    if PAGE_WIDE[name] and (is_html or is_latex and not name:match("%-left$")
+        and (name:match("^column%-page") or name:match("^column%-screen"))) then
+      return "is page-wide"
+    end
+  end
+  return nil
+end
+
+-- Returns the context that a margin or page-wide column class names, or nil.
+local function class_context(classes)
+  return margin_context(classes) or page_context(classes)
+end
+
 -- Returns the context that a block sets for the blocks inside it, or nil.
 -- A code cell with `column: margin` carries the column-margin class.
 local function block_context(block)
@@ -902,7 +932,7 @@ local function block_context(block)
   if attrs["layout-ncol"] or attrs["layout-nrow"] or attrs.layout then
     return "is in a panel layout"
   end
-  return margin_context(block.classes)
+  return class_context(block.classes)
 end
 
 -- A context warning, printed in a format that wraps. Other formats print
@@ -955,10 +985,11 @@ local function mark_context(blocks, context)
 end
 
 -- Finds the lists, callouts, column layouts, panel layouts, tabsets,
--- asides, margin blocks, and subfigure panels, outermost first, and marks
+-- asides, margin blocks, page-wide columns, subfigure panels, and the block
+-- quotes and tables of the formats that cannot wrap there, outermost first, and marks
 -- what is inside each one. A float that holds other floats is a subfigure
--- panel. A captioned image with no id, or an image, with its own margin
--- class is in the margin too. A float's own margin class is read in the
+-- panel. A captioned image with no id, or an image, with its own margin or
+-- page-wide class is in that context too. A float's own class is read in the
 -- float pass.
 local function find_contexts(doc)
   local function mark(block)
@@ -991,9 +1022,9 @@ local function find_contexts(doc)
     return block, false
   end
   local function own_margin(fig)
-    local context = margin_context(fig.classes)
+    local context = class_context(fig.classes)
     fig.content:walk({
-      Image = function(img) context = context or margin_context(img.classes) end,
+      Image = function(img) context = context or class_context(img.classes) end,
     })
     if not context then return nil end
     return mark_context(pandoc.Blocks({ fig }), context), false
@@ -1008,7 +1039,7 @@ local function find_contexts(doc)
     Table = mark,
     Figure = own_margin,
     Image = function(img)
-      local context = margin_context(img.classes)
+      local context = class_context(img.classes)
       if not (context and wrap_class(img.classes)) then return nil end
       found_wrap = true
       context_warning("the image " .. pandoc.utils.stringify(img.src), context)
@@ -1186,7 +1217,7 @@ local function float_target(float)
     or float.attributes.layout
   local context = (float.type ~= "Figure" and "is not a figure")
     or context_of_float[custom_id or ""]
-    or margin_context(float.classes)
+    or class_context(float.classes)
     or (layout and "is a subfigure panel")
     or (is_html and caption_location(float) == "margin" and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no

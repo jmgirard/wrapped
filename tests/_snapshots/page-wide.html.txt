@@ -1,0 +1,21 @@
+# warnings
+1x wrapped: the figure #fig-outset is page-wide, so it does not wrap.
+1x wrapped: the figure #fig-own-page is page-wide, so it does not wrap.
+1x wrapped: the figure #fig-page-cell is page-wide, so it does not wrap.
+1x wrapped: the figure #fig-page-div is page-wide, so it does not wrap.
+1x wrapped: the figure #fig-page-left is page-wide, so it does not wrap.
+# breakpoint
+(none)
+# figures
+fig-page-div: - style=-
+fig-page-left: - style=-
+fig-outset: - style=-
+fig-own-page: - style=-
+fig-page-cell: - style=-
+# images
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+fig-page-cell-1.png: wrap=- style=- width=672
+# groups

@@ -56,7 +56,7 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 
 - [x] T1: In `find_contexts` (`wrapped.lua:953`), treat a definition list as a list context. Its items are a term and a list of definitions. Treat a code cell with `fig-column: margin` as a margin context. Add the cases to `tests/contexts.qmd`, and update its four snapshots.
 - [x] T2: Add contexts that depend on the format: a block quote in LaTeX, and a table cell in Word and LaTeX. Add the block-quote case to `tests/contexts.qmd`. Add a new fixture with the captioned table-cell case, rendered to HTML, Typst, and Word, and a LaTeX fixture with the uncaptioned image. Make the `.typ` summary in `tests/verify.py` read an indented `wrap-content` call.
-- [ ] T3: In HTML, fall back for a margin caption in its six forms, with the figure's own key taking precedence over the metadata. The in-document forms and the override are cases in a fixture. The two metadata forms are two small HTML fixtures. The attribute form also renders in LaTeX, Typst, and Word.
+- [x] T3: In HTML, fall back for a margin caption in its six forms, with the figure's own key taking precedence over the metadata. The in-document forms and the override are cases in a fixture. The two metadata forms are two small HTML fixtures. The attribute form also renders in LaTeX, Typst, and Word.
 - [ ] T4: Fall back for page-wide columns: in HTML for the 16 classes, in LaTeX for the 9 page-wide ones. Read the class on a div, on the figure, and in a cell's `column` or `fig-column` option. Add the five cases to a fixture rendered in four formats.
 - [ ] T5: Remove integer arithmetic on CSS numbers: `docx_measure` (`wrapped.lua:667`), the `px` and `pc` cases of `typst_length` (`wrapped.lua:510`), and `typst_fills` (`wrapped.lua:543`). Add regression fixtures for Word and Typst, and show each failing on `main` first. Record the `grep -n 'tonumber('` ledger in the work log.
 - [ ] T6: Update the README from this milestone's renders, in the section "Where a figure keeps its normal layout". Update DESIGN.md's Architecture step 2.
@@ -85,6 +85,8 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 - 2026-10-27: T2 done: the full suite passed (64 renders).
 - 2026-10-27: substantive amendment: Scope Out no longer lists "a cell's `cap-location-margin` classes", because Quarto copies such a class to the figure's `cap-location` before the filter runs, so AC3's cell form covers it (the `fig-figcap-cell` case). The candidate row is corrected the same way. AC3 is unchanged, and what the user gets is unchanged.
 - 2026-10-27: checkpoint (T3 not checked off): `caption_location` reads the figure's `fig-cap-location`, then its `cap-location`, then the metadata's, and HTML falls back on `margin`. The six forms and the override render as AC3 says. The full suite is running.
+- 2026-10-27: T3 done: the full suite passed (70 renders).
+- 2026-10-27: checkpoint (T4 not checked off): `page_context` reads the 16 page-wide classes (a `fig-` prefix stripped for a cell's `fig-column` class), in HTML for all and in LaTeX for the `isStarEnv` names, and `class_context` joins it with `margin_context` at each site that read a margin class. The warning reads "is page-wide". The LaTeX page images show `column-page-left` and `column-body-outset` wrapping with text beside the figure. The full suite is running.
 
 ## Decisions
 
