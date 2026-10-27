@@ -1,6 +1,8 @@
 # warnings
 1x wrapped: a figure with no id is in a column layout, so it does not wrap.
 1x wrapped: a figure with no id is in the margin, so it does not wrap.
+1x wrapped: the code cell #fig-three-plots makes more than one figure, so it does not wrap.
+1x wrapped: the code cell #fig-two-plots makes more than one figure, so it does not wrap.
 1x wrapped: the figure #fig-aside is in an aside, so it does not wrap.
 1x wrapped: the figure #fig-callout is in a callout, so it does not wrap.
 1x wrapped: the figure #fig-column is in a column layout, so it does not wrap.
@@ -13,6 +15,9 @@
 1x wrapped: the figure #fig-panel is a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-sub-wrapped is in a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-tab is in a tabset, so it does not wrap.
+1x wrapped: the figure #fig-two-subcap is a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-two-subcap-1 is in a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-two-subcap-2 is in a subfigure panel, so it does not wrap.
 1x wrapped: the image deflist.png is in a list, so it does not wrap.
 1x wrapped: the image plot.png is in a list, so it does not wrap.
 1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
@@ -29,6 +34,14 @@ fig-plain-panel: - style=-
 fig-sub-wrapped: - style=-
 fig-sub-plain: - style=-
 fig-layout-cell: - style=-
+fig-two-plots-1: - style=-
+fig-two-plots-2: - style=-
+fig-three-plots-1: - style=-
+fig-three-plots-2: - style=-
+fig-three-plots-3: - style=-
+fig-two-subcap: - style=-
+fig-two-subcap-1: - style=-
+fig-two-subcap-2: - style=-
 tbl-wrapped: - style=-
 fig-list: - style=-
 fig-deflist: - style=-
@@ -50,6 +63,13 @@ plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
+fig-two-plots-1.png: wrap=- style=- width=672
+fig-two-plots-2.png: wrap=- style=- width=672
+fig-three-plots-1.png: wrap=- style=- width=672
+fig-three-plots-2.png: wrap=- style=- width=672
+fig-three-plots-3.png: wrap=- style=- width=672
+fig-two-subcap-1.png: wrap=- style=- width=672
+fig-two-subcap-2.png: wrap=- style=- width=672
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=width:20.0% width=-
 plot.png: wrap=- style=- width=-
