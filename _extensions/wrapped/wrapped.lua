@@ -1053,7 +1053,19 @@ local function meta_text(value)
   return (pandoc.utils.stringify(value):gsub("\u{2013}", "--"))
 end
 
+-- The document's caption location for figures, read in the first pass.
+local meta_cap_location = nil
+
+-- Where a figure's caption goes, read in Quarto's order: the figure's own
+-- fig-cap-location, its cap-location, then the document's. Quarto has
+-- already copied a code cell's caption location to the cell's figure.
+local function caption_location(float)
+  return float.attributes["fig-cap-location"] or float.attributes["cap-location"]
+    or meta_cap_location
+end
+
 local function read_meta(meta)
+  meta_cap_location = meta_text(meta["fig-cap-location"]) or meta_text(meta["cap-location"])
   if is_docx then
     docx_text_width, docx_columns = read_docx_text_width()
     if docx_columns then is_docx = false end
@@ -1165,7 +1177,9 @@ local function float_target(float)
   strip_wrap(float.classes)
   -- Only figures wrap. A table float keeps its normal layout, and Quarto
   -- copies a cell's classes onto a table float, so the wrap class goes.
-  -- A figure in a context keeps its normal layout too.
+  -- A figure in a context keeps its normal layout too, and so does an HTML
+  -- figure whose caption goes to the margin: the caption leaves the float,
+  -- and no text sits beside the figure.
   local node = float.__quarto_custom_node
   local custom_id = node and node.attributes and node.attributes.__quarto_custom_id
   local layout = float.attributes["layout-ncol"] or float.attributes["layout-nrow"]
@@ -1174,6 +1188,7 @@ local function float_target(float)
     or context_of_float[custom_id or ""]
     or margin_context(float.classes)
     or (layout and "is a subfigure panel")
+    or (is_html and caption_location(float) == "margin" and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
   if context or no_text[custom_id or ""] then

@@ -28,7 +28,7 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 
 **Out:**
 - A captioned figure in a table cell in PDF through LaTeX. The LaTeX build fails with or without the extension, because Quarto puts a figure float in a `longtable`. That is Quarto's limit, and no work is planned for it.
-- Other ways to set a margin caption or a page-wide figure: the `.margin-caption` and `.caption-margin` classes, a cell's `cap-location-margin` classes, and a document-level `fig-column`. They go to the candidate row "Fall back in more margin and page forms".
+- Other ways to set a margin caption or a page-wide figure: the `.margin-caption` and `.caption-margin` classes, and a document-level `fig-column`. They go to the candidate row "Fall back in more margin and page forms".
 - A metadata `cap-location: margin` in LaTeX, Typst, and Word. Only the attribute form is tested to keep wrapping there.
 - Two figures in one wrapped cell, dashboards, and Typst columns stay in their candidate rows.
 
@@ -55,7 +55,7 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 ## Tasks
 
 - [x] T1: In `find_contexts` (`wrapped.lua:953`), treat a definition list as a list context. Its items are a term and a list of definitions. Treat a code cell with `fig-column: margin` as a margin context. Add the cases to `tests/contexts.qmd`, and update its four snapshots.
-- [ ] T2: Add contexts that depend on the format: a block quote in LaTeX, and a table cell in Word and LaTeX. Add the block-quote case to `tests/contexts.qmd`. Add a new fixture with the captioned table-cell case, rendered to HTML, Typst, and Word, and a LaTeX fixture with the uncaptioned image. Make the `.typ` summary in `tests/verify.py` read an indented `wrap-content` call.
+- [x] T2: Add contexts that depend on the format: a block quote in LaTeX, and a table cell in Word and LaTeX. Add the block-quote case to `tests/contexts.qmd`. Add a new fixture with the captioned table-cell case, rendered to HTML, Typst, and Word, and a LaTeX fixture with the uncaptioned image. Make the `.typ` summary in `tests/verify.py` read an indented `wrap-content` call.
 - [ ] T3: In HTML, fall back for a margin caption in its six forms, with the figure's own key taking precedence over the metadata. The in-document forms and the override are cases in a fixture. The two metadata forms are two small HTML fixtures. The attribute form also renders in LaTeX, Typst, and Word.
 - [ ] T4: Fall back for page-wide columns: in HTML for the 16 classes, in LaTeX for the 9 page-wide ones. Read the class on a div, on the figure, and in a cell's `column` or `fig-column` option. Add the five cases to a fixture rendered in four formats.
 - [ ] T5: Remove integer arithmetic on CSS numbers: `docx_measure` (`wrapped.lua:667`), the `px` and `pc` cases of `typst_length` (`wrapped.lua:510`), and `typst_fills` (`wrapped.lua:543`). Add regression fixtures for Word and Typst, and show each failing on `main` first. Record the `grep -n 'tonumber('` ledger in the work log.
@@ -82,6 +82,9 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 - 2026-10-27: T1 done: the full suite passed (60 renders).
 - 2026-10-27: overflow fixtures on the code before T5: Word's huge width warns "is not a length that Word can use" where 9999in warns "leaves no room for text", and Word's huge gap prints no warning; Typst's huge pc width is written as -9223372036854775808pt, and its huge percent gap prints no warning where 100% warns.
 - 2026-10-27: checkpoint (T2 not checked off): block quotes fall back in LaTeX, and tables in LaTeX and Word, through `block_context`. The `.typ` summary reads an indented call and its indented label. The table-cell fixtures are in the runner. The full suite is running.
+- 2026-10-27: T2 done: the full suite passed (64 renders).
+- 2026-10-27: substantive amendment: Scope Out no longer lists "a cell's `cap-location-margin` classes", because Quarto copies such a class to the figure's `cap-location` before the filter runs, so AC3's cell form covers it (the `fig-figcap-cell` case). The candidate row is corrected the same way. AC3 is unchanged, and what the user gets is unchanged.
+- 2026-10-27: checkpoint (T3 not checked off): `caption_location` reads the figure's `fig-cap-location`, then its `cap-location`, then the metadata's, and HTML falls back on `margin`. The six forms and the override render as AC3 says. The full suite is running.
 
 ## Decisions
 

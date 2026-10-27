@@ -1,0 +1,12 @@
+# warnings
+1x wrapped: the figure #fig-meta-margin has its caption in the margin, so it does not wrap.
+# breakpoint
+576px
+# figures
+fig-meta-margin: - style=-
+fig-meta-bottom: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+# images
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+# groups
+fig-meta-bottom, p
