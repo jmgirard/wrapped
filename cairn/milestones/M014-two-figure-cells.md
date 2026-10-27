@@ -146,25 +146,27 @@ Pass 1, 2026-10-27, head 4f4e096 (main d536d61, not moved since the cut).
 - gate: cairn_validate "all checks passed"; one version marker (`_extension.yml` version 0.1.0), not changed by the diff; verify passes on the review head; changelog slot "none". No principle changed, so no cairn_impact run.
 - spawned: diff-bug, blame-history, prior-review, ripple
 - diff-bug #1: count_top_floats counts table floats too, so a cell with one table float and one figure float keeps its figure normal with the "more than one figure" warning — reject (edge: a cell that mixes a table float and a figure float, which a knitr cell's one label does not make; effect is a fallback with a warning)
-- diff-bug #2: no fixture backs the README claim that a multi-figure cell with no paragraph after it prints no warning — fix now (cell fig-two-before-heading); the context case stays out of scope by the plan's Out
-- diff-bug #3: a two-plot `layout-ncol` cell gets the panel-layout warning per figure, but the README named only `fig-subcap` as the exception — fix now (README names the layout options)
-- diff-bug #4: the carry comment does not name `several` or `warned` — fix now
-- diff-bug #5: the new branch repeats the context branch's three fallback lines — fix now (keep_normal helper)
-- diff-bug #6: README "follow the next section instead" can read as "come after", and a line break is odd — fix now
+- diff-bug #2: no fixture backs the README claim that a multi-figure cell with no paragraph after it prints no warning — fix now, fixed 6bfa3fb (cell fig-two-before-heading); the context case stays out of scope by the plan's Out
+- diff-bug #3: a two-plot `layout-ncol` cell gets the panel-layout warning per figure, but the README named only `fig-subcap` as the exception — fix now, fixed 6bfa3fb (README names the layout options)
+- diff-bug #4: the carry comment does not name `several` or `warned` — fix now, fixed 6bfa3fb
+- diff-bug #5: the new branch repeats the context branch's three fallback lines — fix now, fixed 6bfa3fb (keep_normal helper)
+- diff-bug #6: README "follow the next section instead" can read as "come after", and a line break is odd — fix now, fixed 6bfa3fb
 - diff-bug #7: the LaTeX summary lists fig-two-subcap-1 and not -2 — reject (false: AC3 binds the warnings, which list -2 in every format)
 - diff-bug #8: an untracked tests/contexts.rmarkdown showed at one point — reject (false: a knitr intermediate, gone and not in the diff)
-- blame-history #1: README "To wrap a plot, give it its own cell" holds only when a paragraph follows that cell — fix now
+- blame-history #1: README "To wrap a plot, give it its own cell" holds only when a paragraph follows that cell — fix now, fixed 6bfa3fb
 - blame-history #2: the change narrows M002's carry, which wrapped every float of a cell, and T1 has no before-state line — reject (planned change: D-010 records the narrowing; the T1 work-log line records the before state)
-- blame-history #3: E7 in references/wrap-mechanisms.md still reads as covering a two-plot cell — fix now
-- blame-history #4: README "The places in the next section are the exception, but a code cell … is not" reads as saying cell figures never warn — fix now
+- blame-history #3: E7 in references/wrap-mechanisms.md still reads as covering a two-plot cell — fix now, fixed 6bfa3fb
+- blame-history #4: README "The places in the next section are the exception, but a code cell … is not" reads as saying cell figures never warn — fix now, fixed 6bfa3fb
 - blame-history #5: tables counted in count_top_floats — reject (edge: same input and effect as diff-bug #1)
 - blame-history #6: README drops the repeated "in" in "In HTML, PDF through LaTeX, …" — reject (style)
-- prior-review #1: the README next-block clause added for the cell is ambiguous, after the M013 review fixed that paragraph — fix now (same edit as blame-history #4)
+- prior-review #1: the README next-block clause added for the cell is ambiguous, after the M013 review fixed that paragraph — fix now, fixed 6bfa3fb (same edit as blame-history #4)
 - prior-review #2: an unlabeled cell would print "the code cell #" — reject (false: a scratch render of an unlabeled two-plot wrapped cell makes no float and prints the existing "makes no figure with a fig- label" warning)
-- ripple #1: references/wrap-mechanisms.md E7 disagrees with D-010 — fix now (same edit as blame-history #3)
-- ripple #2: DESIGN.md Architecture step 4's list of floats that keep the normal layout omits the cell case — fix now
-- ripple #3: wrapped.lua's `wraps()` comment says a warning prints for each figure — fix now
-- ripple #4: wrapped.lua's header names two passes that find normal figures — fix now; the next-block comments near the float pass still hold (a figure with no paragraph after it warns for no reason) — that part reject (false)
-- ripple #5: DESIGN.md Goals says one warning for each figure in a context — fix now
+- ripple #1: references/wrap-mechanisms.md E7 disagrees with D-010 — fix now, fixed 6bfa3fb (same edit as blame-history #3)
+- ripple #2: DESIGN.md Architecture step 4's list of floats that keep the normal layout omits the cell case — fix now, fixed 6bfa3fb
+- ripple #3: wrapped.lua's `wraps()` comment says a warning prints for each figure — fix now, fixed 6bfa3fb
+- ripple #4: wrapped.lua's header names two passes that find normal figures — fix now, fixed 6bfa3fb; the next-block comments near the float pass still hold (a figure with no paragraph after it warns for no reason) — that part reject (false)
+- ripple #5: DESIGN.md Goals says one warning for each figure in a context — fix now, fixed 6bfa3fb
 - ripple #6: the ROADMAP candidate row still poses the decision — reject (planned change: the row ends "started M014", and post-merge hygiene removes it)
 - ripple #7: README's first-list intro says the warning names the figure's id — reject (false: the intro covers the places in that list; the cell paragraph states its own warning)
+- after fixes, head 34bd15a: `python3 tests/verify.py` "all 76 renders pass"; cairn_validate "all checks passed". The fix commits add only fig-two-before-heading lines to the four contexts snapshots (no warning, `- style=-`, `[H]`, `image-width=no`), so the AC1–AC3 evidence above holds on this head.
+- snapshot files: none by the review's definition (`_snaps` or `__snapshots__`); this repo's `tests/_snapshots/contexts.*.txt` gain lines only for the four new cells, as AC1–AC3 and diff-bug #2's fix call for.
