@@ -175,7 +175,13 @@ passes (corrected M003):
    and the `.wrap-group` div's `data-wrap-frame` holds the frame's side,
    width, and gap in twips. A percent is a share of the text width in the
    reference doc's `w:sectPr`, or 6.5 in when it has no page size or
-   margins. Each image takes the frame width (corrected M006).
+   margins. Each image takes the frame width (corrected M006). A frame
+   whose width plus gap is as wide as the text or wider takes the first of
+   the document default and 40% that with the gap is narrower, else 40%,
+   with a warning: in `docx_frame` for a figure that sets its own width or
+   gap, and in `read_meta` for the `wrapped` metadata (corrected M012).
+   In HTML a function gap that is below zero or not finite at every size
+   takes the default gap with a warning (corrected M012).
 6. It warns for a wrap class on an image or a div that it cannot place.
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
    wraps. In LaTeX it adds wrapfig and `wrapped.tex`, which defines
@@ -234,3 +240,7 @@ snapshot difference. The mechanism for each other format is in
   keeps one term's limit for `min()` and `max()`, reads each relative unit
   as unrelated to the others, and adds in floating point. The README says
   the check warns only where it can show the result (M011).
+- HTML: a `max()` gap over two units whose terms are all below zero, such
+  as `max(-2px, -1%)`, prints no warning. The check reads such a `max()`
+  as zero or below, not as below zero, and a gap of zero stays. The README
+  states this limit (M012).
