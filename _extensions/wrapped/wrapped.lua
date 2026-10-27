@@ -5,6 +5,8 @@
 -- that also holds the paragraphs after it. Two passes first find the
 -- figures that keep a normal layout: those in a context that cannot wrap,
 -- such as a list or the margin, and those with no paragraph after them.
+-- The float pass also keeps the figures of a code cell that makes more than
+-- one figure normal (D-010).
 -- LaTeX output puts each wrapped figure in the wrappedfigure environment of
 -- wrapped.tex, which calls wrapfig, and writes \wrappedstop after the
 -- paragraphs of its group. Typst output puts each wrapped figure
@@ -51,7 +53,7 @@ local found_wrap = false
 local placed = false
 
 -- True in a format that wraps, which prints a warning for each figure that
--- keeps its normal layout.
+-- keeps its normal layout, or one for a code cell whose figures keep it.
 local function wraps()
   return is_html or is_latex or is_typst or is_docx
 end
@@ -864,6 +866,22 @@ local function count_floats(div)
   return n
 end
 
+-- Counts the floats of a code cell that sit in no other float. A cell with
+-- `fig-subcap` makes one float that holds a subfloat for each plot, and a
+-- cell that draws two plots without it makes two floats.
+local function count_top_floats(div)
+  local n = 0
+  div.content:walk({
+    traverse = "topdown",
+    Div = function(d)
+      if d.attributes.__quarto_custom_type ~= "FloatRefTarget" then return nil end
+      n = n + 1
+      return nil, false
+    end,
+  })
+  return n
+end
+
 -- Custom ids of floats whose next block is not a paragraph, from the
 -- next-block pass.
 local no_text = {}
@@ -1175,7 +1193,9 @@ local docx_frames = {}
 -- The wrap class of a code cell, carried to the floats inside that cell.
 -- `remaining` counts the cell's floats, figures and tables, so a cell with
 -- no float carries nothing. Only figures wrap: a table float that takes the
--- class keeps its normal layout.
+-- class keeps its normal layout. `several` is true when the cell makes more
+-- than one float that sits in no other float, and `warned` is set once the
+-- cell's one warning is printed.
 local carry = nil
 
 local function cell_div(div)
@@ -1193,19 +1213,28 @@ local function cell_div(div)
   if n > 0 then
     next_token = next_token + 1
     local token = tostring(next_token)
-    carry = { class = c, remaining = n, token = token }
+    carry = { class = c, remaining = n, token = token, several = count_top_floats(div) > 1 }
     if wraps() then div.attributes["data-wrap-anchor"] = token end
   end
   return div
 end
 
+-- Gives a float that does not wrap its normal layout: its images lose
+-- their wrap classes, and the float loses its wrap options.
+local function keep_normal(float)
+  float.content = float.content:walk({ Image = drop_wrap })
+  float.attributes["wrap-gap"] = nil
+  float.attributes["wrap-lines"] = nil
+  return float
+end
+
 local function float_target(float)
   -- Every float of a wrapped cell uses up the carry, tables included, so
   -- the carry never reaches a float after the cell.
-  local carried, token
+  local carried, token, cell
   if carry and carry.remaining > 0 then
     carry.remaining = carry.remaining - 1
-    carried, token = carry.class, carry.token
+    carried, token, cell = carry.class, carry.token, carry
   end
   local img_class, img_width, img_gap, img_lines = image_wrap(float.content)
   local class = wrap_class(float.classes) or carried or img_class
@@ -1229,12 +1258,24 @@ local function float_target(float)
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
   if context or no_text[custom_id or ""] then
-    float.content = float.content:walk({ Image = drop_wrap })
-    float.attributes["wrap-gap"] = nil
-    float.attributes["wrap-lines"] = nil
+    keep_normal(float)
     if context then
       local noun = ({ Figure = "figure", Table = "table" })[float.type] or "float"
       context_warning(string.format("the %s #%s", noun, float.identifier), context)
+    end
+    return float
+  end
+  -- A cell that makes more than one figure without `fig-subcap` keeps all
+  -- its figures normal, with one warning for the cell at the first figure
+  -- that reaches this point (D-010). A cell in a context or with no
+  -- paragraph after it took a branch above instead. Quarto numbers such
+  -- figures with the cell's label and `-1`, `-2`, and so on.
+  if carried and cell.several then
+    keep_normal(float)
+    if not cell.warned then
+      cell.warned = true
+      local label = float.identifier:gsub("%-%d+$", "")
+      context_warning("the code cell #" .. label, "makes more than one figure")
     end
     return float
   end

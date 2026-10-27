@@ -181,17 +181,20 @@ paragraph that you want beside the figure:
 
 A wrapped figure with no paragraph right after it keeps its normal layout.
 An example is a figure right before a heading. In HTML, LaTeX, Typst, and
-Word the render prints no warning for such a figure. The places in the next section are the
-exception. Of two wrapped figures in a row, the first keeps its
-normal layout, and the second wraps the paragraphs after it.
+Word the render prints no warning for such a figure. The places in the
+lists of the next section are the exception: a figure there prints its
+warning with or without a paragraph after it. Of two wrapped figures in a
+row, the first keeps its normal layout, and the second wraps the paragraphs
+after it. This does not hold for the figures of one code cell, which the
+next section covers.
 
 In PDF through LaTeX, in PDF through Typst, and in Word, wrapping stops as
 in HTML, and a `wrap-clear` div works.
 
 ## Where a figure keeps its normal layout
 
-In HTML, in PDF through LaTeX, in PDF through Typst, and in Word, a wrapped
-figure in one of the places in this first list does not wrap. It keeps
+In HTML, PDF through LaTeX, PDF through Typst, and Word, a wrapped figure
+in one of the places in this first list does not wrap. It keeps
 its normal layout, and the render prints one warning for it. The warning
 names the figure's id. If the figure has no id, the warning names its image
 file or says that the figure has no id.
@@ -208,6 +211,16 @@ file or says that the figure has no id.
   or `layout`.
 - A list, a definition list included, a callout, a `.columns` layout, or a
   tabset.
+
+A code cell that makes more than one figure without `fig-subcap` or a
+layout option does not wrap either. An example is a cell that draws two
+plots. Each of its figures keeps its normal layout, and the render prints one
+warning that names the cell's label. If no paragraph follows the cell, its
+figures keep their normal layout with no warning, as any wrapped figure
+does there. To wrap a plot, give it its own cell with a paragraph after
+it. A cell with `fig-subcap`
+makes a subfigure panel, and a cell with `layout-ncol`, `layout-nrow`, or
+`layout` makes a panel layout. The list above covers both.
 
 A table float does not wrap either, and the render prints one warning that
 names it. A `#tbl-` div or a code cell with a `tbl-` label makes a table

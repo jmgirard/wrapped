@@ -1,6 +1,8 @@
 # warnings
 1x wrapped: a figure with no id is in a column layout, so it does not wrap.
 1x wrapped: a figure with no id is in the margin, so it does not wrap.
+1x wrapped: the code cell #fig-three-plots makes more than one figure, so it does not wrap.
+1x wrapped: the code cell #fig-two-plots makes more than one figure, so it does not wrap.
 1x wrapped: the figure #fig-aside is in an aside, so it does not wrap.
 1x wrapped: the figure #fig-callout is in a callout, so it does not wrap.
 1x wrapped: the figure #fig-column is in a column layout, so it does not wrap.
@@ -14,6 +16,9 @@
 1x wrapped: the figure #fig-quote is in a block quote, so it does not wrap.
 1x wrapped: the figure #fig-sub-wrapped is in a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-tab is in a tabset, so it does not wrap.
+1x wrapped: the figure #fig-two-subcap is a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-two-subcap-1 is in a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-two-subcap-2 is in a subfigure panel, so it does not wrap.
 1x wrapped: the image deflist.png is in a list, so it does not wrap.
 1x wrapped: the image plot.png is in a list, so it does not wrap.
 1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
@@ -22,6 +27,14 @@ figure: - [H] image=[keepaspectratio]
 figure: fig-panel-a [-] image=[keepaspectratio]
 figure: fig-sub-wrapped [-] image=[keepaspectratio]
 figure: fig-layout-cell [-] image=[keepaspectratio]
+figure: fig-two-plots-1 [H] image=[keepaspectratio]
+figure: fig-two-plots-2 [H] image=[keepaspectratio]
+figure: fig-three-plots-1 [H] image=[keepaspectratio]
+figure: fig-three-plots-2 [H] image=[keepaspectratio]
+figure: fig-three-plots-3 [H] image=[keepaspectratio]
+figure: fig-two-subcap-1 [H] image=[keepaspectratio]
+figure: fig-two-before-heading-1 [H] image=[keepaspectratio]
+figure: fig-two-before-heading-2 [H] image=[keepaspectratio]
 figure: fig-list [-] image=[keepaspectratio]
 figure: fig-deflist [-] image=[keepaspectratio]
 figure: fig-quote [-] image=[keepaspectratio]

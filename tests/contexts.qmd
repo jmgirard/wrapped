@@ -79,6 +79,58 @@ The paragraph in the second layout cell.
 
 The paragraph after the layout. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
+## A cell with two figures
+
+```{r}
+#| label: fig-two-plots
+#| fig-cap: "A cell with two plots."
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+plot(10:1)
+```
+
+The paragraph after the two-plot cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A cell with three figures
+
+```{r}
+#| label: fig-three-plots
+#| fig-cap: "A cell with three plots."
+#| classes: wrap-left
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+plot(10:1)
+plot(c(1, 10))
+```
+
+The paragraph after the three-plot cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## E4: a cell with subcaptions
+
+```{r}
+#| label: fig-two-subcap
+#| fig-cap: "A cell with two subcaptioned plots."
+#| fig-subcap: ["One.", "Two."]
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+plot(10:1)
+```
+
+The paragraph after the subcaption cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A cell with two figures before a heading
+
+```{r}
+#| label: fig-two-before-heading
+#| fig-cap: "A two-plot cell with a heading after it."
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+plot(10:1)
+```
+
 ## E5: a table float
 
 ::: {#tbl-wrapped .wrap-right}

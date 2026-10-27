@@ -1,6 +1,8 @@
 # warnings
 1x wrapped: a figure with no id is in a column layout, so it does not wrap.
 1x wrapped: a figure with no id is in the margin, so it does not wrap.
+1x wrapped: the code cell #fig-three-plots makes more than one figure, so it does not wrap.
+1x wrapped: the code cell #fig-two-plots makes more than one figure, so it does not wrap.
 1x wrapped: the figure #fig-aside is in an aside, so it does not wrap.
 1x wrapped: the figure #fig-callout is in a callout, so it does not wrap.
 1x wrapped: the figure #fig-column is in a column layout, so it does not wrap.
@@ -13,6 +15,9 @@
 1x wrapped: the figure #fig-panel is a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-sub-wrapped is in a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-tab is in a tabset, so it does not wrap.
+1x wrapped: the figure #fig-two-subcap is a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-two-subcap-1 is in a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-two-subcap-2 is in a subfigure panel, so it does not wrap.
 1x wrapped: the image deflist.png is in a list, so it does not wrap.
 1x wrapped: the image plot.png is in a list, so it does not wrap.
 1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
@@ -26,6 +31,15 @@ image: cx=2971800
 image: cx=2971800
 image: cx=2971800
 image: cx=5334000
+image: cx=4572000
+image: cx=4572000
+image: cx=4572000
+image: cx=4572000
+image: cx=4572000
+image: cx=4572000
+image: cx=4572000
+image: cx=4572000
+image: cx=4572000
 image: cx=5334000
 image: cx=1066800
 image: cx=5334000

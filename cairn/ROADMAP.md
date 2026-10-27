@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-27 (M013 done: two started rows graduated, M010 row
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M014 | Keep two-figure cells unwrapped | planned | — | normal | milestones/M014-two-figure-cells.md |
+| M014 | Keep two-figure cells unwrapped | review | — | normal | milestones/M014-two-figure-cells.md |
 | M013 | Fall back where a format cannot wrap | done | — | normal | milestones/archive/M013-format-fallbacks.md |
 | M012 | Finish the gap checks | done | — | normal | milestones/archive/M012-gap-checks.md |
 | M011 | Finish the figure width checks | done | — | normal | milestones/archive/M011-finish-width-checks.md |
