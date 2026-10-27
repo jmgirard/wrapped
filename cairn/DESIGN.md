@@ -228,3 +228,9 @@ snapshot difference. The mechanism for each other format is in
   typed arithmetic, warn and take the default, because the filter checks
   the CSS Values 3 rules and `min()`, `max()`, and `clamp()`. The README
   lists what the check accepts (M010).
+- HTML: a function width that is never above zero but that the check
+  cannot show to be so prints no warning, such as
+  `calc(min(1%, 1px) - min(1%, 1px))` or `calc(7mm - 0.7cm)`. The check
+  keeps one term's limit for `min()` and `max()`, reads each relative unit
+  as unrelated to the others, and adds in floating point. The README says
+  the check warns only where it can show the result (M011).
