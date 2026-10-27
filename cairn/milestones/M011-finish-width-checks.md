@@ -48,7 +48,7 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 ## Acceptance criteria
 <!-- owner: plan · create/amend-via-gate; review reads, never reinterprets. -->
 
-- [ ] AC1: In HTML, each figure `width` value in a new warning section of
+- [x] AC1: In HTML, each figure `width` value in a new warning section of
       `tests/css-functions.qmd` prints a warning that names the value and
       takes the document default, as `0%` does. The section holds at least
       one value for each of `calc()`, `min()`, `max()`, and `clamp()`; one
@@ -60,17 +60,17 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
       (`calc(10% * -1)`); and a `clamp()` whose minimum is above its maximum
       (`clamp(-1px, 5%, -2px)`). Evidence: the fixture's snapshot and
       warning lines in `python3 tests/verify.py`.
-- [ ] AC2: In HTML, a `wrapped: width` of `calc(0%)` prints the warning and
+- [x] AC2: In HTML, a `wrapped: width` of `calc(0%)` prints the warning and
       the built-in 40% applies, and a `wrapped: breakpoint` of `calc(0px)`
       in the same fixture stays as written with no warning. Evidence: the
       metadata fixture's snapshot in `python3 tests/verify.py`.
-- [ ] AC3: In HTML, each value in the "Values that pass" section of
+- [x] AC3: In HTML, each value in the "Values that pass" section of
       `tests/css-functions.qmd` reaches the style as written with no
       warning. The section gains `calc(50% - 4in)`, `calc(1em - 1rem)`,
       `calc(1em - 2ex)`, `calc(100vw - 100%)`, `calc(var(--w) - 1px)`,
       `max(0px, 10%)`, and `clamp(-1px, 10%, 1in)` as widths and a
       `wrap-gap` of `calc(0px)`. Evidence: the fixture's snapshot.
-- [ ] AC4: In PDF through Typst, each new `TYPST_LAYOUT` case in
+- [x] AC4: In PDF through Typst, each new `TYPST_LAYOUT` case in
       `tests/verify.py` passes, reading the image width in the Typst PDF.
       Cases (a) and (b) sit in a fixture whose document default is an
       absolute width that fits beside the text with their gap and differs
@@ -85,7 +85,7 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
       one not a percent, that together fill the text, which take 40%; (g) a
       gap with which 40% also fills the text, which keeps 40%, read for the
       image width and a render with no error only.
-- [ ] AC5: In PDF through Typst, a figure whose width and gap are both
+- [x] AC5: In PDF through Typst, a figure whose width and gap are both
       percents with a sum of 100% or more prints a warning that names the
       width and the gap; in a fixture whose document default plus that gap
       is under 100%, the document default applies. A `wrapped:` width and
@@ -93,7 +93,7 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
       built-in 40% applies. A width of `99%` with a `1em` gap prints no
       warning. Evidence: the kept `.typ` snapshots and their warning lines
       in `python3 tests/verify.py`.
-- [ ] AC6: The README's "Width and gap" section states which function
+- [x] AC6: The README's "Width and gap" section states which function
       widths warn: those that are zero, negative, or not finite at every
       size, and never one with `var()`. The README's Typst section and
       DESIGN.md's Known issues entry on Typst widths state that the check
@@ -177,3 +177,23 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 
 ## Review
 <!-- owner: review · exclusive. -->
+
+Review head 1f66709; `python3 tests/verify.py` on macOS: all 55 renders pass, 0 FAIL lines, all 8 typst-gap layout cases ok.
+
+- AC1: css-functions snapshot holds 13 `on #fig-never-N is zero, negative, or not finite, so it is 40%` warnings, and all 13 fig-never figures carry `--wrap-width: 40%`. The section covers calc (1, 5-13), min (2), max (3), clamp with min above max (4), zero (1, 13), negative (5, 9, 12), infinite (6), NaN (7), nested (8), single-unit percent (1), absolute (5), font-relative (13), viewport (9), cancelling units (10, 11), and a negative factor (12).
+- AC2: meta-calc-zero snapshot: one warning `width "calc(0%)" on the wrapped metadata is zero, negative, or not finite, so it is 40%.`, the figure has `--wrap-width: 40%`, and `# breakpoint` reads `calc(0px)` with no breakpoint warning.
+- AC3: css-functions snapshot has 0 warnings naming `#fig-valid-`; fig-valid-11 to 17 carry their widths as written (`calc(50% - 4in)` … `clamp(-1px, 10%, 1in)`), and fig-valid-18 carries `--wrap-gap: calc(0px)`.
+- AC4: suite lines `ok layout typst-gap` for (a) 5in with 1.5in gap → 3in, (b) 99% with 1em gap → 3in, (c) 4.5in with 25% gap → 3in, (e) 2in with 2em gap → 2in, (g) 40% with gap too wide → 259 px image only; `ok layout typst-gap-meta` for (d) default with gap too wide → 40% and (f) 5in with 1.5in metadata gap → 40%. typst-gap's default is 3in (324 px), which fits with the (a) and (b) gaps.
+- AC5: typst-gap snapshot warns `width "75%" and wrap-gap "25%" on #fig-g70 leave no room for text in Typst, so the width is 3in.`, and the 75%-with-25% case measures 3in; typst-gap-percent warns `width "70%" and gap "40%" in the wrapped metadata … so the width is 40%.` and its call reads `wrapped-width(wrapped-size, 40%, 40%, 40%, 40%)`; fig-g99 (99% with 1em) has no warning.
+- AC6: README.md:105-113 states that a function width the check can show is zero, negative, or not finite at every page and font size warns, and that a width with `var()` never does; README.md:306-320 states the percent-sum warning, the width-plus-gap check with no warning for other units, and that a figure keeps 40% and the gap when 40% plus the gap fills the text; DESIGN.md:221-226 Known issues states the same limit. `grep -n "calc(0%)\` prints no" README.md` prints nothing.
+- AC7: macOS part above; CI part read on the PR at step 8.
+- Gate: `cairn_validate.py` all checks passed; version marker `_extensions/wrapped/_extension.yml` unchanged by the diff (one marker, so all markers agree); changelog slot "none"; verify passes on the review head (above); no principle changed, so `cairn_impact` skipped.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- ripple #1: ROADMAP row "Warn on zero widths in CSS functions" still says such widths pass with no warning — reject, planned change: post-merge hygiene graduates this started row.
+- ripple #2: ROADMAP row "Count the gap in Typst width checks" still says the width is checked alone — reject, planned change: post-merge hygiene graduates this started row.
+- ripple #3: the is_zero comment "A function value is not read." reads as the width rule now that never_positive reads function values — fix now.
+- ripple #4: tests/typst-wide.qmd:13 says a width as wide as the text leaves no room, with the width-alone framing — reject, false: the sentence still holds, and the rule it states is a case of width plus gap.
+- ripple #5: tests/typst-wide-meta.qmd:13 says a width as wide as the text takes the default when the default fits — reject, false: still true for that fixture's figures.
+- prior-review #1: M005 pass 2 rejected diff-bug #1 ("a 50% width with a 50% gap … not a defect: all text renders"), and M011 now replaces such a width with the default and warns — reject, planned change: the M010 follow-up row asked for it and the plan question set chose width plus gap at the text width.
+- prior-review #2: M010 recorded no Typst warning for a fallback; M011 warns for a percent pair but not for mixed units that fill the text the same way — reject, planned change: AC5 sets that boundary, since Typst cannot print a warning and only the percent sum is known to the filter.
+- prior-review #3: typst_image_case checks only the image width, unlike the earlier cases that check the paragraph beside the image — reject, planned change: AC4 (g) reads that case for image width only, since its text column has no room.

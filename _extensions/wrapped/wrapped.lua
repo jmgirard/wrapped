@@ -392,7 +392,7 @@ local function css_length(value, no_percent)
 end
 
 -- True for a CSS length from css_length whose number is zero, such as 0%
--- or 0in. A function value is not read.
+-- or 0in. A function value is not read here; never_positive reads it.
 local function is_zero(length)
   local num = length:match("^(%d*%.?%d+)%a*%%?$")
   return num ~= nil and tonumber(num) == 0
