@@ -237,10 +237,15 @@ prints the same warning there, and the figure wraps in the other formats.
 - A table cell: in Word and in PDF through LaTeX. In PDF through LaTeX, a
   captioned figure in a table cell fails to render, with or without the
   extension, so only an image with no caption renders there.
-- A caption in the margin: in HTML. The caption goes to the margin when
-  `cap-location` or `fig-cap-location` is `margin` on the figure, on its
-  code cell, or in the document metadata. The figure's own value comes
-  before the metadata's, and `fig-cap-location` comes before
+- A caption in the margin: in HTML. The extension follows where Quarto
+  puts the caption. When the figure or its code cell sets `cap-location`,
+  that value decides, and on a code cell `fig-cap-location` acts as
+  `cap-location`. Without a `cap-location`, a `margin` value in any of
+  three keys sends the caption to the margin: the figure's
+  `fig-cap-location`, the document's `fig-cap-location`, and the
+  document's `cap-location`. A value other than `margin` in one of these
+  three does not override `margin` in another. For a captioned image with
+  no id, Quarto reads only the document's `fig-cap-location`, else its
   `cap-location`. The `.margin-caption` and `.caption-margin` classes also
   send the caption to the margin. They work on the figure, on its image,
   and on its code cell, as in `#| classes: wrap-right .caption-margin`. For
