@@ -106,21 +106,21 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
       followed by a paragraph. Render a bare copy of each to PDF through
       LaTeX and PDF through Typst, and write one work-log line for each
       fixture that names where each figure sits in each format.
-- [ ] T2: In `wrapped.lua`, keep the document's `fig-column` and `column`
+- [x] T2: In `wrapped.lua`, keep the document's `fig-column` and `column`
       apart in `read_meta` (`wrapped.lua:1177`). In LaTeX and Typst, read
       a float's column in Quarto's order in `float_target`, where
       `class_context(float.classes, true)` and `meta_column_context` now
       decide (`wrapped.lua:1308-1312`). Keep HTML and Word on the current
       rule. Add the `tests/verify.py` entries for the four fixtures.
-- [ ] T3: Make a code cell's figure follow T1's renders in LaTeX and
+- [x] T3: Make a code cell's figure follow T1's renders in LaTeX and
       Typst. A cell's own class reaches `block_context` through
       `find_contexts` (`wrapped.lua:1024`), and `meta_column_context.cell`
       gives the document value. Write the snapshots and check each line
       against T1's work-log lines.
-- [ ] T4: Update the README section "Where a figure keeps its normal
+- [x] T4: Update the README section "Where a figure keeps its normal
       layout", row E21 of `cairn/references/wrap-mechanisms.md`, and steps
       2 and 4 of the Architecture in `cairn/DESIGN.md`.
-- [ ] T5: Run `python3 tests/verify.py` and compare `tests/_snapshots/`
+- [x] T5: Run `python3 tests/verify.py` and compare `tests/_snapshots/`
       with `main`.
 
 ## Work log
@@ -142,6 +142,8 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 - 2026-10-27: T1 bare render, column-order-margin (LaTeX and Typst agree): body for fig-marg-body; margin for fig-marg-plain and fig-marg-cell.
 - 2026-10-27: T1 reading: a float outside a cell follows Quarto's four-step order; a cell's figure follows the document's `fig-column`, then its `column`, and the cell's own option only when neither is set (fig-page-cell-margin is page-wide).
 - 2026-10-27: checkpoint: T2 to T4 written (`column_context` and a cell rule in `block_context`, the eight snapshots, README, DESIGN, E21). The eight new summaries match T1's placements. Tasks stay unchecked until the full verify run passes.
+- 2026-10-27: implementation choice: `column_context` keeps HTML and Word on the old chain (own class, then layout, then the document value), so their reasons and snapshots stay as on main. In LaTeX and Typst the column is read before a layout attribute.
+- 2026-10-27: T2 to T5 done. `python3 tests/verify.py`: all 95 renders pass. Against main, `tests/_snapshots/` adds the eight column-order files and changes no other file.
 
 ## Decisions
 
