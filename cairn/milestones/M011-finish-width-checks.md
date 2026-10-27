@@ -118,7 +118,7 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 <!-- owner: plan (create) / implement (check-off, minor edits); substantive
      change is amend-via-gate. -->
 
-- [ ] T1: Make the calc parser (`wrapped.lua:83-207`) return, beside the
+- [x] T1: Make the calc parser (`wrapped.lua:83-207`) return, beside the
       type, what it knows of the result: a sum of an absolute part in px
       and one coefficient for each relative unit, where every relative
       base is unknown and above zero, or a sign class after `min()`,
@@ -161,6 +161,7 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 - 2026-10-27: checkpoint: the full criteria audit (fresh Opus reader) ran after the question set, since the work was chosen there, and is still running at this commit; its dispositions follow in a later plan commit.
 - 2026-10-27: criteria audit (full mode, fresh Opus reader) returned 12 findings on AC1, AC3, AC4, AC5, AC6; all fixed by narrowing or adding cases: AC1 gains unit-kind, cancelling-unit, negative-factor, and inverted-clamp values; AC2 gains a zero breakpoint; AC3 gains clamp, em-ex, and vw-minus-percent passes; AC4 moves (a)-(c) to a fixture with a 2in-like default, adds a percent-gap case, makes the metadata case non-percent, and reads the no-room case for image width only; AC5 names its fixture condition; AC6 becomes a content check and names the 40% limit. It confirmed that the parser accepts every probe value, so the new check decides them, and that the Typst text is 6 in.
 - 2026-10-27: /milestone-implement started on branch m011-finish-width-checks; T1 and T2 code and fixtures written, full suite with --update running.
+- 2026-10-27: T1 done: each calc parser function also returns a bound (lower and upper sums by unit, exact, or not finite); never_positive warns on a width whose upper sum is zero or below or that is not finite, and any var() leaves no bound. A scratch harness gave the expected result on 44 probe values; all 52 renders pass.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
