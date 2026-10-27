@@ -32,6 +32,7 @@ fig-layout-cell: - style=-
 tbl-wrapped: - style=-
 fig-list: - style=-
 fig-deflist: - style=-
+fig-quote: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-figcol-margin: - style=-
 fig-callout: - style=-
 fig-column: - style=-
@@ -53,6 +54,7 @@ plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=width:20.0% width=-
 plot.png: wrap=- style=- width=-
 deflist.png: wrap=- style=width:20.0% width=-
+plot.png: wrap=- style=- width=-
 fig-figcol-margin-1.png: wrap=- style=- width=672
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
@@ -64,6 +66,7 @@ plot.png: wrap=- style=width:20.0% width=-
 plot.png: wrap=- style=width:30.0% width=-
 plot.png: wrap=- style=- width=-
 # groups
+fig-quote, p
 fig-second, p, p
 # margin containers
 fig-margin: same as without the extension: no-row-height column-margin column-container

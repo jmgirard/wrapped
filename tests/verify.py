@@ -101,6 +101,10 @@ RENDERS = [
     ("contexts", "pdf", True),
     ("contexts", "typst", True),
     ("contexts", "docx", True),
+    ("table-cell", "html", True),
+    ("table-cell", "typst", True),
+    ("table-cell", "docx", True),
+    ("table-cell-image", "pdf", True),
     ("stop-rule", "pdf", True),
     ("stop-rule", "typst", True),
     ("stop-rule", "docx", True),
@@ -860,9 +864,12 @@ def log_check(fixture):
     return []
 
 
-TYPST_WRAP_START = re.compile(r"^#layout\(wrapped-size => wrap-content\(", re.M)
+# A call in a table cell is indented and opens the cell's `[`, so its lines
+# carry the indent of its first line.
+TYPST_WRAP_START = re.compile(r"^[ \t]*\[?#layout\(wrapped-size => wrap-content\(", re.M)
 TYPST_WRAP = re.compile(
-    r"^#layout\(wrapped-size => wrap-content\(([^\n]*), box\(width: 100%\)\[\n(.*?)^\], \[\n(.*?)^\]\)\)$",
+    r"^(?P<indent>[ \t]*)\[?#layout\(wrapped-size => wrap-content\(([^\n]*), box\(width: 100%\)\[\n"
+    r"(.*?)^(?P=indent)\], \[\n(.*?)^(?P=indent)\]\)\)",
     re.M | re.S,
 )
 # Typst calls that Pandoc and Quarto write as blocks. Any other text, inline
@@ -905,8 +912,8 @@ def typ_summary(path):
     # citations follows. A call that the pattern cannot read is counted.
     lines.append("# wraps")
     calls = TYPST_WRAP.findall(source)
-    for options, fixed, body in calls:
-        label = re.search(r"^<((?:fig|tbl)-[\w-]+)>", fixed, re.M)
+    for _, options, fixed, body in calls:
+        label = re.search(r"^[ \t]*<((?:fig|tbl)-[\w-]+)>", fixed, re.M)
         image = re.search(r'image\("([^"]*)"', fixed)
         box = label.group(1) if label else Path(image.group(1)).name if image else "-"
         alt_text = re.search(r'image\([^)]*alt: "([^"]*)"', fixed)

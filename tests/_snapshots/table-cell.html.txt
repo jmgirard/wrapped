@@ -1,0 +1,12 @@
+# warnings
+# breakpoint
+576px
+# figures
+fig-cell: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+(box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 20%
+# images
+plot.png: wrap=- style=- width=-
+cell.png: wrap=- style=- width=-
+# groups
+fig-cell, p
+wrapped-image, p

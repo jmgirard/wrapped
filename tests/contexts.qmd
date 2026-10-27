@@ -114,6 +114,12 @@ Another term
 
     The paragraph after an image with no caption in the definition. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
+## A block quote
+
+> ![A block quote figure.](plot.png){#fig-quote .wrap-right}
+>
+> The paragraph after the figure in the block quote. It wraps in HTML, Typst, and Word, and not in LaTeX. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ## E3: a fig-column margin cell
 
 ```{r}

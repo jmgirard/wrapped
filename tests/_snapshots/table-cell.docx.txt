@@ -1,0 +1,7 @@
+# warnings
+1x wrapped: the figure #fig-cell is in a table, so it does not wrap.
+1x wrapped: the image cell.png is in a table, so it does not wrap.
+# docx
+image: cx=5334000
+image: cx=1066800
+# frames

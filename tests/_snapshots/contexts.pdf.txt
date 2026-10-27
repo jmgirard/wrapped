@@ -11,6 +11,7 @@
 1x wrapped: the figure #fig-margin is in the margin, so it does not wrap.
 1x wrapped: the figure #fig-margin-cell is in the margin, so it does not wrap.
 1x wrapped: the figure #fig-panel is a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-quote is in a block quote, so it does not wrap.
 1x wrapped: the figure #fig-sub-wrapped is in a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-tab is in a tabset, so it does not wrap.
 1x wrapped: the image deflist.png is in a list, so it does not wrap.
@@ -23,6 +24,7 @@ figure: fig-sub-wrapped [-] image=[keepaspectratio]
 figure: fig-layout-cell [-] image=[keepaspectratio]
 figure: fig-list [-] image=[keepaspectratio]
 figure: fig-deflist [-] image=[keepaspectratio]
+figure: fig-quote [-] image=[keepaspectratio]
 figure: fig-callout [H] image=[keepaspectratio]
 figure: fig-column [-] image=[keepaspectratio]
 figure: - [H] image=[keepaspectratio]

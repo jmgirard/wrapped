@@ -1,0 +1,5 @@
+# warnings
+# typ
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-cell no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 20%, 40%, 40%)), column-gutter: 1em | cell.png no-alt | p | cites=0

@@ -884,6 +884,11 @@ local function block_context(block)
   if block.t == "BulletList" or block.t == "OrderedList" or block.t == "DefinitionList" then
     return "is in a list"
   end
+  -- wrapfig does not wrap in a block quote, which LaTeX sets as a list.
+  if block.t == "BlockQuote" then return is_latex and "is in a block quote" or nil end
+  -- A Word frame in a table cell does not wrap, and a wrappedfigure in a
+  -- LaTeX longtable breaks the build.
+  if block.t == "Table" then return (is_latex or is_docx) and "is in a table" or nil end
   if block.t ~= "Div" then return nil end
   local kind = block.attributes.__quarto_custom_type
   if kind == "Callout" then return "is in a callout" end
@@ -979,7 +984,8 @@ local function find_contexts(doc)
       end
     else
       -- A definition list's items hold a term and a list of definitions,
-      -- so the walk marks the whole block.
+      -- and a table's cells sit in its head, bodies, and foot, so the walk
+      -- marks the whole block.
       block = mark_context(pandoc.Blocks({ block }), context)[1]
     end
     return block, false
@@ -998,6 +1004,8 @@ local function find_contexts(doc)
     BulletList = mark,
     OrderedList = mark,
     DefinitionList = mark,
+    BlockQuote = mark,
+    Table = mark,
     Figure = own_margin,
     Image = function(img)
       local context = margin_context(img.classes)

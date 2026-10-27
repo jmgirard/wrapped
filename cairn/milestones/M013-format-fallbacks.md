@@ -54,7 +54,7 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 
 ## Tasks
 
-- [ ] T1: In `find_contexts` (`wrapped.lua:953`), treat a definition list as a list context. Its items are a term and a list of definitions. Treat a code cell with `fig-column: margin` as a margin context. Add the cases to `tests/contexts.qmd`, and update its four snapshots.
+- [x] T1: In `find_contexts` (`wrapped.lua:953`), treat a definition list as a list context. Its items are a term and a list of definitions. Treat a code cell with `fig-column: margin` as a margin context. Add the cases to `tests/contexts.qmd`, and update its four snapshots.
 - [ ] T2: Add contexts that depend on the format: a block quote in LaTeX, and a table cell in Word and LaTeX. Add the block-quote case to `tests/contexts.qmd`. Add a new fixture with the captioned table-cell case, rendered to HTML, Typst, and Word, and a LaTeX fixture with the uncaptioned image. Make the `.typ` summary in `tests/verify.py` read an indented `wrap-content` call.
 - [ ] T3: In HTML, fall back for a margin caption in its six forms, with the figure's own key taking precedence over the metadata. The in-document forms and the override are cases in a fixture. The two metadata forms are two small HTML fixtures. The attribute form also renders in LaTeX, Typst, and Word.
 - [ ] T4: Fall back for page-wide columns: in HTML for the 16 classes, in LaTeX for the 9 page-wide ones. Read the class on a div, on the figure, and in a cell's `column` or `fig-column` option. Add the five cases to a fixture rendered in four formats.
@@ -79,6 +79,9 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 
 - 2026-10-27: implement started on m013-format-fallbacks. A pre-quarto dump shows that Quarto already copies a cell's cap-location options onto the float's `cap-location` attribute, and that `fig-column: margin` and `fig-column: page` reach the cell as the classes `fig-column-margin` and `fig-column-page`.
 - 2026-10-27: checkpoint (T1 not checked off): definition lists and `fig-column-margin` cells are contexts, and the contexts fixture and its four snapshots are updated (each format renders with status 0). The fixtures for T2 to T5 are written but not yet in `tests/verify.py`. The full suite is running.
+- 2026-10-27: T1 done: the full suite passed (60 renders).
+- 2026-10-27: overflow fixtures on the code before T5: Word's huge width warns "is not a length that Word can use" where 9999in warns "leaves no room for text", and Word's huge gap prints no warning; Typst's huge pc width is written as -9223372036854775808pt, and its huge percent gap prints no warning where 100% warns.
+- 2026-10-27: checkpoint (T2 not checked off): block quotes fall back in LaTeX, and tables in LaTeX and Word, through `block_context`. The `.typ` summary reads an indented call and its indented label. The table-cell fixtures are in the runner. The full suite is running.
 
 ## Decisions
 
