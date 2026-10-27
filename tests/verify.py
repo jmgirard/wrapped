@@ -91,6 +91,7 @@ RENDERS = [
     ("meta-calc-bad", "html", True),
     ("meta-calc-good", "html", True),
     ("meta-calc-var", "html", True),
+    ("meta-calc-zero", "html", True),
     ("css-functions", "html", True),
     ("contexts", "html", True),
     ("contexts", "pdf", True),

@@ -1,0 +1,13 @@
+---
+title: "wrapped fixture: metadata function values of zero"
+filters:
+  - wrapped
+format: html
+wrapped:
+  breakpoint: calc(0px)
+  width: calc(0%)
+---
+
+![A wrapped figure.](plot.png){#fig-meta-calc-zero .wrap-right}
+
+A width of zero is not a width, so the width stays at its default, with a warning. A breakpoint of zero is a length, so it stays as written.

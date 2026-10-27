@@ -1,22 +1,35 @@
 # warnings
+1x wrapped: width "calc(-10px)" on #fig-never-5 is zero, negative, or not finite, so it is 40%.
+1x wrapped: width "calc(-1vw)" on #fig-never-9 is zero, negative, or not finite, so it is 40%.
+1x wrapped: width "calc(0%)" on #fig-never-1 is zero, negative, or not finite, so it is 40%.
+1x wrapped: width "calc(0em)" on #fig-never-13 is zero, negative, or not finite, so it is 40%.
+1x wrapped: width "calc(0px / 0)" on #fig-never-7 is zero, negative, or not finite, so it is 40%.
+1x wrapped: width "calc(10% * -1)" on #fig-never-12 is zero, negative, or not finite, so it is 40%.
 1x wrapped: width "calc(100% - env(safe-area-inset-right))" on #fig-invalid-19 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(100%-2em)" on #fig-invalid-2 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(10px * 2em / 1em)" on #fig-invalid-14 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(10px / 2px)" on #fig-invalid-5 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(1e2px)" on #fig-invalid-18 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(1em - 1em)" on #fig-never-11 is zero, negative, or not finite, so it is 40%.
+1x wrapped: width "calc(1in - 96px)" on #fig-never-10 is zero, negative, or not finite, so it is 40%.
 1x wrapped: width "calc(1px * 2px)" on #fig-invalid-4 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(1px * pi)" on #fig-invalid-16 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(1px + 2)" on #fig-invalid-3 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(1px + 2px" on #fig-invalid-9 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(1px / 0)" on #fig-never-6 is zero, negative, or not finite, so it is 40%.
 1x wrapped: width "calc(5)" on #fig-invalid-6 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(banana)" on #fig-invalid-1 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(foo(30%))" on #fig-invalid-10 is not a length or a percent, so it is 40%.
+1x wrapped: width "calc(min(0px, 1em) - 1px)" on #fig-never-8 is zero, negative, or not finite, so it is 40%.
 1x wrapped: width "calc(round(30%, 1px))" on #fig-invalid-13 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(var(--a,))" on #fig-invalid-20 is not a length or a percent, so it is 40%.
 1x wrapped: width "calc(var(w) * 2)" on #fig-invalid-12 is not a length or a percent, so it is 40%.
+1x wrapped: width "clamp(-1px, 5%, -2px)" on #fig-never-4 is zero, negative, or not finite, so it is 40%.
 1x wrapped: width "clamp(1px, 2px)" on #fig-invalid-8 is not a length or a percent, so it is 40%.
 1x wrapped: width "clamp(none, 30%, 400px)" on #fig-invalid-17 is not a length or a percent, so it is 40%.
+1x wrapped: width "max(-1em, 0px)" on #fig-never-3 is zero, negative, or not finite, so it is 40%.
 1x wrapped: width "min()" on #fig-invalid-7 is not a length or a percent, so it is 40%.
+1x wrapped: width "min(0px, 10%)" on #fig-never-2 is zero, negative, or not finite, so it is 40%.
 1x wrapped: width "min(40%, 2)" on #fig-invalid-11 is not a length or a percent, so it is 40%.
 1x wrapped: wrap-gap "calc(1px + 2)" on #fig-invalid-15 is not a length or a percent, so it is 1em.
 # breakpoint
@@ -32,6 +45,27 @@ fig-valid-7: wrap-right style=--wrap-gap: 1em; --wrap-width: calc(var(--w) * 0.5
 fig-valid-8: wrap-left style=--wrap-gap: 1em; --wrap-width: CALC(2 * 10px)
 fig-valid-9: wrap-right style=--wrap-gap: min(40%, 300px); --wrap-width: 30%
 fig-valid-10: wrap-left style=--wrap-gap: 1em; --wrap-width: calc(100% - 2dvmin)
+fig-valid-11: wrap-right style=--wrap-gap: 1em; --wrap-width: calc(50% - 4in)
+fig-valid-12: wrap-left style=--wrap-gap: 1em; --wrap-width: calc(1em - 1rem)
+fig-valid-13: wrap-right style=--wrap-gap: 1em; --wrap-width: calc(1em - 2ex)
+fig-valid-14: wrap-left style=--wrap-gap: 1em; --wrap-width: calc(100vw - 100%)
+fig-valid-15: wrap-right style=--wrap-gap: 1em; --wrap-width: calc(var(--w) - 1px)
+fig-valid-16: wrap-left style=--wrap-gap: 1em; --wrap-width: max(0px, 10%)
+fig-valid-17: wrap-right style=--wrap-gap: 1em; --wrap-width: clamp(-1px, 10%, 1in)
+fig-valid-18: wrap-left style=--wrap-gap: calc(0px); --wrap-width: 30%
+fig-never-1: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-2: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-3: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-4: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-5: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-6: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-7: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-8: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-9: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-10: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-11: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-12: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+fig-never-13: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-invalid-1: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-invalid-2: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
 fig-invalid-3: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
@@ -83,6 +117,27 @@ plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
 # groups
 fig-valid-1, p
 fig-valid-2, p
@@ -94,6 +149,27 @@ fig-valid-7, p
 fig-valid-8, p
 fig-valid-9, p
 fig-valid-10, p
+fig-valid-11, p
+fig-valid-12, p
+fig-valid-13, p
+fig-valid-14, p
+fig-valid-15, p
+fig-valid-16, p
+fig-valid-17, p
+fig-valid-18, p
+fig-never-1, p
+fig-never-2, p
+fig-never-3, p
+fig-never-4, p
+fig-never-5, p
+fig-never-6, p
+fig-never-7, p
+fig-never-8, p
+fig-never-9, p
+fig-never-10, p
+fig-never-11, p
+fig-never-12, p
+fig-never-13, p
 fig-invalid-1, p
 fig-invalid-2, p
 fig-invalid-3, p
