@@ -1,13 +1,13 @@
 # M017: Let slides wrap under margin settings
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes which wrapped figures wrap on revealjs slides and what the render warns
-- **Branch/PR:** —
+- **Branch/PR:** m017-slides-margin
 
 ## Goal
 
@@ -89,6 +89,10 @@ normal layout**. A warning line reads `1x wrapped: the figure #<id>
 - 2026-10-27: split from the one-milestone draft with M016 and M018. Each ships alone.
 - 2026-10-27: criteria audit (full mode, on the one-milestone draft): the slide criterion covered 4 of the 7 margin forms. Fixed by adding own `.fig-column-margin`, a cell with `#| fig-column: margin`, and a document `column: margin`. A float's own `.aside` class went to Out. The note that a figure that keeps its normal layout renders as an `img` on a slide needs no change: AC2's aside case renders as a div.
 - 2026-10-27: lessons used: 2026-10-27 (M015) render without filters before trusting a placement.
+- 2026-10-28: started; branch m017-slides-margin cut from main at 90c287a.
+- 2026-10-28: T1 bare render (Quarto 1.10.19, filters removed): every AC1 figure sits in the slide's section, `fig-slide-margin-div` in a `div.column-margin`; no file under the revealjs libs names `column-margin`; `fig-slide-aside` sits in an `aside`, which the theme sets `position:absolute; bottom:20px`.
+- 2026-10-28: T2 choice: a module-level `is_revealjs` flag, also used by `has_page_layout`; `margin_context` skips the two margin classes when it is set.
+- 2026-10-28: checkpoint, half-done: T1–T3 edits on disk, T1/T2 unchecked until `verify.py --update` finishes and the snapshot diff is read.
 
 ## Decisions
 

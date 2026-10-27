@@ -146,7 +146,7 @@ The filter has two entry points (corrected M006):
 |---|---|---|
 | E1 | Wrap class on the image, not the float | The filter moves it to the float. |
 | E2 | `fig-align` set | Ignored for the box position. It still aligns the image inside the box. |
-| E3 | `.column-margin` or `.aside` with a wrap class, or a `fig-column: margin` cell or document | Margin wins. One warning (corrected M013). A document-level value is E21's (M015). In LaTeX and Typst, a document `fig-column` comes before a figure's own `column-*` or `.aside` class (E21, M016). |
+| E3 | `.column-margin` or `.aside` with a wrap class, or a `fig-column: margin` cell or document | Margin wins. One warning (corrected M013). A document-level value is E21's (M015). In LaTeX and Typst, a document `fig-column` comes before a figure's own `column-*` or `.aside` class (E21, M016). Slides have no margin column. There a margin class or a document margin value names no place, and the figure wraps. An `.aside` div still keeps it normal, because revealjs sets the aside at the slide's foot (E15, M017). |
 | E4 | Subfigure panel (`layout-ncol`) | Normal panel. One warning. A wrapped code cell that makes more than one figure without `fig-subcap` keeps each figure normal, with one warning for the cell (corrected M014, D-010). |
 | E5 | `#tbl-` float with a wrap class | Normal table. One warning. |
 | E6 | Wrapped figure is the last block before a heading | No text to wrap. Normal figure, no warning. |
@@ -158,7 +158,7 @@ The filter has two entry points (corrected M006):
 | E12 | `pdf-standard: ua-1` or `ua-2` | A test makes sure that alt text and tags stay. Quarto 1.10.19 ignores `ua-1` for LaTeX, so that PDF has no tags. The LaTeX test uses `ua-2` with `documentclass: article` (corrected M004). |
 | E13 | Book projects and cross-chapter `@fig-` links | No change expected. The test book includes one. |
 | E14 | Right-to-left documents (`dir: rtl`) | `left` and `right` stay physical in version 1. |
-| E15 | revealjs | The HTML path works. If a test slide looks right, the README shows it. |
+| E15 | revealjs | The HTML path works. If a test slide looks right, the README shows it. Quarto 1.10.19's revealjs stylesheet has no `column-margin` rule. So a figure with a margin class, setting, or document value stays in the slide's text, where it wraps. An `.aside` div sits at the slide's foot (`position: absolute; bottom: 20px`), so a figure there is normal with one warning (M017). |
 | E16 | Dark mode and `_brand.yml` | The extension sets no colors, so nothing changes. |
 | E17 | `classoption: twocolumn` in LaTeX | Normal figure. One warning. |
 | E18 | Wrapped figure in a block quote | Normal figure with one warning in LaTeX, where wrapfig does not wrap. Wraps in HTML, Typst, and Word (M013). |

@@ -35,9 +35,10 @@ local options = {
 }
 
 local is_html = quarto.doc.is_format("html:js")
+local is_revealjs = quarto.doc.is_format("revealjs")
 -- An HTML page with Quarto's page layout. revealjs slides have no margin
 -- captions and no page-wide columns.
-local has_page_layout = is_html and not quarto.doc.is_format("revealjs")
+local has_page_layout = is_html and not is_revealjs
 -- PDF through LaTeX. Beamer is a separate format and keeps a normal figure.
 -- The first pass sets is_latex to false for a two-column document.
 local is_latex = FORMAT == "latex"
@@ -895,9 +896,11 @@ local no_text = {}
 local context_of_float = {}
 
 -- Returns the context that a margin class names, or nil. A code cell with
--- `fig-column: margin` carries the fig-column-margin class.
+-- `fig-column: margin` carries the fig-column-margin class. revealjs slides
+-- have no margin column, so the margin classes name no place there, but
+-- revealjs sets an aside at the foot of the slide.
 local function margin_context(classes)
-  if classes:includes("column-margin") or classes:includes("fig-column-margin") then
+  if not is_revealjs and (classes:includes("column-margin") or classes:includes("fig-column-margin")) then
     return "is in the margin"
   end
   if classes:includes("aside") then return "is in an aside" end

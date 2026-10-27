@@ -10,7 +10,7 @@ _Last hygiene check: 2026-10-28 (M016 done; its row graduated, M013's row pruned
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
 | M016 | Read figure columns in Quarto's order in PDF | done | — | normal | milestones/archive/M016-pdf-column-order.md |
-| M017 | Let slides wrap under margin settings | planned | — | normal | milestones/M017-slides-margin.md |
+| M017 | Let slides wrap under margin settings | in-progress | — | normal | milestones/M017-slides-margin.md |
 | M018 | Warn once per cell under a context | planned | — | normal | milestones/M018-cell-warn-once.md |
 | M015 | Fall back in more margin and page forms | done | — | normal | milestones/archive/M015-margin-page-forms.md |
 | M014 | Keep two-figure cells unwrapped | done | — | normal | milestones/archive/M014-two-figure-cells.md |

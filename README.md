@@ -304,8 +304,16 @@ on the same slide, as on an HTML page:
 Ratings rose in both conditions.
 ```
 
-Slides have no margin captions and no page-wide columns, so a figure with
-a margin caption or a page-wide class still wraps on a slide.
+Slides have no margin column, no margin captions, and no page-wide
+columns. A figure with a margin caption or a page-wide class still wraps on
+a slide. A margin setting does not stop a figure from wrapping on a slide
+either: a `.column-margin` or `.fig-column-margin` class, a `.column-margin`
+div, a code cell with `#| column: margin` or `#| fig-column: margin`, or
+`fig-column: margin` or `column: margin` in the document metadata.
+
+revealjs puts an `.aside` div at the foot of the slide, so a figure in an
+aside div does not wrap. It keeps its normal layout, and the render prints
+one warning for it.
 
 ## PDF through LaTeX
 

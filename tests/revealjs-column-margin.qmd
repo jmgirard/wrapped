@@ -1,0 +1,13 @@
+---
+title: "wrapped fixture: a document-level column margin on slides"
+filters:
+  - wrapped
+column: margin
+format: revealjs
+---
+
+## A figure on a slide
+
+![A figure in a column margin document on a slide.](plot.png){#fig-slide-col-margin .wrap-right width="40%"}
+
+The paragraph after the figure sits beside it, because slides have no margin column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
