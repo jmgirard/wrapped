@@ -1,6 +1,6 @@
 # M016: Read figure columns in Quarto's order in PDF
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -145,6 +145,8 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 - 2026-10-27: implementation choice: `column_context` keeps HTML and Word on the old chain (own class, then layout, then the document value), so their reasons and snapshots stay as on main. In LaTeX and Typst the column is read before a layout attribute.
 - 2026-10-27: T2 to T5 done. `python3 tests/verify.py`: all 95 renders pass. Against main, `tests/_snapshots/` adds the eight column-order files and changes no other file.
 - 2026-10-27: checkpoint: claim audit pass done, one README claim corrected (HTML and Word read a margin or page-wide class first; a body class does not override the document key), same wording fixed in DESIGN step 4 and E21; the HTML row gained the audit's bare-HTML evidence. Re-read of the corrected claim pending.
+- 2026-10-27: claim audit: 16 claims read, 1 corrected — README.md (the HTML and Word column sentence; the re-read found Word reads a margin class only, so the sentence, DESIGN step 4, and E21 now say so).
+- 2026-10-27: implement done, status review. No code change since the 95-render verify pass; later edits touched README.md and cairn/ only.
 
 ## Decisions
 

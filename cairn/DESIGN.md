@@ -179,10 +179,10 @@ passes (corrected M003):
    Typst, `column_context` reads a float's column in Quarto's order: its own
    `fig-column-*` class, the document's `fig-column`, its own `column-*` or
    `aside` class, then the document's `column`; the first one set decides.
-   A code cell's float takes the document's value. HTML and Word read a
-   margin or page-wide class on the float or its cell, then the document's
-   value, so a body class does not override the document there (corrected
-   M016). In HTML,
+   A code cell's float takes the document's value. HTML reads a
+   margin or page-wide class on the float or its cell, and Word a margin
+   class, then the document's value, so a body class does not override the
+   document there (corrected M016). In HTML,
    each other float gets its
    box width and gap as CSS custom properties, and a captioned image with
    no id gets a `.wrapped-image` box. In LaTeX, each other float and

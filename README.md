@@ -229,10 +229,11 @@ extension reads them in Quarto's order, and the first one set decides:
 For a code cell's figure, the document's `fig-column`, else its `column`,
 decides over the cell's own `column` or `fig-column` option. If the
 document sets `fig-column: body`, a `.column-margin` figure wraps in PDF,
-because Quarto puts it in the body there. In HTML and
-Word, the extension reads a margin or page-wide class on the figure or its
-code cell before the document's key. A body class, such as `.column-body`,
-does not override the document's key there.
+because Quarto puts it in the body there. In HTML,
+the extension reads a margin or page-wide class on the figure or its code
+cell before the document's key. In Word, it reads a margin class there
+first. A body class, such as `.column-body`, does not override the
+document's key in either format.
 
 A code cell that makes more than one figure without `fig-subcap` or a
 layout option does not wrap either. An example is a cell that draws two
