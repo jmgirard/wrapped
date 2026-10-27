@@ -13,6 +13,8 @@ fig-slide-margin-div: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-slide-margin-cell: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-slide-figmargin-cell: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-slide-aside: - style=-
+(box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
+(box): wrapped-image wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
 # images
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
@@ -24,6 +26,8 @@ plot.png: wrap=- style=- width=-
 fig-slide-margin-cell-1.png: wrap=- style=- width=-
 fig-slide-figmargin-cell-1.png: wrap=- style=- width=-
 plot.png: wrap=- style=width:40.0% width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
 # groups
 fig-slide, p
 fig-slide-page, p
@@ -34,3 +38,5 @@ fig-slide-figmargin, p
 fig-slide-margin-div, p
 cell, p
 cell, p
+wrapped-image, p
+wrapped-image, p
