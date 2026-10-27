@@ -78,7 +78,8 @@ default width is 40%. A width of zero written as a number, such as `0%`,
 
 The `wrap-gap` attribute sets the space between the figure and the text.
 The default gap is `1em`. A gap of zero stays as it is. In Word, a gap of
-0% prints a warning (see Word below).
+0% prints a warning. A width plus its gap as wide as the text or wider
+also prints a warning in Word (see Word below).
 
 In HTML, a width or gap can also be a `calc()`, `min()`, `max()`, or
 `clamp()` value, such as `calc(100% - 2em)` or `min(40%, 300px)`. The
@@ -112,6 +113,16 @@ above zero and as not related to the other units. So a width such as
 warning. A width with `var()` never prints this warning. A gap or a
 breakpoint of zero stays as it is.
 
+The check also looks for a function gap that is negative or not finite at
+every page and font size. A negative gap pulls the text over the figure.
+A gap that the check can show is such a gap prints a warning, and the
+document default applies. Examples are `calc(-1em)`, `min(-1px, 10%)`, and
+`calc(1px / 0)`. A gap that is zero at every size, such as
+`calc(1em - 1em)`, stays as it is. A gap that can be zero or above, such
+as `calc(1em - 20px)`, prints no warning. A `max()` over two units, such as
+`max(-2px, -1%)`, also prints no warning, because the check cannot show
+that it is below zero.
+
 ```markdown
 ![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-left width="3in" wrap-gap="2em"}
 ```
@@ -135,8 +146,11 @@ take the full width of the text column. The default breakpoint is `576px`.
 
 The keys follow the rules of the attributes. A `width` of zero prints a
 warning, and the built-in 40% applies. A `gap` or `breakpoint` of zero stays
-as it is. In Word, a `gap` of 0% prints a warning, and the built-in `1em`
-applies. A `width`, `gap`, or `breakpoint` can be a `calc()`, `min()`,
+as it is. A function `gap` that is negative or not finite at every size
+prints a warning, and the built-in `1em` applies. In Word, a `gap` of 0%
+prints a warning, and the built-in `1em` applies. In Word, a `width` plus
+its `gap` as wide as the text or wider prints a warning, and the built-in
+40% applies. A `width`, `gap`, or `breakpoint` can be a `calc()`, `min()`,
 `max()`, or `clamp()` value, checked as above. A media query takes no
 percent and no `var()`. So a `breakpoint` with a percent or a `var()`, such
 as `calc(50%)`, prints a warning, and `576px` applies.
@@ -367,7 +381,18 @@ The `width` and `wrap-gap` values change to Word lengths:
   warning, and the document default applies.
 - A width or gap as wide as the text or wider, such as `100%` or `10in`,
   leaves no room for the text. It prints a warning, and the document
-  default applies.
+  default applies. In the cases that the next item names, a width takes
+  40% instead.
+- A width plus its gap as wide as the text or wider also leaves no room
+  for the text. Examples are `5in` with a `2in` gap on a 6.5 in text width,
+  and `95%` with a `2em` gap. Such a figure prints a warning, and it takes
+  the document default width. If the document default plus the gap is
+  that wide too, the figure takes the built-in 40%. If 40% plus the gap is
+  that wide too, the figure keeps 40% and the gap. The extension rounds
+  each value to twips (1/20 pt) before it adds them.
+- A `wrapped:` width plus gap that is as wide as the text or wider prints
+  one warning, and the document default width becomes 40%. A figure that
+  sets neither its own width nor its own gap prints no warning of its own.
 
 The text width is the page width less the left and right margins and the
 gutter. A reference doc with more than one column keeps normal figures,

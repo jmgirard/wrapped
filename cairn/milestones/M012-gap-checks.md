@@ -165,3 +165,4 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 - 2026-10-27: T2 done: verify passed, 58 renders.
 - 2026-10-27: T3 and T4 checkpoint (not ticked): `sum_negative` and `always_negative` make `checked_length` warn for a `wrap-gap` or metadata `gap` below zero or not finite at every size; before the change the ten AC3 gaps reached the style, after it each warns and takes 1em, and the seven AC4 gaps are unchanged; `tests/meta-calc-gap.qmd` gives one warning and a 1em gap; full verify running.
 - 2026-10-27: T5 checkpoint (not ticked): DESIGN.md Architecture step 5 and a Known issue for the mixed-unit `max()` gap, and `wrap-mechanisms.md` W4 text, describe the new checks; README next.
+- 2026-10-27: T5 checkpoint (not ticked): README "Width and gap", "Document defaults", and Word sections state the Word sum rule with its fallback order and the HTML negative gap rule with its limits.
