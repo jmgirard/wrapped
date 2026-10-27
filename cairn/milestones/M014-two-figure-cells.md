@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M014: Keep two-figure cells unwrapped
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — it changes how the filter renders a wrapped code cell and what it warns   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m014-two-figure-cells   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -87,7 +87,7 @@ not its engine).
 ## Tasks
 <!-- owner: plan (create) / implement (check-off, minor edits) -->
 
-- [ ] T1: Add the cells `fig-two-plots`, `fig-three-plots`, and
+- [x] T1: Add the cells `fig-two-plots`, `fig-three-plots`, and
       `fig-two-subcap` to `tests/contexts.qmd`, each followed by a
       paragraph, with the file's `out-width` line for docx. Render the
       fixture with `main`'s filter and record in the work log what wraps
@@ -121,6 +121,7 @@ not its engine).
 - 2026-10-27: scratch renders on main: a two-plot wrapped cell gives fig-two-1 and fig-two-2, both wrap-right side by side in HTML; a fig-subcap cell prints the panel warning and one warning per subfigure in all four formats.
 - 2026-10-27: criteria audit (full mode, Opus reader): 6 findings, all fixed: AC1 now says "no figure wraps" and names the HTML groups block; D-003 overlap recorded as D-010; a second cell (three plots, wrap-left) varies count and side; AC2's "names" became a text test and allows the ids; AC3 states the subcap warnings and fig-cell's wrap lines outright, with no main-branch comparison; AC4 kept, README limited to what renders show (T4).
 - 2026-10-27: lessons used: 2026-10-25 (M002) tests/_extensions symlink and Typst PNG; 2026-10-25 (M003) Blocks filter walk inside cells; 2026-10-27 (M012) one-fixture check; 2026-10-27 (M013) dump filter to see cell floats.
+- 2026-10-27: T1 done: three cells added to tests/contexts.qmd. Before state with main's filter: fig-two-plots-1/-2 and fig-three-plots-1/-2/-3 wrap in HTML (wrap class and style), LaTeX (wrappedfigure each), Typst (image-width=yes, one wraps line naming the first figure), and Word (one frame naming the first figure); fig-two-subcap prints its panel warning and one per subfigure in all four formats and does not wrap.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
