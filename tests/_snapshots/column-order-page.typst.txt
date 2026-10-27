@@ -1,0 +1,12 @@
+# warnings
+1x wrapped: the figure #fig-page-cell is page-wide, so it does not wrap.
+1x wrapped: the figure #fig-page-cell-margin is page-wide, so it does not wrap.
+1x wrapped: the figure #fig-page-margin is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-page-plain is page-wide, so it does not wrap.
+# typ
+figure: fig-page-body image-width=yes
+figure: fig-page-plain image-width=no
+figure: fig-page-cell image-width=no
+figure: fig-page-cell-margin image-width=no
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-page-body no-alt | p | cites=0

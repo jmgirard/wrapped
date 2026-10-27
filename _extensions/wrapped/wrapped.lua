@@ -46,6 +46,9 @@ local is_typst = FORMAT == "typst"
 -- Word.
 local is_docx = FORMAT == "docx"
 local two_column = false
+-- Set in the first pass: the document sets fig-column, and the document
+-- sets fig-column or column.
+local meta_fig_column_set, meta_column_set = false, false
 -- found_wrap: a figure or image carries a wrap class, so a format that
 -- cannot wrap prints its one warning. placed: a figure or image wraps, so
 -- the document needs the stylesheet, the LaTeX environment, or wrap-it.
@@ -962,6 +965,11 @@ local function block_context(block)
   if attrs["layout-ncol"] or attrs["layout-nrow"] or attrs.layout then
     return "is in a panel layout"
   end
+  -- In LaTeX and Typst, the document's fig-column or column decides where
+  -- a code cell's figure goes, over the cell's own column (Quarto 1.10.19).
+  if (is_latex or is_typst) and meta_column_set and block.classes:includes("cell") then
+    return nil
+  end
   return class_context(block.classes)
 end
 
@@ -1163,6 +1171,25 @@ local function caption_in_margin(float)
     or meta_cap_location == "margin"
 end
 
+-- Returns the context that a figure float's column gives it, or nil. In
+-- LaTeX and Typst, Quarto 1.10.19 reads a float's own fig-column-* class,
+-- the document's fig-column, its own column-* or aside class, and the
+-- document's column, and the first one set decides. A code cell's float
+-- takes the document's value when it has one; otherwise find_contexts has
+-- read the cell's own column. HTML and Word read the float's own class
+-- here, and float_target reads the document's value after a layout.
+local function column_context(float, cell)
+  if not (is_latex or is_typst) then return class_context(float.classes, true) end
+  local document = cell and meta_column_context.cell or meta_column_context.float
+  if cell then return document end
+  local scoped = float.classes:filter(function(c) return c:match("^fig%-column%-") end)
+  if #scoped > 0 then return class_context(scoped, true) end
+  if meta_fig_column_set then return document end
+  local own = float.classes:filter(function(c) return c:match("^column%-") or c == "aside" end)
+  if #own > 0 then return class_context(own, true) end
+  return document
+end
+
 local function read_meta(meta)
   meta_fig_cap_location = meta_text(meta["fig-cap-location"])
   meta_cap_location = meta_text(meta["cap-location"])
@@ -1174,7 +1201,9 @@ local function read_meta(meta)
     is_latex = false
     two_column = true
   end
-  local column = meta_column(meta["fig-column"]) or meta_column(meta.column)
+  local fig_column = meta_column(meta["fig-column"])
+  local column = fig_column or meta_column(meta.column)
+  meta_fig_column_set, meta_column_set = fig_column ~= nil, column ~= nil
   if column then
     local classes = pandoc.List({ "column-" .. column })
     meta_column_context = { float = class_context(classes, true), cell = class_context(classes) }
@@ -1307,9 +1336,9 @@ local function float_target(float)
     or float.attributes.layout
   local context = (float.type ~= "Figure" and "is not a figure")
     or context_of_float[custom_id or ""]
-    or class_context(float.classes, true)
+    or column_context(float, cell)
     or (layout and "is a subfigure panel")
-    or (cell and meta_column_context.cell or meta_column_context.float)
+    or (not (is_latex or is_typst) and (cell and meta_column_context.cell or meta_column_context.float))
     or (has_page_layout and (caption_in_margin(float) or (cell and cell.margin_caption))
       and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no

@@ -141,6 +141,7 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 - 2026-10-27: T1 bare render, column-order-fig-margin (LaTeX and Typst agree): body for fig-figm-figbody and fig-figm-div; margin for fig-figm-body, fig-figm-plain, and fig-figm-cell-body.
 - 2026-10-27: T1 bare render, column-order-margin (LaTeX and Typst agree): body for fig-marg-body; margin for fig-marg-plain and fig-marg-cell.
 - 2026-10-27: T1 reading: a float outside a cell follows Quarto's four-step order; a cell's figure follows the document's `fig-column`, then its `column`, and the cell's own option only when neither is set (fig-page-cell-margin is page-wide).
+- 2026-10-27: checkpoint: T2 to T4 written (`column_context` and a cell rule in `block_context`, the eight snapshots, README, DESIGN, E21). The eight new summaries match T1's placements. Tasks stay unchecked until the full verify run passes.
 
 ## Decisions
 

@@ -1,0 +1,15 @@
+# warnings
+1x wrapped: the figure #fig-order-figmargin is in the margin, so it does not wrap.
+# tex
+wrappedfigure: fig-order-margin [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-order-page [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-order-plain [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-order-div [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-order-cell-margin [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-order-cell-figmargin [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

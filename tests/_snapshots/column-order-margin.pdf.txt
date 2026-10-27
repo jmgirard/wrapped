@@ -1,0 +1,6 @@
+# warnings
+1x wrapped: the figure #fig-marg-cell is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-marg-plain is in the margin, so it does not wrap.
+# tex
+wrappedfigure: fig-marg-body [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
