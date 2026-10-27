@@ -81,6 +81,10 @@ See @fig-valid-17. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed 
 
 See @fig-valid-18. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+![A width of `calc(9223372036854775807px + 1px)`.](plot.png){#fig-valid-19 .wrap-right width="calc(9223372036854775807px + 1px)"}
+
+See @fig-valid-19. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
 ## Values that are never above zero
 
 ![A width of `calc(0%)`.](plot.png){#fig-never-1 .wrap-right width="calc(0%)"}
@@ -134,6 +138,14 @@ See @fig-never-12. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed 
 ![A width of `calc(0em)`.](plot.png){#fig-never-13 .wrap-right width="calc(0em)"}
 
 See @fig-never-13. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(-1 * 10%)`.](plot.png){#fig-never-14 .wrap-left width="calc(-1 * 10%)"}
+
+See @fig-never-14. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(10% / -2)`.](plot.png){#fig-never-15 .wrap-right width="calc(10% / -2)"}
+
+See @fig-never-15. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ## Values that print a warning
 

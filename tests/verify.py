@@ -118,6 +118,7 @@ RENDERS = [
     ("typst-gap", "typst", True),
     ("typst-gap-meta", "typst", True),
     ("typst-gap-percent", "typst", True),
+    ("typst-gap-default", "typst", True),
     ("zero-meta", "html", True),
     ("zero-meta", "pdf", True),
     ("zero-meta", "typst", True),
@@ -744,7 +745,7 @@ def typst_image_case(caption, want):
 def typst_gap_cases():
     yield "5in with 1.5in gap", typst_width_case("Fig G5in.", "Marker inches", TYPST_3IN)
     yield "99% with 1em gap", typst_width_case("Fig G99.", "Marker percent", TYPST_3IN)
-    yield "4.5in with 25% gap", typst_width_case("Fig G4in.", "Marker share", TYPST_3IN)
+    yield "4.6in with 25% gap", typst_width_case("Fig G4in.", "Marker share", TYPST_3IN)
     yield "2in with 2em gap", typst_width_case("Fig G2in.", "Marker fits", TYPST_2IN)
     yield "75% with 25% gap", typst_width_case("Fig G70.", "Marker sum", TYPST_3IN)
     yield "40% with gap too wide", typst_image_case("Fig GWide.", TYPST_40)

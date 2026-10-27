@@ -1,0 +1,15 @@
+---
+title: "wrapped fixture: a Typst percent width whose default also fills the text with its gap"
+filters:
+  - wrapped
+format:
+  typst:
+    keep-typ: true
+    fig-format: png
+wrapped:
+  width: 80%
+---
+
+![A wrapped figure.](plot.png){#fig-gap-default .wrap-right width="75%" wrap-gap="30%"}
+
+The width of 75% with a 30% gap fills the text, and so does the document default of 80% with that gap, so the render prints a warning that names the built-in 40%.

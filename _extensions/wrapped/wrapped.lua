@@ -231,7 +231,8 @@ end
 local function calc_value(s, i, no_percent)
   local num, unit, j = s:match("^([+-]?%d*%.?%d+)(%a*%%?)()", i)
   if num then
-    local n = tonumber(num)
+    -- A float, so a large number does not wrap around as an integer.
+    local n = tonumber(num) + 0.0
     if unit == "" then return "number", j, exact_bound({ [""] = n }) end
     if unit == "%" then
       if no_percent then return nil end
@@ -528,22 +529,26 @@ end
 -- width that with the gap is as wide as the text or wider into the
 -- document default, or into the built-in default when the document default
 -- with the gap is that wide too. Typst has no way to print a warning for
--- it, so the filter warns only where it can see the sum: a percent width
--- and gap. The closing `]))` is written by the grouping pass.
+-- it, so the filter warns only where it can see the sum: a figure's own
+-- percent width with a percent gap. A figure with no width of its own was
+-- checked with the metadata. The closing `]))` is written by the grouping
+-- pass.
 local function typst_open(class, width, gap, where)
   local side = SIDES[class]
   local w = checked_typst_length(width, options.width, "width", where)
   local g = checked_typst_length(gap, options.gap, "wrap-gap", where)
+  local fallback = options.width
+  if typst_fills(typst_length(fallback), g) then fallback = DEFAULTS.width end
   if typst_too_wide(w) then
     quarto.log.warning(string.format(
       'wrapped: width "%s" on %s leaves no room for text in Typst, so it is %s.',
-      w, where, options.width))
-    w = typst_length(options.width)
-  elseif typst_fills(w, g) then
+      w, where, fallback))
+    w = typst_length(fallback)
+  elseif width ~= nil and typst_fills(w, g) then
     quarto.log.warning(string.format(
       'wrapped: width "%s" and wrap-gap "%s" on %s leave no room for text in Typst, so the width is %s.',
-      w, g, where, options.width))
-    w = typst_length(options.width)
+      w, g, where, fallback))
+    w = typst_length(fallback)
   end
   return string.format(
     "#layout(wrapped-size => wrap-content(align: top + wrapped-side(%s), columns: wrapped-columns(%s, wrapped-width(wrapped-size, %s, %s, %s, %s)), column-gutter: %s, box(width: 100%%)[",
@@ -556,13 +561,15 @@ end
 -- left. wrapped-abs turns a percent into that share of the text width,
 -- which `size` from `layout` gives. wrapped-width returns the first width
 -- that with the gap is narrower than the text, or the last when none is.
+-- On a page of auto width the text width is infinite, so it returns the
+-- first.
 local TYPST_HEADER = [[
 #import "@preview/wrap-it:0.1.1": wrap-content
 #let wrapped-rtl() = text.dir == rtl or (text.dir == auto and text.lang in ("ar", "dv", "fa", "he", "ks", "pa", "ps", "sd", "ug", "ur", "yi"))
 #let wrapped-side(side) = if wrapped-rtl() { if side == right { left } else { right } } else { side }
 #let wrapped-columns(side, width) = if wrapped-side(side) == right { (1fr, width) } else { (width, 1fr) }
 #let wrapped-abs(size, x) = if type(x) == ratio { x * size.width } else { x.to-absolute() }
-#let wrapped-width(size, gap, ..widths) = { let fits = widths.pos().filter(w => wrapped-abs(size, w) + wrapped-abs(size, gap) < size.width); if fits.len() > 0 { fits.first() } else { widths.pos().last() } }]]
+#let wrapped-width(size, gap, ..widths) = { if size.width.pt() == float.inf { return widths.pos().first() }; let fits = widths.pos().filter(w => wrapped-abs(size, w) + wrapped-abs(size, gap) < size.width); if fits.len() > 0 { fits.first() } else { widths.pos().last() } }]]
 
 -- Twips (1/20 pt) for each unit of a length that Word can use. A px length
 -- is 1/96 in, as in CSS, and an em is 12 pt.
@@ -1005,7 +1012,7 @@ local function read_meta(meta)
         'wrapped: width "%s" in the wrapped metadata leaves no room for text in Typst, so it is %s.',
         options.width, DEFAULTS.width))
       options.width = DEFAULTS.width
-    elseif typst_fills(typst_length(options.width), typst_length(options.gap)) then
+    elseif m.width ~= nil and typst_fills(typst_length(options.width), typst_length(options.gap)) then
       quarto.log.warning(string.format(
         'wrapped: width "%s" and gap "%s" in the wrapped metadata leave no room for text in Typst, so the width is %s.',
         options.width, options.gap, DEFAULTS.width))

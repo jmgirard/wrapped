@@ -24,9 +24,9 @@ Marker inches starts the paragraph beside the figure at 5 in with a 1.5 in gap, 
 
 Marker percent starts the paragraph beside the figure at 99% with a 1 em gap, which together fill the text, so the figure takes the 3 in default. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-![Fig G4in.](plot.png){#fig-g4in .wrap-right width="4.5in" wrap-gap="25%"}
+![Fig G4in.](plot.png){#fig-g4in .wrap-right width="4.6in" wrap-gap="25%"}
 
-Marker share starts the paragraph beside the figure at 4.5 in with a 25% gap, which together fill the text, so the figure takes the 3 in default. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+Marker share starts the paragraph beside the figure at 4.6 in with a 25% gap, which together fill the text, so the figure takes the 3 in default. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ## Widths that fit with the gap
 

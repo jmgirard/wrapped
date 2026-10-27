@@ -306,7 +306,9 @@ The `width` and `wrap-gap` values change to Typst lengths:
 A percent of 100% or more leaves no room for the text in Typst, so it
 prints a warning. A percent width and a percent gap with a sum of 100% or
 more also print a warning, for example `width="75%"` with
-`wrap-gap="25%"`. A figure's own width then takes the document default. A
+`wrap-gap="25%"`. A figure's own width then takes the document default.
+If the document default is a percent that with the gap also fills the
+text, the figure's width takes the built-in 40%. A
 `wrapped: width` of 100% or more, or a `wrapped:` width and gap in
 percents with such a sum, takes the built-in 40%.
 
