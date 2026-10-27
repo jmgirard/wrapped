@@ -109,28 +109,28 @@ Evidence gathered 2026-10-28 at aaf6f5c (Quarto 1.10.19). Fresh `python3 tests/v
 - AC3: README.md section "Slides" (read at aaf6f5c) says "A margin setting does not stop a figure from wrapping on a slide either", naming the two margin classes, the margin div, both margin cell options, and `fig-column: margin` and `column: margin` in the document metadata, and says "A figure in an aside div does not wrap." Both facts stated. Pass.
 - Gate: `cairn_validate.py` exit 0, all checks passed. Profile gate: the one version marker (`_extension.yml` `version: 0.1.0`) is unchanged on the branch; verify passes (above); changelog slot "none", no entry read. Pass.
 - spawned: diff-bug, blame-history, prior-review, ripple
-- diff-bug #1: the captioned image with no id and the bare image with `.column-margin` on a slide (own_margin and the find_contexts Image handler) changed behavior with no fixture — fix now: two cases added to `tests/revealjs.qmd`.
-- diff-bug #2: README "Where a figure keeps its normal layout" says the margin item holds "In HTML" with no slide exception, while README line 7 counts slides as HTML — fix now: the margin item points to "Slides".
+- diff-bug #1: the captioned image with no id and the bare image with `.column-margin` on a slide (own_margin and the find_contexts Image handler) changed behavior with no fixture — fix now: two cases added to `tests/revealjs.qmd`; both wrap, and main's filter warns `is in the margin` for both, fixed 372263a, 6fee163.
+- diff-bug #2: README "Where a figure keeps its normal layout" says the margin item holds "In HTML" with no slide exception, while README line 7 counts slides as HTML — fix now: the margin item points to "Slides", fixed 372263a.
 - diff-bug #3: with `center: true` or on a `.scrollable` slide the aside sits in the slide's text, yet a figure there still falls back with a warning — follow-up: candidate row "Let asides wrap on centered slides".
-- diff-bug #4: DESIGN.md steps 2 and 4 and the wrapped.lua comments above `has_page_layout` and `find_contexts` miss the slide margin rule — fix now.
+- diff-bug #4: DESIGN.md steps 2 and 4 and the wrapped.lua comments above `has_page_layout` and `find_contexts` miss the slide margin rule — fix now, fixed 372263a.
 - diff-bug #5: `is_revealjs` covers revealjs only, but Quarto's `renderDivColumn` skips every HTML slide format (slidy, s5, dzslides, slideous) — follow-up: candidate row "Check margins in slidy and other slides" (predates the branch; the README claims revealjs only).
 - diff-bug #6: `revealjs-column-margin.qmd` runs the same code path as `revealjs-margin-meta.qmd` on revealjs — reject (planned change): AC1 names both fixtures.
 - diff-bug #7: the `.column-margin`/`.fig-column-margin` and `column`/`fig-column` margin pairs in `tests/revealjs.qmd` are near duplicates — reject (planned change): AC1 names all four.
 - diff-bug #8: the two knitr cells make `tests/revealjs.qmd` need R — reject (planned change): AC1 names knitr cells in that fixture, and CI installs R (D-009).
-- blame-history #1: DESIGN.md steps 2 and 4 stale for slides — fix now (same fix as diff-bug #4).
-- blame-history #2: README fallback list has no slide exception for the margin item — fix now (same fix as diff-bug #2).
-- blame-history #3: the comment above `has_page_layout` omits the margin column — fix now (same fix as diff-bug #4).
+- blame-history #1: DESIGN.md steps 2 and 4 stale for slides — fix now (same fix as diff-bug #4), fixed 372263a.
+- blame-history #2: README fallback list has no slide exception for the margin item — fix now (same fix as diff-bug #2), fixed 372263a.
+- blame-history #3: the comment above `has_page_layout` omits the margin column — fix now (same fix as diff-bug #4), fixed 372263a.
 - blame-history #4: no D-entry for the slide margin rule — reject (false): no D-entry is owed; the change applies M013's rule that slides lack the page layout, and DESIGN and the README record the behavior.
 - prior-review #1: the change reverses M013's "slide fallbacks" fix — reject (false): M013 diff-bug #2 stopped the page-wide and margin-caption fallbacks firing on slides, the same direction as this change.
 - prior-review #2: the Quarto 1.10.19 stylesheet claims may lack a source — reject (false): the claim audit read the deck's CSS files and quarto.scss for both claims (work log).
 - prior-review #3: E3 has been edited by two earlier fixes — reject (false): the reviewer found the text consistent with the code, and no defect is named.
-- ripple #1: README fallback list's margin item contradicts "Slides" — fix now (same fix as diff-bug #2).
-- ripple #2: wrap-mechanisms.md E21 says a margin value keeps the figure normal in every format where it decides, and HTML reads an own margin class first — fix now: E21 notes slides.
-- ripple #3: DESIGN.md step 2 — fix now (same fix as diff-bug #4).
-- ripple #4: DESIGN.md step 4 — fix now (same fix as diff-bug #4).
+- ripple #1: README fallback list's margin item contradicts "Slides" — fix now (same fix as diff-bug #2), fixed 372263a.
+- ripple #2: wrap-mechanisms.md E21 says a margin value keeps the figure normal in every format where it decides, and HTML reads an own margin class first — fix now: E21 notes slides, fixed 372263a.
+- ripple #3: DESIGN.md step 2 — fix now (same fix as diff-bug #4), fixed 372263a.
+- ripple #4: DESIGN.md step 4 — fix now (same fix as diff-bug #4), fixed 372263a.
 - ripple #5: ROADMAP row "Let slides wrap under margin settings" still states the old behavior — reject (planned change): post-merge hygiene graduates that row.
 - ripple #6: the `column_context` comment says HTML reads an own margin class — reject (false): it states the read order, which holds on slides; `margin_context`'s comment states that the classes name no place there.
-- ripple #7: the `find_contexts` comment says an image with its own margin class is in the margin — fix now (same fix as diff-bug #4).
+- ripple #7: the `find_contexts` comment says an image with its own margin class is in the margin — fix now (same fix as diff-bug #4), fixed 372263a.
 - ripple #8: the file header names the margin as a context, "such as a list or the margin" — reject (false): it gives examples of contexts, and the format limits sit at `margin_context` and `page_context`, as for page-wide columns.
 - ripple #9: the comment at wrapped.lua:1339 says a column class "can put the float in the margin" — reject (false): "can" holds in the formats with a margin.
 - ripple #10: ROADMAP row "Warn once per cell under a context" says a document margin value prints one warning per figure — reject (false): the row covers the formats where the value names a context.
