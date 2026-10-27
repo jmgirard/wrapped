@@ -11,7 +11,7 @@
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — it changes which wrapped figures the filter keeps normal and what it warns   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** m015-margin-page-forms   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m015-margin-page-forms, https://github.com/jmgirard/wrapped/pull/15   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -105,7 +105,7 @@ line is absent. A warning line reads
       `fig-column` key in the margin and page-wide items, and the document
       `column` key in the page-wide item, each with the formats AC1 to AC5
       test.
-- [ ] AC7: `python3 tests/verify.py` exits 0 on macOS, and the `verify`
+- [x] AC7: `python3 tests/verify.py` exits 0 on macOS, and the `verify`
       workflow passes on the milestone's PR.
 
 ## Coverage
@@ -227,4 +227,5 @@ Evidence read 2026-10-27 at 3e97223 from the committed snapshots by a Python che
 - ripple #7: DESIGN step 2 and step 4 disagree — fix now (with diff-bug #7), fixed ef7677a.
 - ripple #8: E3 names only a `fig-column: margin` cell — fix now (E3 points to E21 for a document value), fixed ef7677a.
 - ripple #9: the started row "Fall back in more margin and page forms" still calls these forms unchecked — reject (planned change: step 9's hygiene graduates the row).
+- AC7: `python3 tests/verify.py` exits 0 on macOS at ef7677a (87 renders pass); the `verify` workflow passed on PR #15 at 8c255ec (4m26s, run 40525539956). Pass.
 - ripple #10: `tests/page-wide.qmd` intro on Typst — reject (false: "where Quarto makes the figure page-wide" holds for both the div and own-class rules).
