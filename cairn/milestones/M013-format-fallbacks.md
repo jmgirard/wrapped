@@ -96,6 +96,7 @@ If a format cannot wrap a figure where it sits, the figure keeps its normal layo
 - 2026-10-27: T6 done: the full suite passed (76 renders).
 - 2026-10-27: claim audit: 44 claims read, 2 corrected — _extensions/wrapped/wrapped.lua (the Word table-cell comment now names the LibreOffice render it rests on; the margin-caption comment now says CSS places the caption in the margin). The same reader re-read both and found that they hold.
 - 2026-10-27: T7 done: the full suite passed on ab1925c (76 renders). All tasks done; status set to review.
+- 2026-10-27: step-7 approval: m013-format-fallbacks approved for merge
 
 ## Decisions
 
