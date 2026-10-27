@@ -22,3 +22,5 @@ wrappedfigure: - [side=left,width=0.3\linewidth,gap=1em] image=[width=1\linewidt
 wrappedstop
 wrappedfigure: fig-capclass-cell [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+wrappedfigure: fig-margincap-cell [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

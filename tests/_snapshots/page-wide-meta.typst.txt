@@ -1,11 +1,11 @@
 # warnings
+1x wrapped: the figure #fig-meta-page is page-wide, so it does not wrap.
+1x wrapped: the figure #fig-meta-page-body is page-wide, so it does not wrap.
+1x wrapped: the figure #fig-meta-page-cell is page-wide, so it does not wrap.
 # typ
-figure: fig-meta-page image-width=yes
-figure: fig-meta-page-cell image-width=yes
-figure: fig-meta-page-body image-width=yes
+figure: fig-meta-page image-width=no
+figure: fig-meta-page-cell image-width=no
+figure: fig-meta-page-body image-width=no
 figure: - image-width=yes
 # wraps
-align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-meta-page no-alt | p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-meta-page-cell no-alt | p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-meta-page-body no-alt | p | cites=0
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 30%, 40%, 40%)), column-gutter: 1em | plot.png no-alt | p | cites=0

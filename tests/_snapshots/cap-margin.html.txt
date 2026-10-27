@@ -6,6 +6,7 @@
 1x wrapped: the figure #fig-capmargin-class has its caption in the margin, so it does not wrap.
 1x wrapped: the figure #fig-figcap-attr has its caption in the margin, so it does not wrap.
 1x wrapped: the figure #fig-figcap-cell has its caption in the margin, so it does not wrap.
+1x wrapped: the figure #fig-margincap-cell has its caption in the margin, so it does not wrap.
 1x wrapped: the figure #fig-margincap-class has its caption in the margin, so it does not wrap.
 1x wrapped: the figure #fig-margincap-div has its caption in the margin, so it does not wrap.
 # breakpoint
@@ -21,6 +22,7 @@ fig-capmargin-class: - style=-
 fig-margincap-div: - style=-
 (box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
 fig-capclass-cell: - style=-
+fig-margincap-cell: - style=-
 # images
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
@@ -33,6 +35,7 @@ plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 fig-capclass-cell-1.png: wrap=- style=- width=672
+fig-margincap-cell-1.png: wrap=- style=- width=672
 # groups
 fig-figcap-first, p
 wrapped-image, p
