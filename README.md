@@ -74,9 +74,7 @@ The `width` attribute sets the width of the figure box, caption included.
 The image fills the box. A percent is a share of the text column. An
 absolute length, such as `3in` or `250px`, sets the width directly. The
 default width is 40%. A width of zero written as a number, such as `0%`,
-`0in`, or `0`, prints a warning, and the document default applies. The
-extension does not compute a function value, so `calc(0%)` prints no
-warning.
+`0in`, or `0`, prints a warning, and the document default applies.
 
 The `wrap-gap` attribute sets the space between the figure and the text.
 The default gap is `1em`. A gap of zero stays as it is. In Word, a gap of
@@ -103,6 +101,16 @@ Some CSS that browsers accept also prints a warning:
 - a length divided by a length
 - a number with an exponent, such as `1e2px`
 - an empty `var()` fallback, such as `var(--a,)`
+
+The check also looks for a function width that is zero, negative, or not
+finite at every page and font size. A width that it can show is such a
+width prints a warning, and the document default applies.
+Examples are `calc(0%)`, `min(0px, 10%)`, `calc(-10px)`, and
+`calc(1px / 0)`. The check reads each unit other than an absolute unit as
+above zero and as not related to the other units. So a width such as
+`calc(50% - 4in)` or `calc(1em - 1rem)`, which can be above zero, prints no
+warning. A width with `var()` never prints this warning. A gap or a
+breakpoint of zero stays as it is.
 
 ```markdown
 ![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-left width="3in" wrap-gap="2em"}
@@ -296,15 +304,22 @@ The `width` and `wrap-gap` values change to Typst lengths:
 - A width of zero prints a warning, and the document default applies.
 
 A percent of 100% or more leaves no room for the text in Typst, so it
-prints a warning. A figure's own width then takes the document default.
-A `wrapped: width` of 100% or more takes the built-in 40%.
+prints a warning. A percent width and a percent gap with a sum of 100% or
+more also print a warning, for example `width="75%"` with
+`wrap-gap="25%"`. A figure's own width then takes the document default.
+If the document default is a percent that with the gap also fills the
+text, the figure's width takes the built-in 40%. A
+`wrapped: width` of 100% or more, or a `wrapped:` width and gap in
+percents with such a sum, takes the built-in 40%.
 
-A width in a unit such as `10in` or `60em` can be as wide as the text or
-wider. It also leaves no room for the text. The extension cannot know the text width, so Typst
-checks the width while it lays out the page. The figure then takes the
-document default. If the document default is that wide too, the figure
-takes the built-in 40%. Typst cannot print a warning, so the render prints
-none for such a width.
+A width plus its gap in other units can also fill the text. Examples are
+`5in` with a `1.5in` gap, and `99%` with a `1em` gap. Such a width also
+leaves no room for the text. The extension cannot know the text width, so
+Typst checks the width plus the gap while it lays out the page. The
+figure then takes the document default. If the document default plus the
+gap is that wide too, the figure takes the built-in 40%. Typst cannot
+print a warning, so the render prints none for such a width. If 40% plus
+the gap is that wide too, the figure keeps 40% and the gap.
 
 The `wrap-lines` attribute does nothing in Typst. Typst does not use an
 image's `height` in a wrapped figure. The image fills the box width and

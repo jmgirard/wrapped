@@ -69,10 +69,119 @@ local UNITS = {
 -- CSS functions whose result is a length, read by calc_value.
 local FUNCTIONS = { calc = true, min = true, max = true, clamp = true }
 
+-- Pixels for each absolute CSS unit. Every other unit, and a percent, has a
+-- base that depends on the page, which the filter does not know but which
+-- is above zero.
+local PX = { px = 1, pt = 4 / 3, pc = 16, ["in"] = 96, cm = 96 / 2.54, mm = 96 / 25.4, q = 96 / 101.6 }
+
+-- What the filter knows of an expression's result is a bound: nil when
+-- nothing is known, or a table with `lo` and `hi`, each a sum (or nil when
+-- that side has no known limit), `exact` when the result is the sum
+-- itself, and `bad` when the result is not finite. A sum is a table of
+-- coefficients by unit, where "" holds the pixels of the absolute units
+-- and "%" the percent. A value with var() has no bound.
+
+-- The sum `a` + `k` * `b`, or nil when either is nil.
+local function sum_add(a, b, k)
+  if a == nil or b == nil then return nil end
+  local r = {}
+  for u, c in pairs(a) do r[u] = c end
+  for u, c in pairs(b) do r[u] = (r[u] or 0) + k * c end
+  return r
+end
+
+-- True when a sum is zero or below for every base above zero.
+local function sum_not_positive(f)
+  if f == nil then return false end
+  for _, c in pairs(f) do
+    if not (c <= 0) then return false end
+  end
+  return true
+end
+
+-- The unit and coefficient of a sum with one unit or none, or nil.
+local function sum_term(f)
+  local unit, coef = "", 0
+  for u, c in pairs(f) do
+    if c ~= 0 then
+      if coef ~= 0 then return nil end
+      unit, coef = u, c
+    end
+  end
+  return unit, coef
+end
+
+local function exact_bound(f)
+  return { lo = f, hi = f, exact = true }
+end
+
+-- The bound of `a` + `k` * `b`, for `k` of 1 or -1.
+local function bound_add(a, b, k)
+  if a == nil or b == nil then return nil end
+  if a.bad or b.bad then return { bad = true } end
+  local blo, bhi = b.lo, b.hi
+  if k < 0 then blo, bhi = bhi, blo end
+  return { lo = sum_add(a.lo, blo, k), hi = sum_add(a.hi, bhi, k), exact = a.exact and b.exact }
+end
+
+-- The bound of `a` times the number `k`.
+local function bound_scale(a, k)
+  if a == nil then return nil end
+  if a.bad or k ~= k or k == math.huge or k == -math.huge then return { bad = true } end
+  local lo, hi = a.lo, a.hi
+  if k == 0 then lo, hi = {}, {} end
+  if k < 0 then lo, hi = hi, lo end
+  return { lo = sum_add({}, lo, k), hi = sum_add({}, hi, k), exact = a.exact }
+end
+
+-- The number of an exact bound with no unit, or nil.
+local function bound_number(a)
+  if a == nil or a.bad or not a.exact then return nil end
+  local unit, coef = sum_term(a.lo)
+  if unit ~= "" then return nil end
+  return coef
+end
+
+-- The bound of min() (`pick` of -1) or max() (`pick` of 1) over a list of
+-- bounds, where false is a term with none. With exact terms in one unit, the result is exact. Otherwise any
+-- term's upper limit bounds a min() from above, and any term's lower limit
+-- bounds a max() from below. A max() is zero or below only when every term
+-- is. A term that is not finite leaves the result unknown, unless every
+-- term is not finite.
+local function bound_pick(list, pick)
+  local bad = 0
+  for _, a in ipairs(list) do
+    if not a then return nil end
+    if a.bad then bad = bad + 1 end
+  end
+  if bad == #list then return { bad = true } end
+  if bad > 0 then return nil end
+  local one, unit, best = true, nil, nil
+  for _, a in ipairs(list) do
+    local u, c
+    if a.exact then u, c = sum_term(a.lo) end
+    if c == nil or (c ~= 0 and unit ~= nil and u ~= unit) then
+      one = false
+      break
+    end
+    if c ~= 0 then unit = u end
+    if best == nil or c * pick > best * pick then best = c end
+  end
+  if one then return exact_bound({ [unit or ""] = best }) end
+  local lo, hi, all_low = nil, nil, true
+  for _, a in ipairs(list) do
+    if not sum_not_positive(a.hi) then all_low = false end
+    if pick < 0 and a.hi and (hi == nil or sum_not_positive(a.hi)) then hi = a.hi end
+    if pick > 0 and lo == nil then lo = a.lo end
+  end
+  if pick > 0 and all_low then hi = {} end
+  return { lo = lo, hi = hi }
+end
+
 -- The type of the math expression in `s` from position `i`: "number",
 -- "length" (a length or a percent), or "any" (a var() term, whose type is
--- not known). Returns the type and the position after the expression, or
--- nil when the text is not such an expression. The rules are calc()'s in
+-- not known). Returns the type, the position after the expression, and its
+-- bound, or nil when the text is not such an expression. The rules are calc()'s in
 -- CSS Values and Units Level 3 (section 8.1), with min(), max(), and
 -- clamp() from Level 4 (section 10.2). A + or - between terms needs
 -- whitespace on both sides, the terms of a sum share a type, a product
@@ -97,22 +206,24 @@ local function same_type(a, b)
 end
 
 -- A function's argument list from position `i`, after its "(": `count`
--- terms, or one or more when `count` is nil. Returns their common type and
--- the position after the ")".
+-- terms, or one or more when `count` is nil. Returns their common type, the
+-- position after the ")", and the list of their bounds, with false for a
+-- term that has none.
 local function calc_args(s, i, no_percent, count)
-  local t, n = "any", 0
+  local t, n, bounds = "any", 0, {}
   repeat
-    local ti
-    ti, i = calc_sum(s, skip(s, i), no_percent)
+    local ti, bi
+    ti, i, bi = calc_sum(s, skip(s, i), no_percent)
     if not ti then return nil end
     t, n = same_type(t, ti), n + 1
     if not t then return nil end
+    bounds[n] = bi or false
     i = skip(s, i)
     local more = s:sub(i, i) == ","
     if more then i = i + 1 end
   until not more
   if s:sub(i, i) ~= ")" or (count and n ~= count) then return nil end
-  return t, i + 1
+  return t, i + 1, bounds
 end
 
 -- One value: a number, a length, a percent, a sum in parentheses, a math
@@ -120,21 +231,25 @@ end
 local function calc_value(s, i, no_percent)
   local num, unit, j = s:match("^([+-]?%d*%.?%d+)(%a*%%?)()", i)
   if num then
-    if unit == "" then return "number", j end
+    -- A float, so a large number does not wrap around as an integer.
+    local n = tonumber(num) + 0.0
+    if unit == "" then return "number", j, exact_bound({ [""] = n }) end
     if unit == "%" then
       if no_percent then return nil end
-      return "length", j
+      return "length", j, exact_bound({ ["%"] = n })
     end
-    if UNITS[unit:lower()] then return "length", j end
-    return nil
+    local u = unit:lower()
+    if not UNITS[u] then return nil end
+    if PX[u] then return "length", j, exact_bound({ [""] = n * PX[u] }) end
+    return "length", j, exact_bound({ [u] = n })
   end
   if s:sub(i, i) == "(" then
-    local t
-    t, i = calc_sum(s, skip(s, i + 1), no_percent)
+    local t, b
+    t, i, b = calc_sum(s, skip(s, i + 1), no_percent)
     if not t then return nil end
     i = skip(s, i)
     if s:sub(i, i) ~= ")" then return nil end
-    return t, i + 1
+    return t, i + 1, b
   end
   local name, k = s:match("^(%a+)%(()", i)
   if not name then return nil end
@@ -150,60 +265,93 @@ local function calc_value(s, i, no_percent)
     t, k = calc_args(s, k + 1, no_percent, 1)
     return t and "any", k
   end
-  if name == "calc" then return calc_args(s, k, no_percent, 1) end
-  if name == "clamp" then return calc_args(s, k, no_percent, 3) end
-  if FUNCTIONS[name] then return calc_args(s, k, no_percent) end
-  return nil
+  if not FUNCTIONS[name] then return nil end
+  local count = name == "calc" and 1 or name == "clamp" and 3 or nil
+  local t, list
+  t, k, list = calc_args(s, k, no_percent, count)
+  if not t then return nil end
+  local b
+  if name == "calc" then
+    b = list[1] or nil
+  elseif name == "clamp" then
+    b = bound_pick({ list[1], bound_pick({ list[2], list[3] }, -1) or false }, 1)
+  else
+    b = bound_pick(list, name == "min" and -1 or 1)
+  end
+  return t, k, b
 end
 
 -- A product: values joined by * or /.
 local function calc_product(s, i, no_percent)
-  local t
-  t, i = calc_value(s, i, no_percent)
+  local t, b
+  t, i, b = calc_value(s, i, no_percent)
   if not t then return nil end
   while true do
     local j = skip(s, i)
     local op = s:sub(j, j)
-    if op ~= "*" and op ~= "/" then return t, i end
-    local u
-    u, i = calc_value(s, skip(s, j + 1), no_percent)
+    if op ~= "*" and op ~= "/" then return t, i, b end
+    local u, c
+    u, i, c = calc_value(s, skip(s, j + 1), no_percent)
     if not u then return nil end
     if op == "/" then
       if u == "length" then return nil end
+      local k = u == "number" and bound_number(c)
+      if c and c.bad then
+        -- A value divided by a number that is not finite is zero or NaN,
+        -- so the bound leaves the result unknown.
+        b = nil
+      elseif k == 0 then
+        b = b and { bad = true }
+      else
+        b = k and bound_scale(b, 1 / k) or nil
+      end
     elseif t == "number" then
+      local k = bound_number(b)
+      if b and b.bad then
+        b = c and { bad = true }
+      else
+        b = k and bound_scale(c, k) or nil
+      end
       t = u
     elseif u == "length" and t == "length" then
       return nil
-    elseif t == "any" and u == "length" then
-      t = "length"
+    else
+      local k = u == "number" and bound_number(c)
+      if b and c and c.bad then
+        b = { bad = true }
+      else
+        b = k and bound_scale(b, k) or nil
+      end
+      if t == "any" and u == "length" then t = "length" end
     end
   end
 end
 
 -- A sum: products joined by + or -.
 calc_sum = function(s, i, no_percent)
-  local t
-  t, i = calc_product(s, i, no_percent)
+  local t, b
+  t, i, b = calc_product(s, i, no_percent)
   if not t then return nil end
   while true do
     local j, before = skip(s, i)
     local op = s:sub(j, j)
-    if (op ~= "+" and op ~= "-") or not before then return t, i end
+    if (op ~= "+" and op ~= "-") or not before then return t, i, b end
     local k, after = skip(s, j + 1)
-    if not after then return t, i end
-    local u
-    u, i = calc_product(s, k, no_percent)
+    if not after then return t, i, b end
+    local u, c
+    u, i, c = calc_product(s, k, no_percent)
     if not u then return nil end
     t = same_type(t, u)
     if not t then return nil end
+    b = bound_add(b, c, op == "+" and 1 or -1)
   end
 end
 
 -- True for a calc(), min(), max(), or clamp() value whose result is a
--- length or a percent.
+-- length or a percent. Also returns the value's bound.
 local function calc_length(s, no_percent)
-  local t, i = calc_value(s, 1, no_percent)
-  return t ~= nil and t ~= "number" and i == #s + 1
+  local t, i, b = calc_value(s, 1, no_percent)
+  return t ~= nil and t ~= "number" and i == #s + 1, b
 end
 
 -- Returns the wrap class in a class list, or nil.
@@ -245,10 +393,20 @@ local function css_length(value, no_percent)
 end
 
 -- True for a CSS length from css_length whose number is zero, such as 0%
--- or 0in. A function value is not read.
+-- or 0in. A function value is not read here; never_positive reads it.
 local function is_zero(length)
   local num = length:match("^(%d*%.?%d+)%a*%%?$")
   return num ~= nil and tonumber(num) == 0
+end
+
+-- True for a function value from css_length whose result is zero or below,
+-- or not finite, at every page and font size: CSS sets a negative width or
+-- a NaN to zero and an infinite one to the largest width. A value with
+-- var() is never read so.
+local function never_positive(length)
+  if not length:match("^%a+%(") then return false end
+  local _, b = calc_length(length)
+  return b ~= nil and (b.bad or sum_not_positive(b.hi))
 end
 
 -- Returns the CSS length for a value, or `fallback` with a warning when the
@@ -262,6 +420,12 @@ local function checked_length(value, fallback, what, where, no_percent)
   if length and what == "width" and is_zero(length) then
     quarto.log.warning(string.format(
       'wrapped: width "%s" on %s is zero, so it is %s.',
+      pandoc.utils.stringify(value), where, fallback))
+    return fallback
+  end
+  if length and what == "width" and never_positive(length) then
+    quarto.log.warning(string.format(
+      'wrapped: width "%s" on %s is zero, negative, or not finite, so it is %s.',
       pandoc.utils.stringify(value), where, fallback))
     return fallback
   end
@@ -347,43 +511,65 @@ local function typst_too_wide(length)
   return n ~= nil and tonumber(n) >= 100
 end
 
+-- True for a Typst width and gap that are both percents with a sum of 100%
+-- or more, which leaves wrap-it no room for the text beside the figure.
+local function typst_fills(width, gap)
+  local w = width:match("^(%d*%.?%d+)%%$")
+  local g = gap:match("^(%d*%.?%d+)%%$")
+  return w ~= nil and g ~= nil and tonumber(w) + tonumber(g) >= 100
+end
+
 -- The opening of a wrap-content call, which takes the figure box as its
 -- first argument. The width sets the box's grid column, where a percent is
 -- a share of the text width. Set on the box itself, a percent would be a
 -- share of the box's own measured column. wrap-it's grid follows the text
 -- direction, so the helpers in TYPST_HEADER turn the physical side into
 -- the side wrap-it reads, in context. The filter cannot know the text
--- width, so the call runs inside `layout`, and wrapped-width there turns an
--- absolute width as wide as the text or wider into the document default,
--- or into the built-in default when the document default is that wide too.
--- Typst has no way to print a warning for it. The closing `]))` is written
--- by the grouping pass.
+-- width, so the call runs inside `layout`, and wrapped-width there turns a
+-- width that with the gap is as wide as the text or wider into the
+-- document default, or into the built-in default when the document default
+-- with the gap is that wide too. Typst has no way to print a warning for
+-- it, so the filter warns only where it can see the sum: a figure's own
+-- percent width with a percent gap. A figure with no width of its own was
+-- checked with the metadata. The closing `]))` is written by the grouping
+-- pass.
 local function typst_open(class, width, gap, where)
   local side = SIDES[class]
   local w = checked_typst_length(width, options.width, "width", where)
+  local g = checked_typst_length(gap, options.gap, "wrap-gap", where)
+  local fallback = options.width
+  if typst_fills(typst_length(fallback), g) then fallback = DEFAULTS.width end
   if typst_too_wide(w) then
     quarto.log.warning(string.format(
       'wrapped: width "%s" on %s leaves no room for text in Typst, so it is %s.',
-      w, where, options.width))
-    w = typst_length(options.width)
+      w, where, fallback))
+    w = typst_length(fallback)
+  elseif width ~= nil and typst_fills(w, g) then
+    quarto.log.warning(string.format(
+      'wrapped: width "%s" and wrap-gap "%s" on %s leave no room for text in Typst, so the width is %s.',
+      w, g, where, fallback))
+    w = typst_length(fallback)
   end
   return string.format(
-    "#layout(wrapped-size => wrap-content(align: top + wrapped-side(%s), columns: wrapped-columns(%s, wrapped-width(wrapped-size, %s, %s, %s)), column-gutter: %s, box(width: 100%%)[",
-    side, side, w, typst_length(options.width), typst_length(DEFAULTS.width),
-    checked_typst_length(gap, options.gap, "wrap-gap", where))
+    "#layout(wrapped-size => wrap-content(align: top + wrapped-side(%s), columns: wrapped-columns(%s, wrapped-width(wrapped-size, %s, %s, %s, %s)), column-gutter: %s, box(width: 100%%)[",
+    side, side, g, w, typst_length(options.width), typst_length(DEFAULTS.width), g)
 end
 
 -- The Typst header: the wrap-it import, the side helpers, and the width
--- helper. Typst takes a text's direction from `dir`, or from its language
+-- helpers. Typst takes a text's direction from `dir`, or from its language
 -- when `dir` is auto, and these are the languages that Typst sets right to
--- left. wrapped-width returns the first width that is a percent or narrower
--- than the text, which `size` from `layout` gives; the last is a percent.
+-- left. wrapped-abs turns a percent into that share of the text width,
+-- which `size` from `layout` gives. wrapped-width returns the first width
+-- that with the gap is narrower than the text, or the last when none is.
+-- On a page of auto width the text width is infinite, so it returns the
+-- first.
 local TYPST_HEADER = [[
 #import "@preview/wrap-it:0.1.1": wrap-content
 #let wrapped-rtl() = text.dir == rtl or (text.dir == auto and text.lang in ("ar", "dv", "fa", "he", "ks", "pa", "ps", "sd", "ug", "ur", "yi"))
 #let wrapped-side(side) = if wrapped-rtl() { if side == right { left } else { right } } else { side }
 #let wrapped-columns(side, width) = if wrapped-side(side) == right { (1fr, width) } else { (width, 1fr) }
-#let wrapped-width(size, ..widths) = widths.pos().find(w => type(w) == ratio or w.to-absolute() < size.width)]]
+#let wrapped-abs(size, x) = if type(x) == ratio { x * size.width } else { x.to-absolute() }
+#let wrapped-width(size, gap, ..widths) = { if size.width.pt() == float.inf { return widths.pos().first() }; let fits = widths.pos().filter(w => wrapped-abs(size, w) + wrapped-abs(size, gap) < size.width); if fits.len() > 0 { fits.first() } else { widths.pos().last() } }]]
 
 -- Twips (1/20 pt) for each unit of a length that Word can use. A px length
 -- is 1/96 in, as in CSS, and an em is 12 pt.
@@ -825,6 +1011,11 @@ local function read_meta(meta)
       quarto.log.warning(string.format(
         'wrapped: width "%s" in the wrapped metadata leaves no room for text in Typst, so it is %s.',
         options.width, DEFAULTS.width))
+      options.width = DEFAULTS.width
+    elseif m.width ~= nil and typst_fills(typst_length(options.width), typst_length(options.gap)) then
+      quarto.log.warning(string.format(
+        'wrapped: width "%s" and gap "%s" in the wrapped metadata leave no room for text in Typst, so the width is %s.',
+        options.width, options.gap, DEFAULTS.width))
       options.width = DEFAULTS.width
     end
   elseif is_docx then

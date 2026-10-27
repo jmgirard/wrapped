@@ -2,4 +2,4 @@
 # typ
 figure: fig-break image-width=yes
 # wraps
-align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em | fig-break no-alt | p, p, p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-break no-alt | p, p, p | cites=0

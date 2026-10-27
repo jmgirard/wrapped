@@ -5,7 +5,7 @@ filters:
 format: html
 ---
 
-Each value in the first part reaches the style as written. Each value in the second part prints a warning, and its figure takes the default.
+Each value in the first part reaches the style as written. Each value in the second part is zero, negative, or not finite at every size, and each value in the third part is one the filter does not read as a length; both print a warning, and the value takes its default.
 
 ## Values that pass
 
@@ -48,6 +48,104 @@ See @fig-valid-9. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed d
 ![A width of `calc(100% - 2dvmin)`.](plot.png){#fig-valid-10 .wrap-left width="calc(100% - 2dvmin)"}
 
 See @fig-valid-10. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(50% - 4in)`.](plot.png){#fig-valid-11 .wrap-right width="calc(50% - 4in)"}
+
+See @fig-valid-11. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(1em - 1rem)`.](plot.png){#fig-valid-12 .wrap-left width="calc(1em - 1rem)"}
+
+See @fig-valid-12. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(1em - 2ex)`.](plot.png){#fig-valid-13 .wrap-right width="calc(1em - 2ex)"}
+
+See @fig-valid-13. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(100vw - 100%)`.](plot.png){#fig-valid-14 .wrap-left width="calc(100vw - 100%)"}
+
+See @fig-valid-14. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(var(--w) - 1px)`.](plot.png){#fig-valid-15 .wrap-right width="calc(var(--w) - 1px)"}
+
+See @fig-valid-15. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `max(0px, 10%)`.](plot.png){#fig-valid-16 .wrap-left width="max(0px, 10%)"}
+
+See @fig-valid-16. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `clamp(-1px, 10%, 1in)`.](plot.png){#fig-valid-17 .wrap-right width="clamp(-1px, 10%, 1in)"}
+
+See @fig-valid-17. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(0px)`.](plot.png){#fig-valid-18 .wrap-left width="30%" wrap-gap="calc(0px)"}
+
+See @fig-valid-18. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(9223372036854775807px + 1px)`.](plot.png){#fig-valid-19 .wrap-right width="calc(9223372036854775807px + 1px)"}
+
+See @fig-valid-19. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## Values that are never above zero
+
+![A width of `calc(0%)`.](plot.png){#fig-never-1 .wrap-right width="calc(0%)"}
+
+See @fig-never-1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `min(0px, 10%)`.](plot.png){#fig-never-2 .wrap-left width="min(0px, 10%)"}
+
+See @fig-never-2. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `max(-1em, 0px)`.](plot.png){#fig-never-3 .wrap-right width="max(-1em, 0px)"}
+
+See @fig-never-3. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `clamp(-1px, 5%, -2px)`.](plot.png){#fig-never-4 .wrap-left width="clamp(-1px, 5%, -2px)"}
+
+See @fig-never-4. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(-10px)`.](plot.png){#fig-never-5 .wrap-right width="calc(-10px)"}
+
+See @fig-never-5. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(1px / 0)`.](plot.png){#fig-never-6 .wrap-left width="calc(1px / 0)"}
+
+See @fig-never-6. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(0px / 0)`.](plot.png){#fig-never-7 .wrap-right width="calc(0px / 0)"}
+
+See @fig-never-7. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(min(0px, 1em) - 1px)`.](plot.png){#fig-never-8 .wrap-left width="calc(min(0px, 1em) - 1px)"}
+
+See @fig-never-8. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(-1vw)`.](plot.png){#fig-never-9 .wrap-right width="calc(-1vw)"}
+
+See @fig-never-9. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(1in - 96px)`.](plot.png){#fig-never-10 .wrap-left width="calc(1in - 96px)"}
+
+See @fig-never-10. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(1em - 1em)`.](plot.png){#fig-never-11 .wrap-right width="calc(1em - 1em)"}
+
+See @fig-never-11. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(10% * -1)`.](plot.png){#fig-never-12 .wrap-left width="calc(10% * -1)"}
+
+See @fig-never-12. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(0em)`.](plot.png){#fig-never-13 .wrap-right width="calc(0em)"}
+
+See @fig-never-13. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(-1 * 10%)`.](plot.png){#fig-never-14 .wrap-left width="calc(-1 * 10%)"}
+
+See @fig-never-14. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A width of `calc(10% / -2)`.](plot.png){#fig-never-15 .wrap-right width="calc(10% / -2)"}
+
+See @fig-never-15. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ## Values that print a warning
 

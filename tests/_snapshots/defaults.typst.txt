@@ -8,8 +8,8 @@ figure: fig-upper image-width=yes
 figure: fig-unitless image-width=yes
 figure: fig-height image-width=yes
 # wraps
-align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 25%, 25%, 40%)), column-gutter: 22.5pt | fig-defaults no-alt | p, p | cites=0
-align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 30%, 25%, 40%)), column-gutter: 24pt | fig-pica no-alt | p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 2in, 25%, 40%)), column-gutter: 22.5pt | fig-upper no-alt | p | cites=0
-align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 225pt, 25%, 40%)), column-gutter: 22.5pt | fig-unitless no-alt | p | cites=0
-align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 20%, 25%, 40%)), column-gutter: 22.5pt | fig-height no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 22.5pt, 25%, 25%, 40%)), column-gutter: 22.5pt | fig-defaults no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 24pt, 30%, 25%, 40%)), column-gutter: 24pt | fig-pica no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 22.5pt, 2in, 25%, 40%)), column-gutter: 22.5pt | fig-upper no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 22.5pt, 225pt, 25%, 40%)), column-gutter: 22.5pt | fig-unitless no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 22.5pt, 20%, 25%, 40%)), column-gutter: 22.5pt | fig-height no-alt | p | cites=0

@@ -1,0 +1,7 @@
+# warnings
+# typ
+figure: fig-mgap image-width=yes
+figure: fig-mdefault image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1.5in, 5in, 5in, 40%)), column-gutter: 1.5in | fig-mgap no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1in, 5.5in, 5in, 40%)), column-gutter: 1in | fig-mdefault no-alt | p | cites=0

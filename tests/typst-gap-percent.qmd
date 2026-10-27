@@ -1,0 +1,16 @@
+---
+title: "wrapped fixture: a Typst metadata width and gap in percents that fill the text"
+filters:
+  - wrapped
+format:
+  typst:
+    keep-typ: true
+    fig-format: png
+wrapped:
+  width: 70%
+  gap: 40%
+---
+
+![A wrapped figure.](plot.png){#fig-gap-percent .wrap-right}
+
+The metadata width and gap are both percents and together fill the text, so the render prints a warning, and the width is the built-in 40%.
