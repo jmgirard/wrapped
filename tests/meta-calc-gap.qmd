@@ -1,0 +1,12 @@
+---
+title: "wrapped fixture: a metadata gap below zero"
+filters:
+  - wrapped
+format: html
+wrapped:
+  gap: calc(-1em)
+---
+
+![A wrapped figure.](plot.png){#fig-meta-calc-gap .wrap-right}
+
+A gap below zero would pull the text over the figure, so the gap stays at its default, with a warning.

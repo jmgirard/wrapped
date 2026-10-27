@@ -99,6 +99,16 @@ local function sum_not_positive(f)
   return true
 end
 
+-- True when a sum is below zero for every base above zero: each
+-- coefficient is zero or below, and one is below zero.
+local function sum_negative(f)
+  if not sum_not_positive(f) then return false end
+  for _, c in pairs(f) do
+    if c < 0 then return true end
+  end
+  return false
+end
+
 -- The unit and coefficient of a sum with one unit or none, or nil.
 local function sum_term(f)
   local unit, coef = "", 0
@@ -409,11 +419,22 @@ local function never_positive(length)
   return b ~= nil and (b.bad or sum_not_positive(b.hi))
 end
 
+-- True for a function value from css_length whose result is below zero, or
+-- not finite, at every page and font size. A negative gap pulls the text
+-- over the figure. A value with var() is never read so, and a result of
+-- zero is not below zero.
+local function always_negative(length)
+  if not length:match("^%a+%(") then return false end
+  local _, b = calc_length(length)
+  return b ~= nil and (b.bad or sum_negative(b.hi))
+end
+
 -- Returns the CSS length for a value, or `fallback` with a warning when the
 -- value is not a length. `what` and `where` name the value in the warning.
 -- A width of zero is not a width, because a box with no width leaves the
--- figure nothing to fill. A gap or a breakpoint of zero is a length.
--- A breakpoint passes `no_percent`, because a media query takes no percent.
+-- figure nothing to fill. A gap or a breakpoint of zero is a length, but a
+-- gap below zero is not a gap. A breakpoint passes `no_percent`, because a
+-- media query takes no percent.
 local function checked_length(value, fallback, what, where, no_percent)
   if value == nil then return fallback end
   local length = css_length(value, no_percent)
@@ -427,6 +448,12 @@ local function checked_length(value, fallback, what, where, no_percent)
     quarto.log.warning(string.format(
       'wrapped: width "%s" on %s is zero, negative, or not finite, so it is %s.',
       pandoc.utils.stringify(value), where, fallback))
+    return fallback
+  end
+  if length and (what == "wrap-gap" or what == "gap") and always_negative(length) then
+    quarto.log.warning(string.format(
+      'wrapped: %s "%s" on %s is negative or not finite, so it is %s.',
+      what, pandoc.utils.stringify(value), where, fallback))
     return fallback
   end
   if length then return length end

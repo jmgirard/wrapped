@@ -1,0 +1,10 @@
+# warnings
+1x wrapped: gap "calc(-1em)" on the wrapped metadata is negative or not finite, so it is 1em.
+# breakpoint
+576px
+# figures
+fig-meta-calc-gap: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-meta-calc-gap, p

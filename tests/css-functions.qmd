@@ -5,7 +5,7 @@ filters:
 format: html
 ---
 
-Each value in the first part reaches the style as written. Each value in the second part is zero, negative, or not finite at every size, and each value in the third part is one the filter does not read as a length; both print a warning, and the value takes its default.
+Each value in the first part reaches the style as written. Each width in the second part is zero, negative, or not finite at every size, each gap in the third part is negative or not finite at every size, and each value in the fourth part is one the filter does not read as a length; these print a warning, and the value takes its default.
 
 ## Values that pass
 
@@ -85,6 +85,34 @@ See @fig-valid-18. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed 
 
 See @fig-valid-19. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+![A gap of `calc(1em - 1em)`.](plot.png){#fig-valid-20 .wrap-left width="30%" wrap-gap="calc(1em - 1em)"}
+
+See @fig-valid-20. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(1in - 96px)`.](plot.png){#fig-valid-21 .wrap-right width="30%" wrap-gap="calc(1in - 96px)"}
+
+See @fig-valid-21. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `min(0px, 10%)`.](plot.png){#fig-valid-22 .wrap-left width="30%" wrap-gap="min(0px, 10%)"}
+
+See @fig-valid-22. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `max(-1em, 0px)`.](plot.png){#fig-valid-23 .wrap-right width="30%" wrap-gap="max(-1em, 0px)"}
+
+See @fig-valid-23. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(1em - 20px)`.](plot.png){#fig-valid-24 .wrap-left width="30%" wrap-gap="calc(1em - 20px)"}
+
+See @fig-valid-24. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(50% - 1in)`.](plot.png){#fig-valid-25 .wrap-right width="30%" wrap-gap="calc(50% - 1in)"}
+
+See @fig-valid-25. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(var(--g) - 1px)`.](plot.png){#fig-valid-26 .wrap-left width="30%" wrap-gap="calc(var(--g) - 1px)"}
+
+See @fig-valid-26. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
 ## Values that are never above zero
 
 ![A width of `calc(0%)`.](plot.png){#fig-never-1 .wrap-right width="calc(0%)"}
@@ -146,6 +174,48 @@ See @fig-never-14. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed 
 ![A width of `calc(10% / -2)`.](plot.png){#fig-never-15 .wrap-right width="calc(10% / -2)"}
 
 See @fig-never-15. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## Gaps that are below zero
+
+![A gap of `calc(-1em)`.](plot.png){#fig-gap-1 .wrap-right width="30%" wrap-gap="calc(-1em)"}
+
+See @fig-gap-1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(-1vw)`.](plot.png){#fig-gap-2 .wrap-left width="30%" wrap-gap="calc(-1vw)"}
+
+See @fig-gap-2. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(10% / -2)`.](plot.png){#fig-gap-3 .wrap-right width="30%" wrap-gap="calc(10% / -2)"}
+
+See @fig-gap-3. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(-1 * 1em)`.](plot.png){#fig-gap-4 .wrap-left width="30%" wrap-gap="calc(-1 * 1em)"}
+
+See @fig-gap-4. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `min(-1px, 10%)`.](plot.png){#fig-gap-5 .wrap-right width="30%" wrap-gap="min(-1px, 10%)"}
+
+See @fig-gap-5. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `max(-2px, -1px)`.](plot.png){#fig-gap-6 .wrap-left width="30%" wrap-gap="max(-2px, -1px)"}
+
+See @fig-gap-6. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `clamp(-3px, -2px, -1px)`.](plot.png){#fig-gap-7 .wrap-right width="30%" wrap-gap="clamp(-3px, -2px, -1px)"}
+
+See @fig-gap-7. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(min(0px, 1em) - 1px)`.](plot.png){#fig-gap-8 .wrap-left width="30%" wrap-gap="calc(min(0px, 1em) - 1px)"}
+
+See @fig-gap-8. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(1px / 0)`.](plot.png){#fig-gap-9 .wrap-right width="30%" wrap-gap="calc(1px / 0)"}
+
+See @fig-gap-9. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![A gap of `calc(0px / 0)`.](plot.png){#fig-gap-10 .wrap-left width="30%" wrap-gap="calc(0px / 0)"}
+
+See @fig-gap-10. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ## Values that print a warning
 

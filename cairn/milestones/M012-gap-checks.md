@@ -126,7 +126,7 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
       `DEFAULTS.width` that fits with `g`, else 40%. A width already
       replaced by the wide-width check gets one warning, not two. Update
       the snapshot and read the diff.
-- [ ] T2: Word metadata check. In `read_meta`'s Word branch
+- [x] T2: Word metadata check. In `read_meta`'s Word branch
       (`wrapped.lua:1021`), after `format_default`, warn once and set
       `options.width` to 40% when the metadata width plus gap fills the
       text. New fixture `tests/docx-gap-meta.qmd` with the AC2 metadata
@@ -162,3 +162,5 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 - 2026-10-27: T1 checkpoint (not ticked): `docx_frame` counts the gap and `checked_docx_twips` reports a fallback and names a figure's gap for a too-wide width; `tests/docx-gap.qmd` gives the seven AC1 widths and warnings (before the change all but (e) differed); full verify running.
 - 2026-10-27: T1 done: verify passed, 57 renders.
 - 2026-10-27: T2 checkpoint (not ticked): `read_meta` warns once and sets the document default width to 40% when a `wrapped:` width or gap is set and the sum fills the text; `tests/docx-gap-meta.qmd` gave 7200 twips and no warning before, 3744 and one warning after; full verify running.
+- 2026-10-27: T2 done: verify passed, 58 renders.
+- 2026-10-27: T3 and T4 checkpoint (not ticked): `sum_negative` and `always_negative` make `checked_length` warn for a `wrap-gap` or metadata `gap` below zero or not finite at every size; before the change the ten AC3 gaps reached the style, after it each warns and takes 1em, and the seven AC4 gaps are unchanged; `tests/meta-calc-gap.qmd` gives one warning and a 1em gap; full verify running.
