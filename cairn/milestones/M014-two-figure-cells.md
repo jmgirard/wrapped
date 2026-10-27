@@ -92,7 +92,7 @@ not its engine).
       paragraph, with the file's `out-width` line for docx. Render the
       fixture with `main`'s filter and record in the work log what wraps
       and what warns (the before state; the two plain cells must wrap).
-- [ ] T2: In `wrapped.lua`'s `cell_div` (near line 1181), count the cell's
+- [x] T2: In `wrapped.lua`'s `cell_div` (near line 1181), count the cell's
       figure floats that sit in no other float. `count_floats` also counts
       subfigures and tables, so the subcap cell counts 3 today. With two or
       more, keep every figure of the cell normal and print one warning in
@@ -122,6 +122,7 @@ not its engine).
 - 2026-10-27: criteria audit (full mode, Opus reader): 6 findings, all fixed: AC1 now says "no figure wraps" and names the HTML groups block; D-003 overlap recorded as D-010; a second cell (three plots, wrap-left) varies count and side; AC2's "names" became a text test and allows the ids; AC3 states the subcap warnings and fig-cell's wrap lines outright, with no main-branch comparison; AC4 kept, README limited to what renders show (T4).
 - 2026-10-27: lessons used: 2026-10-25 (M002) tests/_extensions symlink and Typst PNG; 2026-10-25 (M003) Blocks filter walk inside cells; 2026-10-27 (M012) one-fixture check; 2026-10-27 (M013) dump filter to see cell floats.
 - 2026-10-27: T1 done: three cells added to tests/contexts.qmd. Before state with main's filter: fig-two-plots-1/-2 and fig-three-plots-1/-2/-3 wrap in HTML (wrap class and style), LaTeX (wrappedfigure each), Typst (image-width=yes, one wraps line naming the first figure), and Word (one frame naming the first figure); fig-two-subcap prints its panel warning and one per subfigure in all four formats and does not wrap.
+- 2026-10-27: T2 done: a float Div inside a cell carries no type or id in a user filter (dump at pre-quarto), so cell_div counts the cell's top-level floats (count_top_floats) and float_target keeps each Figure of such a cell normal, before clean_images, with one warning at the first figure: "the code cell #<label> makes more than one figure", the label being the float id less its -N ending. Table floats keep the "is not a figure" path; context and next-block paths run first. Scratch renders of contexts.qmd show the five figures with no wrap in all four formats and each cell warning once.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

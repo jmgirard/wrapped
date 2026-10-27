@@ -864,6 +864,22 @@ local function count_floats(div)
   return n
 end
 
+-- Counts the floats of a code cell that sit in no other float. A cell with
+-- `fig-subcap` makes one float that holds a subfloat for each plot, and a
+-- cell that draws two plots without it makes two floats.
+local function count_top_floats(div)
+  local n = 0
+  div.content:walk({
+    traverse = "topdown",
+    Div = function(d)
+      if d.attributes.__quarto_custom_type ~= "FloatRefTarget" then return nil end
+      n = n + 1
+      return nil, false
+    end,
+  })
+  return n
+end
+
 -- Custom ids of floats whose next block is not a paragraph, from the
 -- next-block pass.
 local no_text = {}
@@ -1193,7 +1209,7 @@ local function cell_div(div)
   if n > 0 then
     next_token = next_token + 1
     local token = tostring(next_token)
-    carry = { class = c, remaining = n, token = token }
+    carry = { class = c, remaining = n, token = token, several = count_top_floats(div) > 1 }
     if wraps() then div.attributes["data-wrap-anchor"] = token end
   end
   return div
@@ -1202,10 +1218,10 @@ end
 local function float_target(float)
   -- Every float of a wrapped cell uses up the carry, tables included, so
   -- the carry never reaches a float after the cell.
-  local carried, token
+  local carried, token, cell
   if carry and carry.remaining > 0 then
     carry.remaining = carry.remaining - 1
-    carried, token = carry.class, carry.token
+    carried, token, cell = carry.class, carry.token, carry
   end
   local img_class, img_width, img_gap, img_lines = image_wrap(float.content)
   local class = wrap_class(float.classes) or carried or img_class
@@ -1235,6 +1251,21 @@ local function float_target(float)
     if context then
       local noun = ({ Figure = "figure", Table = "table" })[float.type] or "float"
       context_warning(string.format("the %s #%s", noun, float.identifier), context)
+    end
+    return float
+  end
+  -- A cell that makes more than one figure without `fig-subcap` keeps all
+  -- its figures normal, with one warning for the cell at its first figure
+  -- (D-010). Quarto numbers such figures with the cell's label and `-1`,
+  -- `-2`, and so on.
+  if carried and cell.several then
+    float.content = float.content:walk({ Image = drop_wrap })
+    float.attributes["wrap-gap"] = nil
+    float.attributes["wrap-lines"] = nil
+    if not cell.warned then
+      cell.warned = true
+      local label = float.identifier:gsub("%-%d+$", "")
+      context_warning("the code cell #" .. label, "makes more than one figure")
     end
     return float
   end
