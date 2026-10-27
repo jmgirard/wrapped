@@ -1,13 +1,13 @@
 # M016: Read figure columns in Quarto's order in PDF
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes which wrapped figures wrap in PDF and what the render warns
-- **Branch/PR:** —
+- **Branch/PR:** m016-pdf-column-order
 
 ## Goal
 
@@ -102,7 +102,7 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 
 ## Tasks
 
-- [ ] T1: Write the four fixtures with the figures that AC1 lists, each
+- [x] T1: Write the four fixtures with the figures that AC1 lists, each
       followed by a paragraph. Render a bare copy of each to PDF through
       LaTeX and PDF through Typst, and write one work-log line for each
       fixture that names where each figure sits in each format.
@@ -134,6 +134,13 @@ margin. In its `.typ`, `#notefigure` is the margin, a `#figure` inside a
 - 2026-10-27: criteria audit (full mode, fresh Opus reader with scratch bare renders): 11 findings on the one-milestone draft. Fixed: HTML order differs (narrowed to LaTeX and Typst), HTML classes do not decide a place (bare-render rule now reads `.tex` and `.typ` only), the no-id image forced a change to existing snapshots (moved to a row), each source tested in one direction (added reverse cases and figure divs), formats unnamed and AC1 a fixture promise (folded into AC1's domain with LaTeX and Typst named), Goal "only" against Word (Goal now PDF only), AC4 forms and aside, AC5 family, and AC7's unlabeled lines went to M017 and M018. Answered: no D-entry conflict.
 - 2026-10-27: plan chose to follow bare renders over coding Quarto's order alone because the M015 renders showed Quarto's cell handling differs from the float order; falsified by a bare render whose place differs from what the order gives for a float.
 - 2026-10-27: lessons used: 2026-10-27 (M015) render without filters before trusting a placement, 2026-10-27 (M015) Typst widening and `#notefigure`, 2026-10-27 (M013) what the pre-quarto filter sees, 2026-10-27 (M012) checking one fixture.
+
+- 2026-10-27: implement started on branch m016-pdf-column-order.
+- 2026-10-27: T1 bare render, column-order (LaTeX and Typst agree): body for fig-order-margin, fig-order-page, fig-order-plain, fig-order-div, fig-order-cell-margin, fig-order-cell-figmargin; margin for fig-order-figmargin.
+- 2026-10-27: T1 bare render, column-order-page (LaTeX and Typst agree): body for fig-page-body; margin for fig-page-margin; page-wide for fig-page-plain, fig-page-cell, and fig-page-cell-margin (`figure*` and a nested `#wideblock`).
+- 2026-10-27: T1 bare render, column-order-fig-margin (LaTeX and Typst agree): body for fig-figm-figbody and fig-figm-div; margin for fig-figm-body, fig-figm-plain, and fig-figm-cell-body.
+- 2026-10-27: T1 bare render, column-order-margin (LaTeX and Typst agree): body for fig-marg-body; margin for fig-marg-plain and fig-marg-cell.
+- 2026-10-27: T1 reading: a float outside a cell follows Quarto's four-step order; a cell's figure follows the document's `fig-column`, then its `column`, and the cell's own option only when neither is set (fig-page-cell-margin is page-wide).
 
 ## Decisions
 

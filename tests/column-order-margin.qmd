@@ -1,0 +1,40 @@
+---
+title: "wrapped fixture: column margin under column classes"
+filters:
+  - wrapped
+column: margin
+format:
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
+---
+
+With `column: margin` in the document and no `fig-column`, Quarto reads a
+float's own `column-*` class before the document's `column`. So in PDF a
+`column-body` float sits in the body, and a float with no column class
+sits in the margin.
+
+## A column-body float
+
+![A float with the column-body class.](plot.png){#fig-marg-body .column-body .wrap-right}
+
+The paragraph after the column-body float. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A float with no column class
+
+![A float with no column class.](plot.png){#fig-marg-plain .wrap-right}
+
+The paragraph after the float with no column class. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A cell with no column option
+
+```{r}
+#| label: fig-marg-cell
+#| fig-cap: "A cell figure with no column option."
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the cell with no column option. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
