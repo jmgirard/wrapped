@@ -1,0 +1,50 @@
+---
+title: "wrapped fixture: a document-level column page"
+filters:
+  - wrapped
+column: page
+format:
+  html: default
+  pdf:
+    keep-tex: true
+---
+
+With `column: page` in the document, Quarto makes each figure float
+page-wide, a cell's float with its own `fig-column: body` included. A
+wrapped float keeps its normal layout with a warning. A captioned image with
+no id is not a float, so it stays in the body and wraps.
+
+## An image-form figure
+
+![An image-form figure in a column page document.](plot.png){#fig-col-page .wrap-right}
+
+The paragraph after the image-form figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A cell
+
+```{r}
+#| label: fig-col-cell
+#| fig-cap: "A cell figure in a column page document."
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A cell with fig-column body
+
+```{r}
+#| label: fig-col-body-cell
+#| fig-cap: "A cell figure with its own fig-column body."
+#| fig-column: body
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the cell with fig-column body. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A captioned image with no id
+
+![A captioned image with no id in a column page document.](plot.png){.wrap-left width="30%"}
+
+The paragraph after the captioned image with no id. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

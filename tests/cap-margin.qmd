@@ -59,3 +59,49 @@ plot(1:10)
 ```
 
 The paragraph after the cell with fig-cap-location. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## The margin-caption class
+
+![A figure with the margin-caption class.](plot.png){#fig-margincap-class .wrap-right .margin-caption}
+
+The paragraph after the figure with the margin-caption class. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## The caption-margin class
+
+![A figure with the caption-margin class.](plot.png){#fig-capmargin-class .wrap-right .caption-margin}
+
+The paragraph after the figure with the caption-margin class. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A figure div with the margin-caption class
+
+::: {#fig-margincap-div .wrap-left .margin-caption}
+![](plot.png)
+
+A figure div with the margin-caption class.
+:::
+
+The paragraph after the figure div with the margin-caption class. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A captioned image with no id and the margin-caption class
+
+![A captioned image with no id and the margin-caption class.](plot.png){.wrap-right .margin-caption}
+
+The paragraph after the captioned image with no id. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A captioned image with no id and the caption-margin class
+
+![A captioned image with no id and the caption-margin class.](plot.png){.wrap-left .caption-margin width="30%"}
+
+The paragraph after the captioned image with no id and the caption-margin class, which wraps in every format, because Quarto keeps its caption below it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## The caption-margin class on a cell
+
+```{r}
+#| label: fig-capclass-cell
+#| fig-cap: "A cell figure with the caption-margin class."
+#| classes: wrap-right .caption-margin
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+```
+
+The paragraph after the cell with the caption-margin class. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

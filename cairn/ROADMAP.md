@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-27 (M014 done: one started row graduated, M011 row 
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M015 | Fall back in more margin and page forms | planned | — | normal | milestones/M015-margin-page-forms.md |
+| M015 | Fall back in more margin and page forms | in-progress | — | normal | milestones/M015-margin-page-forms.md |
 | M014 | Keep two-figure cells unwrapped | done | — | normal | milestones/archive/M014-two-figure-cells.md |
 | M013 | Fall back where a format cannot wrap | done | — | normal | milestones/archive/M013-format-fallbacks.md |
 | M012 | Finish the gap checks | done | — | normal | milestones/archive/M012-gap-checks.md |

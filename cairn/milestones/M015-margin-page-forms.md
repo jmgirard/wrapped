@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M015: Fall back in more margin and page forms
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — it changes which wrapped figures the filter keeps normal and what it warns   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m015-margin-page-forms   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -159,6 +159,8 @@ so it does not wrap.`, or `1x wrapped: a figure with no id <reason>, …`.
 - 2026-10-27: criteria audit (full mode, fresh Opus reader): 11 findings. Fixed: no-id naming per format and its warning text (1, 3), normal layout needs the figure's own line in HTML and Typst (2), empty warnings blocks and T1 in AC2's coverage (4), a div-form float in margin-meta (5), a plain cell and named formats for column-meta (7), README claim narrowed to `column` for page-wide only (8), Scope order contradiction narrowed with a candidate row (10). No change: AC4 (6), AC7 binds the gate as every milestone does (9), bounded promises (11).
 - 2026-10-27: plan-owned body was 159 lines; the Acceptance criteria section was rewritten once to 150 or fewer, with the warning text stated once in the lead paragraph and no promise changed.
 - 2026-10-27: remainder ledger: both caption classes and the document `fig-column` key are in M015, with the `column` key added; the class-order gap and `column: margin` go to the new row "Read fig-column over a figure's class"; nothing dropped.
+- 2026-10-27: implement started on branch m015-margin-page-forms.
+- 2026-10-27: checkpoint (T1 to T3 code, T5 docs drafted, not checked off): T1's render without the extension showed a cell's own `fig-column: body` does not keep its float in the body under a document key, a no-id image moves its caption only for `.margin-caption`, and `classes: wrap-right caption-margin` writes broken attributes. A criteria amendment for AC1 to AC5 is with its second fresh reader; T4's snapshots wait for it.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

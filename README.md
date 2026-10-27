@@ -201,7 +201,10 @@ file or says that the figure has no id.
 
 - The margin: a figure with the `.column-margin` class, a figure in a
   `.column-margin` or `.aside` div, or a code cell with `#| column: margin`
-  or `#| fig-column: margin`. The figure stays in the margin. In PDF through LaTeX, Quarto puts a
+  or `#| fig-column: margin`. It also covers `fig-column: margin` in the
+  document metadata. That value applies to every figure with a `#fig-` id
+  and every code cell figure, even a cell with its own `fig-column`. A
+  captioned image with no id stays in the body and wraps. The figure stays in the margin. In PDF through LaTeX, Quarto puts a
   captioned image that has the `.column-margin` class and no `#fig-` id
   in the body instead. Word has no margin column, so there the figure is
   in the body.
@@ -237,7 +240,10 @@ prints the same warning there, and the figure wraps in the other formats.
   `cap-location` or `fig-cap-location` is `margin` on the figure, on its
   code cell, or in the document metadata. The figure's own value comes
   before the metadata's, and `fig-cap-location` comes before
-  `cap-location`.
+  `cap-location`. The `.margin-caption` and `.caption-margin` classes also
+  send the caption to the margin. They work on the figure, on its image,
+  and on its code cell, as in `#| classes: wrap-right .caption-margin`. For
+  a captioned image with no id, only `.margin-caption` does this.
 - A page-wide column: a page-wide class on the figure or on a div around
   it, or a code cell with `#| column: page` or `#| fig-column: page`. The
   classes are `.column-body-outset`, `.column-page-inset`, `.column-page`,
@@ -245,7 +251,11 @@ prints the same warning there, and the figure wraps in the other formats.
   or `-right`, and `.column-screen-inset-shaded`. In HTML this covers all of
   them. In PDF through LaTeX it covers the classes that Quarto makes
   page-wide there: those that start with `.column-page` or
-  `.column-screen` and do not end in `-left`.
+  `.column-screen` and do not end in `-left`. It also covers a page-wide
+  value of `fig-column` or `column` in the document metadata, such as
+  `fig-column: page`. That value applies to every figure with a `#fig-` id
+  and every code cell figure, even a cell with its own `fig-column`. A
+  captioned image with no id stays in the body and wraps.
 
 ## Slides
 

@@ -1111,10 +1111,30 @@ end
 -- The document's caption location for figures, read in the first pass.
 local meta_cap_location = nil
 
--- Where a figure's caption goes, read in Quarto's order: the figure's own
--- fig-cap-location, its cap-location, then the document's. Quarto has
--- already copied a code cell's caption location to the cell's figure.
+-- The context that the document's fig-column, or else its column, gives
+-- every figure float, or nil. Quarto 1.10.19 applies it to a code cell's
+-- float even when the cell sets its own fig-column, and not to a captioned
+-- image with no id, which is no float.
+local meta_column_context = nil
+
+-- Whether a class sends a caption to the margin. Quarto reads both
+-- margin-caption and caption-margin on a float, but moves the caption of a
+-- captioned image with no id only for margin-caption (Quarto 1.10.19).
+local function margin_caption_class(classes, is_float)
+  return classes:includes("margin-caption") or (is_float and classes:includes("caption-margin"))
+end
+
+-- Where a figure's caption goes, read in Quarto's order: a margin caption
+-- class on the float or its image, the figure's own fig-cap-location, its
+-- cap-location, then the document's. Quarto has already copied a code
+-- cell's caption location, and its caption-margin class, to the cell's
+-- figure as cap-location.
 local function caption_location(float)
+  local by_class = margin_caption_class(float.classes, true)
+  float.content:walk({
+    Image = function(img) by_class = by_class or margin_caption_class(img.classes, true) end,
+  })
+  if by_class then return "margin" end
   return float.attributes["fig-cap-location"] or float.attributes["cap-location"]
     or meta_cap_location
 end
@@ -1129,6 +1149,8 @@ local function read_meta(meta)
     is_latex = false
     two_column = true
   end
+  local column = meta_text(meta["fig-column"]) or meta_text(meta.column)
+  if column then meta_column_context = class_context(pandoc.List({ "column-" .. column })) end
   local m = meta.wrapped
   if m == nil then return end
   if pandoc.utils.type(m) ~= "table" then
@@ -1246,6 +1268,8 @@ local function float_target(float)
   -- A figure in a context keeps its normal layout too, and so does an HTML
   -- figure whose caption goes to the margin: CSS places the caption in the
   -- margin, outside the figure's box, and no text sits beside the figure.
+  -- A document-level fig-column or column puts the float in the margin or
+  -- a page-wide column.
   local node = float.__quarto_custom_node
   local custom_id = node and node.attributes and node.attributes.__quarto_custom_id
   local layout = float.attributes["layout-ncol"] or float.attributes["layout-nrow"]
@@ -1254,6 +1278,7 @@ local function float_target(float)
     or context_of_float[custom_id or ""]
     or class_context(float.classes)
     or (layout and "is a subfigure panel")
+    or meta_column_context
     or (has_page_layout and caption_location(float) == "margin" and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
@@ -1331,16 +1356,19 @@ local function figure_block(fig)
   strip_wrap(fig.classes)
   local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
   -- As for a float, a caption in the margin of an HTML page leaves no text
-  -- beside the figure. The image may carry the caption location instead of
-  -- the figure.
+  -- beside the figure. The image may carry the caption location or the
+  -- margin-caption class instead of the figure.
   if has_page_layout then
-    local loc = caption_location(fig)
+    local by_class = margin_caption_class(fig.classes, false)
+    local loc = fig.attributes["fig-cap-location"] or fig.attributes["cap-location"]
+      or meta_cap_location
     fig.content:walk({
       Image = function(img)
+        by_class = by_class or margin_caption_class(img.classes, false)
         loc = img.attributes["fig-cap-location"] or img.attributes["cap-location"] or loc
       end,
     })
-    if loc == "margin" then
+    if by_class or loc == "margin" then
       fig.content = fig.content:walk({ Image = drop_wrap })
       context_warning(where == "a figure with no id" and where or ("the figure " .. where),
         "has its caption in the margin")

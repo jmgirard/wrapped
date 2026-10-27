@@ -153,15 +153,18 @@ passes (corrected M003):
    records each float there by its custom id, and it removes the wrap class
    from a captioned image with no id or an image there, with a warning. In
    HTML, step 4 also keeps a float whose caption goes to the margin in its
-   normal layout (`caption_location`) (corrected M013).
+   normal layout (`caption_location`), by a caption location or by the
+   `margin-caption` or `caption-margin` class (corrected M013, M015).
 3. It applies the next-block rule: it records each float with no paragraph
    after it, and removes the wrap class from such a captioned image with no
    id or image.
 4. In a top-down pass, it carries a code cell's wrap class to that cell's
    floats and moves an image's class to its float. A float that step 2 or
    3 recorded, a table, a float with a margin or page-wide class or a
-   layout attribute, or a figure of a code cell with more than one float
-   outside other floats keeps its normal layout (corrected M014). In HTML, each other float gets its
+   layout attribute, any figure float when the document's `fig-column` or
+   `column` names the margin or a page-wide column (`meta_column_context`),
+   or a figure of a code cell with more than one float outside other
+   floats keeps its normal layout (corrected M014, M015). In HTML, each other float gets its
    box width and gap as CSS custom properties, and a captioned image with
    no id gets a `.wrapped-image` box. In LaTeX, each other float and
    captioned image gets `fig-env="wrappedfigure"` and a `fig-pos` that

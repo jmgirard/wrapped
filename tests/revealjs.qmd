@@ -24,3 +24,9 @@ The paragraph after the figure sits beside it, because slides have no page-wide 
 ![A figure with cap-location on a slide.](plot.png){#fig-slide-cap .wrap-right width="40%" cap-location="margin"}
 
 The paragraph after the figure sits beside it, because slides have no margin captions. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A margin-caption class on a slide
+
+![A figure with the margin-caption class on a slide.](plot.png){#fig-slide-margincap .wrap-right width="40%" .margin-caption}
+
+The paragraph after the figure sits beside it, because slides have no margin captions. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
