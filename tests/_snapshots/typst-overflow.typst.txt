@@ -1,0 +1,11 @@
+# warnings
+1x wrapped: width "50%" and wrap-gap "100%" on #fig-full-percent leave no room for text in Typst, so the width is 40%.
+1x wrapped: width "50%" and wrap-gap "9223372036854775807%" on #fig-huge-percent leave no room for text in Typst, so the width is 40%.
+# typ
+figure: fig-huge-pc image-width=yes
+figure: fig-huge-percent image-width=yes
+figure: fig-full-percent image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 9223372036854775808pt, 40%, 40%)), column-gutter: 1em | fig-huge-pc no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 9223372036854775807%, 40%, 40%, 40%)), column-gutter: 9223372036854775807% | fig-huge-percent no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 100%, 40%, 40%, 40%)), column-gutter: 100% | fig-full-percent no-alt | p | cites=0

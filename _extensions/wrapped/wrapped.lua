@@ -482,7 +482,7 @@ local function tex_length(length)
   if not num then return nil end
   if unit == "%" then return tex_number(tonumber(num) / 100) .. "\\linewidth" end
   unit = unit:lower()
-  if unit == "px" then return tex_number(tonumber(num) * 0.75) .. "pt" end
+  if unit == "px" then return tex_number((tonumber(num) + 0.0) * 0.75) .. "pt" end
   if TEX_UNITS[unit] then return num .. unit end
   return nil
 end
@@ -512,8 +512,9 @@ local function typst_length(length)
   if not num then return nil end
   if unit == "%" then return num .. "%" end
   unit = unit:lower()
-  if unit == "px" then return tex_number(tonumber(num) * 0.75) .. "pt" end
-  if unit == "pc" then return tex_number(tonumber(num) * 12) .. "pt" end
+  -- A float, so a large number does not wrap around as an integer.
+  if unit == "px" then return tex_number((tonumber(num) + 0.0) * 0.75) .. "pt" end
+  if unit == "pc" then return tex_number((tonumber(num) + 0.0) * 12) .. "pt" end
   if TYPST_UNITS[unit] then return num .. unit end
   return nil
 end
@@ -543,7 +544,7 @@ end
 local function typst_fills(width, gap)
   local w = width:match("^(%d*%.?%d+)%%$")
   local g = gap:match("^(%d*%.?%d+)%%$")
-  return w ~= nil and g ~= nil and tonumber(w) + tonumber(g) >= 100
+  return w ~= nil and g ~= nil and (tonumber(w) + 0.0) + (tonumber(g) + 0.0) >= 100
 end
 
 -- The opening of a wrap-content call, which takes the figure box as its
@@ -667,7 +668,8 @@ end
 local function docx_measure(length, positive)
   local num, unit = length:match("^(%d*%.?%d+)(%a*%%?)$")
   if not num then return nil end
-  local n = tonumber(num)
+  -- A float, so a large number does not wrap around as an integer.
+  local n = tonumber(num) + 0.0
   local twips
   if unit == "%" then
     if n >= 100 then return nil, "wide" end
