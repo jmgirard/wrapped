@@ -11,7 +11,7 @@
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — the filter's warnings and figure widths reach every user   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** m011-finish-width-checks   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m011-finish-width-checks, https://github.com/jmgirard/wrapped/pull/11   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -100,7 +100,7 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
       counts the gap, with no console warning when a term is not a percent.
       The README states that a figure keeps 40% and its gap when 40% plus
       the gap fills the text.
-- [ ] AC7: `python3 tests/verify.py` passes on macOS and in CI.
+- [x] AC7: `python3 tests/verify.py` passes on macOS and in CI.
 
 ## Coverage
 <!-- owner: plan · create/amend-via-gate; each acceptance criterion → the
@@ -174,6 +174,8 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 - 2026-10-27: T6: all 55 renders pass on macOS after the audit fixes. CI does not run on branch pushes (verify.yml runs on pull requests and main), so CI is read at review's merge step; T6's push-and-CI half moves there (minor task edit).
 - 2026-10-27: the line on line 172 is superseded by blame-history #1's fix: a figure with no width of its own no longer gets the percent-sum warning.
 - 2026-10-27: step-7 approval: m011-finish-width-checks approved for merge
+- 2026-10-27: PR #11 opened at pushed head 8914ccb, one check (verify) pending; review stopped before the CI wait, since this session does not poll CI; left: AC7's CI half (tick from `gh pr checks 11`), the merge marker, the squash merge, and post-merge hygiene.
+- 2026-10-27: resume: verify passed on PR #11 (4m35s); merged as 1210b0a with `gh pr merge 11 --squash --delete-branch`. The delete removed the local branch with three unpushed tracking commits (PR record, CI stop, AC7 tick); this file is restored from c74a154 in the reflog.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
@@ -191,6 +193,7 @@ Review head 1f66709; `python3 tests/verify.py` on macOS: all 55 renders pass, 0 
 - AC6: README.md:105-113 states that a function width the check can show is zero, negative, or not finite at every page and font size warns, and that a width with `var()` never does; README.md:306-320 states the percent-sum warning, the width-plus-gap check with no warning for other units, and that a figure keeps 40% and the gap when 40% plus the gap fills the text; DESIGN.md:221-226 Known issues states the same limit. `grep -n "calc(0%)\` prints no" README.md` prints nothing.
 - AC7: macOS part above; CI part read on the PR at step 8.
 - Re-verified after the fix-now commits (3d95522 plus snapshots): `python3 tests/verify.py --update` all 56 renders pass, 0 FAIL, 8 typst-gap layout cases ok; css-functions now holds 15 fig-never warnings (adds fig-never-14 and 15) and fig-valid-19 as written; typst-gap-default warns `… so the width is 40%.`. AC1 to AC6 evidence above still holds on this head.
+- AC7 (CI): `gh pr checks 11` — verify pass in 4m35s on head 8914ccb (run 40462905427); with the macOS run above, AC7 holds.
 - Gate: `cairn_validate.py` all checks passed; version marker `_extensions/wrapped/_extension.yml` unchanged by the diff (one marker, so all markers agree); changelog slot "none"; verify passes on the review head (above); no principle changed, so `cairn_impact` skipped.
 - spawned: diff-bug, blame-history, prior-review, ripple
 - ripple #1: ROADMAP row "Warn on zero widths in CSS functions" still says such widths pass with no warning — reject, planned change: post-merge hygiene graduates this started row.
