@@ -191,7 +191,7 @@ in HTML, and a `wrap-clear` div works.
 ## Where a figure keeps its normal layout
 
 In HTML, in PDF through LaTeX, in PDF through Typst, and in Word, a wrapped
-figure in one of these places does not wrap. It keeps
+figure in one of the places in this first list does not wrap. It keeps
 its normal layout, and the render prints one warning for it. The warning
 names the figure's id. If the figure has no id, the warning names its image
 file or says that the figure has no id.
@@ -246,6 +246,9 @@ on the same slide, as on an HTML page:
 
 Ratings rose in both conditions.
 ```
+
+Slides have no margin captions and no page-wide columns, so a figure with
+a margin caption or a page-wide class still wraps on a slide.
 
 ## PDF through LaTeX
 

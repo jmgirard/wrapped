@@ -146,12 +146,12 @@ The filter has two entry points (corrected M006):
 |---|---|---|
 | E1 | Wrap class on the image, not the float | The filter moves it to the float. |
 | E2 | `fig-align` set | Ignored for the box position. It still aligns the image inside the box. |
-| E3 | `.column-margin` or `.aside` with a wrap class | Margin wins. One warning. |
+| E3 | `.column-margin` or `.aside` with a wrap class, or a `fig-column: margin` cell | Margin wins. One warning (corrected M013). |
 | E4 | Subfigure panel (`layout-ncol`) | Normal panel. One warning. |
 | E5 | `#tbl-` float with a wrap class | Normal table. One warning. |
 | E6 | Wrapped figure is the last block before a heading | No text to wrap. Normal figure, no warning. |
 | E7 | Two wrapped figures with no text between them | The first figure falls back with no warning, and the second wraps the text after it (corrected 2026-10-24, D-003). |
-| E8 | Wrapped figure inside a list, callout, column layout, or tabset | Normal figure. One warning. |
+| E8 | Wrapped figure inside a list (a definition list included), callout, column layout, or tabset | Normal figure. One warning (corrected M013). |
 | E9 | Text shorter than the figure | HTML and Word clear at the stop point. Typst wraps the text it has. LaTeX skips the lines that the figure's height still needs at the stop point (corrected M007). |
 | E10 | Figure taller than the rest of the page | LaTeX, Typst, and Word move it to the next page. In LaTeX the text before it leaves no gap. A figure whose paragraphs all end before it is placed renders with no text beside it, before the stop block (corrected M007). In Typst the `wrap-content` box moves whole and the rest of the page stays blank (corrected M005). Word moves the frame and the paragraph after it, and the rest of the page stays blank (corrected M006). |
 | E11 | Long caption | The caption wraps inside the box width in all formats. |
@@ -161,6 +161,10 @@ The filter has two entry points (corrected M006):
 | E15 | revealjs | The HTML path works. If a test slide looks right, the README shows it. |
 | E16 | Dark mode and `_brand.yml` | The extension sets no colors, so nothing changes. |
 | E17 | `classoption: twocolumn` in LaTeX | Normal figure. One warning. |
+| E18 | Wrapped figure in a block quote | Normal figure with one warning in LaTeX, where wrapfig does not wrap. Wraps in HTML, Typst, and Word (M013). |
+| E19 | Wrapped figure in a table cell | Normal figure with one warning in Word and LaTeX. A captioned figure in a LaTeX table cell fails to build with or without the extension. Wraps in HTML and Typst (M013). |
+| E20 | Caption in the margin (`cap-location` or `fig-cap-location`) | Normal figure with one warning on an HTML page, where no text sits beside it. Wraps in LaTeX, Typst, Word, and slides (M013). |
+| E21 | Page-wide column class | Normal figure with one warning on an HTML page for all 16 classes, and in LaTeX for those Quarto makes page-wide. Wraps in Typst, Word, and slides (M013). |
 
 ## Test plan
 

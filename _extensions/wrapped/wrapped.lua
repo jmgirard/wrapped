@@ -33,6 +33,9 @@ local options = {
 }
 
 local is_html = quarto.doc.is_format("html:js")
+-- An HTML page with Quarto's page layout. revealjs slides have no margin
+-- captions and no page-wide columns.
+local has_page_layout = is_html and not quarto.doc.is_format("revealjs")
 -- PDF through LaTeX. Beamer is a separate format and keeps a normal figure.
 -- The first pass sets is_latex to false for a two-column document.
 local is_latex = FORMAT == "latex"
@@ -880,8 +883,8 @@ local function margin_context(classes)
   return nil
 end
 
--- Quarto's page-wide column classes. HTML sets each one wider than the body
--- text, where a wrapped figure does not float.
+-- Quarto's page-wide column classes. An HTML page sets each one wider than
+-- the body text, where a wrapped figure does not float.
 local PAGE_WIDE = { ["column-screen-inset-shaded"] = true }
 for _, name in ipairs({ "column-body-outset", "column-page-inset", "column-page",
     "column-screen-inset", "column-screen" }) do
@@ -897,7 +900,7 @@ end
 local function page_context(classes)
   for _, class in ipairs(classes) do
     local name = class:gsub("^fig%-", "")
-    if PAGE_WIDE[name] and (is_html or is_latex and not name:match("%-left$")
+    if PAGE_WIDE[name] and (has_page_layout or is_latex and not name:match("%-left$")
         and (name:match("^column%-page") or name:match("^column%-screen"))) then
       return "is page-wide"
     end
@@ -991,9 +994,9 @@ end
 -- asides, margin blocks, page-wide columns, subfigure panels, and the block
 -- quotes and tables of the formats that cannot wrap there, outermost first, and marks
 -- what is inside each one. A float that holds other floats is a subfigure
--- panel. A captioned image with no id, or an image, with its own margin or
--- page-wide class is in that context too. A float's own class is read in the
--- float pass.
+-- panel. A captioned image with no id, or an image, with its own margin
+-- class is in the margin too. Quarto makes only floats and divs page-wide,
+-- so a float's own margin or page-wide class is read in the float pass.
 local function find_contexts(doc)
   local function mark(block)
     if block.t == "Div" and is_float_div(block) then
@@ -1025,9 +1028,9 @@ local function find_contexts(doc)
     return block, false
   end
   local function own_margin(fig)
-    local context = class_context(fig.classes)
+    local context = margin_context(fig.classes)
     fig.content:walk({
-      Image = function(img) context = context or class_context(img.classes) end,
+      Image = function(img) context = context or margin_context(img.classes) end,
     })
     if not context then return nil end
     return mark_context(pandoc.Blocks({ fig }), context), false
@@ -1042,7 +1045,7 @@ local function find_contexts(doc)
     Table = mark,
     Figure = own_margin,
     Image = function(img)
-      local context = class_context(img.classes)
+      local context = margin_context(img.classes)
       if not (context and wrap_class(img.classes)) then return nil end
       found_wrap = true
       context_warning("the image " .. pandoc.utils.stringify(img.src), context)
@@ -1222,7 +1225,7 @@ local function float_target(float)
     or context_of_float[custom_id or ""]
     or class_context(float.classes)
     or (layout and "is a subfigure panel")
-    or (is_html and caption_location(float) == "margin" and "has its caption in the margin")
+    or (has_page_layout and caption_location(float) == "margin" and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
   if context or no_text[custom_id or ""] then
@@ -1285,6 +1288,24 @@ local function figure_block(fig)
   if not class then return nil end
   found_wrap = true
   strip_wrap(fig.classes)
+  local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
+  -- As for a float, a caption in the margin of an HTML page leaves no text
+  -- beside the figure. The image may carry the caption location instead of
+  -- the figure.
+  if has_page_layout then
+    local loc = caption_location(fig)
+    fig.content:walk({
+      Image = function(img)
+        loc = img.attributes["fig-cap-location"] or img.attributes["cap-location"] or loc
+      end,
+    })
+    if loc == "margin" then
+      fig.content = fig.content:walk({ Image = drop_wrap })
+      context_warning(where == "a figure with no id" and where or ("the figure " .. where),
+        "has its caption in the margin")
+      return fig, false
+    end
+  end
   fig.content = clean_images(fig.content)
   if not wraps() then return fig end
   local width = fig.attributes.width or img_width
@@ -1293,7 +1314,6 @@ local function figure_block(fig)
   fig.attributes.width = nil
   fig.attributes["wrap-gap"] = nil
   fig.attributes["wrap-lines"] = nil
-  local where = fig.identifier ~= "" and ("#" .. fig.identifier) or "a figure with no id"
   placed = true
   if is_latex then
     fig.attributes["fig-env"] = "wrappedfigure"

@@ -6,12 +6,13 @@
 1x wrapped: the figure #fig-page-div is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-page-left is page-wide, so it does not wrap.
 # breakpoint
-(none)
+576px
 # figures
 fig-page-div: - style=-
 fig-page-left: - style=-
 fig-outset: - style=-
 fig-own-page: - style=-
+(box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
 fig-page-cell: - style=-
 fig-column-cell: - style=-
 # images
@@ -19,6 +20,8 @@ plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
 fig-page-cell-1.png: wrap=- style=- width=672
 fig-column-cell-1.png: wrap=- style=- width=672
 # groups
+wrapped-image, p

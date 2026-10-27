@@ -46,6 +46,12 @@ The paragraph after the figure in the column-body-outset div. Lorem ipsum dolor 
 
 The paragraph after the figure with its own column-page class. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
+## An image with its own column-page class
+
+![](plot.png){.wrap-left .column-page width="30%"}
+
+The paragraph after the image with its own column-page class, which wraps in every format, because Quarto makes only floats and divs page-wide. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ## A fig-column page cell
 
 ```{r}

@@ -12,4 +12,8 @@ The paragraph after the figure, which keeps its normal layout with a warning. Lo
 
 ![A figure with its caption below.](plot.png){#fig-meta-bottom .wrap-right fig-cap-location="bottom"}
 
-The paragraph after the figure, which wraps, because its own fig-cap-location overrides the metadata. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+The paragraph after the figure, which wraps, because its own fig-cap-location overrides the metadata. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+![A captioned image with no id.](plot.png){.wrap-right}
+
+The paragraph after the captioned image with no id, which keeps its normal layout with a warning. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

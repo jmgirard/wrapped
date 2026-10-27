@@ -10,3 +10,17 @@ format: revealjs
 ![A wrapped figure on a slide.](plot.png){#fig-slide .wrap-right width="40%"}
 
 The paragraph after the figure sits beside it on the slide. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A page-wide class on a slide
+
+::: {.column-page}
+![A figure in a column-page div on a slide.](plot.png){#fig-slide-page .wrap-right width="40%"}
+
+The paragraph after the figure sits beside it, because slides have no page-wide columns. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+
+## A margin caption on a slide
+
+![A figure with cap-location on a slide.](plot.png){#fig-slide-cap .wrap-right width="40%" cap-location="margin"}
+
+The paragraph after the figure sits beside it, because slides have no margin captions. Lorem ipsum dolor sit amet, consectetur adipiscing elit.

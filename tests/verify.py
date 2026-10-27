@@ -877,11 +877,12 @@ def log_check(fixture):
 
 
 # A call in a table cell is indented and opens the cell's `[`, so its lines
-# carry the indent of its first line.
+# carry the indent of its first line, and its last line closes the cell
+# with `],`.
 TYPST_WRAP_START = re.compile(r"^[ \t]*\[?#layout\(wrapped-size => wrap-content\(", re.M)
 TYPST_WRAP = re.compile(
     r"^(?P<indent>[ \t]*)\[?#layout\(wrapped-size => wrap-content\(([^\n]*), box\(width: 100%\)\[\n"
-    r"(.*?)^(?P=indent)\], \[\n(.*?)^(?P=indent)\]\)\)",
+    r"(.*?)^(?P=indent)\], \[\n(.*?)^(?P=indent)\]\)\)[\],]*$",
     re.M | re.S,
 )
 # Typst calls that Pandoc and Quarto write as blocks. Any other text, inline
@@ -907,14 +908,15 @@ def typ_block_kind(block):
 
 
 def typ_summary(path):
-    # A body figure's #figure( call starts a line, unlike the one in Quarto's
-    # template. Each chunk runs to the next call, and the figure's label is
-    # the first one in it. The figure's content ends before its `kind:` line.
+    # A body figure's #figure( call starts a line, or follows the indent of
+    # a table cell, unlike the `[#figure(` in Quarto's template. Each chunk
+    # runs to the next call, and the figure's label is the first one in it.
+    # The figure's content ends before its `kind:` line.
     source = path.read_text(encoding="utf-8")
-    chunks = re.split(r"^#figure\(", source, flags=re.M)[1:]
+    chunks = re.split(r"^[ \t]*#figure\(", source, flags=re.M)[1:]
     lines = []
     for chunk in chunks:
-        label = re.search(r"^<((?:fig|tbl)-[\w-]+)>", chunk, re.M)
+        label = re.search(r"^[ \t]*<((?:fig|tbl)-[\w-]+)>", chunk, re.M)
         content = chunk.split("\nkind: ", 1)[0]
         width = re.search(r"image\([^)]*width:", content) is not None
         lines.append(f"figure: {label.group(1) if label else '-'} image-width={'yes' if width else 'no'}")
