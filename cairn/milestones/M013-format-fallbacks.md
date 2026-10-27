@@ -112,19 +112,19 @@ Pass 1, 2026-10-27, on 7c80a9a. `python3 tests/verify.py` exited 0 with all 76 r
 - AC7 (local half): `python3 tests/verify.py` exited 0 on 7c80a9a, all 76 renders. The CI half is read on the PR at step 8, and the box is ticked then.
 - Gate: `cairn_validate.py` passes (all checks). No DESIGN.md principle changed, so no impact report. Profile consistency-gate: `_extensions/wrapped/_extension.yml` is the one version marker and the diff leaves it unchanged; the verify command passes (above); changelog "none", so no entry is read.
 - spawned: diff-bug, blame-history, prior-review, ripple
-- diff-bug #1: a bare image (or a captioned image with no id) with its own page-wide class fell back in LaTeX, where Quarto makes only floats and divs page-wide — fix now: own-class sites outside the float pass read margin classes only; page-wide.qmd gains an image case that wraps in all four formats.
-- diff-bug #2: the page-wide and margin-caption fallbacks fired in revealjs, which has neither layout — fix now: they key on `has_page_layout` (HTML, not revealjs); revealjs.qmd gains a page-wide slide and a margin-caption slide that wrap, and the README Slides section says so.
-- diff-bug #3: in HTML a captioned image with no id whose caption goes to the margin still floated — fix now: `figure_block` falls back with "a figure with no id has its caption in the margin"; cap-margin-meta.qmd gains the case.
-- diff-bug #4: the `# typ` summary skipped an indented `#figure(` in a table cell — fix now: the split allows an indent (Quarto's template call is `[#figure(`, still left out).
-- diff-bug #5: the TYPST_WRAP pattern lost its end anchor — fix now: `[\],]*$` ends a call at `]))` or a cell's `]))],`. The part about `TYPST_WRAP_START` counting an indented call in a code listing — reject (edge): only a document whose code listing holds the filter's own `#layout(wrapped-size => wrap-content(` text reaches it, outside documented and common use, and the effect is an "unread" line in a test summary.
+- diff-bug #1: a bare image (or a captioned image with no id) with its own page-wide class fell back in LaTeX, where Quarto makes only floats and divs page-wide — fix now: own-class sites outside the float pass read margin classes only; page-wide.qmd gains an image case that wraps in all four formats, fixed ba48f24.
+- diff-bug #2: the page-wide and margin-caption fallbacks fired in revealjs, which has neither layout — fix now: they key on `has_page_layout` (HTML, not revealjs); revealjs.qmd gains a page-wide slide and a margin-caption slide that wrap, and the README Slides section says so, fixed ba48f24.
+- diff-bug #3: in HTML a captioned image with no id whose caption goes to the margin still floated — fix now: `figure_block` falls back with "a figure with no id has its caption in the margin"; cap-margin-meta.qmd gains the case, fixed ba48f24.
+- diff-bug #4: the `# typ` summary skipped an indented `#figure(` in a table cell — fix now: the split allows an indent (Quarto's template call is `[#figure(`, still left out), fixed ba48f24.
+- diff-bug #5: the TYPST_WRAP pattern lost its end anchor — fix now: `[\],]*$` ends a call at `]))` or a cell's `]))],`, fixed ba48f24. The part about `TYPST_WRAP_START` counting an indented call in a code listing — reject (edge): only a document whose code listing holds the filter's own `#layout(wrapped-size => wrap-content(` text reaches it, outside documented and common use, and the effect is an "unread" line in a test summary.
 - diff-bug #6: `+ 0.0` before `* 0.75` in the px branches does nothing — reject (planned change): AC5 asks for a float at each call whose result enters `*`.
 - diff-bug #7: a length of 310 or more digits reads as inf, so Typst gets `infpt` and LaTeX a dimension TeX rejects — follow-up: predates the branch (such a string already read as a float), new row "Reject infinite lengths in Typst and LaTeX".
 - diff-bug #8: some tests run the same code path (cell caption forms, Typst and Word page-wide cases, the `column: page` cell, cap-margin outside HTML, two copies of one PNG) — reject (planned change): AC3 and AC4 name each form and case, the `column: page` cell backs a README claim, and the PNG names keep the image warnings apart.
 - blame-history #1: a context still warns for a figure with no paragraph after it, while D-003 says such a figure keeps its normal layout with no warning — reject (false): the context-before-next-block order is M003's (208d0bf), the README states that each context prints one warning, and the branch only adds contexts to that rule.
-- blame-history #2: same as diff-bug #4 — fix now.
-- blame-history #3: the removed `$` anchor — fix now, as diff-bug #5.
+- blame-history #2: same as diff-bug #4 — fix now, fixed ba48f24.
+- blame-history #3: the removed `$` anchor — fix now, as diff-bug #5, fixed ba48f24.
 - blame-history #4: a block quote, table, or definition list inside a `#fig-` div is never marked, as M003 left lists — reject (edge): a wrapped image inside a figure div inside such a block is outside documented and common use, and the effect is an error in a LaTeX table or a wrap that HTML renders.
-- blame-history #5: same as diff-bug #2 — fix now.
+- blame-history #5: same as diff-bug #2 — fix now, fixed ba48f24.
 - blame-history #6: same as diff-bug #6 — reject (planned change).
 - blame-history #7: `cell.png` and `deflist.png` are copies — reject (style): fixture hygiene; the names keep the warnings apart.
 - blame-history #8: lines past 80 columns in a comment and the README — reject (style).
@@ -132,6 +132,8 @@ Pass 1, 2026-10-27, on 7c80a9a. `python3 tests/verify.py` exited 0 with all 76 r
 - prior-review #2: the README's LaTeX table-cell failure has no render in the repo — reject (false): the claim audit rendered it with and without the extension, both failing with "Not in outer par mode", and a test of Quarto's own failure would test dependency behavior.
 - prior-review #3: the Word table-cell fallback rests on a LibreOffice render while the README says "in Word" — follow-up: the README states what the filter does in Word, which `table-cell.docx` tests, and the reason (a frame in a cell not wrapping in Word itself) goes to "Check wrapped figures in table cells".
 - prior-review #4: M005's indented-call miscount stood on main until this branch — reject (false): no defect, the branch fixes it.
-- ripple #1: the README lead "a wrapped figure in one of these places does not wrap" could be read to cover the per-format list — fix now: it reads "in one of the places in this first list".
-- ripple #2: wrap-mechanisms.md E3 omits `fig-column: margin` — fix now (corrected M013).
-- ripple #3: wrap-mechanisms.md has no rows for the new contexts and E8 does not name definition lists — fix now: E8 names them and E18 to E21 are added.
+- ripple #1: the README lead "a wrapped figure in one of these places does not wrap" could be read to cover the per-format list — fix now: it reads "in one of the places in this first list", fixed ba48f24.
+- ripple #2: wrap-mechanisms.md E3 omits `fig-column: margin` — fix now (corrected M013), fixed ba48f24.
+- ripple #3: wrap-mechanisms.md has no rows for the new contexts and E8 does not name definition lists — fix now: E8 names them and E18 to E21 are added, fixed ba48f24.
+- After the fixes: `python3 tests/verify.py` exited 0 on ba48f24, all 76 renders. AC1 to AC6 hold on that head (the fixes add cases and change no criterion's evidence above).
+- snapshot: none by step 7's definition (no `_snaps` or `__snapshots__` directory). The 21 changed files in `tests/_snapshots/` add lines for the new cases and remove only the `(none)` breakpoint line of `cap-margin.html.txt` and `page-wide.html.txt`, now `576px` because a figure there wraps; each change is called for by AC1 to AC5 or a fix above.
