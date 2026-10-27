@@ -918,8 +918,9 @@ local function block_context(block)
   end
   -- wrapfig does not wrap in a block quote, which LaTeX sets as a list.
   if block.t == "BlockQuote" then return is_latex and "is in a block quote" or nil end
-  -- A Word frame in a table cell does not wrap, and a wrappedfigure in a
-  -- LaTeX longtable breaks the build.
+  -- A Word frame in a table cell rendered with no text beside it in a
+  -- LibreOffice render of the docx, and a wrappedfigure in a LaTeX
+  -- longtable breaks the build.
   if block.t == "Table" then return (is_latex or is_docx) and "is in a table" or nil end
   if block.t ~= "Div" then return nil end
   local kind = block.attributes.__quarto_custom_type
@@ -1211,8 +1212,8 @@ local function float_target(float)
   -- Only figures wrap. A table float keeps its normal layout, and Quarto
   -- copies a cell's classes onto a table float, so the wrap class goes.
   -- A figure in a context keeps its normal layout too, and so does an HTML
-  -- figure whose caption goes to the margin: the caption leaves the float,
-  -- and no text sits beside the figure.
+  -- figure whose caption goes to the margin: CSS places the caption in the
+  -- margin, outside the figure's box, and no text sits beside the figure.
   local node = float.__quarto_custom_node
   local custom_id = node and node.attributes and node.attributes.__quarto_custom_id
   local layout = float.attributes["layout-ncol"] or float.attributes["layout-nrow"]
