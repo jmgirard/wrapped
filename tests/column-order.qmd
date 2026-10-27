@@ -1,0 +1,76 @@
+---
+title: "wrapped fixture: fig-column body over column classes"
+filters:
+  - wrapped
+fig-column: body
+column: page
+format:
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
+---
+
+With `fig-column: body` and `column: page` in the document, Quarto reads a
+float's own `fig-column-*` class first, then the document's `fig-column`.
+So in PDF a float with its own `column-*` class sits in the body, and a
+float with its own `fig-column-margin` class sits in the margin.
+
+## A column-margin float
+
+![A float with the column-margin class.](plot.png){#fig-order-margin .column-margin .wrap-right}
+
+The paragraph after the column-margin float. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A column-page float
+
+![A float with the column-page class.](plot.png){#fig-order-page .column-page .wrap-right}
+
+The paragraph after the column-page float. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A fig-column-margin float
+
+![A float with the fig-column-margin class.](plot.png){#fig-order-figmargin .fig-column-margin .wrap-right}
+
+The paragraph after the fig-column-margin float. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A float with no column class
+
+![A float with no column class.](plot.png){#fig-order-plain .wrap-right}
+
+The paragraph after the float with no column class. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A column-margin figure div
+
+::: {#fig-order-div .column-margin .wrap-left}
+![](plot.png)
+
+A figure div with the column-margin class.
+:::
+
+The paragraph after the figure div. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A cell with column margin
+
+```{r}
+#| label: fig-order-cell-margin
+#| fig-cap: "A cell figure with its own column margin."
+#| column: margin
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the cell with column margin. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A cell with fig-column margin
+
+```{r}
+#| label: fig-order-cell-figmargin
+#| fig-cap: "A cell figure with its own fig-column margin."
+#| fig-column: margin
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the cell with fig-column margin. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

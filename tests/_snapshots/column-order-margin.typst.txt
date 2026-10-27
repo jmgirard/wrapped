@@ -1,0 +1,7 @@
+# warnings
+1x wrapped: the figure #fig-marg-cell is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-marg-plain is in the margin, so it does not wrap.
+# typ
+figure: fig-marg-body image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-marg-body no-alt | p | cites=0

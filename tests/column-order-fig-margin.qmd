@@ -1,0 +1,57 @@
+---
+title: "wrapped fixture: fig-column margin under column classes"
+filters:
+  - wrapped
+fig-column: margin
+format:
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
+---
+
+With `fig-column: margin` in the document, Quarto reads a float's own
+`fig-column-*` class first, then the document's `fig-column`, and only then
+its own `column-*` class. So in PDF a `fig-column-body` float sits in the
+body, and a `column-body` float sits in the margin.
+
+## A fig-column-body float
+
+![A float with the fig-column-body class.](plot.png){#fig-figm-figbody .fig-column-body .wrap-right}
+
+The paragraph after the fig-column-body float. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A column-body float
+
+![A float with the column-body class.](plot.png){#fig-figm-body .column-body .wrap-right}
+
+The paragraph after the column-body float. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A float with no column class
+
+![A float with no column class.](plot.png){#fig-figm-plain .wrap-right}
+
+The paragraph after the float with no column class. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A fig-column-body figure div
+
+::: {#fig-figm-div .fig-column-body .wrap-left}
+![](plot.png)
+
+A figure div with the fig-column-body class.
+:::
+
+The paragraph after the figure div. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A cell with fig-column body
+
+```{r}
+#| label: fig-figm-cell-body
+#| fig-cap: "A cell figure with its own fig-column body."
+#| fig-column: body
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the cell with fig-column body. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

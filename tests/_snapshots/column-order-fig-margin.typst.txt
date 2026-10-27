@@ -1,0 +1,10 @@
+# warnings
+1x wrapped: the figure #fig-figm-body is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-figm-cell-body is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-figm-plain is in the margin, so it does not wrap.
+# typ
+figure: fig-figm-figbody image-width=yes
+figure: fig-figm-div image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-figm-figbody no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-figm-div no-alt | p | cites=0

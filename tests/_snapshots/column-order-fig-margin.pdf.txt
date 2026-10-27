@@ -1,0 +1,9 @@
+# warnings
+1x wrapped: the figure #fig-figm-body is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-figm-cell-body is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-figm-plain is in the margin, so it does not wrap.
+# tex
+wrappedfigure: fig-figm-figbody [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-figm-div [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
