@@ -1,0 +1,31 @@
+---
+title: "wrapped fixture: a document-level fig-column page-inset in Typst"
+filters:
+  - wrapped
+fig-column: page-inset
+format:
+  typst:
+    keep-typ: true
+    fig-format: png
+---
+
+With `fig-column: page-inset` in the document, Typst sets a code cell's
+figure wider than the text, so a wrapped cell keeps its normal layout with a
+warning. Typst keeps an image-form figure in the body, so it wraps.
+
+## An image-form figure
+
+![An image-form figure in a fig-column page-inset document.](plot.png){#fig-inset-float .wrap-right}
+
+The paragraph after the image-form figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A cell
+
+```{r}
+#| label: fig-inset-cell
+#| fig-cap: "A cell figure in a fig-column page-inset document."
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

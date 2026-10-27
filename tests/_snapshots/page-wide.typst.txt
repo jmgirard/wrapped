@@ -10,7 +10,9 @@ figure: fig-page-div image-width=no
 figure: fig-page-left image-width=no
 figure: fig-outset image-width=no
 figure: fig-own-page image-width=no
+figure: fig-own-inset image-width=yes
 figure: fig-page-cell image-width=no
 figure: fig-column-cell image-width=no
 # wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-own-inset no-alt | p | cites=0
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 30%, 40%, 40%)), column-gutter: 1em | plot.png no-alt | p | cites=0

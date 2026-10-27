@@ -914,13 +914,17 @@ end
 -- `fig-column: page` the fig-column-page class. LaTeX makes a figure
 -- page-wide only for the names that start with column-page or
 -- column-screen and do not end in -left, as Quarto's isStarEnv does. Typst
--- sets each name wider than the text, in a wideblock or a column function
--- (Quarto 1.10.19), and Word keeps the figure in the body.
-local function page_context(classes)
+-- sets a div or a code cell wider than the text for each name, in a
+-- wideblock or a column function, but a float's own class only for the
+-- column-page and column-screen names without -inset (Quarto 1.10.19). Word
+-- keeps the figure in the body.
+local function page_context(classes, own)
   for _, class in ipairs(classes) do
     local name = class:gsub("^fig%-", "")
-    if PAGE_WIDE[name] and (has_page_layout or is_typst or is_latex and not name:match("%-left$")
-        and (name:match("^column%-page") or name:match("^column%-screen"))) then
+    local starred = name:match("^column%-page") or name:match("^column%-screen")
+    if PAGE_WIDE[name] and (has_page_layout
+        or is_typst and not (own and (not starred or name:match("%-inset")))
+        or is_latex and not name:match("%-left$") and starred) then
       return "is page-wide"
     end
   end
@@ -928,8 +932,9 @@ local function page_context(classes)
 end
 
 -- Returns the context that a margin or page-wide column class names, or nil.
-local function class_context(classes)
-  return margin_context(classes) or page_context(classes)
+-- `own` is true for a float's own classes.
+local function class_context(classes, own)
+  return margin_context(classes) or page_context(classes, own)
 end
 
 -- Returns the context that a block sets for the blocks inside it, or nil.
@@ -1112,11 +1117,13 @@ end
 -- The document's caption location for figures, read in the first pass.
 local meta_cap_location = nil
 
--- The context that the document's fig-column, or else its column, gives
--- every figure float, or nil. Quarto 1.10.19 applies it to a code cell's
--- float even when the cell sets its own fig-column, and not to a captioned
--- image with no id, which is no float.
-local meta_column_context = nil
+-- The contexts that the document's fig-column, or else its column, gives a
+-- code cell's figure float (cell) and any other figure float (float); each
+-- is nil when the value names neither the margin nor a page-wide column
+-- there. Quarto 1.10.19 applies the value to a code cell's float even when
+-- the cell sets fig-column: body, and not to a captioned image with no id,
+-- which is no float.
+local meta_column_context = {}
 
 -- Whether a class sends a caption to the margin. Quarto reads both
 -- margin-caption and caption-margin on a float, but moves the caption of a
@@ -1151,7 +1158,10 @@ local function read_meta(meta)
     two_column = true
   end
   local column = meta_text(meta["fig-column"]) or meta_text(meta.column)
-  if column then meta_column_context = class_context(pandoc.List({ "column-" .. column })) end
+  if column then
+    local classes = pandoc.List({ "column-" .. column })
+    meta_column_context = { float = class_context(classes, true), cell = class_context(classes) }
+  end
   local m = meta.wrapped
   if m == nil then return end
   if pandoc.utils.type(m) ~= "table" then
@@ -1280,9 +1290,9 @@ local function float_target(float)
     or float.attributes.layout
   local context = (float.type ~= "Figure" and "is not a figure")
     or context_of_float[custom_id or ""]
-    or class_context(float.classes)
+    or class_context(float.classes, true)
     or (layout and "is a subfigure panel")
-    or meta_column_context
+    or (cell and meta_column_context.cell or meta_column_context.float)
     or (has_page_layout and (caption_location(float) == "margin" or (cell and cell.margin_caption))
       and "has its caption in the margin")
   -- A figure with no paragraph after it keeps a normal figure with no

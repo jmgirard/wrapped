@@ -144,6 +144,7 @@ RENDERS = [
     ("typst-options", "typst", True),
     ("typst-wide", "typst", True),
     ("typst-wide-meta", "typst", True),
+    ("typst-inset-meta", "typst", True),
     ("typst-gap", "typst", True),
     ("typst-gap-meta", "typst", True),
     ("typst-gap-percent", "typst", True),

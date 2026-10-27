@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M015: Fall back in more margin and page forms
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -177,6 +177,8 @@ line is absent. A warning line reads
 - 2026-10-27: claim audit: 21 claims read, 5 corrected — README.md, wrapped.lua, tests/cap-margin.qmd, tests/margin-meta.qmd, tests/page-wide-meta.qmd, tests/page-wide.qmd. A cell's `.margin-caption` moved the caption but wrapped (fixed: the cell's class is carried to its float, case `fig-margincap-cell` added); the README margin item's sentence order (fixed); margin-meta's "every format" for Quarto's margin (fixed: Word has none); the `caption_location` comment called the attribute order Quarto's (fixed); Typst page-wide figures overlap the text (stop, below).
 - 2026-10-27: substantive amendment: AC4 — the page-wide floats now keep their normal layout in Typst too, and wrap in Word. The user chose this at the stop: Quarto 1.10.19 sets all 16 page-wide classes wider than the text in Typst (`wideblock` or a column function), and a wrapped figure there overlapped the paragraph beside it (claim audit render). `page_context` now covers Typst, which also changes M013's `page-wide` Typst snapshot, the README page-wide item, E21, and DESIGN step 2.
 - 2026-10-27: pre-existing bug found by the claim audit and checked by a render: Quarto 1.10.19 follows `cap-location` over `fig-cap-location`, but `caption_location` and the README read `fig-cap-location` first, so `fig-figcap-first` in `cap-margin` wraps while its caption sits in the margin. Recorded as the candidate row "Read cap-location before fig-cap-location", whose door is `/hotfix`.
+- 2026-10-27: claim audit re-read: 4 of the 5 corrected claims hold. The Typst page-wide claim held for the fixtures but was too broad: Quarto 1.10.19 widens a float's own inset or outset class, and a document value on a float outside a code cell, only for the 6 `column-page` and `column-screen` names (reader's renders; checked by a render of `fig-column: page-inset`). Narrowed: `page_context` takes an `own` flag, `meta_column_context` keeps a float and a cell context, the README, E21, DESIGN step 2, and the page-wide intro say so, and the cases `fig-own-inset` (`tests/page-wide.qmd`) and `tests/typst-inset-meta.qmd` pin both branches. No second pass, per the stopping rule.
+- 2026-10-27: `python3 tests/verify.py --update` after the narrowing: 87 renders pass; only the 4 `page-wide` snapshots (the `fig-own-inset` case) and the new `typst-inset-meta` snapshot changed.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

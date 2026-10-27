@@ -249,15 +249,20 @@ prints the same warning there, and the figure wraps in the other formats.
   it, or a code cell with `#| column: page` or `#| fig-column: page`. The
   classes are `.column-body-outset`, `.column-page-inset`, `.column-page`,
   `.column-screen-inset`, and `.column-screen`, each alone or with `-left`
-  or `-right`, and `.column-screen-inset-shaded`. In HTML and in PDF
-  through Typst this covers all of them, and Word keeps the figure in the
-  body, where it wraps. In PDF through LaTeX it covers the classes that Quarto makes
-  page-wide there: those that start with `.column-page` or
-  `.column-screen` and do not end in `-left`. It also covers a page-wide
-  value of `fig-column` or `column` in the document metadata, such as
-  `fig-column: page`. That value applies to every figure with a `#fig-` id
-  and every code cell figure, even a cell with `#| fig-column: body`. A
-  captioned image with no id stays in the body and wraps.
+  or `-right`, and `.column-screen-inset-shaded`. In HTML this covers all
+  of them. In PDF through Typst it covers all of them on a div or a code
+  cell. For a class on the figure itself, it covers only `.column-page`
+  and `.column-screen`, each alone or with `-left` or `-right`. Quarto
+  keeps the figure in the body for the others. In PDF through LaTeX
+  it covers the classes that Quarto makes page-wide there: those that
+  start with `.column-page` or `.column-screen` and do not end in `-left`.
+  Word keeps the figure in the body, where it wraps. This item also covers
+  a page-wide value of `fig-column` or `column` in the document metadata,
+  such as `fig-column: page`. That value applies to every figure with a
+  `#fig-` id and every code cell figure, even a cell with
+  `#| fig-column: body`. In PDF through Typst it applies as a class on the
+  figure itself does, except on a code cell figure. A captioned image with
+  no id stays in the body and wraps.
 
 ## Slides
 
