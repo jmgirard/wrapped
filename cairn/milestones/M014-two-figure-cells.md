@@ -126,6 +126,7 @@ not its engine).
 - 2026-10-27: T4 done (ahead of T3, while the verify run goes): README paragraph after the fallback list, E4 row in references/wrap-mechanisms.md, next-block note in DESIGN.md, each citing what T2's renders showed. The simple-english hook also split the README's first fallback sentence (same meaning); its "would" hit in wrap-mechanisms.md is a quoted Typst error, left as is.
 - 2026-10-27: T3 in progress: verify --update passed 76 renders; the diff adds lines to the four contexts snapshots only, all for the three new cells. With main's wrapped.lua swapped in, all four contexts summaries differ from the new snapshots (the check can fail); filter restored. Final verify run without --update pending.
 - 2026-10-27: T3 done: python3 tests/verify.py without --update: "all 76 renders pass".
+- 2026-10-27: claim audit: 11 claims read, 2 corrected — README.md, _extensions/wrapped/wrapped.lua. Both from one cause: a multi-figure cell with no paragraph after it takes the next-block branch and prints no warning (scratch render of a two-plot cell before a heading: no warning, no wrap class). README and the Lua comment now say so; the README's split fallback sentence got its format scope back; the re-read found 0 wrong, and its one optional point (the next-block paragraph's "exception" and back-to-back sentences) was applied.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

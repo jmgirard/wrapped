@@ -181,17 +181,19 @@ paragraph that you want beside the figure:
 
 A wrapped figure with no paragraph right after it keeps its normal layout.
 An example is a figure right before a heading. In HTML, LaTeX, Typst, and
-Word the render prints no warning for such a figure. The places in the next section are the
-exception. Of two wrapped figures in a row, the first keeps its
-normal layout, and the second wraps the paragraphs after it.
+Word the render prints no warning for such a figure. The places in the next
+section are the exception, but a code cell that makes more than one figure
+is not. Of two wrapped figures in a row, the first keeps its normal layout,
+and the second wraps the paragraphs after it. The figures of one code cell
+follow the next section instead.
 
 In PDF through LaTeX, in PDF through Typst, and in Word, wrapping stops as
 in HTML, and a `wrap-clear` div works.
 
 ## Where a figure keeps its normal layout
 
-A wrapped figure in one of the places in this first list does not wrap in
-HTML, PDF through LaTeX, PDF through Typst, or Word. It keeps
+In HTML, PDF through LaTeX, PDF through Typst, and Word, a wrapped figure
+in one of the places in this first list does not wrap. It keeps
 its normal layout, and the render prints one warning for it. The warning
 names the figure's id. If the figure has no id, the warning names its image
 file or says that the figure has no id.
@@ -212,7 +214,9 @@ file or says that the figure has no id.
 A code cell that makes more than one figure without `fig-subcap`, such as
 a cell that draws two plots, does not wrap either. Each of its figures
 keeps its normal layout, and the render prints one warning that names the
-cell's label. To wrap a plot, give it its own cell. A cell with
+cell's label. If no paragraph follows the cell, its figures keep their
+normal layout with no warning, as any wrapped figure does there. To wrap a
+plot, give it its own cell. A cell with
 `fig-subcap` makes a subfigure panel, which the list above covers.
 
 A table float does not wrap either, and the render prints one warning that
