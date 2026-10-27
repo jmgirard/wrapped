@@ -99,10 +99,10 @@ LaTeX wrapper (W2). The filter adds `wrapfig` with
 \ExplSyntaxOff
 ```
 
-Typst output (W3), as the filter writes it from the `pre-quarto` pass (corrected M005, corrected M010). The `wrapped-side` and `wrapped-columns` helpers keep the side physical in right-to-left text. `layout` gives the text width, and `wrapped-width` takes the first of the figure width, the document default, and 40% that fits it:
+Typst output (W3), as the filter writes it from the `pre-quarto` pass (corrected M005, corrected M010, corrected M011). The `wrapped-side` and `wrapped-columns` helpers keep the side physical in right-to-left text. `layout` gives the text width. `wrapped-width` takes the gap, then the figure width, the document default, and 40%. It returns the first width that fits the text with the gap. When none fits, it returns 40%:
 
 ```typst
-#layout(wrapped-size => wrap-content(align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 40%, 40%, 40%)), column-gutter: 1em, box(width: 100%)[
+#layout(wrapped-size => wrap-content(align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em, box(width: 100%)[
 #figure(...)<fig-id>
 ], [
 Paragraph one.

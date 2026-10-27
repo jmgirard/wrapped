@@ -167,10 +167,11 @@ passes (corrected M003):
    `\wrappedstop` follows each group's last paragraph (corrected M007). In Typst it writes each group as raw Typst blocks around the figure and the
    paragraphs, which make one `layout(wrapped-size => wrap-content(...,
    box(width: 100%)[figure], [paragraphs]))` call. The width sets wrap-it's
-   grid column. A percent of 100% or more takes the default width with a
-   warning. An absolute width as wide as the text or wider takes the
+   grid column. A percent of 100% or more, or a percent width and gap with
+   a sum of 100% or more, takes the default width with a warning. Any
+   other width that with the gap is as wide as the text or wider takes the
    default in Typst, with no warning, through `wrapped-width` (corrected
-   M010). A code cell keeps its code above the call (corrected M005). In Word it groups as in HTML,
+   M010, corrected M011). A code cell keeps its code above the call (corrected M005). In Word it groups as in HTML,
    and the `.wrap-group` div's `data-wrap-frame` holds the frame's side,
    width, and gap in twips. A percent is a share of the text width in the
    reference doc's `w:sectPr`, or 6.5 in when it has no page size or
@@ -190,7 +191,8 @@ passes (corrected M003):
    extension's `typst/packages` folder, and defines the helpers that turn a
    physical side into wrap-it's side in right-to-left text, read in context
    (corrected M005), and `wrapped-width`, which picks the first width that
-   fits the text width that `layout` gives (corrected M010). Word needs nothing here. Elsewhere it prints
+   with the gap fits the text width that `layout` gives (corrected M010,
+   corrected M011). Word needs nothing here. Elsewhere it prints
    one format warning.
 
 At `post-render`, `wrapped-docx.lua` turns each Word group into a frame. It
@@ -216,9 +218,12 @@ snapshot difference. The mechanism for each other format is in
   page with the paragraph after it, and the rest of the page stays blank. A
   Word frame does not break across pages. The README states this limit
   (M006).
-- PDF through Typst: a wrapped figure whose width is as wide as the text or
-  wider takes the default width with no console warning, because Typst has
-  no function that prints one. The README states this limit (M010).
+- PDF through Typst: a wrapped figure whose width plus its gap is as wide
+  as the text or wider takes the default width with no console warning,
+  unless the width and the gap are both percents, because Typst has no
+  function that prints one. When 40% plus the gap is that wide too, the
+  figure keeps 40% and the gap. The README states these limits (M010,
+  corrected M011).
 - HTML: newer CSS forms that browsers accept, such as `round()`, `pi`, and
   typed arithmetic, warn and take the default, because the filter checks
   the CSS Values 3 rules and `min()`, `max()`, and `clamp()`. The README

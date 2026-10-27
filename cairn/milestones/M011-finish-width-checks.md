@@ -163,6 +163,7 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 - 2026-10-27: /milestone-implement started on branch m011-finish-width-checks; T1 and T2 code and fixtures written, full suite with --update running.
 - 2026-10-27: T1 done: each calc parser function also returns a bound (lower and upper sums by unit, exact, or not finite); never_positive warns on a width whose upper sum is zero or below or that is not finite, and any var() leaves no bound. A scratch harness gave the expected result on 44 probe values; all 52 renders pass.
 - 2026-10-27: T2 done: css-functions.qmd gains 13 never-above-zero widths and 8 passing values; new meta-calc-zero.qmd (width calc(0%), breakpoint calc(0px)). Only those two snapshots changed. With main's wrapped.lua, meta-calc-zero prints no warning, so its snapshot fails there.
+- 2026-10-27: checkpoint: T3 code (wrapped-abs, wrapped-width with the gap, percent-sum warnings) and T5 docs written; new Typst layout cases pass in targeted renders and failed 6 of 7 before T3; full suite with --update running, no box ticked yet.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
