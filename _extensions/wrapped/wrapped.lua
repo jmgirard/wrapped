@@ -1043,6 +1043,16 @@ local function read_meta(meta)
   elseif is_docx then
     format_default("width", "width", function(l) return docx_twips(l, true) end, "Word")
     format_default("gap", "gap", docx_twips, "Word")
+    -- A width and gap as wide as the text or wider leave no room for text,
+    -- so the document default becomes 40%. Each figure with its own width
+    -- or gap is checked again in docx_frame.
+    if (m.width ~= nil or m.gap ~= nil)
+        and docx_twips(options.width, true) + docx_twips(options.gap) >= docx_text_width then
+      quarto.log.warning(string.format(
+        'wrapped: width "%s" and gap "%s" in the wrapped metadata leave no room for text in Word, so the width is %s.',
+        options.width, options.gap, DEFAULTS.width))
+      options.width = DEFAULTS.width
+    end
   end
 end
 

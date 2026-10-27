@@ -117,7 +117,7 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 <!-- owner: plan (create) / implement (check-off, minor edits); substantive
      change is amend-via-gate. -->
 
-- [ ] T1: Word figure check. Write `tests/docx-gap.qmd` with the seven
+- [x] T1: Word figure check. Write `tests/docx-gap.qmd` with the seven
       AC1 cases and add it to `RENDERS` in `tests/verify.py`; render it
       before the change and see each case but (e) differ from the wanted
       widths. In `docx_frame` (`wrapped.lua:679`), when the figure sets its
@@ -160,3 +160,5 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 - 2026-10-27: criteria audit (full mode, fresh Opus reader): 11 findings, all fixed. AC1 names its snapshot file, pins its values, adds a rounding case (f) and a wide-width case (g), and no width in (d); `max(-2px, -1%)` cannot warn under M011's bound, so AC3 uses `max(-2px, -1px)` and the mixed-unit case moved to Out and a Known issue; AC3 adds viewport, percent, product, and nested probes; AC4 adds zero-at-every-size gaps; AC2 pins its metadata; Scope names the shared `checked_length` message change; AC6 names what each doc states, comments included; T1 expects no change in (e). AC5 and AC7 had none.
 - 2026-10-27: implement started on branch m012-gap-checks; status in-progress.
 - 2026-10-27: T1 checkpoint (not ticked): `docx_frame` counts the gap and `checked_docx_twips` reports a fallback and names a figure's gap for a too-wide width; `tests/docx-gap.qmd` gives the seven AC1 widths and warnings (before the change all but (e) differed); full verify running.
+- 2026-10-27: T1 done: verify passed, 57 renders.
+- 2026-10-27: T2 checkpoint (not ticked): `read_meta` warns once and sets the document default width to 40% when a `wrapped:` width or gap is set and the sum fills the text; `tests/docx-gap-meta.qmd` gave 7200 twips and no warning before, 3744 and one warning after; full verify running.
