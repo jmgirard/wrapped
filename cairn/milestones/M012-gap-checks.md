@@ -52,7 +52,7 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
 ## Acceptance criteria
 <!-- owner: plan · create/amend-via-gate; review reads, never reinterprets. -->
 
-- [ ] AC1: In Word, a new fixture `tests/docx-gap.qmd`, rendered with no
+- [x] AC1: In Word, a new fixture `tests/docx-gap.qmd`, rendered with no
       reference doc (text width 9360 twips) and `wrapped: width: 4in`,
       gives these frame widths and warnings in its snapshot
       `tests/_snapshots/docx-gap.docx.txt` (frame lines and `# warnings`)
@@ -67,12 +67,12 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
       (f) `width="6in" wrap-gap="12.699mm"` (720 twips once rounded, sum
       9360) takes 4in;
       (g) `width="10in" wrap-gap="3in"` takes 40% with one warning in all.
-- [ ] AC2: In Word, a fixture with `wrapped: {width: 5in, gap: 2in}` (7200
+- [x] AC2: In Word, a fixture with `wrapped: {width: 5in, gap: 2in}` (7200
       plus 2880 twips, at or above 9360) prints one metadata warning, and a
       figure with no `width` and no `wrap-gap` prints no warning of its own
       and gets a 3744-twip frame. Evidence: the fixture's snapshot under
       `python3 tests/verify.py`.
-- [ ] AC3: In HTML, each `wrap-gap` value in a new warning section of
+- [x] AC3: In HTML, each `wrap-gap` value in a new warning section of
       `tests/css-functions.qmd` prints a warning that names the value and
       takes the document default gap, as the snapshot's style shows. The
       values: `calc(-1em)`, `calc(-1vw)`, `calc(10% / -2)`,
@@ -80,17 +80,17 @@ A wrapped figure whose Word width plus gap fills the text, or whose HTML gap is 
       `clamp(-3px, -2px, -1px)`, `calc(min(0px, 1em) - 1px)`,
       `calc(1px / 0)`, and `calc(0px / 0)`. Evidence: the fixture's
       snapshot and warning lines under `python3 tests/verify.py`.
-- [ ] AC4: In HTML, each gap in the "Values that pass" section of
+- [x] AC4: In HTML, each gap in the "Values that pass" section of
       `tests/css-functions.qmd` reaches the style as written with no
       warning. The section keeps `calc(0px)` and gains `calc(1em - 1em)`,
       `calc(1in - 96px)`, `min(0px, 10%)`, `max(-1em, 0px)`,
       `calc(1em - 20px)`, `calc(50% - 1in)`, and `calc(var(--g) - 1px)` as
       gaps. Evidence: the fixture's snapshot.
-- [ ] AC5: In HTML, a `wrapped: gap` of `calc(-1em)` prints one warning,
+- [x] AC5: In HTML, a `wrapped: gap` of `calc(-1em)` prints one warning,
       and the built-in `1em` gap applies to a figure with no `wrap-gap`.
       Evidence: a metadata fixture's snapshot and warning lines under
       `python3 tests/verify.py`.
-- [ ] AC6: The README's "Width and gap" section states both rules,
+- [x] AC6: The README's "Width and gap" section states both rules,
       "Document defaults" states the metadata forms, and the Word section
       states the sum rule and the fallback order (document default, then
       40% with the gap kept). DESIGN.md's Architecture describes both
@@ -205,3 +205,19 @@ Findings and dispositions:
 - diff-bug #12: a number of more than 308 digits reads as infinite and warns — reject, edge: such a number is outside documented and common use, and the effect is a warning.
 - diff-bug test-rule note: pairs of AC3, AC4, and AC1 cases share a code path — reject, planned change: AC1, AC3, and AC4 name each case.
 - ripple #1, #2: the ROADMAP rows "Count the gap in Word width checks" and "Refuse negative gaps in CSS functions" still describe the old behavior — reject, planned change: they end with "started M012", and post-merge hygiene removes them.
+
+Criteria evidence (`python3 tests/verify.py` on 69037e6, macOS: "all 60
+renders pass", exit 0; later commits change only the milestone file):
+- AC1: `tests/_snapshots/docx-gap.docx.txt` matches the render. Frames and warnings: (a) fig-abs w=5760 gap=2880, warning names "5in" and "2in"; (b) fig-percent w=5760 gap=480, names "95%" and "2em"; (c) fig-default-fills w=3744 gap=4320, names "4in" and "3in"; (d) fig-all-fill w=3744 gap=5760, names "4in" and "4in"; (e) fig-below w=8640 gap=719, no warning; (f) fig-equal w=5760 gap=720, names "6in" and "12.699mm"; (g) fig-wide w=3744 gap=4320, one warning naming "10in" and "3in". Each warning appears once ("1x").
+- AC2: `tests/_snapshots/docx-gap-meta.docx.txt` matches: one warning, `width "5in" and gap "2in" in the wrapped metadata leave no room for text in Word, so the width is 40%.`, and fig-meta w=3744 gap=2880 with no warning of its own.
+- AC3: `tests/_snapshots/css-functions.html.txt` matches: fig-gap-1 to fig-gap-10 (the ten listed values) each have `--wrap-gap: 1em`, and the warnings section holds ten lines `wrap-gap "<value>" on #fig-gap-<n> is negative or not finite, so it is 1em.`, one per value.
+- AC4: the same snapshot shows fig-valid-18 `calc(0px)`, fig-valid-20 to 26 (`calc(1em - 1em)`, `calc(1in - 96px)`, `min(0px, 10%)`, `max(-1em, 0px)`, `calc(1em - 20px)`, `calc(50% - 1in)`, `calc(var(--g) - 1px)`) with each value as its `--wrap-gap`, and no warning names any of them; fig-valid-27 `max(-2px, -1%)` passes too.
+- AC5: `tests/_snapshots/meta-calc-gap.html.txt` matches: one warning, `gap "calc(-1em)" on the wrapped metadata is negative or not finite, so it is 1em.`, and fig-meta-calc-gap has `--wrap-gap: 1em`.
+- AC6: read by grep at 6921105. README "Width and gap" (line 71) states the Word sum rule (line 81) and the HTML negative gap rule (lines 116 to 128); "Document defaults" (line 135) states the metadata negative gap (line 152) and the Word metadata width plus gap (line 154); the Word section (line 365) states the sum rule (line 392), the order document default, then 40% with the gap kept (lines 395 to 398), and the metadata rule (line 400). DESIGN.md Architecture describes the Word check (line 179) and the gap check (line 183), and Known issues holds the mixed-unit `max()` and `clamp()` gap (line 245). `wrap-mechanisms.md` line 114 describes the Word sum check. Comments: `docx_frame` (wrapped.lua:714), the `read_meta` Word branch (1079), and `checked_length` (436).
+- AC7: macOS half: "all 60 renders pass" on 69037e6 (above). CI half: not yet run; `verify.yml` runs on the PR that step 8 opens, and its result is recorded before the merge. Box left unticked until then.
+
+Consistency gate: `cairn_validate.py` passes (all checks passed). The one
+version marker, `_extensions/wrapped/_extension.yml`, stays at 0.1.0
+(unchanged on the branch). The verify command passes on the review head
+(above). The changelog slot says "none". No DESIGN.md principle changed,
+so `cairn_impact` is skipped.
