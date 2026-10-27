@@ -113,6 +113,10 @@ See @fig-valid-25. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed 
 
 See @fig-valid-26. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+![A gap of `max(-2px, -1%)`, which the check cannot show to be below zero.](plot.png){#fig-valid-27 .wrap-right width="30%" wrap-gap="max(-2px, -1%)"}
+
+See @fig-valid-27. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
 ## Values that are never above zero
 
 ![A width of `calc(0%)`.](plot.png){#fig-never-1 .wrap-right width="calc(0%)"}

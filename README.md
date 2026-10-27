@@ -150,7 +150,8 @@ as it is. A function `gap` that is negative or not finite at every size
 prints a warning, and the built-in `1em` applies. In Word, a `gap` of 0%
 prints a warning, and the built-in `1em` applies. In Word, a `width` plus
 its `gap` as wide as the text or wider prints a warning, and the built-in
-40% applies. A `width`, `gap`, or `breakpoint` can be a `calc()`, `min()`,
+40% applies. With only a `gap` set, the width is already 40%, and 40% plus
+that gap can still leave no room. A `width`, `gap`, or `breakpoint` can be a `calc()`, `min()`,
 `max()`, or `clamp()` value, checked as above. A media query takes no
 percent and no `var()`. So a `breakpoint` with a percent or a `var()`, such
 as `calc(50%)`, prints a warning, and `576px` applies.
@@ -388,7 +389,8 @@ The `width` and `wrap-gap` values change to Word lengths:
   and `95%` with a `2em` gap. Such a figure prints a warning, and it takes
   the document default width. If the document default plus the gap is
   that wide too, the figure takes the built-in 40%. If 40% plus the gap is
-  that wide too, the figure keeps 40% and the gap. The extension rounds
+  that wide too, the figure takes 40% and keeps the gap. This is so even
+  when its own width was narrower than 40%. The extension rounds
   each value to twips (1/20 pt) before it adds them.
 - A `wrapped:` width plus gap that is as wide as the text or wider prints
   one warning, and the document default width becomes 40%. A figure that

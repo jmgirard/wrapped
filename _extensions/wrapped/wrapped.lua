@@ -691,7 +691,8 @@ end
 -- Returns the twips for a value, or the twips of `fallback` with a warning
 -- when the value is not a length that Word can use. Also returns true when
 -- the value gave way to `fallback`. A width as wide as the text or wider
--- with `gap`, a figure's own gap, names the gap in its warning.
+-- with `gap`, the gap that a figure with its own gap ends up with, names
+-- that gap in its warning.
 local function checked_docx_twips(value, fallback, what, where, positive, gap)
   local length = checked_length(value, fallback, what, where)
   local twips, why = docx_measure(length, positive)
@@ -714,7 +715,8 @@ end
 -- is as wide as the text or wider, takes the first of the document default
 -- and 40% that with the gap is narrower than the text, or 40% when neither
 -- is, with a warning, as Typst does. Each value is rounded to twips before
--- the sum. A figure with neither was checked with the metadata.
+-- the sum. A figure with neither was checked with the metadata, which can
+-- leave 40% plus the gap still as wide as the text.
 local function docx_frame(class, width, gap, where)
   local g, g_fell = checked_docx_twips(gap, options.gap, "wrap-gap", where)
   local g_length = (gap == nil or g_fell) and options.gap or css_length(gap)
