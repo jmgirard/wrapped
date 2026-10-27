@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M011: Finish the figure width checks
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — the filter's warnings and figure widths reach every user   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m011-finish-width-checks   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -160,6 +160,7 @@ A wrapped figure whose CSS function width is zero or below, or whose Typst width
 - 2026-10-27: plan question set's third chip said HTML and LaTeX check width plus gap; neither checks wide widths, and Word checks width and gap each alone. Corrected in chat; the answer stands, since the rule extends M010's Typst check.
 - 2026-10-27: checkpoint: the full criteria audit (fresh Opus reader) ran after the question set, since the work was chosen there, and is still running at this commit; its dispositions follow in a later plan commit.
 - 2026-10-27: criteria audit (full mode, fresh Opus reader) returned 12 findings on AC1, AC3, AC4, AC5, AC6; all fixed by narrowing or adding cases: AC1 gains unit-kind, cancelling-unit, negative-factor, and inverted-clamp values; AC2 gains a zero breakpoint; AC3 gains clamp, em-ex, and vw-minus-percent passes; AC4 moves (a)-(c) to a fixture with a 2in-like default, adds a percent-gap case, makes the metadata case non-percent, and reads the no-room case for image width only; AC5 names its fixture condition; AC6 becomes a content check and names the 40% limit. It confirmed that the parser accepts every probe value, so the new check decides them, and that the Typst text is 6 in.
+- 2026-10-27: /milestone-implement started on branch m011-finish-width-checks; T1 and T2 code and fixtures written, full suite with --update running.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
