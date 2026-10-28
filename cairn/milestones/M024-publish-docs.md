@@ -168,25 +168,26 @@ Review pass 1, 2026-10-28, on e26cbb2 (main 61c21d3 not moved since the cut; no 
 - Consistency gate: `cairn_validate.py` all checks passed (exit 0); no principle changed, so no `cairn_impact` run; version marker `_extension.yml` 0.2.0 on main and branch (one marker); `python3 tests/verify.py` on e26cbb2: all 103 renders pass; changelog slot "none". PASS.
 - snapshot: no changed snapshot file (`git diff --name-only main...HEAD` lists none under `tests/_snapshots/`).
 - spawned: diff-bug, blame-history, prior-review, ripple
-- diff-bug #1: the write-scoped token in the `publish` job goes to actions on movable tags (`setup@v2`, `publish@v2`, `checkout@v7`), so a moved tag could push to `main` — fix now: pin the three actions in `publish` to commit SHAs with the tag in a comment.
-- diff-bug #2: the CI publish path (push by `GITHUB_TOKEN`, Pages build after it) has never run — fix now: pass `GITHUB_TOKEN` in `env` as the action's README example does; the first run after the merge is read before hygiene ends.
-- diff-bug #3: `publish` does not check the repository, so a fork's push to its `main` fails red for lack of `gh-pages` — fix now: `publish` adds `github.repository == 'jmgirard/wrapped'`, and `render` runs in its place elsewhere.
-- diff-bug #4: DESIGN.md Conventions bullet on `docs.yml` still says it only renders on a push to `main`, and the workflow header says "this job needs no R" with two jobs — fix now.
+- diff-bug #1: the write-scoped token in the `publish` job goes to actions on movable tags (`setup@v2`, `publish@v2`, `checkout@v7`), so a moved tag could push to `main` — fix now, fixed 1b20351: pin the three actions in `publish` to commit SHAs with the tag in a comment.
+- diff-bug #2: the CI publish path (push by `GITHUB_TOKEN`, Pages build after it) has never run — fix now, fixed 1b20351: pass `GITHUB_TOKEN` in `env` as the action's README example does; the first run after the merge is read before hygiene ends.
+- diff-bug #3: `publish` does not check the repository, so a fork's push to its `main` fails red for lack of `gh-pages` — fix now, fixed 1b20351: `publish` adds `github.repository == 'jmgirard/wrapped'`, and `render` runs in its place elsewhere.
+- diff-bug #4: DESIGN.md Conventions bullet on `docs.yml` still says it only renders on a push to `main`, and the workflow header says "this job needs no R" with two jobs — fix now, fixed 1b20351.
 - diff-bug #5: the README image is a hand-run fixed-offset crop that nothing rebuilds or checks — reject (planned change: T2 names this method).
-- diff-bug #6: the image shows a whole page section while the snippet above it has one paragraph — fix now: the README sentence says the image is part of the example page that uses this figure.
+- diff-bug #6: the image shows a whole page section while the snippet above it has one paragraph — fix now, fixed 1b20351: the README sentence says the image is part of the example page that uses this figure.
 - diff-bug #7: anchors into old README sections and the old Pages home no longer reach those sections — reject (planned change: the Goal shortens the README and moves Pages to the site).
-- diff-bug #8: CLAUDE.md's new notes repeat DESIGN.md facts about the site and publishing — fix now: CLAUDE.md keeps the commands and points to DESIGN.md's Distribution paragraph.
-- diff-bug #9: `tests/readme.qmd`'s intro reads as eight examples where the file has seven (the README example is the first get-started form) — fix now.
+- diff-bug #8: CLAUDE.md's new notes repeat DESIGN.md facts about the site and publishing — fix now, fixed 1b20351: CLAUDE.md keeps the commands and points to DESIGN.md's Distribution paragraph.
+- diff-bug #9: `tests/readme.qmd`'s intro reads as eight examples where the file has seven (the README example is the first get-started form) — fix now, fixed 1b20351.
 - blame-history #1: `docs/formats/html.qmd:57` shows `{{r}}` in the dashboard example — reject (false: the rendered `docs/_site/formats/html.html` shows ```` ```{r} ````; the double braces are Quarto's escape).
-- blame-history #2: D-014 does not record that `publish` gets `contents: write` — fix now: the workflow comment on the job's permissions says why, and a milestone-local decision records the scope and the pins (D-014 is history, not edited).
-- blame-history #3: no token is passed to the publish action — fix now (same fix as diff-bug #2).
+- blame-history #2: D-014 does not record that `publish` gets `contents: write` — fix now, fixed 1b20351: the workflow comment on the job's permissions says why, and a milestone-local decision records the scope and the pins (D-014 is history, not edited).
+- blame-history #3: no token is passed to the publish action — fix now, fixed 1b20351 (same fix as diff-bug #2).
 - blame-history #4: concurrency comment and job conditions — checked, no finding.
 - blame-history #5: whether the `tests/readme.qmd` title change affects a snapshot — reject (false: `verify.py` lists `("readme", "html", False)`, no snapshot; verify passes).
 - blame-history #6: CLAUDE.md, LESSONS, make-images.R — checked, no finding.
-- prior-review #1: `contents: write` regresses M008's read-only token — fix now (same as blame-history #2; the workflow default stays `contents: read`, and only the `publish` job on `main` of this repo writes).
-- prior-review #2: the intro's "The site's `wrap-clear` example is in `stop-rule.qmd`" reads as if `stop-rule.qmd` were a site file — fix now (same edit as diff-bug #9).
+- prior-review #1: `contents: write` regresses M008's read-only token — fix now, fixed 1b20351 (same as blame-history #2; the workflow default stays `contents: read`, and only the `publish` job on `main` of this repo writes).
+- prior-review #2: the intro's "The site's `wrap-clear` example is in `stop-rule.qmd`" reads as if `stop-rule.qmd` were a site file — fix now, fixed 1b20351 (same edit as diff-bug #9).
 - prior-review #3: `docs/defaults.qmd`'s sentence "a `width` that with the `gap` is as wide as the text or wider" is hard to read — reject (style, on a line this diff does not change).
-- prior-review #4: CLAUDE.md "The README gives only the install steps and one example" leaves out the image and the link list — fix now (same edit as diff-bug #8).
+- prior-review #4: CLAUDE.md "The README gives only the install steps and one example" leaves out the image and the link list — fix now, fixed 1b20351 (same edit as diff-bug #8).
 - prior-review #5 (outside the lens): LESSONS gains a "(corrected M024)" tag where the file had none — reject (false: tracking-rules require a correction to current knowledge to be marked in place).
 - prior-review #6 (outside the lens): M023 chose CI-rendered links over page images, and the README embeds a committed image — reject (planned change: M024's Scope asks for the image; M023's choice was for the site).
-- ripple #1: DESIGN.md Conventions bullet on `docs.yml` is stale — fix now (same as diff-bug #4).
+- ripple #1: DESIGN.md Conventions bullet on `docs.yml` is stale — fix now, fixed 1b20351 (same as diff-bug #4).
+- After the fixes (1b20351): `python3 tests/verify.py` all 103 renders pass; the AC4 script 15 of 15 cases pass; README 69 lines (AC3 holds); the workflow parses with `publish` pinned to SHAs, `GITHUB_TOKEN` in `env`, and the repository check. Open-PR read: 0 open PRs of mine, under the feature cap of 1. Snapshot list still empty.
