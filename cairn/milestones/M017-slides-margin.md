@@ -97,6 +97,7 @@ normal layout**. A warning line reads `1x wrapped: the figure #<id>
 - 2026-10-28: claim audit: 19 claims read, 3 corrected — README.md, _extensions/wrapped/wrapped.lua, tests/revealjs.qmd (the aside sits at the slide's foot only by default: `center: true` and `.scrollable` slides place it otherwise; the reader re-read the three narrowed lines and all hold).
 - 2026-10-28: T4 run 1: `python3 tests/verify.py` passed all 97 renders; against main the snapshots add revealjs-margin-meta and revealjs-column-margin (9 lines each) and 18 lines to revealjs.revealjs.txt, with no line removed. The three audit edits landed during that run, so a second run checks the final head.
 - 2026-10-28: T4 run 2 at b88687f: `python3 tests/verify.py` passed all 97 renders, no FAIL line. Status set to review.
+- 2026-10-28: step-7 approval: m017-slides-margin approved for merge
 
 ## Decisions
 
