@@ -96,7 +96,7 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
       `quarto-dev/quarto-actions/publish@v2` with `target: gh-pages` and
       `path: docs`, run only on `push` to `main` and `workflow_dispatch`.
       Record the new action in a D-entry (it extends D-008's CI tools).
-- [ ] T2: Make the README image from an example page: render it, turn its
+- [x] T2: Make the README image from an example page: render it, turn its
       first PDF page into a PNG with `pdftoppm`, and commit the PNG under
       `docs/images/` with the command in a comment of the page or the
       README source.
@@ -134,6 +134,7 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
 - 2026-10-28: AC4 re-audit (full, fresh reader): the grep domain mixed rule pointers with fixture ids, vendored file lists, and history, and T5 missed four candidate rows, one lesson, and one references line. AC4 now names a fixed list of pointers plus `tests/readme.qmd`'s intro; out of it on purpose: wrap-it's `typst.toml`, the `fig-readme-*` ids, `verify.py`'s fixture name, the M024 row, `wrap-mechanisms.md` E15 (a planning note), and the "README since M019" row (history).
 - 2026-10-28: implement started on branch m024-publish-docs.
 - 2026-10-28: T1 done: `docs.yml` has a `publish` job (contents: write, publish@v2, target gh-pages, path docs) that runs on a push or manual run on `main` only, so a manual run on another branch renders and does not publish; the `render` job runs on every other event. D-014 records the action.
+- 2026-10-28: T2 done: `docs/images/readme-example.png` is a 144-dpi crop of page 1 of `image-figure.pdf` (LaTeX); the two commands sit at the end of `docs/images/make-images.R`, whose header said it makes every image in the folder, and the README comment points there (the simple-english hook blocked the commands in the README comment); a rerun of the command gives a byte-identical PNG.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

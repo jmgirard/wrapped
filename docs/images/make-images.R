@@ -1,4 +1,5 @@
-# Makes the example images in this folder. It needs the R package ragg.
+# Makes the example images in this folder, except readme-example.png (see the
+# end of this file). It needs the R package ragg.
 # Run from the repository root:
 # Rscript docs/images/make-images.R
 
@@ -37,3 +38,9 @@ out("badge.png", 400, 400, {
           fg = NA)
   text(0, 0, "w", col = "white", cex = 9, font = 2)
 })
+
+# readme-example.png, the image in README.md, is not made by this script.
+# It is part of the first page of the PDF through LaTeX of the "A captioned
+# image" example page. It needs poppler. Run from the repository root:
+# quarto render docs/examples/image-figure.qmd --to pdf
+# pdftoppm -png -r 144 -f 1 -l 1 -x 150 -y 560 -W 940 -H 640 -singlefile docs/_site/examples/image-figure.pdf docs/images/readme-example
