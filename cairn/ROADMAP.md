@@ -9,6 +9,7 @@ _Last hygiene check: 2026-10-28 (M018 done; its row graduated, M015's row pruned
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
+| M019 | Wrap figures in Typst columns | planned | — | normal | milestones/M019-typst-columns.md |
 | M016 | Read figure columns in Quarto's order in PDF | done | — | normal | milestones/archive/M016-pdf-column-order.md |
 | M017 | Let slides wrap under margin settings | done | — | normal | milestones/archive/M017-slides-margin.md |
 | M018 | Warn once per cell under a context | done | — | normal | milestones/archive/M018-cell-warn-once.md |
@@ -26,7 +27,7 @@ _Last hygiene check: 2026-10-28 (M018 done; its row graduated, M015's row pruned
      `Fix SE of skewness calculation (#100)`; `/cairn-triage` offers a new title for one
      with fewer than 5 words or more than 40 characters; tracking-rules "Candidate short title" has the whole rule -->
 - Check wrapped figures in dashboards: in a Quarto dashboard the `.wrap-group` div likely gets `html-fill-container`, a flex container, where a float has no effect. Not verified. Make wrapping work there or fall back with a warning. Found at M002 review (diff-bug #9) — added 2026-10-24 — milestones/M002-html-wrap.md
-- Check wrapped figures in Typst columns: a Typst document with `columns:` set puts the text in columns, and no one has tested a `wrap-content` call there. Make wrapping work there or keep a normal figure with a warning, as LaTeX does for two columns. Left out of M005 — added 2026-10-25 — milestones/M005-typst-wrap.md
+- Check wrapped figures in Typst columns: a Typst document with `columns:` set puts the text in columns, and no one has tested a `wrap-content` call there. Make wrapping work there or keep a normal figure with a warning, as LaTeX does for two columns. Left out of M005 — added 2026-10-25 — milestones/M005-typst-wrap.md — started M019
 - Cut the Ubuntu mirror from CI setup: `r-lib/actions/setup-r` still runs `apt-get update` and installs about 175 Ubuntu packages (gdebi-core, qpdf, devscripts, ghostscript), and the poppler step runs `apt-get update` too, so a slow mirror day can still stretch the job toward its 45-minute timeout. The Ubuntu R packages took 35m56s in one run before D-009 (M008 review pass 2, diff-bug #1, blame-history #1) — added 2026-10-26 — milestones/M008-ci-verify.md
 - Test the minimum Quarto version in CI: `quarto-required` says 1.9.36, but only 1.10.19 and later are tested (DESIGN.md, Quarto version). A CI job pinned to 1.9.36 would test the claim or show that the floor must rise. Left out of M008 — added 2026-10-26 — milestones/M008-ci-verify.md
 - Fit images in wide Word frames: Pandoc caps an image at 8400 twips with the default reference doc, so a Word frame between 8400 twips and the text width (such as `width="95%"`) holds a narrower image. Widths at or above the text width take the default since M006 (M006 review, diff-bug #4). The docx-gap fixture's `fig-below` (8640-twip frame, 8400-twip image) records the case (M012 review, diff-bug #1) — added 2026-10-26 — milestones/archive/M006-word-wrap.md
