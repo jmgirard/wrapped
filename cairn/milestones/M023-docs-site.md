@@ -57,38 +57,38 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
      insertion, removal, or reorder renumbers the labels and the Coverage
      lines together. -->
 
-- [ ] AC1: From a clean checkout of the branch head, `quarto render docs`
+- [x] AC1: From a clean checkout of the branch head, `quarto render docs`
       with Quarto 1.10.19 exits 0 with no `R` or `Rscript` on `PATH`,
       because code-cell results come from the committed `docs/_freeze/`.
       `.github/workflows/docs.yml` runs that command on each pull request
       that changes `docs/`, `_extensions/`, or the workflow file, and it has
       no step that installs R.
-- [ ] AC2: An example page is a `.qmd` file in `docs/examples/` other than
+- [x] AC2: An example page is a `.qmd` file in `docs/examples/` other than
       `index.qmd`, `slides.qmd`, and `dashboard.qmd`. After
       `quarto render docs`, the HTML of each example page lists PDF, Typst,
       and MS Word links under "Other Formats", and each linked file exists
       under `docs/_site/examples/`. `pdfinfo` reports a LaTeX producer for
       the file of the PDF link and Typst for the file of the Typst link.
-- [ ] AC3: Every wrapped figure in the gallery wraps. The domain is each
+- [x] AC3: Every wrapped figure in the gallery wraps. The domain is each
       element that `tests/layout.js` lists as a wrapped figure in the HTML of
       each page in `docs/examples/`, the slides and dashboard pages
       included. At a 1280x900 viewport, `tests/layout.js` reports each one
       with `float` `left` or `right`. For each example page, a page image of
       its LaTeX PDF, its Typst PDF, and its Word file (as a PDF that
       LibreOffice makes) shows body text beside each of those figures.
-- [ ] AC4: The site carries each rule that `README.md` states at the
+- [x] AC4: The site carries each rule that `README.md` states at the
       branch's base commit. The domain is each block of the README as
       `quarto pandoc -t json` parses it, the opening lines included: each
       paragraph, each list item, and each code block. For each block, a site
       page states the same rule with the same meaning, or shows the same
       syntax for a code block.
-- [ ] AC5: `docs/reference.qmd` has one table row for each of nine names:
+- [x] AC5: `docs/reference.qmd` has one table row for each of nine names:
       the classes `.wrap-right`, `.wrap-left`, and `.wrap-clear`, the
       attributes `width`, `wrap-gap`, and `wrap-lines`, and the `wrapped:`
       keys `width`, `gap`, and `breakpoint`. Each row gives the values, the
       default, and the formats where the name works, as the topic page that
       covers the name states them.
-- [ ] AC6: The install does not change. In an empty folder,
+- [x] AC6: The install does not change. In an empty folder,
       `quarto add <zip> --no-prompt`, run on a `git archive --format=zip` of
       the branch head, installs `_extensions/wrapped/` with the same file
       list as `main` and no other extension.
@@ -201,3 +201,13 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
      results, review findings + triage. EXEMPT from the 150-line cap (M55),
      as are the work log (D-046) and the decisions section (D-074); evidence
      never scrambles plan-owned content. -->
+
+Review head 95ea977, main b7e62a3 (unmoved since the cut). Copilot round off.
+
+- AC1: fresh clone at 95ea977, Quarto 1.10.19, PATH of symlinked quarto, python3, pdflatex, lualatex, and pandoc plus system and TeX dirs; `command -v R` and `command -v Rscript` print nothing; `quarto render docs` exit 0, one `(W)` line (fig-callout, intended). `docs.yml`: `pull_request` to main with paths `docs/**`, `_extensions/**`, `.github/workflows/docs.yml`, plus `workflow_dispatch`; its one `run:` is `quarto render docs`; no step names R, setup-r, or Rscript. Pass.
+- AC2: `ls docs/examples/*.qmd` less index, slides, and dashboard gives 8 example pages (both-sides, code-cell, defaults, div-figure, image-figure, uncaptioned-image, width-gap, wrap-clear). In the clone's render each page's "Other Formats" block holds PDF → `<name>.pdf`, Typst → `<name>-typst.pdf`, MS Word → `<name>.docx`, and all 24 files exist in `docs/_site/examples/`. `pdfinfo`: each PDF-link file reports Producer LuaTeX-1.24.0 (Creator "LaTeX via pandoc"); each Typst-link file reports Creator Typst 0.15.1 and no Producer line. Pass.
+- AC3: the clone's `_site` served at :8792 with `tests/layout.js` beside it; at a 1280x900 viewport `report().figures` lists 11 figures across 10 pages (image-figure fig-ratings, div-figure fig-groups, uncaptioned-image badge, code-cell fig-cars, both-sides fig-right and fig-left, width-gap fig-ratings, defaults fig-ratings, wrap-clear fig-ratings, slides fig-ratings, dashboard fig-ratings; index none), each with `float` equal to its side. Page images (pdftoppm 40 dpi; Word through `soffice --headless --convert-to pdf`) of the 8 example pages' LaTeX PDF, Typst PDF, and Word file, 26 images with both-sides' and code-cell's second LaTeX pages, show body text beside each of the 9 figures in each of the 3 formats. Pass.
+- AC4: the ledger script (`quarto pandoc -t json` of `git show main:README.md`; every Para, Plain, list item, and CodeBlock, opening lines included) finds 133 blocks, 115 verbatim in `docs/**/*.qmd` at 95ea977. Each of the other 18 was found by its rule sentence or heading: stopping.qmd (4 blocks: stop rule, shortcodes, no-paragraph figure, two in a row), defaults.qmd (rules for the keys, "checked as on" link), width-gap.qmd (gap paragraph with a Word link), normal-layout.qmd (margin item, dashboard item, multi-figure cell, no-id image note), formats/latex.qmd (intro with a Columns link, Tagged PDF), formats/typst.qmd (Tagged PDF), get-started.qmd (three form headings, code-cell lead, the fenced cell's source), formats/html.qmd (dashboard cell written `{{r}}`, rendered as `{r}`). Each states the README rule with a cross-reference turned into a link or a lead-in turned into a heading; none drops or changes a rule. Pass.
+- AC5: the clone's `reference.html` has a six-row table (`.wrap-right`, `.wrap-left`, `.wrap-clear` classes; `width`, `wrap-gap`, `wrap-lines` attributes) and a three-row table (`wrapped:` keys `width`, `gap`, `breakpoint`): nine rows, one per name, each with values, default, and formats. Read against the topic pages: width (percent or absolute length, CSS functions in HTML, default 40%), wrap-gap (default `1em`, percents handled on the Word and Typst pages), wrap-lines (LaTeX only, counted from the height without it), `.wrap-clear` (works in all four formats, stopping.qmd), breakpoint (HTML media query, no percent or `var()`, default `576px`); each row matches. Pass.
+- AC6: `git archive --format=zip HEAD` of the clone (95ea977) and of origin/main, each run through `quarto add <zip> --no-prompt` in an empty folder: exit 0, `_extensions/` holds only `wrapped`, and `find _extensions -type f` lists the same 9 files for both. Pass.
+- Gate: `cairn_validate.py` exit 0, all checks passed; no DESIGN.md principle changed, so no `cairn_impact` run. Profile gate: the one version marker (`_extensions/wrapped/_extension.yml`) reads 0.2.0 on the branch and on main; `python3 tests/verify.py` on the 95ea977 tree: all 103 renders pass, exit 0; changelog slot "none", no entry read.
