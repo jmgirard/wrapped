@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M023: Build the documentation site
 
-- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -57,7 +57,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
      insertion, removal, or reorder renumbers the labels and the Coverage
      lines together. -->
 
-- [x] AC1: From a clean checkout of the branch head, `quarto render docs`
+- [ ] AC1: From a clean checkout of the branch head, `quarto render docs`
       with Quarto 1.10.19 exits 0 with no `R` or `Rscript` on `PATH`,
       because code-cell results come from the committed `docs/_freeze/`.
       `.github/workflows/docs.yml` runs that command on each pull request
@@ -188,6 +188,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: claim audit: 190 claims read, 7 corrected — docs/examples/div-figure.qmd, docs/get-started.qmd, docs/reference.qmd (two), docs/examples/uncaptioned-image.qmd, docs/index.qmd, docs/normal-layout.qmd. The div-caption claims said a div caption holds markdown an image caption cannot (a render showed both hold emphasis, links, and citations); the `wrap-gap` row omitted percents; the units note named `wrap-lines`; the alt-text claim ignored untagged PDFs; "every format" and "in every format" named four. The dashboard source card also gained its missing third paragraph. The same reader re-read the eight changes and found none still wrong.
 - 2026-10-28: `python3 tests/verify.py` passes (all 103 renders) on the branch; the filter is unchanged.
 - 2026-10-28: implement done; status review.
+- 2026-10-28: review return 1: AC1 fails as written, since `docs.yml` limits pull requests to `branches: [main]` (diff-bug #3); the return also carries the review's fix-now items (diff-bug #1, #2, #5–#9, blame-history #1–#2, ripple #1).
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
@@ -211,3 +212,27 @@ Review head 95ea977, main b7e62a3 (unmoved since the cut). Copilot round off.
 - AC5: the clone's `reference.html` has a six-row table (`.wrap-right`, `.wrap-left`, `.wrap-clear` classes; `width`, `wrap-gap`, `wrap-lines` attributes) and a three-row table (`wrapped:` keys `width`, `gap`, `breakpoint`): nine rows, one per name, each with values, default, and formats. Read against the topic pages: width (percent or absolute length, CSS functions in HTML, default 40%), wrap-gap (default `1em`, percents handled on the Word and Typst pages), wrap-lines (LaTeX only, counted from the height without it), `.wrap-clear` (works in all four formats, stopping.qmd), breakpoint (HTML media query, no percent or `var()`, default `576px`); each row matches. Pass.
 - AC6: `git archive --format=zip HEAD` of the clone (95ea977) and of origin/main, each run through `quarto add <zip> --no-prompt` in an empty folder: exit 0, `_extensions/` holds only `wrapped`, and `find _extensions -type f` lists the same 9 files for both. Pass.
 - Gate: `cairn_validate.py` exit 0, all checks passed; no DESIGN.md principle changed, so no `cairn_impact` run. Profile gate: the one version marker (`_extensions/wrapped/_extension.yml`) reads 0.2.0 on the branch and on main; `python3 tests/verify.py` on the 95ea977 tree: all 103 renders pass, exit 0; changelog slot "none", no entry read.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: editing prose in get-started.qmd or examples/code-cell.qmd changes the freeze hash, so the R-less docs job fails, and nothing says to re-render with R and commit `_freeze` — fix now
+- diff-bug #2: DESIGN.md Conventions names only verify.yml and not docs.yml, `docs/_freeze/`, or the re-freeze rule — fix now
+- diff-bug #3: `docs.yml` `branches: [main]` runs only on PRs into main, so AC1's "each pull request that changes `docs/` …" fails for a PR into another branch — fix now; AC1 fails as written, so review return 1
+- diff-bug #4: `version: release` floats while the docs name 1.10.19 — reject, planned change (the docs job copies verify.yml's setup, D-008)
+- diff-bug #5: examples/width-gap.qmd "2.5 inches wide in every format" ignores the HTML breakpoint — fix now
+- diff-bug #6: width-gap.qmd's "format pages" link goes to formats/html.qmd, which has no unit rules — fix now
+- diff-bug #7: reference.qmd `width` Values cell leaves out `em` and other lengths the format pages accept — fix now
+- diff-bug #8: about 9,000 lines of `docs/_freeze/site_libs` JS carry no `linguist-generated` mark, so GitHub's language bar skews — fix now
+- diff-bug #9: make-images.R needs ragg and does not say so — fix now
+- diff-bug #10: `docs/_extensions` is a plain file in a Windows clone without symlink support — reject, edge (a local render on such a clone, outside the documented macOS and Linux use; the effect is a render error; tests/_extensions has the same shape)
+- blame-history #1: docs.yml has no push trigger, so the site is never rendered on main, against CLAUDE.md's "main must render" and verify.yml's push trigger — fix now
+- blame-history #2: `cancel-in-progress: true` for every ref, where verify.yml cancels only on pull_request (M008) — fix now
+- blame-history #3: docs/.gitignore lacks `*.log`, `*.aux`, `*_files/` — reject, false (after a full render `git status --ignored docs` lists only `.quarto/` and `_site/`)
+- blame-history #4: ```` ```{{r}} ```` may show as `{{r}}` — reject, false (the rendered page holds one ```` ```{r} ```` and no `{{r}}`)
+- blame-history #5: "tested with Quarto 1.10.19" while the docs job uses release — reject, planned change (README sentence moved verbatim under AC4; D-008)
+- blame-history #6: DESIGN.md Known issues point to "The README states" while the site now holds the rules too — reject, planned change (M024 AC4)
+- prior-review #1: `cancel-in-progress: true` cancels runs on main, which M008's review removed from verify.yml — fix now (same as blame-history #2)
+- prior-review #2: the pages say "tested with Quarto 1.10.19" while docs.yml renders with release — reject, planned change (as blame-history #5)
+- ripple #1: PROFILE.md's verify slot names verify.yml and verify-prerelease.yml only — fix now
+- ripple #2: CLAUDE.md says main must render at every commit, but docs.yml runs only on PRs — fix now (as blame-history #1)
+- ripple #3: DESIGN.md Conventions describes PR CI as verify.yml only — fix now (as diff-bug #2)
+- ripple #4: DESIGN.md "The README states this limit" lines — reject, planned change (M024 AC4)
+- ripple #5: the M002 lesson names only tests/_extensions — reject, false (it does not contradict a second symlink)

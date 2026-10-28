@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-28 (M022 review: "Check wrapped figures in dashboar
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M023 | Build the documentation site | review | — | normal | milestones/M023-docs-site.md |
+| M023 | Build the documentation site | in-progress | — | normal | milestones/M023-docs-site.md |
 | M024 | Publish the site and shorten the README | planned | M023 | normal | milestones/M024-publish-docs.md |
 | M020 | Stop wraps at block shortcodes | done | — | normal | milestones/archive/M020-shortcode-stop.md |
 | M021 | Stop wraps at more shortcode forms | done | — | normal | milestones/archive/M021-shortcode-stop-forms.md |
