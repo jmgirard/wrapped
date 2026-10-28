@@ -89,3 +89,32 @@ In a Quarto dashboard, a wrapped code-cell figure inside a `.card` div wraps the
 - AC3 evidence (same snapshot): `fig-dash-md`, `(box)` (the image), `fig-dash-card`, and `fig-dash-nofill` keep `wrap-right`/`wrap-left`; `# groups` holds exactly four lines, `fig-dash-md, p`, `wrapped-image, p`, `cell, p`, `cell, p`; neither warning names any of the four.
 - AC4 evidence (2026-10-28, read at 8b60a5c): README intro names dashboards and `grep -n 'not tested yet' README.md` finds nothing; "Where a figure keeps its normal layout" has the dashboard item; "Dashboards" states that a figure in a `.card` div wraps beside its paragraphs in that card (and an image in a row or column card), that a code cell outside a `.card` div keeps its normal layout with one warning, and that a `.card` div around the cell and its paragraphs makes it wrap, with an example. DESIGN.md step 2 names "is outside a card in a dashboard", and step 5 names `wrapped.css`'s `display: block` on the cell wrappers.
 - AC5 evidence, macOS part (2026-10-28): `python3 tests/verify.py` at 5296a58 exited 0, "all 103 renders pass". The PR's `verify` check is read at step 8.
+- consistency gate (2026-10-28): `cairn_validate.py` all checks passed; `_extension.yml` version 0.2.0 unchanged on the branch (one marker); verify passes at 5296a58 (AC5); changelog slot "none".
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a `.card` div that is also a context (`layout-ncol`, `.panel-tabset`, `.columns`) skipped its own context, so a figure there wrapped with no warning — fix now: `mark` descends into a card only when `block_context` finds none; new fixture case `fig-dash-panel` (on the old code it kept `wrap-right`, now "is in a panel layout"), fixed 4de44cb
+- diff-bug #2: README "Quarto makes a code cell outside a `.card` div into a card of its own" fails for sidebar, toolbar, value box, asis, and hidden cells — fix now: scoped to "in a row or a column", and the fallback stated for any such cell, fixed 4de44cb
+- diff-bug #3: a Jupyter `output: asis` cell is not made a card but gets the fallback (unverified) — follow-up: row "Check wraps in dashboard sidebars"
+- diff-bug #4: `nextBlock` skipped a `display: contents` element with its children — fix now: skip removed, since the `.card-body` stop already ends dashboard groups; dashboard and `stop-shortcode` reports unchanged (13 of 13), fixed 4de44cb
+- diff-bug #5: the `getAttribute("class")` and `contents` edits go beyond the fixture — reject (planned change): T2 named both; the `contents` part is removed under #4
+- diff-bug #6: the CSS rules have no automatic regression check — reject (planned change): browser checks with `layout.js` are the repo's method for HTML layout (PROFILE verify slot)
+- diff-bug #7: the CSS rules win only by load order — fix now: DESIGN.md step 5 states it, fixed 4de44cb
+- diff-bug #8: README line lengths — reject (style)
+- blame-history #1: the `.card-body` stop drops the check for a group followed by another card body in the same card — reject (false): each card body scrolls its own content (`overflow-y: auto`, measured), so a later body cannot sit over the figure
+- blame-history #2: no D-entry for the outside-card rule — fix now: D-013, fixed 4de44cb
+- blame-history #3: `has_page_layout` is true in dashboards, so margin and page-wide classes still name a place — follow-up: row "Check wraps in dashboard sidebars"
+- blame-history #4: `display: block` removes bslib fill for a widget in a wrapped cell — reject (planned change): the plan sets those wrappers to blocks so the float works, and a floated figure has a set width, not a fill
+- blame-history #5: a dashboard cell outside a card with `column: margin` gets the card phrase, not the margin phrase — reject (edge): a margin column option in a dashboard is outside documented use, and the effect is the warning's wording
+- blame-history #6: `verify.py` docstring reflow — fix now, fixed 4de44cb
+- prior-review #1: dashboards take `has_page_layout` — follow-up: row "Check wraps in dashboard sidebars"
+- prior-review #2: `display: contents` skip skips children — fix now (same as diff-bug #4), fixed 4de44cb
+- prior-review #3: a `.card` div's own margin or page-wide class is unread — follow-up: row "Check wraps in dashboard sidebars" (the panel-layout part fixed under diff-bug #1)
+- prior-review #4: the Jupyter markdown-cell skip is untested — follow-up: row "Check wraps in dashboard sidebars"
+- prior-review #5: README "one warning for it" misses the two-figure cell; DESIGN "post-render" versus the code comment "runs after this one" — fix now for the README (one warning per cell named), fixed 4de44cb; reject (false) for the wording pair, which agree
+- prior-review #6: `verify.py` line of 88 characters — fix now (same as blame-history #6), fixed 4de44cb
+- ripple #1: `cairn/PROFILE.md` verify slot omits the dashboard render — fix now, fixed 4de44cb
+- ripple #2: ROADMAP row "Check wrapped figures in dashboards" still says "Not verified" — reject (planned change): post-merge hygiene graduates the row
+- ripple #3: `wrap-mechanisms.md` W1 risk column omits the fill classes — fix now, fixed 4de44cb
+- ripple #4: `tests/readme.qmd` says each README figure example appears there — fix now: its header names `dashboard.qmd`'s `fig-dash-card` for the dashboard example, fixed 4de44cb
+- ripple #5: DESIGN.md step 2's list of contexts omits the dashboard cell — fix now, fixed 4de44cb
+- ripple #6: `wrap-mechanisms.md` E8 omits the dashboard cell — fix now, fixed 4de44cb
+- snapshot: `tests/_snapshots/dashboard.dashboard.txt` — new file; AC2 and AC3 call for it, and the `fig-dash-panel` lines come from the diff-bug #1 fix
