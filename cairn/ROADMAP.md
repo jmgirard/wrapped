@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-28 (M023 review: M020 row pruned; row "Correct the cancel comment in verify.yml" added; one lesson captured, 2026-10-26 M009 LaTeX-log lesson evicted by rank; validate green)_
+_Last hygiene check: 2026-10-28 (M024 review: M021 row pruned; no lesson captured or retired; no row added; validate green)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-28 (M023 review: M020 row pruned; row "Correct the 
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M024 | Publish the site and shorten the README | review | M023 | normal | milestones/M024-publish-docs.md |
-| M021 | Stop wraps at more shortcode forms | done | — | normal | milestones/archive/M021-shortcode-stop-forms.md |
 | M022 | Wrap figures in dashboard cards | done | — | normal | milestones/archive/M022-dashboard-wraps.md |
 | M023 | Build the documentation site | done | — | normal | milestones/archive/M023-docs-site.md |
+| M024 | Publish the site and shorten the README | done | M023 | normal | milestones/archive/M024-publish-docs.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
