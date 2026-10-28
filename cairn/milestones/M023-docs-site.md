@@ -128,7 +128,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
       fallback case live, with its warning text.
 - [x] T5: Write the format pages: HTML with slides and dashboards, PDF
       through LaTeX, PDF through Typst, and Word.
-- [ ] T6: Build the gallery: `docs/examples/index.qmd`, the example pages in
+- [x] T6: Build the gallery: `docs/examples/index.qmd`, the example pages in
       four formats (image, div, uncaptioned image, code cell with
       `freeze`, left and right sides, width and gap, document defaults,
       `wrap-clear`), `slides.qmd`, and `dashboard.qmd`. Commit
@@ -178,6 +178,8 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: implement chose to edit tracking files with Edit from here on; the T2 tick went in through a python script, against the rulebook's file-edit rule.
 - 2026-10-28: T4 done: normal-layout page carries README "Where a figure keeps its normal layout" and the Notes items (no-id images, linked images, right-to-left sides, long captions, margin content; the non-length item went to width-gap). A live callout fallback shows the warning text copied from the render, `(W) wrapped: the figure #fig-callout is in a callout, so it does not wrap.`; it is the one warning in the full site render. The filter's warnings start with `(W)`, so a grep for "warn" misses them.
 - 2026-10-28: T5 done: format pages for HTML (with the README's "Slides" and "Dashboards" sections), PDF through LaTeX, PDF through Typst, and Word carry the README's format sections under task headings; the HTML page adds a short lead that links to the breakpoint, CSS functions, and normal-layout pages. The site render still prints only the callout warning.
+- 2026-10-28: T6 done: gallery `docs/examples/` with a table listing and ten pages (image, div, uncaptioned image, knitr code cell with `fig-format: png`, both sides, width and gap, document defaults, `wrap-clear`, slides, dashboard). The eight example pages render to HTML, LaTeX PDF, Typst PDF (`<name>-typst.pdf`), and docx; `docs/_freeze/examples/code-cell/` holds all four formats' results. In the browser at 1280x900, `tests/layout.js` (copied into `docs/_site/` to serve it same-origin) reports each of the 11 gallery figures with `float` on its side; the slides page's one group check is false because the block after the group is on a hidden slide, and a look at the slide shows the text beside the figure.
+- 2026-10-28: found and fixed: knitr ran the ```` ```{r} ```` cell inside a four-backtick `markdown` fence on `formats/html.qmd`, so the page showed knitr's output; the fence now writes ```` ```{{r}} ````, which knitr prints as `{r}`, and the stray `docs/_freeze/formats/` is gone.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

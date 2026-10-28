@@ -54,7 +54,7 @@ paragraphs in a `.card` div:
 
 ````markdown
 ::: {.card title="Ratings"}
-```{r}
+```{{r}}
 #| label: fig-ratings
 #| fig-cap: "Mean ratings by condition."
 #| classes: wrap-right

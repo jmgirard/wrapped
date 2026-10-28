@@ -1,0 +1,27 @@
+---
+title: "Slides"
+description: "A wrapped figure on a revealjs slide."
+format: revealjs
+---
+
+## A wrapped figure on a slide
+
+![Mean ratings by condition.](../images/ratings.png){#fig-ratings .wrap-right width="40%"}
+
+Ratings rose in both conditions.
+
+The figure floats to the right of the paragraphs after it on the same
+slide, as on an HTML page.
+
+## The source
+
+```markdown
+## A wrapped figure on a slide
+
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width="40%"}
+
+Ratings rose in both conditions.
+
+The figure floats to the right of the paragraphs after it on the same
+slide, as on an HTML page.
+```

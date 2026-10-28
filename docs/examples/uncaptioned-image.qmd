@@ -1,0 +1,35 @@
+---
+title: "An image with no caption"
+description: "An image with no caption floats to the right and keeps its alt text."
+format:
+  html: default
+  pdf: default
+  typst:
+    output-file: uncaptioned-image-typst.pdf
+  docx: default
+---
+
+The image on this page has no caption and no id, so it gets no figure
+number:
+
+```markdown
+![](badge.png){.wrap-right width="20%" fig-alt="A round blue badge with the letter w"}
+```
+
+## Result
+
+![](../images/badge.png){.wrap-right width="20%" fig-alt="A round blue badge with the letter w"}
+
+An image with no caption wraps in the same way as a captioned figure. The
+class `.wrap-right` puts it on the right, and the text flows on its left.
+
+The `fig-alt` attribute gives the image its alt text, which a screen
+reader reads in place of the image.
+
+A small image like this one suits a logo or an icon at the start of a
+section. The image is 20% of the text width, so the text beside it keeps
+most of the line.
+
+## Next
+
+A heading is not a paragraph, so wrapping stops before it.

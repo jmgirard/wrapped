@@ -1,0 +1,45 @@
+---
+title: "Document defaults"
+description: "The wrapped key in the YAML header sets the width and gap for every figure."
+wrapped:
+  width: 30%
+  gap: 1.5em
+format:
+  html: default
+  pdf: default
+  typst:
+    output-file: defaults-typst.pdf
+  docx: default
+---
+
+This page sets a default width and gap in its YAML header:
+
+```yaml
+wrapped:
+  width: 30%
+  gap: 1.5em
+```
+
+Its figures set no `width` or `wrap-gap` of their own:
+
+```markdown
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right}
+```
+
+## Result
+
+![Mean ratings by condition.](../images/ratings.png){#fig-ratings .wrap-right}
+
+@fig-ratings takes the page's default width of 30% and its gap of
+`1.5em`. Without the `wrapped` key, it would take the built-in 40% and
+`1em`.
+
+The defaults save you from repeating the same values on every figure. A
+figure's own `width` or `wrap-gap` attribute still comes first.
+
+In HTML, the `wrapped` key also takes a `breakpoint`. In a window that
+wide or narrower, figures stop floating.
+
+## Next
+
+A heading is not a paragraph, so wrapping stops before it.

@@ -1,0 +1,41 @@
+---
+title: "A figure from a code cell"
+description: "A knitr code cell makes a figure that floats to the right."
+fig-format: png
+format:
+  html: default
+  pdf: default
+  typst:
+    output-file: code-cell-typst.pdf
+  docx: default
+---
+
+A code cell makes a figure when it has a `fig-` label and a `fig-cap`. The
+class goes in `#| classes:`, and the width in `#| out-width:`. This page
+shows the cell with its options:
+
+## Result
+
+```{r}
+#| echo: fenced
+#| label: fig-cars
+#| fig-cap: "Stopping distance by speed."
+#| classes: wrap-right
+#| out-width: "40%"
+plot(cars, pch = 19, col = "#3b6ea8",
+     xlab = "Speed (mph)", ylab = "Stopping distance (ft)")
+```
+
+@fig-cars comes from the R code above. The cell's code stays above the
+figure, and the figure floats to the right of the paragraphs after the
+cell.
+
+The data are the `cars` data set that ships with R: the speed of each car
+and the distance that it took to stop. Faster cars took longer to stop.
+
+The site renders this page from results that Quarto saved when the cell
+last ran, so the site does not need R to build it.
+
+## Next
+
+A heading is not a paragraph, so wrapping stops before it.

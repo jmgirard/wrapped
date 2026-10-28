@@ -1,0 +1,17 @@
+{
+  "hash": "892d70b0f0ffd3c70669b68188fdf2d7",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"A figure from a code cell\"\ndescription: \"A knitr code cell makes a figure that floats to the right.\"\nfig-format: png\nformat:\n  html: default\n  pdf: default\n  typst:\n    output-file: code-cell-typst.pdf\n  docx: default\n---\n\nA code cell makes a figure when it has a `fig-` label and a `fig-cap`. The\nclass goes in `#| classes:`, and the width in `#| out-width:`. This page\nshows the cell with its options:\n\n## Result\n\n\n::: {.cell .wrap-right}\n\n````{.cell-code}\n```{{r}}\n#| label: fig-cars\n#| fig-cap: \"Stopping distance by speed.\"\n#| classes: wrap-right\n#| out-width: \"40%\"\nplot(cars, pch = 19, col = \"#3b6ea8\",\n     xlab = \"Speed (mph)\", ylab = \"Stopping distance (ft)\")\n```\n````\n\n::: {.cell-output-display}\n![Stopping distance by speed.](code-cell_files/figure-pdf/fig-cars-1.png){#fig-cars fig-pos='H' width=40%}\n:::\n:::\n\n\n@fig-cars comes from the R code above. The cell's code stays above the\nfigure, and the figure floats to the right of the paragraphs after the\ncell.\n\nThe data are the `cars` data set that ships with R: the speed of each car\nand the distance that it took to stop. Faster cars took longer to stop.\n\nThe site renders this page from results that Quarto saved when the cell\nlast ran, so the site does not need R to build it.\n\n## Next\n\nA heading is not a paragraph, so wrapping stops before it.\n",
+    "supporting": [
+      "code-cell_files/figure-pdf"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": null,
+    "postProcess": false
+  }
+}
