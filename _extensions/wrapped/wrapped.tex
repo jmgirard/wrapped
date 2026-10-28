@@ -51,7 +51,8 @@
 % height, or takes the wrap-lines value. \wrapped@startlines keeps the count
 % that the wrap started with, and \wrapped@startbs the \baselineskip that
 % wrapfig counted with. \wrapped@starttotal keeps \pagetotal at the start,
-% which wrapfig has just brought up to date, \wrapped@startsize keeps
+% which wrapfig has just brought up to date in the main vertical list, but
+% not inside a box, \wrapped@startsize keeps
 % \WF@size, and \wrapped@startpage the number of pages shipped out by then.
 \newcount\wrapped@startlines
 \newdimen\wrapped@startbs
@@ -69,9 +70,10 @@
 % Where the text is still narrowed, the lines skipped are the lines that
 % wrapfig counts from the height, less the lines already set beside the
 % figure, less one. A wrap-lines value larger than the height needs adds no
-% space. A wrap-lines value smaller than the height needs can end the
-% narrowed lines above the figure's bottom. Then \wrapped@skipbelow skips
-% to where the narrowed lines that wrapfig counts from the height would end.
+% space. Where the narrowed lines have ended, as a wrap-lines value smaller
+% than the height needs can make them end above the figure's bottom,
+% \wrapped@skipbelow skips to \WF@size less one \baselineskip below where
+% the wrap started, which is below the figure's bottom.
 \newcommand*\wrapped@endwrap{%
   \ifvoid\WF@box\else \WFclear \fi
   \ifx\parshape\WF@fudgeparshape

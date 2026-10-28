@@ -1,6 +1,6 @@
 # M025: Stop text overlap with small wrap-lines
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -57,6 +57,7 @@ In PDF through LaTeX, the block that stops a wrap starts below the figure also a
 - 2026-10-28: checkpoint, T2 and T3 written, not ticked: the full `python3 tests/verify.py` run is in progress and the `stop-latex` snapshot is not refreshed. `\wrapped@skipbelow` targets the start's `\pagetotal` plus `\WF@size` less one `\baselineskip`, a choice made against the stop gaps of (a) 46 px and (b) 44 px, which sit below their reference gaps of 62 px and 55 px. Added case (f), a paragraph that ends on the next page, because (e) cannot fail without the page check. Planted defects: no page check fails (f); a skip of the full `\WF@size` fails (a), (b), and (d).
 - 2026-10-28: T2 and T3 done. The full run failed only on the `stop-latex` snapshot, which lacked the seven new figures; the snapshot is refreshed. 64 layout cases passed, none failed.
 - 2026-10-28: T4 done. `python3 tests/verify.py` at `1b0b521` exits 0: all 103 renders pass and 64 layout cases pass.
+- 2026-10-28: claim audit: 29 claims read, 5 corrected — docs/formats/latex.qmd, _extensions/wrapped/wrapped.tex, tests/stop-latex.qmd. The corrections are text past the count "prints over the figure", the stop and Limits statements limited to body text, the skip comment matching the code, `\pagetotal` up to date in the main vertical list only, and the case (e) comment. The same reader re-read all five, and each holds. The `stop-latex` render after the edits keeps its snapshot and passes its layout cases.
 
 ## Decisions
 

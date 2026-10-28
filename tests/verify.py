@@ -564,8 +564,9 @@ def lines_case(boxes, edges, lh):
 
 
 def paragraph_lines(boxes, first, end, leave=None):
-    """The lines of the paragraph whose first line holds `first`, up to the
-    line that holds `end`, each as a list of the boxes that share its top.
+    """The lines of the paragraph whose first line holds `first`, up to and
+    not including the line that holds `end`, each as a list of the boxes
+    that share its top.
     The box `leave` is left out."""
     p = find_text(boxes, first)
     lines = [[b for b in boxes if b.kind == "text" and b.page == p.page and abs(b.top - p.top) <= NEAR * 2]]

@@ -237,8 +237,8 @@ Text after stop twin d.
 
 ```{=latex}
 % Puts the figure near the bottom of the page, where it still fits, so
-% its paragraph ends at the page's bottom and the stop heading starts the
-% next page.
+% its paragraph ends too near the page's bottom for the stop heading and
+% the line after it, and the stop heading starts the next page.
 \vspace{0.63\textheight}
 ```
 
