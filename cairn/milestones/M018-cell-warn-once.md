@@ -1,13 +1,13 @@
 # M018: Warn once per cell under a context
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes the warnings a render prints
-- **Branch/PR:** —
+- **Branch/PR:** m018-cell-warn-once
 
 ## Goal
 
@@ -74,7 +74,7 @@ the Word `# frames` bookmark field is not `<id>`. A cell warning reads
 
 ## Tasks
 
-- [ ] T1: Add the five cells of AC1 to their fixtures.
+- [x] T1: Add the five cells of AC1 to their fixtures.
 - [ ] T2: In `float_target`, print one warning for a cell with `several`
       set whose figures keep their normal layout for a place, and none for
       its figures. Write the snapshots.
@@ -93,6 +93,10 @@ the Word `# frames` bookmark field is not `<id>`. A cell warning reads
 - 2026-10-27: criteria audit (full mode, on the one-milestone draft): two cases stood in for the row's family. Fixed by adding a page-wide document value, a document `column` value, and a cell's own `#| column: margin`. The diff criterion now forbids removing or changing a line on `main`, since summary lines such as `# images` name no case.
 - 2026-10-27: plan chose the place as the cell warning's reason over D-010's `makes more than one figure`, because the place says why the cell does not wrap in the formats where it applies; falsified by a user report that the place reason hides the one-plot-per-cell advice.
 - 2026-10-27: lessons used: 2026-10-27 (M014) cell float ids and `fig-subcap`.
+- 2026-10-28: implement started; branch m018-cell-warn-once cut from main at 639ad60.
+- 2026-10-28: T1 done: the five two-plot cells go at the end of each fixture, so earlier figure numbers and snapshot lines stay as they are. Before the fix, margin-meta's PDF printed one warning for each of fig-meta-margin-two-1 and -2.
+- 2026-10-28: checkpoint, T2 half-done: the float_target change and the T3 README and E4 edits are in this commit. Snapshots are not written yet, so verify fails at this commit until the `--update` run lands.
+- 2026-10-28: choice: the cell warning shares the context branch of float_target. A cell figure with no paragraph after it and no context still prints nothing, and a table in a cell keeps its own warning.
 
 ## Decisions
 

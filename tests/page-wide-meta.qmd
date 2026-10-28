@@ -55,3 +55,16 @@ The paragraph after the cell with fig-column body. Lorem ipsum dolor sit amet, c
 ![A captioned image with no id in a fig-column page document.](plot.png){.wrap-left width="30%"}
 
 The paragraph after the captioned image with no id. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A cell with two figures
+
+```{r}
+#| label: fig-meta-page-two
+#| fig-cap: "A two-plot cell in a fig-column page document."
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+plot(10:1)
+```
+
+The paragraph after the two-plot cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

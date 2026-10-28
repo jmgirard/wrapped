@@ -242,7 +242,10 @@ override the document's key.
 A code cell that makes more than one figure without `fig-subcap` or a
 layout option does not wrap either. An example is a cell that draws two
 plots. Each of its figures keeps its normal layout, and the render prints one
-warning that names the cell's label. If no paragraph follows the cell, its
+warning that names the cell's label. The cell can be in a place in this
+section where its format keeps the normal layout, such as the margin or a
+callout. Then that one warning names the cell and the place, and no warning
+names a figure of the cell. If no paragraph follows the cell, its
 figures keep their normal layout with no warning, as any wrapped figure
 does there. To wrap a plot, give it its own cell with a paragraph after
 it. A cell with `fig-subcap`
