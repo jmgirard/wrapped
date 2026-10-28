@@ -50,21 +50,21 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
      insertion, removal, or reorder renumbers the labels and the Coverage
      lines together. -->
 
-- [ ] AC1: `.github/workflows/docs.yml` publishes the rendered site to the
+- [x] AC1: `.github/workflows/docs.yml` publishes the rendered site to the
       `gh-pages` branch with `quarto-dev/quarto-actions/publish` on each
       push to `main` that changes `docs/`, `_extensions/`, or the workflow
       file, and on a manual run. On a pull request it renders and does not
       publish.
-- [ ] AC2: Before the merge, the GitHub Pages source of `jmgirard/wrapped`
+- [x] AC2: Before the merge, the GitHub Pages source of `jmgirard/wrapped`
       is the `gh-pages` branch at `/`. Each HTML file that
       `find docs/_site -name '*.html'` lists after a render of the branch
       head returns HTTP 200 at the same path under
       https://jmgirard.github.io/wrapped/, with the same `<title>`.
-- [ ] AC3: `README.md` has 80 lines at most (`wc -l`). It holds a sentence
+- [x] AC3: `README.md` has 80 lines at most (`wc -l`). It holds a sentence
       on what the extension does, the `quarto add jmgirard/wrapped` command,
       the `filters:` YAML, one wrapped-figure example, an image of a rendered
       wrapped figure, and a link to https://jmgirard.github.io/wrapped/.
-- [ ] AC4: Each of these pointers names a place that states its rule on
+- [x] AC4: Each of these pointers names a place that states its rule on
       the branch head: a site page, or the short README where it still
       holds that rule. They are the eight "The README states" or "The
       README says" lines of DESIGN.md's Known issues; the candidate rows
@@ -156,3 +156,10 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
      results, review findings + triage. EXEMPT from the 150-line cap (M55),
      as are the work log (D-046) and the decisions section (D-074); evidence
      never scrambles plan-owned content. -->
+
+Review pass 1, 2026-10-28, on e26cbb2 (main 61c21d3 not moved since the cut; no PR yet, route (d); Copilot round off).
+
+- AC1: `docs.yml` read by YAML parse: `push` on `main` and `pull_request` both filter on `docs/**`, `_extensions/**`, `.github/workflows/docs.yml`, plus `workflow_dispatch`; job `publish` runs when `github.event_name != 'pull_request' && github.ref == 'refs/heads/main'`, has `contents: write`, and its last step is `quarto-dev/quarto-actions/publish@v2` with `target: gh-pages`, `path: docs` (the action runs `quarto publish gh-pages docs`, which renders first, as its `action.yml` at v2 shows); job `render` runs on every pull request and only runs `quarto render docs`. The two `if:` conditions exclude each other. The workflow has not run in CI: its first push run comes after the merge. PASS on the configuration.
+- AC3: `wc -l README.md` = 68 (≤80). It holds the sentence "wrapped is a Quarto filter extension. It lets body text flow beside a figure" (line 3), `quarto add jmgirard/wrapped` (line 20), the `filters:` YAML (line 27), one wrapped-figure example (`.wrap-right width="40%"`, line 38, the only wrap class in the file), the image `docs/images/readme-example.png` (line 47; a 940x640 PNG of a LaTeX page where three paragraphs flow beside a bar chart), and the link <https://jmgirard.github.io/wrapped/> (line 12). PASS.
+- AC2: `gh api repos/jmgirard/wrapped/pages` gives source `gh-pages` `/`, status built. After `rm -rf docs/_site` and a fresh `quarto render docs` of e26cbb2 (exit 0, no `_freeze` change), `find docs/_site -name '*.html'` lists 23 files; a script fetched each at the same path under https://jmgirard.github.io/wrapped/: 23 of 23 return 200 with the same `<title>` (a missing path returns 404, so the check can fail). PASS.
+- AC4: a script checked 15 cases (the eight DESIGN Known issues lines, the four candidate rows, the second of which names two pages, the LESSONS line, and the w3c-css-values line): each pointer text is in its file, and its named page and section in `docs/` holds the rule's phrase; a planted phrase the named section lacks is not found; no "README states/says/…" pointer is left in DESIGN, LESSONS, references, or the candidate rows. `tests/readme.qmd`'s intro: each of its 8 named examples, ids and file names stripped, is found in the file it names (README.md, `docs/get-started.qmd` ×4, `docs/width-gap.qmd`, `docs/formats/latex.qmd`, `docs/formats/html.qmd`); the `stop-rule.qmd`, `defaults.qmd`, and `dashboard.qmd` claims were read by the implement claim audit (holds). PASS.
