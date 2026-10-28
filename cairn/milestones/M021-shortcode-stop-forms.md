@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M021: Stop wraps at more shortcode forms
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -58,7 +58,7 @@ A paragraph that holds one shortcode outside D-011's eight joining names ends th
 - [x] T3: Block meta values. Record the first positional argument of a `meta` shortcode in `find_shortcode` (wrapped.lua:1563), keep the metadata in `read_meta` (wrapped.lua:1202), and resolve the key as Quarto's `parseOption` does. Stop only for the exact lone form, as a whitelist: every block in the value is `Para` or `Plain` → join; any other block → stop.
 - [x] T4: Run the fixture with `--update`, read the snapshot diff for cases 6 to 13 and the unchanged lines for cases 1 to 5, and check cases 6 to 9 in a browser with `tests/layout.js` at 1280x900.
 - [x] T5: Write the README, DESIGN.md, and code-comment text for AC5, and append a D-entry that annotates D-011 with the new forms and the user's choice that a paragraph-only `meta` value joins.
-- [ ] T6: Run `python3 tests/verify.py` in full on macOS.
+- [x] T6: Run `python3 tests/verify.py` in full on macOS.
 
 ## Work log
 
@@ -82,6 +82,8 @@ A paragraph that holds one shortcode outside D-011's eight joining names ends th
 - 2026-10-28: substantive amendment: AC1 reworded after two re-audits (case 7 opens with the shortcode, since Pandoc reads a line-opening comment as a block; case 8's span gains a soft break and comments inside and outside; groups hold one `p`; the LaTeX check as `stop_case` runs it; case 13 named as the fixture has it). The user adopted it at a chip and declined the optional boundary case. What the user gets is unchanged. AC2 keeps "only the paragraph before the shortcode"; its snapshot `p` is that paragraph, and the HTML browser check shows the next block below the figure.
 - 2026-10-28: T5 done: README "Where wrapping stops" and its next-block paragraph, the DESIGN.md stop rule, next-block rule, and step 1, the comment above `JOINING_SHORTCODES` (written in T3), and D-012 annotating D-011. `grep` of README, DESIGN.md, and wrapped.lua finds no text saying a block-valued `meta` joins or needs a `wrap-clear` div.
 - 2026-10-28: claim audit: 70 claims read, 8 corrected — wrapped.lua, README.md, tests/verify.py, tests/stop-shortcode.qmd. Fixed: a `meta` list in a user span stopped the wrap though Quarto renders it inline (the meta test now needs the shortcode itself as the one inline; new joining case 14); `meta_value` read a number as a list index in the first key; quote stripping removed two pairs; README "line breaks" (now line ends in the source; a hard LineBreak joins), the eight joining names' exception, and the span form for `meta`; fixture "third video"; the stop_shortcode_cases docstring. Code in 93996c3; failing-first check of case 14 and the full verify rerun still owed.
+- 2026-10-28: case 14 with the filter of 1e41d39: HTML group `fig-sc-meta-span, p` (stopped, wrong); with the fix: `p, p, p` (joins). Snapshots in 1bead1d add only case 14's lines; the case 1 to 5 lines still match 093e4ef in all four.
+- 2026-10-28: T6 done: `python3 tests/verify.py` on macOS at 1bead1d, all 102 renders pass, exit 0, all five stop-shortcode LAYOUT cases ok. Status review. Deviations: AC1 reworded (user-approved); case 14 added from the claim audit. Open: none.
 
 ## Decisions
 
