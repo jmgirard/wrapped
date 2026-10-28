@@ -40,7 +40,7 @@ In PDF through LaTeX, the block that stops a wrap starts below the figure also a
 - [x] T1: Add cases (a) to (e) and the twin of case (d) to `tests/stop-latex.qmd`, and add their checks to `stop_latex_cases` in `tests/verify.py`. Compare the heading gaps of (a) and (b) with the existing "form A right" and "form C left" cases, as `lines_case` does. Make sure that (a), (b), and (c) fail on `main`.
 - [x] T2: In `_extensions/wrapped/wrapped.tex`, record the page and the `\pagetotal` where the wrap starts, in the `\WF@startwrapping` hook. If the narrowed lines ended on that page above the figure's bottom, make `\wrapped@endwrap` skip to below the figure. Keep the line-count skip for a wrap whose narrowed lines still run. Update the file's comments.
 - [x] T3: Update the `wrap-lines` text of `docs/formats/latex.qmd` (AC5) and the `wrap-lines` row of `cairn/DESIGN.md`. Append a D-entry that annotates D-007: the stop block also skips below the figure after a smaller count ends. Refresh the `stop-latex` snapshot.
-- [ ] T4: Run `python3 tests/verify.py` in full.
+- [x] T4: Run `python3 tests/verify.py` in full.
 
 ## Work log
 
@@ -56,6 +56,7 @@ In PDF through LaTeX, the block that stops a wrap starts below the figure also a
 - 2026-10-28: T1 done. Cases (a) to (e) and the twin of (d) are in `tests/stop-latex.qmd`, checked by `small_a_case` to `small_e_case` in `tests/verify.py`. On the unchanged filter, (a) and (b) fail with "the stop heading … starts above the figure's bottom", (c) fails with "the next wrapped figure starts above the figure's bottom", and (d) and (e) pass. Case (b) uses a 40% width so its stop heading sits clearly above the figure's bottom on `main`.
 - 2026-10-28: checkpoint, T2 and T3 written, not ticked: the full `python3 tests/verify.py` run is in progress and the `stop-latex` snapshot is not refreshed. `\wrapped@skipbelow` targets the start's `\pagetotal` plus `\WF@size` less one `\baselineskip`, a choice made against the stop gaps of (a) 46 px and (b) 44 px, which sit below their reference gaps of 62 px and 55 px. Added case (f), a paragraph that ends on the next page, because (e) cannot fail without the page check. Planted defects: no page check fails (f); a skip of the full `\WF@size` fails (a), (b), and (d).
 - 2026-10-28: T2 and T3 done. The full run failed only on the `stop-latex` snapshot, which lacked the seven new figures; the snapshot is refreshed. 64 layout cases passed, none failed.
+- 2026-10-28: T4 done. `python3 tests/verify.py` at `1b0b521` exits 0: all 103 renders pass and 64 layout cases pass.
 
 ## Decisions
 
