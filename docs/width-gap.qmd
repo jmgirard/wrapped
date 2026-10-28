@@ -28,7 +28,9 @@ This figure is 3 inches wide, and a gap of `2em` separates it from this
 text, twice the default gap.
 
 The width and the gap convert to each format's own units. The
-[format pages](formats/html.qmd) give the rules for each one.
+pages for [PDF through LaTeX](formats/latex.qmd#width-and-gap),
+[PDF through Typst](formats/typst.qmd#width-and-gap), and
+[Word](formats/word.qmd#width-and-gap) give the rules for each one.
 :::
 
 A `fig-align` attribute does not move the box. The class sets the side.

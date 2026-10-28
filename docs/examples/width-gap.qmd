@@ -20,7 +20,9 @@ the default:
 
 ![Mean ratings.](../images/ratings.png){#fig-ratings .wrap-left width="2.5in" wrap-gap="2em"}
 
-@fig-ratings is 2.5 inches wide in every format. An absolute length does
+@fig-ratings is 2.5 inches wide in each of the four formats. In HTML, a
+window at the breakpoint or narrower gives it the full width of the text
+column instead. An absolute length does
 not change with the width of the text, so in a narrow text column the
 figure takes a larger share of the line.
 

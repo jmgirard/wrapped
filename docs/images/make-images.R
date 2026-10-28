@@ -1,4 +1,5 @@
-# Makes the example images in this folder. Run from the repository root:
+# Makes the example images in this folder. It needs the R package ragg.
+# Run from the repository root:
 # Rscript docs/images/make-images.R
 
 out <- function(name, width, height, expr) {

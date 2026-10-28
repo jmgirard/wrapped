@@ -1,9 +1,17 @@
 # Renders the documentation site in docs/ (quarto render docs). Code cells
 # take their results from the committed docs/_freeze/, so this job needs no R.
+# An edit to a page with a code cell (get-started.qmd, examples/code-cell.qmd)
+# makes its frozen results stale, and this job then fails. Render the site
+# locally with R (quarto render docs) and commit the changed docs/_freeze/.
 name: docs
 
 on:
   pull_request:
+    paths:
+      - "docs/**"
+      - "_extensions/**"
+      - ".github/workflows/docs.yml"
+  push:
     branches: [main]
     paths:
       - "docs/**"
@@ -14,9 +22,11 @@ on:
 permissions:
   contents: read
 
+# A newer push to a pull request cancels its older run. Runs on main are
+# never cancelled, so each commit there gets its own check.
 concurrency:
   group: docs-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   render:

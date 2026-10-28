@@ -98,7 +98,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
      task(s) satisfying it, by positional number (AC/Task counted
      top-to-bottom). Review reads to fence evidence — tracking-rules "AC fencing". -->
 
-- AC1 → T1, T6, T8
+- AC1 → T1, T6, T8, T10
 - AC2 → T6
 - AC3 → T6, T9
 - AC4 → T2, T3, T4, T5, T9
@@ -144,6 +144,13 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
       measure the gallery's HTML with `tests/layout.js` (lessons M020, M022);
       make page images with `pdftoppm` and, for Word, LibreOffice (D-005),
       and record one line for each figure and format in the Review section.
+- [x] T10: Review return 1: run `docs.yml` on every pull request that
+      changes its paths (no branch filter) and on pushes to main, cancel
+      only pull-request runs, and say how to re-freeze; add the re-freeze
+      rule to DESIGN.md Conventions and docs.yml to PROFILE.md's verify
+      slot; fix the width-gap breakpoint claim and format-page link and the
+      reference `width` row; mark `docs/_freeze/site_libs` generated; name
+      ragg in make-images.R.
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates.
@@ -189,6 +196,9 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: `python3 tests/verify.py` passes (all 103 renders) on the branch; the filter is unchanged.
 - 2026-10-28: implement done; status review.
 - 2026-10-28: review return 1: AC1 fails as written, since `docs.yml` limits pull requests to `branches: [main]` (diff-bug #3); the return also carries the review's fix-now items (diff-bug #1, #2, #5–#9, blame-history #1–#2, ripple #1).
+- 2026-10-28: minor amendment: T10 added for review return 1, Coverage AC1 → T1, T6, T8, T10.
+- 2026-10-28: T10 done: `docs.yml` now runs on every pull request that changes its paths (no branch filter), on pushes to main with the same paths, and by hand; only pull-request runs cancel; its header says to re-render with R and commit `docs/_freeze/` after editing a page with a code cell (Ruby's YAML parser reads the three triggers and the concurrency expression). DESIGN.md Conventions gained the docs-site line, PROFILE.md's verify slot names `docs.yml`, the width-gap example notes the HTML breakpoint, width-gap.qmd links the LaTeX, Typst, and Word pages, the reference `width` row names `20em` and per-format units, `.gitattributes` marks `docs/_freeze/**` generated (`git check-attr` confirms), and make-images.R names ragg. Site render: one `(W)` line; 22 pages, all links resolve.
+
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
