@@ -70,6 +70,8 @@ The site's example pages and the README image show body text above a wrapped fig
 - 2026-10-28: claim audit: 105 claims read, 6 corrected — tests/layout.js, tests/docs_layout.py, docs/examples/width-gap.qmd, README.md, docs/examples/uncaptioned-image.qmd, docs/examples/both-sides.qmd. The `straddle()` comment named first and last words; the body font is counted over the PDF; HTML keeps width and gap as written; the README sentence named the wrong paragraph; "a few lines" was 7 to 9; the page break left a LaTeX page with only the rule.
 - 2026-10-28: both-sides fix: the page break moved into `::: {.content-hidden when-format="pdf"}`, so LaTeX has 2 pages with the rule at the top of page 2. Without any break, Typst and Word split the second figure from its text. This div is a second `::: {` line in AC2's grep, but it encloses no figure.
 - 2026-10-28: T7: after the fixes, `quarto render docs` from a clean `docs/.quarto` with no `Rscript` on `PATH` and `QUARTO_R`/`R_HOME` unset exits 0 with the same sorted `(W) wrapped:` line as `main`. `tests/docs_layout.py` passes 24 of 24, `straddle()` passes 9 of 9 at 1280x900, and the four freeze hashes equal md5 08a5ee68… of `code-cell.qmd`.
+- 2026-10-28: review fixes changed `code-cell.qmd`, so its freeze was rendered again with R; the hashes are now 9cefb3c3658082ecd9dfbc8201a5d45f (Review section, re-verification line).
+- 2026-10-28: step-7 approval: m026-wrap-showcase approved for merge
 
 ## Decisions
 
