@@ -262,8 +262,10 @@ snapshot difference. The mechanism for each other format is in
 
 - PDF through Typst: a wrapped figure whose group does not fit at the bottom
   of a page moves to the next page with the text beside it, and the rest of
-  the page stays blank. wrap-it puts the group in a `box`, which does not
-  break across pages. The README states this limit (M005).
+  the page stays blank. With `columns:` set, the same holds at the bottom of
+  a column: the group moves to the next column. wrap-it puts the group in a
+  `box`, which does not break across pages or columns. The README states
+  this limit (M005, corrected M019).
 - Word: a frame that does not fit at the bottom of a page moves to the next
   page with the paragraph after it, and the rest of the page stays blank. A
   Word frame does not break across pages. The README states this limit

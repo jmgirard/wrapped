@@ -113,7 +113,7 @@ that holds the image. Each test allows `NEAR` (3 px).
       Shorten the text before AC4's figure so that its group fits. Leave
       one column of page 1 empty for the edge reader. Write the snapshot
       with `--update` and read it.
-- [ ] T3: Update the README section "PDF through Typst" for AC5, its
+- [x] T3: Update the README section "PDF through Typst" for AC5, its
       `text width` sentences included. Update the Typst page-bottom entry
       in `cairn/DESIGN.md` Known issues for columns. Update row W3 of
       `cairn/references/wrap-mechanisms.md` and add an edge-case row there
@@ -138,5 +138,6 @@ that holds the image. Each test allows `NEAR` (3 px).
 - 2026-10-28: T1 done: `tests/typst-columns.qmd` renders with no warning. Images measure 124 px (40%, 40% in column 2, 2.9in fallback, moved group) and 108 px (1in); the moved group starts column 2 of page 3. Added to RENDERS with its snapshot.
 - 2026-10-28: T2 choice: `column_edges` splits page 1 at the middle of its text and lets text cross the middle only above the columns (the title); `column_of` puts a box in the column whose left edge is the last at or left of it, so a line that runs past its column's right edge still fails the edge test. Fixtures in `COLUMN_LAYOUT` take these edges in `layout_check`.
 - 2026-10-28: T2 done: 5 `typst_columns_cases` pass. Plants, each red with its test's reason, then restored: no wrap class ("not beside the image"), second case in column 1 ("not inside column 2", 2 cases), 30% width ("93 px wide, not 124 px"), short filler ("not inside column 2"), page 1 in one column ("a column of page 1 has no text"), a -60pt gutter in `wrapped.lua` ("overlaps the figure", 5 cases), a colbreak before the moved figure ("8 lines of column 2 end above the image"). The restored render matches its snapshot.
+- 2026-10-28: T3 done: README "PDF through Typst" gains a columns paragraph, and both of its `text width` sentences name the column width. DESIGN's Typst page-bottom entry covers columns (corrected M019). wrap-mechanisms gains a W3 columns note and row E22.
 
 ## Decisions

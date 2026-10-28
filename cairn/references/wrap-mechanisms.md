@@ -56,6 +56,11 @@ Details by row:
   meander handles page breaks, but it lays out whole pages. The wrap-it
   license is Unlicense and the meander license is MIT, so the extension can
   bundle either one.
+- W3 columns: with `columns:` set, Quarto 1.10.19 writes
+  `set page(columns: …)`. Inside a page column, `layout` gives the column's
+  size. So each group wraps inside its column, and a percent width and
+  `wrapped-width` read the column width. A group that does not fit at a
+  column's bottom moves to the next column (E22, M019).
 - W4: Pandoc writes every image as `wp:inline`. Raw OpenXML cannot embed an
   image, because Pandoc assigns the relationship IDs. Quarto already puts a
   raw `<w:pPr>` at the start of caption paragraphs. It also uses `w:framePr`
@@ -165,6 +170,7 @@ The filter has two entry points (corrected M006):
 | E19 | Wrapped figure in a table cell | Normal figure with one warning in Word and LaTeX. A captioned figure in a LaTeX table cell fails to build with or without the extension. Wraps in HTML and Typst (M013). |
 | E20 | Caption in the margin (`cap-location`, `fig-cap-location`, or the `.margin-caption` or `.caption-margin` class) | Normal figure with one warning on an HTML page, where no text sits beside it. Wraps in LaTeX, Typst, Word, and slides (M013). A captioned image with no id moves its caption only for `.margin-caption` (M015). |
 | E21 | Page-wide column class, or a document-level `fig-column` or `column` | Normal figure with one warning on an HTML page for all 16 classes, and in LaTeX for those Quarto makes page-wide. Wraps in Word and slides (M013). In Typst, Quarto 1.10.19 sets a div or a code cell wider than the text for all 16. It sets a figure with its own class wider only for `column-page` and `column-screen`, with or without `-left` or `-right`. The figure is normal in those cases (corrected M015). In HTML and Word, a document-level value applies to every figure float, even a cell with `fig-column: body`. In LaTeX and Typst, the order below decides (corrected M016). A margin value keeps the figure normal in every format where it decides, as a margin class does. On revealjs slides neither decides, and the figure wraps (E3, M017). A captioned image with no id is no float and wraps (M015). Where a figure's own class and a document key name different places, LaTeX and Typst follow Quarto's order: own `fig-column-*`, document `fig-column`, own `column-*` or `.aside`, document `column`. A layout attribute comes before a document value, so a panel warns as a subfigure panel. A code cell's figure takes the document's value over the cell's own option. HTML reads an own margin or page-wide class first. Word reads an own margin class first. A body class does not override the document key in either (M016). |
+| E22 | `columns:` set in PDF through Typst | Wraps inside its column. A percent width is a share of the column width, and a width that with its gap fills the column takes the default. A group that does not fit at a column's bottom moves to the next column, and the rest of that column stays blank (W3, M019). |
 
 ## Test plan
 
