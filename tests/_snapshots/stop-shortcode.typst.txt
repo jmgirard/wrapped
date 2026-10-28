@@ -5,8 +5,10 @@ figure: fig-sc-box image-width=yes
 figure: fig-sc-kbd image-width=yes
 figure: fig-sc-include image-width=yes
 figure: fig-sc-next image-width=yes
+figure: fig-sc-meta image-width=yes
 # wraps
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-video no-alt | p | cites=0
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-box no-alt | p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-kbd no-alt | p, p, p | cites=0
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-include no-alt | p, p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-meta no-alt | p, list, p | cites=0

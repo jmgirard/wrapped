@@ -7,14 +7,17 @@ fig-sc-box: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
 fig-sc-kbd: wrap-right style=--wrap-gap: 1em; --wrap-width: 35%
 fig-sc-include: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
 fig-sc-next: - style=-
+fig-sc-meta: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
 # images
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=width:35.0% width=-
+plot.png: wrap=- style=- width=-
 # groups
 fig-sc-video, p
 fig-sc-box, p
 fig-sc-kbd, p, p, p
 fig-sc-include, p, p, p
+fig-sc-meta, p, ul, p
