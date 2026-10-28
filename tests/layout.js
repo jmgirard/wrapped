@@ -185,11 +185,12 @@ export function straddle(cases) {
   let pos = 0;
   return cases.map((c, n) => {
     const el = figs[n];
-    const box = el.getBoundingClientRect();
+    const box = el?.getBoundingClientRect();
     const crosses = (l) => (c.side === "right" ? l.right > box.left + TOL : l.left < box.right - TOL);
     const ai = paras.findIndex((p, i) => i >= pos && has(p, c.above));
     const si = paras.findIndex((p, i) => i > ai && has(p, c.straddle));
     const problems = [];
+    if (!el || sideOf(el) !== c.side) return { figure: el?.id, ok: false, problems: ["figure missing or on the other side"] };
     if (ai < 0 || si < 0) return { figure: el.id, ok: false, problems: ["paragraph not found"] };
     pos = si + 1;
     const above = paragraphLines(paras[ai]);

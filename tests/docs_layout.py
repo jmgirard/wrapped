@@ -238,11 +238,12 @@ def main():
                 for t in texts:
                     weight[t["font"]] += t["chars"]
                 body = weight.most_common(1)[0][0]
+                # Figure n is image n, so the page must hold no other image.
                 for n, case in enumerate(cases):
-                    if n < len(images):
-                        problems = check(texts, images[n], case["side"], body, sizes)
+                    if len(images) != len(cases):
+                        problems = [f"{len(images)} images for {len(cases)} figures"]
                     else:
-                        problems = ["no image"]
+                        problems = check(texts, images[n], case["side"], body, sizes)
                     status = "ok" if not problems else "FAIL: " + "; ".join(problems)
                     failed += bool(problems)
                     print(f"{page} {fmt} figure {n + 1}: {status}")

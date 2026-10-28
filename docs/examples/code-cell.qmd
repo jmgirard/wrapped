@@ -37,12 +37,12 @@ cell.
 Faster cars took longer to stop. The figure has the same caption, number,
 and `@fig-` link as a figure written in markdown. The plot's size in R
 sets its shape, and `out-width` scales it to 40% of the text width. The
-site renders this page from results that Quarto
-saved when the cell last ran, so the site does not need R to build it.
-After the text passes the bottom of the figure, each line starts at the
-left edge of the text again and runs under the figure, as the end of this
-paragraph shows. Two columns or a table could not give this layout,
-because the text in them stays in its own column from top to bottom.
+site renders this page from results that Quarto saved when the cell last
+ran, so the site does not need R to build it. The cell's options start
+with `#|`, and knitr reads them before it runs the code. The last lines of
+this paragraph start at the left edge of the text again and run under the
+figure. Two columns or a table could not give this layout, because the
+text in them stays in its own column from top to bottom.
 
 ## Next
 

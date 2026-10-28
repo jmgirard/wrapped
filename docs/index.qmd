@@ -24,10 +24,9 @@ caption, and the text can point to it with a `@fig-` link, as the
 paragraph before this one does. Its width is 40% of the text column,
 which is the default. Each format draws the layout with its own tools:
 CSS in HTML, wrapfig in LaTeX, wrap-it in Typst, and a frame in Word. The
-text is not split into two columns. It
-flows beside the figure, and after it passes the bottom of the figure,
-each line runs the full width of the text again, under the figure, as the
-end of this paragraph shows. Wrapping stops at the next block that is not
+text is not split into two columns. It flows beside the figure, and the
+last lines of this paragraph run under the figure, at the full width of
+the text. Wrapping stops at the next block that is not
 a paragraph, such as a heading or a list. In a window 576px wide or
 narrower, the figure stops floating and takes the full width of the text
 column.

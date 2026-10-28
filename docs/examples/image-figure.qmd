@@ -32,12 +32,12 @@ The class `.wrap-right` puts the figure on the right side of the text, and
 the `width` attribute makes it 40% of the text width. The paragraphs after
 the figure flow on its left. Each format draws this layout with its own
 tools: CSS in HTML, wrapfig in LaTeX, wrap-it in Typst, and a frame in
-Word. The text does not stay in a column of its own. After the text passes
-the bottom of the figure, each line starts at the left edge of the text
-and runs to the right edge, under the figure. This paragraph shows it: its
-first lines sit beside the figure, and its last lines run under it. Two
+Word. The text does not stay in a column of its own. The first lines of this
+paragraph sit beside the figure, and its last lines run from the left edge
+of the text to the right edge, under the figure. Two
 columns or a table cannot give this layout, because their text stays in
-its own column from top to bottom. Wrapping goes on in this way until the
+its own column from top to bottom. The figure's number comes from its id,
+`#fig-ratings`, as it does for any figure in Quarto. Wrapping goes on in this way until the
 next block that is not a paragraph, such as the heading below.
 
 ## Next
