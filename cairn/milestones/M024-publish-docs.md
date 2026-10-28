@@ -143,6 +143,7 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
 - 2026-10-28: verify after T5: 102 of 103 renders pass; `meta-breakpoint.html` failed with quarto exit 139 ("Segmentation fault: 11" in Quarto's deno), a crash with no output to compare, not a snapshot difference; the branch changes no filter file, so the full suite is rerun.
 - 2026-10-28: claim audit: 38 claims read, 1 corrected — CLAUDE.md ("The README only points to the site": it also gives install steps and one example); the publish job's CI run is still untested (first run comes at the merge).
 - 2026-10-28: T5 done: verify rerun on 01ffbeb, all 103 renders pass (the segfault did not recur). All tasks checked; status review; paused for the user before `/milestone-review`.
+- 2026-10-28: step-7 approval: m024-publish-docs approved for merge
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
