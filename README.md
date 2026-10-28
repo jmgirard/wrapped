@@ -354,10 +354,11 @@ floats beside the paragraphs after it in that card. So does an image in
 the card that Quarto makes for the text of a row or a column.
 Code cell figures are tested with knitr cells that make one plot.
 
-Quarto makes a code cell outside a `.card` div into a card of its own. The paragraphs after the cell are then in another card.
-So a figure from a code cell outside a `.card` div keeps its normal
-layout. The render prints one warning for it. To wrap the
-figure, put the cell and its paragraphs in a `.card` div:
+Quarto makes a code cell outside a `.card` div into a card of its own.
+The paragraphs after the cell are then in another card. So a figure from
+a code cell outside a `.card` div keeps its normal layout. The render
+prints one warning for it. To wrap the figure, put the cell and its
+paragraphs in a `.card` div:
 
 ````markdown
 ::: {.card title="Ratings"}
