@@ -57,7 +57,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
      insertion, removal, or reorder renumbers the labels and the Coverage
      lines together. -->
 
-- [ ] AC1: From a clean checkout of the branch head, `quarto render docs`
+- [x] AC1: From a clean checkout of the branch head, `quarto render docs`
       with Quarto 1.10.19 exits 0 with no `R` or `Rscript` on `PATH`,
       because code-cell results come from the committed `docs/_freeze/`.
       `.github/workflows/docs.yml` runs that command on each pull request
@@ -231,3 +231,29 @@ Review head 95ea977, main b7e62a3 (unmoved since the cut). Copilot round off.
 - ripple #3: DESIGN.md Conventions describes PR CI as verify.yml only — fix now (as diff-bug #2)
 - ripple #4: DESIGN.md "The README states this limit" lines — reject, planned change (M024 AC4)
 - ripple #5: the M002 lesson names only tests/_extensions — reject, false (it does not contradict a second symlink)
+- Pass 1 fix-now items (diff-bug #1, #2, #3, #5–#9; blame-history #1, #2; prior-review #1; ripple #1–#3): fixed b73cdf3 through review return 1; caps restored 9d81552.
+
+Pass 2, review head 9952239, main b7e62a3 (unmoved).
+
+- AC1: fresh clone at 9952239, Quarto 1.10.19, `command -v R` and `command -v Rscript` empty; `quarto render docs` exit 0, one `(W)` line (fig-callout), `git status --porcelain` empty after. `docs.yml` triggers: `pull_request` with paths `docs/**`, `_extensions/**`, `.github/workflows/docs.yml` and no branch filter; `push` to main with the same paths; `workflow_dispatch`. One `run:`, `quarto render docs`; no R step. Pass.
+- AC2: the 8 example pages each link PDF → `<name>.pdf`, Typst → `<name>-typst.pdf`, MS Word → `<name>.docx`; 24 of 24 files exist; each PDF-link file reports Producer LuaTeX-1.24.0 and each Typst-link file Creator Typst 0.15.1. Pass.
+- AC3: clone's `_site` with `tests/layout.js` at 1280x900: 11 figures on 10 pages, each `float` equal to its side (same list as pass 1). 26 fresh page images (LaTeX PDF, Typst PDF, Word via LibreOffice) show body text beside each of the 9 example figures in each format, the width-gap pages with their new breakpoint sentence included. Pass.
+- AC4: `readme_ledger.py` on the clone against origin/main's README: 133 blocks, 115 verbatim, the same 18 hand-matched blocks as pass 1, whose pages return 1 did not change apart from width-gap.qmd, where the gap paragraph is as before. Pass.
+- AC5: reference.html: six rows (classes and attributes) and three rows (`wrapped:` keys), each with values, default, and formats; the `width` row now names `3in`, `250px`, or `20em` and per-format units, which the four format pages accept. Pass.
+- AC6: `quarto add <zip> --no-prompt` on `git archive` zips of 9952239 and origin/main: exit 0, only `wrapped`, the same 9 files. `.gitattributes` does not enter the install. Pass.
+- Gate: `cairn_validate.py` all checks passed; version marker 0.2.0 on branch and main; `tests/verify.py` on 9d81552 (no filter or test change since): all 103 renders pass; changelog none.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: docs.yml's "Runs on main are never cancelled" is false, since a newer queued run replaces a queued one — fix now (verify.yml's same comment is outside the diff: follow-up, row "Correct the cancel comment in verify.yml")
+- diff-bug #2: the re-freeze note names the two code-cell pages by hand and goes stale when a page gains a cell — fix now
+- diff-bug #3: width-gap.qmd says the values convert to each format's units and links only LaTeX, Typst, and Word, but HTML uses the CSS value as written — fix now
+- diff-bug #4: examples/width-gap.qmd's breakpoint sentence is not linked, and the next sentence about narrow columns reads against it — fix now
+- diff-bug #5: DESIGN.md's docs-site line omits `workflow_dispatch` — fix now
+- diff-bug #6: reference.qmd's `width` row says "Each format takes its own set of units" beside a Formats cell that says the same — reject, style
+- diff-bug #7: a PR touching none of docs.yml's paths would wait forever if `docs` were a required check — reject, edge (making it a required check, outside the repo's setup; the effect is a pending check)
+- blame-history #1: frozen results are not re-run after a filter change, so CI could pass on stale output — reject, false (freeze keeps knitr's output; Pandoc and the filter run on every render, so a filter change shows)
+- blame-history #2: docs.yml drops the main-only branch filter that verify.yml keeps — reject, planned change (AC1, return 1)
+- blame-history #3: width-gap.qmd's format link leaves out HTML — fix now (as diff-bug #3)
+- blame-history #4: examples/width-gap.qmd states the rule before its exception — fix now (as diff-bug #4)
+- prior-review #1: DESIGN.md's "on pull requests and pushes to `main`" reads as PRs to main only — fix now (with diff-bug #5)
+- ripple #1: the breakpoint sentence and the narrow-column sentence read against each other — fix now (as diff-bug #4)
+- ripple #2: DESIGN.md omits the manual trigger — fix now (as diff-bug #5)
