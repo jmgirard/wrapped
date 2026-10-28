@@ -599,6 +599,8 @@ def small_a_case(boxes, edges, lh):
     lines = paragraph_lines(boxes, "Four lines beside small a.", "Stop small a", fig.caption)
     if len(lines) != 4:
         raise LayoutError(f"the paragraph beside small a has {len(lines)} lines, not 4")
+    if lines[-1][0].bottom >= fig.bottom:
+        raise LayoutError("the 4 narrowed lines do not end above the figure's bottom")
     ref = find_text(boxes, "A short paragraph beside form A right.")
     stop_gap(fig, find_text(boxes, "Stop small a"), lh,
              find_figure(boxes, "Form A right.", ref), find_text(boxes, "Stop A right"))
@@ -613,6 +615,8 @@ def small_b_case(boxes, edges, lh):
     lines = paragraph_lines(boxes, "First paragraph beside small b.", "Second paragraph of small b.")
     if len(lines) < 4:
         raise LayoutError(f"the first paragraph of small b has {len(lines)} lines, fewer than 4")
+    if lines[3][0].top >= fig.image.bottom:
+        raise LayoutError("line 4 of the first paragraph is not beside the figure")
     for n, line in enumerate(lines, 1):
         left = min(b.left for b in line)
         if n <= 3 and left < fig.image.right:
@@ -636,12 +640,16 @@ def small_c_case(boxes, edges, lh):
     check_beside(fig, p, "right", edges, lh)
     second = paragraph_lines(boxes, "Second paragraph beside small c.", "A short paragraph beside small c next.",
                              fig.caption)
+    if max(b.right for b in second[0]) > fig.image.left:
+        raise LayoutError("the first line of the second paragraph runs at full width, so the count ended before it")
     if not any(max(b.right for b in line) > fig.image.left and line[0].top < fig.bottom for line in second[1:]):
         raise LayoutError("no line of the second paragraph runs at full width above the figure's bottom")
-    nxt = find_figure(boxes, "Small c next.", find_text(boxes, "A short paragraph beside small c next."))
+    beside = find_text(boxes, "A short paragraph beside small c next.")
+    nxt = find_figure(boxes, "Small c next.", beside)
     if nxt.page != fig.page:
         raise LayoutError(f"the next wrapped figure is on page {nxt.page}, not on the figure's page {fig.page}")
     check_below(fig, nxt.image.top, nxt.page, "the next wrapped figure")
+    check_below(fig, beside.top, beside.page, "the paragraph beside the next wrapped figure")
 
 
 def heading_gap(boxes, last, heading):

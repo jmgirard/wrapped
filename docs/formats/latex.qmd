@@ -31,7 +31,8 @@ the figure, as it does without `wrap-lines`.
 With a value smaller than the figure needs, LaTeX narrows that many lines.
 The text after them runs at full width, also beside the figure, where it
 prints over the figure. In body text, the block that stops the wrap starts
-below the figure.
+below the figure when the paragraph that holds the figure, its narrowed
+lines, and that block are on one page, with no footnote beside the figure.
 
 ```markdown
 ![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right wrap-lines="12"}
@@ -48,7 +49,8 @@ wrapfig has limits, and the extension keeps some of them:
 - wrapfig narrows a number of lines that it counts from the height of the
   figure. At the block that stops the wrap, the extension skips the lines
   that the figure still needs. After a `wrap-lines` value smaller than the
-  figure needs, it skips to below the figure in body text. If the text
+  figure needs, it skips to below the figure in body text, on the figure's
+  page. If the text
   beside the figure is shorter than the figure, the space beside the
   figure stays empty.
 - A figure that does not fit at the bottom of a page moves to the start of

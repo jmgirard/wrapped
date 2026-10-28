@@ -21,7 +21,8 @@
 % whose text is still narrowed ends: the lines that the figure's height
 % still needs are skipped, and \WFclear ends the wrap. After a wrap-lines
 % value smaller than the height needs, whose narrowed lines have ended, the
-% text skips to below the figure on its page. In a wrappedfigure,
+% block that stops the wrap starts below the figure on its page, outside
+% boxes. In a wrappedfigure,
 % \WFclear ends it inside the environment's group, so \wrapped@afterenv
 % ends it again after the group.
 %
@@ -39,7 +40,9 @@
 \def\WF@putfigmaybe{\columnsep=\wrapped@gap\relax \wrapped@putfigmaybe}
 \g@addto@macro\WF@startwrapping{\wrapped@cleargap}
 % \WFclear as in wrapfig, but a figure that waits is centered. LaTeX runs
-% \WFclear at each \clearpage, the end of the document included.
+% \WFclear at each \clearpage, the end of the document included. It also
+% drops the start record below, so no later stop skips for a wrap that a
+% \clearpage ended.
 \renewcommand\WFclear{\par
   \ifvoid\WF@box\else
     \vskip\intextsep
@@ -75,8 +78,9 @@
 % figure, less one. A wrap-lines value larger than the height needs adds no
 % space. A wrap-lines value smaller than the height needs can end the
 % narrowed lines above the figure's bottom. Then \wrapped@skipbelow skips to
-% \WF@size less one \baselineskip below where the wrap started, which is
-% below the figure's bottom.
+% \WF@size less one \baselineskip below where the wrap started. \WF@size is
+% the figure's depth plus 1.5\baselineskip and two \intextsep, so that point
+% is about \intextsep less half a line below the figure's bottom.
 \newcommand*\wrapped@endwrap{%
   \ifvoid\WF@box\else \WFclear \fi
   \ifx\parshape\WF@fudgeparshape
