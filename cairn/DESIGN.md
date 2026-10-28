@@ -79,7 +79,7 @@ filter carries it to the figure (`references/wrap-mechanisms.md`, S1; D-001).
 | `.wrap-left`, `.wrap-right` | class | none | Turns wrapping on and picks the side. |
 | `width` | percent of text width (in Typst with `columns:` set, of column width), or an absolute length | `40%` | Width of the figure box, caption included. |
 | `wrap-gap` | length | `1em` | Space between the figure and the text. A gap below zero takes the default with a warning (corrected M012). |
-| `wrap-lines` | integer | auto | LaTeX only. The most narrowed lines; a stop block ends the wrap earlier (changed M007, D-007). |
+| `wrap-lines` | integer | auto | LaTeX only. The most narrowed lines; a stop block ends the wrap earlier (changed M007, D-007). After a smaller value than the height needs, the stop block starts below the figure in body text (changed M025, D-015). |
 
 Document or project defaults go under one metadata key:
 
@@ -108,7 +108,9 @@ before the filter runs, so their blocks follow the rule as written. An empty `::
 it earlier. HTML, LaTeX, Typst, and Word enforce the rule. In LaTeX a
 `\wrappedstop` after the group skips the lines the figure's height still
 needs, and puts out a figure that moved and still waits, centered with no
-text beside it (corrected M007).
+text beside it (corrected M007). After a `wrap-lines` value smaller than
+the height needs, whose narrowed lines have ended, it skips to below the
+figure on the figure's page, outside boxes (corrected M025).
 
 Next-block rule (D-003): a wrapped figure whose next block is not a
 paragraph has no text to wrap, so it keeps a normal figure with no warning.
