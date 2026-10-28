@@ -25,9 +25,9 @@ the ImageCaption style, and the kind of each block after the frame up to the
 paragraph with the clearing break, with the link anchors and author-year
 citations in those paragraphs. It also counts framed paragraphs that are
 in no frame. The script first writes the reference docs of the docx
-fixtures with tests/reference_narrow.py. A revealjs
-snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
-book project: its snapshot holds the HTML parts of each page under _book/,
+fixtures with tests/reference_narrow.py. A revealjs or dashboard
+snapshot holds what an HTML snapshot holds. A fixture that is a folder
+is a book project: its snapshot holds the HTML parts of each page under _book/,
 and the href of each cross-reference link. For a fixture in MARGIN_IDS, the
 script also renders a copy with no filters and records whether the nearest
 column-margin div around each named figure has the same classes in both
@@ -174,6 +174,7 @@ RENDERS = [
     ("revealjs", "revealjs", True),
     ("revealjs-margin-meta", "revealjs", True),
     ("revealjs-column-margin", "revealjs", True),
+    ("dashboard", "dashboard", True),
     ("margin", "html", False),
     ("stop-rule", "html", False),
     ("rtl", "html", False),
@@ -1289,7 +1290,7 @@ def summary(fixture, fmt, log):
     if (TESTS / fixture).is_dir():
         for page in sorted((TESTS / fixture / "_book").glob("*.html")):
             parts += [f"## {page.name}", html_summary(page), "# xrefs", xref_summary(page)]
-    elif fmt in ("html", "revealjs"):
+    elif fmt in ("html", "revealjs", "dashboard"):
         parts.append(html_summary(TESTS / f"{fixture}.html"))
         if fixture in MARGIN_IDS:
             parts += ["# margin containers"] + margin_summary(fixture)

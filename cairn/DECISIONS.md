@@ -174,3 +174,17 @@ text there. The meta stop follows the value in each format, so a key set
 for one format only stops in that format and joins in the others, where
 Quarto renders it as text. The new stop forms are blocks of D-007's stop
 rule and not paragraphs for D-003's next-block rule, as D-011's are.
+
+### D-013: In a dashboard, a code cell outside a `.card` div keeps a normal figure
+
+2026-10-28, M022. In a dashboard, a wrapped figure from a code cell that
+is not inside a `.card` div keeps its normal layout with the warning "is
+outside a card in a dashboard". Quarto's dashboard filter runs after this
+filter and makes such a cell a card of its own, so the paragraphs after
+the cell sit in another card, where no float can reach them. The user
+chose, at the M021 plan's question set, a normal figure with a warning
+where a float cannot work in a dashboard. The filter does not put the
+cell and its paragraphs in a card for the user, because a card the user
+did not write changes the dashboard's layout; the README asks the user to
+write the `.card` div. A `.card` div that is itself a context, such as one
+with `layout-ncol`, keeps that context.

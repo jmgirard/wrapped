@@ -5,7 +5,7 @@ filters:
 format: html
 ---
 
-Each figure example in `README.md` appears here, with only ids and file names changed. The `wrap-clear` example is in `stop-rule.qmd`, and the `wrapped:` example is in `defaults.qmd`.
+Each figure example in `README.md` appears here, with only ids and file names changed. The `wrap-clear` example is in `stop-rule.qmd`, the `wrapped:` example is in `defaults.qmd`, and the dashboard `.card` example has the shape of `fig-dash-card` in `dashboard.qmd`.
 
 ![Mean ratings by condition.](plot.png){#fig-readme-md .wrap-right width="40%"}
 

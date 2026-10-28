@@ -36,6 +36,7 @@ local options = {
 
 local is_html = quarto.doc.is_format("html:js")
 local is_revealjs = quarto.doc.is_format("revealjs")
+local is_dashboard = quarto.doc.is_format("dashboard")
 -- An HTML page with Quarto's page layout. revealjs slides have no margin
 -- column, no margin captions, and no page-wide columns.
 local has_page_layout = is_html and not is_revealjs
@@ -943,6 +944,10 @@ local function class_context(classes, own)
   return margin_context(classes) or page_context(classes, own)
 end
 
+-- The number of dashboard `.card` divs around the block that find_contexts
+-- is at.
+local card_depth = 0
+
 -- Returns the context that a block sets for the blocks inside it, or nil.
 -- A code cell with `column: margin` carries the column-margin class.
 local function block_context(block)
@@ -972,6 +977,14 @@ local function block_context(block)
   -- a code cell's figure goes, over the cell's own column (Quarto 1.10.19).
   if (is_latex or is_typst) and meta_column_set and block.classes:includes("cell") then
     return nil
+  end
+  -- Quarto's dashboard filter, which runs after this one, makes a code cell
+  -- outside a `.card` div a card of its own, so the paragraphs after the
+  -- cell are not in its card. It leaves a Jupyter markdown cell's content
+  -- in place.
+  if is_dashboard and card_depth == 0 and block.classes:includes("cell")
+      and not block.classes:includes("markdown") then
+    return "is outside a card in a dashboard"
   end
   return class_context(block.classes)
 end
@@ -1034,7 +1047,17 @@ end
 -- floats and divs page-wide, so a float's own margin or page-wide class is
 -- read in the float pass.
 local function find_contexts(doc)
+  local filter
   local function mark(block)
+    -- A card that is also a context, such as one with layout-ncol, is
+    -- marked as that context below.
+    if is_dashboard and block.t == "Div" and block.classes:includes("card")
+        and not block_context(block) then
+      card_depth = card_depth + 1
+      block.content = block.content:walk(filter)
+      card_depth = card_depth - 1
+      return block, false
+    end
     if block.t == "Div" and is_float_div(block) then
       local inner = pandoc.Blocks({})
       block.content:walk({
@@ -1071,7 +1094,7 @@ local function find_contexts(doc)
     if not context then return nil end
     return mark_context(pandoc.Blocks({ fig }), context), false
   end
-  doc.blocks = doc.blocks:walk({
+  filter = {
     traverse = "topdown",
     Div = mark,
     BulletList = mark,
@@ -1087,7 +1110,8 @@ local function find_contexts(doc)
       context_warning("the image " .. pandoc.utils.stringify(img.src), context)
       return drop_wrap(img)
     end,
-  })
+  }
+  doc.blocks = doc.blocks:walk(filter)
   return doc
 end
 
