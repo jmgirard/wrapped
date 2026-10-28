@@ -181,8 +181,8 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    the document sets `fig-column` or `column`, because the document's value
    decides there (corrected M016). In a dashboard, a code cell outside a
    `.card` div is a context ("is outside a card in a dashboard"), because
-   Quarto's post-render dashboard filter makes such a cell in a row or
-   column a card of its own; the walk tracks the `.card` divs around each
+   Quarto's post-render dashboard filter makes such a cell a card of its
+   own; the walk tracks the `.card` divs around each
    block (corrected M022). It
    records each float there by its custom id, and it removes the wrap class
    from a captioned image with no id or an image there, with a warning. In

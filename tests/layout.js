@@ -102,8 +102,9 @@ function figureEntry(el) {
 }
 
 // The block that follows a wrap group. A group that ends its section is
-// followed by the next section. In a dashboard, a group that ends its card
-// body has no next block, since the next card is laid out apart from it.
+// followed by the next section. A group that ends its `.card-body` has no
+// next block, since the next card body, in this card or another, is laid
+// out apart from it. Elements with display none or contents are skipped.
 function nextBlock(group) {
   const main = group.closest(".card-body") || group.closest("main") || document.body;
   const hidden = (el) => ["none", "contents"].includes(getComputedStyle(el).display) || el.tagName === "SCRIPT";

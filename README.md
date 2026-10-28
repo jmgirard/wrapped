@@ -349,12 +349,12 @@ render prints one warning for it.
 
 ## Dashboards
 
-In a dashboard (`format: dashboard`), a wrapped figure in a card floats
-beside the paragraphs after it in that card. This holds for an image and
-for a code cell figure too.
+In a dashboard (`format: dashboard`), a wrapped figure in a `.card` div
+floats beside the paragraphs after it in that card. So does a figure or an
+image in the card that Quarto makes for the text of a row or a column.
+Code cell figures are tested with knitr cells that make one plot.
 
-In a row or a column, Quarto makes a code cell outside a `.card` div into
-a card of its own. The paragraphs after the cell are then in another card.
+Quarto makes a code cell outside a `.card` div into a card of its own. The paragraphs after the cell are then in another card.
 So a figure from a code cell outside a `.card` div keeps its normal
 layout. The render prints one warning for it. To wrap the
 figure, put the cell and its paragraphs in a `.card` div:
@@ -366,7 +366,7 @@ figure, put the cell and its paragraphs in a `.card` div:
 #| fig-cap: "Mean ratings by condition."
 #| classes: wrap-right
 #| out-width: "40%"
-plot(ratings)
+plot(1:10)
 ```
 
 Ratings rose in both conditions.
