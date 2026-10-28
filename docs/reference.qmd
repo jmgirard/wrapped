@@ -18,13 +18,12 @@ Word. HTML includes revealjs slides and dashboards.
 | [`.wrap-left`](get-started.qmd#wrap-a-figure) | class | none | none | All four formats |
 | [`.wrap-clear`](stopping.qmd#stop-wrapping-earlier) | class on an empty div | none | none | All four formats |
 | [`width`](width-gap.qmd#width) | attribute | A percent of the text column, or an absolute length such as `3in` or `250px`. In HTML, also a `calc()`, `min()`, `max()`, or `clamp()` value. | The document default, else `40%` | All four formats, each with its own units |
-| [`wrap-gap`](width-gap.qmd#gap) | attribute | A length. In HTML, also a `calc()`, `min()`, `max()`, or `clamp()` value. | The document default, else `1em` | All four formats, each with its own units |
+| [`wrap-gap`](width-gap.qmd#gap) | attribute | A length or a percent of the text column. In HTML, also a `calc()`, `min()`, `max()`, or `clamp()` value. | The document default, else `1em` | All four formats, each with its own units |
 | [`wrap-lines`](formats/latex.qmd#lines-beside-the-figure) | attribute | A number of lines | Counted from the figure's height | PDF through LaTeX only |
 
 : {tbl-colwidths="[18,16,36,15,15]"}
 
-`width`, `wrap-gap`, and `wrap-lines` convert to each format's units as
-the pages for [LaTeX](formats/latex.qmd#width-and-gap),
+`width` and `wrap-gap` convert to each format's units as the pages for [LaTeX](formats/latex.qmd#width-and-gap),
 [Typst](formats/typst.qmd#width-and-gap), and
 [Word](formats/word.qmd#width-and-gap) state.
 

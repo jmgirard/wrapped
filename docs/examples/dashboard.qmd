@@ -23,6 +23,9 @@ in a `.card` div.
 
 Ratings rose in both conditions. The figure floats to the right of the
 paragraphs after it, inside this card.
+
+A figure from a code cell wraps too when the cell and its paragraphs are
+in a `.card` div.
 :::
 ```
 :::

@@ -59,8 +59,8 @@ Ratings by group.
 Ratings by group.
 :::
 
-The div form puts the caption in the last paragraph of the div, so the
-caption can hold more markdown. The class `.wrap-left` puts the figure on
+The div form puts the caption in the last paragraph of the div, which
+keeps a long caption easy to read in the source. The class `.wrap-left` puts the figure on
 the left, and this text flows on its right.
 
 @fig-groups has a width of 35%, so the text beside it has a little more

@@ -45,4 +45,5 @@ filters:
 ```
 
 [Get started](get-started.qmd) shows each kind of figure that wraps. The
-[examples](examples/index.qmd) show each one rendered in every format.
+[examples](examples/index.qmd) show each one rendered in HTML, in PDF
+through LaTeX, in PDF through Typst, and in Word.

@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M023: Build the documentation site
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -139,7 +139,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
       TinyTeX through `quarto-dev/quarto-actions/setup`, and
       `quarto render docs`, on pull requests that change `docs/`,
       `_extensions/`, or the workflow, and by hand.
-- [ ] T9: Checks for review: render with R off `PATH`; build the README
+- [x] T9: Checks for review: render with R off `PATH`; build the README
       block ledger (each Pandoc block → site page and heading) in this file;
       measure the gallery's HTML with `tests/layout.js` (lessons M020, M022);
       make page images with `pdftoppm` and, for Word, LibreOffice (D-005),
@@ -185,6 +185,9 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: T9 README ledger: a script parses `README.md` at main with `quarto pandoc -t json` into 133 blocks (paragraphs, list items, code blocks, opening lines included) and finds 115 verbatim in a `docs/**/*.qmd` page. The 18 others were matched by hand: the three form lead-ins and the code-cell lead-in became get-started headings plus text; the get-started cell (`echo: fenced`) and the dashboard cell (written `{{r}}`) show the same source; "see Word below", "checked as above", "see below", "see “Slides”", "see “Dashboards”", "the next section", and "this section" became links or "this page"; "Tagged PDF:" lead-ins became headings; the stopping and shortcode paragraphs were split at their topic seams. No rule was dropped or changed.
 - 2026-10-28: T9 page images (pdftoppm, 40 dpi; Word via `soffice --headless --convert-to pdf`, D-005): body text sits beside each of the 9 figures of the 8 example pages in the LaTeX PDF, the Typst PDF, and the Word file (image-figure, div-figure, uncaptioned-image, code-cell, both-sides x2, width-gap, defaults, wrap-clear); `pdfinfo` gives Producer LuaTeX-1.24.0 for each `<name>.pdf` and Creator Typst 0.15.1 for each `<name>-typst.pdf`. The width-gap source line ran past the LaTeX margin; its caption is now "Mean ratings." and the line fits.
 - 2026-10-28: minor amendment: T9's per-figure ledger is in the work log above, not the Review section, which review owns; review regenerates its evidence.
+- 2026-10-28: claim audit: 190 claims read, 7 corrected — docs/examples/div-figure.qmd, docs/get-started.qmd, docs/reference.qmd (two), docs/examples/uncaptioned-image.qmd, docs/index.qmd, docs/normal-layout.qmd. The div-caption claims said a div caption holds markdown an image caption cannot (a render showed both hold emphasis, links, and citations); the `wrap-gap` row omitted percents; the units note named `wrap-lines`; the alt-text claim ignored untagged PDFs; "every format" and "in every format" named four. The dashboard source card also gained its missing third paragraph. The same reader re-read the eight changes and found none still wrong.
+- 2026-10-28: `python3 tests/verify.py` passes (all 103 renders) on the branch; the filter is unchanged.
+- 2026-10-28: implement done; status review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

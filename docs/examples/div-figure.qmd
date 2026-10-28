@@ -36,9 +36,9 @@ The class `.wrap-left` puts the figure on the left side of the text, so
 this text flows on its right. The figure is 35% of the text width, a
 little narrower than the default of 40%.
 
-The div form lets the caption hold more markdown than the image form,
-such as *emphasis*, a link, or a citation. The figure keeps its number,
-so the text can point to it.
+The div form puts the caption in its own paragraph, which is easier to
+read and edit when the caption is long. The figure keeps its number, so
+the text can point to it.
 
 ## Next
 

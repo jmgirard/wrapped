@@ -22,7 +22,7 @@ The render of this page prints this warning for @fig-callout:
 (W) wrapped: the figure #fig-callout is in a callout, so it does not wrap.
 ```
 
-## Places that keep the normal layout in every format
+## Places that keep the normal layout in all four formats
 
 In HTML, PDF through LaTeX, PDF through Typst, and Word, a wrapped figure
 in one of the places in this first list does not wrap. It keeps
