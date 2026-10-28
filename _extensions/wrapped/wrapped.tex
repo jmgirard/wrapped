@@ -19,7 +19,9 @@
 % earlier wrap first, in the same way. A figure that moved and still waits
 % for a paragraph is put out there, centered, with no text beside it. A wrap
 % whose text is still narrowed ends: the lines that the figure's height
-% still needs are skipped, and \WFclear ends the wrap. In a wrappedfigure,
+% still needs are skipped, and \WFclear ends the wrap. After a wrap-lines
+% value smaller than the height needs, whose narrowed lines have ended, the
+% text skips to below the figure on its page. In a wrappedfigure,
 % \WFclear ends it inside the environment's group, so \wrapped@afterenv
 % ends it again after the group.
 %
@@ -46,14 +48,15 @@
     \let\everypar\WF@@everypar \everypar\expandafter{\the\WF@everypar}%
   \fi
   \global\c@WF@wrappedlines\z@ \WF@finale
+  \global\wrapped@startedfalse
   \wrapped@cleargap}
 % wrapfig counts the lines beside a figure from \WF@size, the figure's
 % height, or takes the wrap-lines value. \wrapped@startlines keeps the count
 % that the wrap started with, and \wrapped@startbs the \baselineskip that
-% wrapfig counted with. \wrapped@starttotal keeps \pagetotal at the start,
-% which wrapfig has just brought up to date in the main vertical list, but
-% not inside a box, \wrapped@startsize keeps
-% \WF@size, and \wrapped@startpage the number of pages shipped out by then.
+% wrapfig counted with. \wrapped@starttotal keeps \pagetotal at the start.
+% In the main vertical list, wrapfig has just brought it up to date; inside
+% a box it has not. \wrapped@startsize keeps \WF@size, and
+% \wrapped@startpage the number of pages shipped out by then.
 \newcount\wrapped@startlines
 \newdimen\wrapped@startbs
 \newdimen\wrapped@starttotal
@@ -70,10 +73,10 @@
 % Where the text is still narrowed, the lines skipped are the lines that
 % wrapfig counts from the height, less the lines already set beside the
 % figure, less one. A wrap-lines value larger than the height needs adds no
-% space. Where the narrowed lines have ended, as a wrap-lines value smaller
-% than the height needs can make them end above the figure's bottom,
-% \wrapped@skipbelow skips to \WF@size less one \baselineskip below where
-% the wrap started, which is below the figure's bottom.
+% space. A wrap-lines value smaller than the height needs can end the
+% narrowed lines above the figure's bottom. Then \wrapped@skipbelow skips to
+% \WF@size less one \baselineskip below where the wrap started, which is
+% below the figure's bottom.
 \newcommand*\wrapped@endwrap{%
   \ifvoid\WF@box\else \WFclear \fi
   \ifx\parshape\WF@fudgeparshape
@@ -88,18 +91,22 @@
     \ifwrapped@started \wrapped@skipbelow \fi
   \fi
   \global\wrapped@startedfalse}
-% \pagetotal is the height of the page so far. It describes the text only
-% in the main vertical list on the page where the wrap started, so inside a
-% box such as a callout, or after a page break, nothing is skipped.
+% Only a count smaller than the one wrapfig takes from the height skips: the
+% count that wrapfig takes ends at about the figure's bottom. \pagetotal is
+% the height of the page so far. It describes the text only in the main
+% vertical list on the page where the wrap started, so inside a box such as
+% a callout, or after a page break, nothing is skipped.
 \newcommand*\wrapped@skipbelow{%
   \par
-  \ifinner\else
+  \@tempdima\wrapped@startsize \advance\@tempdima1.1\wrapped@startbs
+  \divide\@tempdima\wrapped@startbs \@tempcnta\@tempdima
+  \ifnum\wrapped@startlines<\@tempcnta \ifinner\else
     \ifnum\wrapped@startpage=\ReadonlyShipoutCounter
       \@tempdima\wrapped@starttotal \advance\@tempdima\wrapped@startsize
       \advance\@tempdima-\wrapped@startbs \advance\@tempdima-\pagetotal
       \ifdim\@tempdima>\z@ \vspace{\@tempdima}\fi
     \fi
-  \fi}
+  \fi \fi}
 \newcommand*\wrappedstop{\wrapped@endwrap}
 % wrapfig runs \WF@startfloating after the environment's groups end. Before
 % it, \wrapped@afterenv ends an earlier wrap there and records that group

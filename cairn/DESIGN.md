@@ -108,7 +108,9 @@ before the filter runs, so their blocks follow the rule as written. An empty `::
 it earlier. HTML, LaTeX, Typst, and Word enforce the rule. In LaTeX a
 `\wrappedstop` after the group skips the lines the figure's height still
 needs, and puts out a figure that moved and still waits, centered with no
-text beside it (corrected M007).
+text beside it (corrected M007). After a `wrap-lines` value smaller than
+the height needs, whose narrowed lines have ended, it skips to below the
+figure on the figure's page, outside boxes (corrected M025).
 
 Next-block rule (D-003): a wrapped figure whose next block is not a
 paragraph has no text to wrap, so it keeps a normal figure with no warning.

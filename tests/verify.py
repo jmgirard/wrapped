@@ -569,7 +569,8 @@ def paragraph_lines(boxes, first, end, leave=None):
     that share its top.
     The box `leave` is left out."""
     p = find_text(boxes, first)
-    lines = [[b for b in boxes if b.kind == "text" and b.page == p.page and abs(b.top - p.top) <= NEAR * 2]]
+    lines = [[b for b in boxes if b.kind == "text" and b.page == p.page and abs(b.top - p.top) <= NEAR * 2
+              and b is not leave]]
     for line in after(boxes, p, leave):
         if any(end in b.text for b in line):
             break
@@ -578,8 +579,11 @@ def paragraph_lines(boxes, first, end, leave=None):
 
 
 def stop_gap(fig, heading, lh, ref_fig, ref_heading):
-    """A stop heading below the figure, at most a line further from its
-    bottom than the heading of the same form and side without wrap-lines."""
+    """A stop heading below the figure on its page, at most a line further
+    from its bottom than the heading of the same form and side without
+    wrap-lines."""
+    if heading.page != fig.page:
+        raise LayoutError(f"the stop heading is on page {heading.page}, not on the figure's page {fig.page}")
     check_below(fig, heading.top, heading.page, f"the stop heading {heading.text!r}")
     got, want = heading.top - fig.bottom, ref_heading.top - ref_fig.bottom
     if got > want + lh:
@@ -624,12 +628,19 @@ def small_b_case(boxes, edges, lh):
 
 
 def small_c_case(boxes, edges, lh):
-    """A count that ends inside the second paragraph, and the next wrapped
-    figure stops the wrap: that figure starts below the first."""
+    """A count that ends inside the second paragraph, above the figure's
+    bottom, and the next wrapped figure stops the wrap: that figure starts
+    below the first on its page."""
     p = find_text(boxes, "First paragraph beside small c.")
     fig = find_figure(boxes, "Small c.", p)
     check_beside(fig, p, "right", edges, lh)
+    second = paragraph_lines(boxes, "Second paragraph beside small c.", "A short paragraph beside small c next.",
+                             fig.caption)
+    if not any(max(b.right for b in line) > fig.image.left and line[0].top < fig.bottom for line in second[1:]):
+        raise LayoutError("no line of the second paragraph runs at full width above the figure's bottom")
     nxt = find_figure(boxes, "Small c next.", find_text(boxes, "A short paragraph beside small c next."))
+    if nxt.page != fig.page:
+        raise LayoutError(f"the next wrapped figure is on page {nxt.page}, not on the figure's page {fig.page}")
     check_below(fig, nxt.image.top, nxt.page, "the next wrapped figure")
 
 
@@ -648,6 +659,8 @@ def small_d_case(boxes, edges, lh):
     after a twin paragraph with no figure."""
     fig = find_figure(boxes, "Small d.", find_text(boxes, "Long paragraph beside small d."))
     last, got = heading_gap(boxes, "zeta.", "Stop small d")
+    if last.page != fig.page:
+        raise LayoutError(f"the paragraph ends on page {last.page}, not on the figure's page {fig.page}")
     check_below(fig, last.top, last.page, "the last line of the paragraph")
     _, want = heading_gap(boxes, "omega.", "Stop twin d")
     if abs(got - want) > 2:
@@ -666,7 +679,7 @@ def small_e_case(boxes, edges, lh):
         raise LayoutError(f"the stop heading is on page {heading.page}, not on the next page")
     ref = find_text(boxes, "A short paragraph beside form A left.").page
     top = min(b.top for b in boxes if b.kind == "text" and b.page == ref)
-    if abs(heading.top - top) > lh:
+    if abs(heading.top - top) > NEAR:
         raise LayoutError(f"the stop heading starts at {heading.top:.0f} px, not at the page's top text edge {top:.0f} px")
 
 
