@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-28 (M021 review: "Stop wraps at block meta values" 
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M022 | Wrap figures in dashboard cards | in-progress | — | normal | milestones/M022-dashboard-wraps.md |
+| M022 | Wrap figures in dashboard cards | review | — | normal | milestones/M022-dashboard-wraps.md |
 | M019 | Wrap figures in Typst columns | done | — | normal | milestones/archive/M019-typst-columns.md |
 | M020 | Stop wraps at block shortcodes | done | — | normal | milestones/archive/M020-shortcode-stop.md |
 | M021 | Stop wraps at more shortcode forms | done | — | normal | milestones/archive/M021-shortcode-stop-forms.md |

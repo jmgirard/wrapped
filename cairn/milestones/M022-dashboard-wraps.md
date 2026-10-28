@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M022: Wrap figures in dashboard cards
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -56,7 +56,7 @@ In a Quarto dashboard, a wrapped code-cell figure inside a `.card` div wraps the
 - [x] T4: In `wrapped.lua`, add an `is_dashboard` flag beside `is_revealjs` (line 38). In pass 2, mark a code cell Div that is not inside a `.card` Div as the context "is outside a card in a dashboard", so its floats get the context warning in the float pass and a two-figure cell gets the one cell warning. Contexts inside a `.card` div (a callout, a list) are still found.
 - [x] T5: Run the fixture with `--update`, read the new snapshot, confirm that no other snapshot changes, and check AC1's figures and group with `report()` at 1280x900 in the built-in browser.
 - [x] T6: Write the README and DESIGN.md text for AC4.
-- [ ] T7: Run `python3 tests/verify.py` in full on macOS.
+- [x] T7: Run `python3 tests/verify.py` in full on macOS.
 
 ## Work log
 
@@ -78,6 +78,7 @@ In a Quarto dashboard, a wrapped code-cell figure inside a `.card` div wraps the
 - 2026-10-28: T5: `verify.py --update` passed all 103 renders and changed no snapshot but the new `dashboard.dashboard.txt` (two "is outside a card in a dashboard" warnings, `fig-dash-bare` and `fig-dash-two-*` with no wrap class, four group lines). `report()` at 1280x900 on the T4 render, after a cache-bypassing reload, gave the four AC1 figures `ok: true` and the `fig-dash-card` group (next `ul` at 629 px, figure bottom 588 px) `ok: true`.
 - 2026-10-28: claim audit: 24 claims read, 3 corrected — README.md, tests/layout.js (README "a wrapped figure in a card" overstated: now names `.card` divs, the row or column card, and one-plot knitr cells; "in a row or a column" dropped from the cell-card claim, here and in DESIGN.md step 2; the `nextBlock` comment names `.card-body` and the skipped displays). Also `plot(ratings)` in the README example became `plot(1:10)`, since no example defines `ratings`.
 - 2026-10-28: claim audit re-read: `layout.js` and DESIGN.md corrections hold; the README's loose-card sentence said "a figure or an image", which reads as covering a code cell figure, so it now says "an image", the case the fixture tests.
+- 2026-10-28: T7: `python3 tests/verify.py` on macOS at 60f86ab: all 103 renders pass, exit 0. Later commits change README, DESIGN.md, and a `layout.js` comment only. Status → review.
 
 ## Decisions
 
