@@ -1,13 +1,13 @@
 # M020: Stop wraps at block shortcodes
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes which blocks wrap beside a figure in every format
-- **Branch/PR:** —
+- **Branch/PR:** m020-shortcode-stop
 
 ## Goal
 
