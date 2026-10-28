@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-28 (M025 review: M022 row pruned; "Stop text overla
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M026 | Show text wrapping past the figure in examples | planned | — | normal | milestones/M026-wrap-showcase.md |
+| M026 | Show text wrapping past the figure in examples | in-progress | — | normal | milestones/M026-wrap-showcase.md |
 | M023 | Build the documentation site | done | — | normal | milestones/archive/M023-docs-site.md |
 | M024 | Publish the site and shorten the README | done | M023 | normal | milestones/archive/M024-publish-docs.md |
 | M025 | Stop text overlap with small wrap-lines | done | — | normal | milestones/archive/M025-small-wrap-lines.md |

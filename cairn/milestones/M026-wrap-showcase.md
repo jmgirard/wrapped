@@ -1,13 +1,13 @@
 # M026: Show text wrapping past the figure in examples
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes the published site's example pages and the README image
-- **Branch/PR:** —
+- **Branch/PR:** m026-wrap-showcase
 
 ## Goal
 
@@ -37,7 +37,7 @@ The site's example pages and the README image show body text above a wrapped fig
 
 ## Tasks
 
-- [ ] T1: On `main`, render `docs/` from a clean `docs/.quarto` and write its sorted `(W) wrapped:` lines to the work log. Add `tests/docs_layout.py`, which reads the `pdftohtml -xml` line boxes of the LaTeX, Typst, and LibreOffice PDFs of the pages in P and checks AC1 (a) to (c) for each figure, and add a function to `tests/layout.js` that returns each paragraph's line rectangles for the same check in HTML. Make sure that both readers fail on `main`.
+- [x] T1: On `main`, render `docs/` from a clean `docs/.quarto` and write its sorted `(W) wrapped:` lines to the work log. Add `tests/docs_layout.py`, which reads the `pdftohtml -xml` line boxes of the LaTeX, Typst, and LibreOffice PDFs of the pages in P and checks AC1 (a) to (c) for each figure, and add a function to `tests/layout.js` that returns each paragraph's line rectangles for the same check in HTML. Make sure that both readers fail on `main`.
 - [ ] T2: Rewrite the Result sections of `image-figure.qmd`, `div-figure.qmd`, and `uncaptioned-image.qmd`: a paragraph of at least two lines before the figure, then a paragraph of about 8 lines that starts beside the figure and continues below it. The prose explains the example, in the site's plain style.
 - [ ] T3: Do the same for `width-gap.qmd`, `defaults.qmd`, and both figures of `both-sides.qmd`.
 - [ ] T4: Do the same for `code-cell.qmd` (the paragraph goes before the cell) and the `.demo` div of `docs/index.qmd`. Render `docs/` locally with R so that `docs/_freeze/examples/code-cell/` matches the new page.
@@ -58,6 +58,9 @@ The site's example pages and the README image show body text above a wrapped fig
 - 2026-10-28: plan gate chose rewriting the seven one-wrap example pages over rewriting only the captioned-image page, because every example otherwise still shows text only beside the figure; falsified by a format where a page's figure cannot keep its text on one page at its current width.
 - 2026-10-28: plan chose committed line-box readers in `tests/` over scratch scripts, because review must re-run the AC1 reads in a fresh session; falsified by a reader that cannot tell a figure page on `main` from one on the branch.
 - 2026-10-28: criteria audit (full mode, Opus reader): 13 findings. AC1's "paragraph before" was already true on `main`, "full width" and "crosses" lacked edges, caption lines could pass as text below, no one-page rule, `layout.js` reads no lines below; AC2's move exception was loose and missed the YAML key; AC3's PNG origin could not be checked and README line 45 also describes it; AC4 lacked a clean render; AC5 could not hold, since a single-file render always runs R. All fixed in the wording above; AC4 dropped `verify.py`, which reads no `docs/` file, to T7.
+- 2026-10-28: started on branch m026-wrap-showcase; `tests/__pycache__/` is untracked and left unstaged.
+- 2026-10-28: T1 baseline: `quarto render docs` on `main` (Quarto 1.10.19, clean `docs/.quarto`) exits 0 with one `(W) wrapped:` line, "the figure #fig-callout is in a callout, so it does not wrap."
+- 2026-10-28: T1: added `tests/docs_layout.py` (pdftohtml line boxes of the LaTeX, Typst, and LibreOffice PDFs) and `straddle()` in `tests/layout.js`. On `main`'s image-figure page both fail: LaTeX and Word "paragraph above has 1 line; no later line below the figure", Typst and HTML "paragraph above has 1 line". LibreOffice's PDF loses "e" and "g" in pdftohtml, so markers match with those letters removed.
 
 ## Decisions
 
