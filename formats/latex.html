@@ -323,6 +323,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="lines-beside-the-figure" class="level2">
 <h2 class="anchored" data-anchor-id="lines-beside-the-figure">Lines beside the figure</h2>
 <p>The <code>wrap-lines</code> attribute sets the number of lines beside the figure. It works only in LaTeX. Without it, wrapfig counts the lines from the height of the figure. A block that stops the wrap ends it before that number of lines. With a value larger than the figure needs, that block starts below the figure, as it does without <code>wrap-lines</code>.</p>
+<p>With a value smaller than the figure needs, LaTeX narrows that many lines. The text after them runs at full width, also beside the figure, where it prints over the figure. In body text, the block that stops the wrap starts below the figure when the paragraph that holds the figure, its narrowed lines, and that block are on one page, with no footnote beside the figure.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="al">![Mean ratings by condition.](ratings.png)</span>{#fig-ratings .wrap-right wrap-lines="12"}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A caption inside a wrapped figure is set ragged-right. An image with a <code>height</code> keeps it in LaTeX and keeps its shape, and it fits in the box width.</p>
 </section>
@@ -330,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="limits">Limits</h2>
 <p>wrapfig has limits, and the extension keeps some of them:</p>
 <ul>
-<li>wrapfig narrows a number of lines that it counts from the height of the figure. At the block that stops the wrap, the extension skips the lines that the figure still needs. If the text beside the figure is shorter than the figure, the space beside the figure stays empty.</li>
+<li>wrapfig narrows a number of lines that it counts from the height of the figure. At the block that stops the wrap, the extension skips the lines that the figure still needs. After a <code>wrap-lines</code> value smaller than the figure needs, it skips to below the figure in body text, on the figure’s page. If the text beside the figure is shorter than the figure, the space beside the figure stays empty.</li>
 <li>A figure that does not fit at the bottom of a page moves to the start of a paragraph on the next page. The text before it fills the page. If its paragraphs all end before it is placed, it renders with no text beside it. It renders before the block that stops the wrap, and that block starts below it.</li>
 <li>If a page break comes while lines are still narrowed, the first lines on the next page are narrowed with no figure beside them. A <code>wrap-lines</code> value larger than the figure needs can narrow lines past a page break in the same way.</li>
 <li>Figures in a row: a figure after the paragraphs of a wrapped figure is a block that stops its wrap, so it starts below the wrapped figure. A figure that moved to the next page waits for one of its own paragraphs. A heading or the end of a callout does not take it.</li>
