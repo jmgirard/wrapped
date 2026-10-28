@@ -30,7 +30,11 @@ exits with status 1 on a failed render, difference, layout case, or log
 check. It needs Quarto, R with knitr, TinyTeX, and poppler. After an
 intended output change, run it with `--update` and review the snapshot
 diff. Other layout is not in this command. Measure HTML layout in a
-browser with `tests/layout.js`, as its header says (corrected M007).
+browser with `tests/layout.js`, as its header says (corrected M007). For the
+docs site's example pages, run `python3 tests/docs_layout.py` after
+`quarto render docs`. It reads their LaTeX, Typst, and LibreOffice PDFs and
+needs `soffice` and poppler. Its `--js` option prints the `straddle()`
+calls for the same pages in a browser (corrected M026).
 
 CI runs it on Ubuntu (D-008, D-009). `.github/workflows/verify.yml` uses Quarto's
 release channel on pull requests, pushes to `main` outside `cairn/`, and by

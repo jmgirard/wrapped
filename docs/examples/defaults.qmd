@@ -40,8 +40,8 @@ figure, so it runs the full width of the text.
 
 The defaults save you from repeating the same values on every figure. A
 figure's own `width` or `wrap-gap` attribute still comes first: a figure
-on this page that sets its own `width` keeps that width, and the page's
-gap still applies to it. The gap is the space between the figure and the
+that sets its own `width` keeps that width, and the page's gap still
+applies to it. The gap is the space between the figure and the
 text beside it, so this text sits a little farther from the figure than
 it would with the built-in `1em`. In HTML,
 the `wrapped` key also takes a `breakpoint`. In a window that wide or
