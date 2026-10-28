@@ -1557,10 +1557,28 @@ local function is_comment(text)
   return body ~= nil and not body:find("-->", 1, true)
 end
 
+-- Custom ids of the {{< pagebreak >}} shortcodes, from the shortcode pass.
+local page_breaks = {}
+
+local function find_page_break(shortcode)
+  if shortcode.name == "pagebreak" then
+    page_breaks[shortcode.__quarto_custom_node.attributes.__quarto_custom_id] = true
+  end
+end
+
+-- True for a paragraph that holds only a {{< pagebreak >}} shortcode,
+-- which Quarto has not yet turned into a page break.
+local function is_page_break(para)
+  local span = #para.content == 1 and para.content[1]
+  return span and span.t == "Span" and span.attributes.__quarto_custom_type == "Shortcode"
+    and page_breaks[span.attributes.__quarto_custom_id] == true
+end
+
 -- A block that a group takes in: a paragraph that does not start a wrap of
--- its own, or a raw HTML comment, which shows nothing.
+-- its own and is not a page break, or a raw HTML comment, which shows
+-- nothing.
 local function joins_group(block)
-  if block.t == "Para" then return lone_wrapped_image(block) == nil end
+  if block.t == "Para" then return lone_wrapped_image(block) == nil and not is_page_break(block) end
   return block.t == "RawBlock" and block.format:match("html") ~= nil
     and is_comment(block.text)
 end
@@ -1831,6 +1849,7 @@ end
 
 return {
   { Meta = read_meta },
+  { Shortcode = find_page_break },
   { Pandoc = find_contexts },
   { Pandoc = find_no_text },
   {
