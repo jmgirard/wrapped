@@ -112,45 +112,28 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
      cites; an insertion, removal, or reorder renumbers the labels and the
      Coverage lines together. -->
 
-- [x] T1: Scaffold `docs/`: `_quarto.yml`, the `_extensions` symlink,
-      `docs/.gitignore`, example images in `docs/images/`, and a stub home
-      page. Render it, and confirm that `tests/verify.py` does not pick up
-      `docs/` and that `quarto add` on a `git archive` zip still finds one
-      extension (the `tests/_extensions` symlink is the precedent).
-- [x] T2: Write the home page (what the filter does, which formats wrap,
-      install, one live wrapped figure) and the getting-started page (the
-      README's "Install" and "Wrap a figure" sections, each form shown live).
-- [x] T3: Write the pages for width and gap (the CSS function check last,
-      under its own heading), document defaults, and where wrapping stops,
-      each with live examples of the common case.
-- [x] T4: Write the page on where a figure keeps its normal layout, with the
-      README's "Notes" placed on their topic pages. Show at least one
-      fallback case live, with its warning text.
-- [x] T5: Write the format pages: HTML with slides and dashboards, PDF
-      through LaTeX, PDF through Typst, and Word.
-- [x] T6: Build the gallery: `docs/examples/index.qmd`, the example pages in
-      four formats (image, div, uncaptioned image, code cell with
-      `freeze`, left and right sides, width and gap, document defaults,
-      `wrap-clear`), `slides.qmd`, and `dashboard.qmd`. Commit
-      `docs/_freeze/`.
-- [x] T7: Write `docs/reference.qmd` with the nine-row table and links to
-      the topic pages.
-- [x] T8: Add `.github/workflows/docs.yml`: checkout, Quarto release with
-      TinyTeX through `quarto-dev/quarto-actions/setup`, and
-      `quarto render docs`, on pull requests that change `docs/`,
-      `_extensions/`, or the workflow, and by hand.
-- [x] T9: Checks for review: render with R off `PATH`; build the README
-      block ledger (each Pandoc block → site page and heading) in this file;
-      measure the gallery's HTML with `tests/layout.js` (lessons M020, M022);
-      make page images with `pdftoppm` and, for Word, LibreOffice (D-005),
-      and record one line for each figure and format in the Review section.
-- [x] T10: Review return 1: run `docs.yml` on every pull request that
-      changes its paths (no branch filter) and on pushes to main, cancel
-      only pull-request runs, and say how to re-freeze; add the re-freeze
-      rule to DESIGN.md Conventions and docs.yml to PROFILE.md's verify
-      slot; fix the width-gap breakpoint claim and format-page link and the
-      reference `width` row; mark `docs/_freeze/site_libs` generated; name
-      ragg in make-images.R.
+- [x] T1: Scaffold `docs/` (`_quarto.yml`, `_extensions` symlink,
+      `.gitignore`, images, stub home); check that `tests/verify.py` skips
+      `docs/` and `quarto add` on a `git archive` zip finds one extension.
+- [x] T2: Home page and getting-started page (README "Install" and "Wrap a
+      figure"), each form shown live.
+- [x] T3: Width-and-gap (CSS function check last), document-defaults, and
+      stopping pages, with live examples of the common case.
+- [x] T4: Normal-layout page with the README "Notes" placed by topic and one
+      live fallback with its warning text.
+- [x] T5: Format pages: HTML with slides and dashboards, LaTeX, Typst, Word.
+- [x] T6: Gallery: index, eight example pages in four formats (one frozen
+      code cell), `slides.qmd`, `dashboard.qmd`; commit `docs/_freeze/`.
+- [x] T7: `docs/reference.qmd` with the nine-row table and topic links.
+- [x] T8: `.github/workflows/docs.yml`: Quarto release with TinyTeX through
+      `quarto-dev/quarto-actions/setup`, then `quarto render docs`.
+- [x] T9: Review checks: render with R off `PATH`; README block ledger;
+      `tests/layout.js` on the gallery (lessons M020, M022); page images
+      with `pdftoppm` and LibreOffice for Word (D-005).
+- [x] T10: Review return 1: `docs.yml` on every pull request that changes
+      its paths and on pushes to main, PR-only cancel, re-freeze note;
+      DESIGN.md and PROFILE.md lines; width-gap, reference, `.gitattributes`,
+      and make-images.R fixes.
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates.
@@ -198,6 +181,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: review return 1: AC1 fails as written, since `docs.yml` limits pull requests to `branches: [main]` (diff-bug #3); the return also carries the review's fix-now items (diff-bug #1, #2, #5–#9, blame-history #1–#2, ripple #1).
 - 2026-10-28: minor amendment: T10 added for review return 1, Coverage AC1 → T1, T6, T8, T10.
 - 2026-10-28: T10 done: `docs.yml` now runs on every pull request that changes its paths (no branch filter), on pushes to main with the same paths, and by hand; only pull-request runs cancel; its header says to re-render with R and commit `docs/_freeze/` after editing a page with a code cell (Ruby's YAML parser reads the three triggers and the concurrency expression). DESIGN.md Conventions gained the docs-site line, PROFILE.md's verify slot names `docs.yml`, the width-gap example notes the HTML breakpoint, width-gap.qmd links the LaTeX, Typst, and Word pages, the reference `width` row names `20em` and per-format units, `.gitattributes` marks `docs/_freeze/**` generated (`git check-attr` confirms), and make-images.R names ragg. Site render: one `(W)` line; 22 pages, all links resolve.
+- 2026-10-28: the T10 commit b73cdf3 broke two caps (PROFILE.md 120 lines, this file 154 plan-owned lines), caught by `cairn_validate` after the commit; PROFILE.md's new note is now one line (119) and the Tasks section was compressed in one rewrite; validate passes.
 
 
 ## Decisions

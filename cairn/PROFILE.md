@@ -36,8 +36,7 @@ CI runs it on Ubuntu (D-008, D-009). `.github/workflows/verify.yml` uses Quarto'
 release channel on pull requests, pushes to `main` outside `cairn/`, and by
 hand. `verify-prerelease.yml` uses the pre-release channel weekly and by hand
 and blocks no merge. The same snapshots must pass on macOS and in CI.
-`docs.yml` renders the documentation site in `docs/` with no R. It is not
-part of this command (corrected M023).
+`docs.yml` renders `docs/` with no R and is not this command (corrected M023).
 
 ## consistency-gate
 Toolchain tests that `/milestone-review` runs *in addition to* the universal
