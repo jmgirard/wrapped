@@ -197,7 +197,8 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a wrapped figure
 in one of the places in this first list does not wrap. It keeps
 its normal layout, and the render prints one warning for it. The warning
 names the figure's id. If the figure has no id, the warning names its image
-file or says that the figure has no id.
+file or says that the figure has no id. A code cell that makes more than
+one figure gets one warning for the cell instead, as stated below.
 
 - The margin: a figure with the `.column-margin` class, a figure in a
   `.column-margin` or `.aside` div, or a code cell with `#| column: margin`
@@ -242,9 +243,12 @@ override the document's key.
 A code cell that makes more than one figure without `fig-subcap` or a
 layout option does not wrap either. An example is a cell that draws two
 plots. Each of its figures keeps its normal layout, and the render prints one
-warning that names the cell's label. If no paragraph follows the cell, its
-figures keep their normal layout with no warning, as any wrapped figure
-does there. To wrap a plot, give it its own cell with a paragraph after
+warning that names the cell's label. The cell can be in a place in this
+section where its format keeps the normal layout, such as the margin or a
+callout. Then that one warning names the cell and the place, and no warning
+names a figure of the cell. If no paragraph follows a cell outside these
+places, its figures keep their normal layout with no warning, as any
+wrapped figure does there. To wrap a plot, give it its own cell with a paragraph after
 it. A cell with `fig-subcap`
 makes a subfigure panel, and a cell with `layout-ncol`, `layout-nrow`, or
 `layout` makes a panel layout. The list above covers both.

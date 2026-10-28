@@ -1351,27 +1351,26 @@ local function float_target(float)
     or (by_document and column)
     or (has_page_layout and (caption_in_margin(float) or (cell and cell.margin_caption))
       and "has its caption in the margin")
+  -- A cell that makes more than one figure without `fig-subcap` keeps all
+  -- its figures normal, with one warning for the cell at its first figure
+  -- (D-010). The warning gives the figure's context as the reason when it
+  -- has one. A cell in no context with no paragraph after it prints no
+  -- warning. A table keeps its own warning. Quarto numbers such figures
+  -- with the cell's label and `-1`, `-2`, and so on.
+  local several = carried and cell.several and float.type == "Figure"
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
-  if context or no_text[custom_id or ""] then
+  if context or no_text[custom_id or ""] or several then
     keep_normal(float)
-    if context then
+    if several and (context or not no_text[custom_id or ""]) then
+      if not cell.warned then
+        cell.warned = true
+        local label = float.identifier:gsub("%-%d+$", "")
+        context_warning("the code cell #" .. label, context or "makes more than one figure")
+      end
+    elseif context then
       local noun = ({ Figure = "figure", Table = "table" })[float.type] or "float"
       context_warning(string.format("the %s #%s", noun, float.identifier), context)
-    end
-    return float
-  end
-  -- A cell that makes more than one figure without `fig-subcap` keeps all
-  -- its figures normal, with one warning for the cell at the first figure
-  -- that reaches this point (D-010). A cell in a context or with no
-  -- paragraph after it took a branch above instead. Quarto numbers such
-  -- figures with the cell's label and `-1`, `-2`, and so on.
-  if carried and cell.several then
-    keep_normal(float)
-    if not cell.warned then
-      cell.warned = true
-      local label = float.identifier:gsub("%-%d+$", "")
-      context_warning("the code cell #" .. label, "makes more than one figure")
     end
     return float
   end

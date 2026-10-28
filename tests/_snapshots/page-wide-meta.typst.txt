@@ -1,4 +1,5 @@
 # warnings
+1x wrapped: the code cell #fig-meta-page-two is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-meta-page is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-meta-page-body is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-meta-page-cell is page-wide, so it does not wrap.
@@ -7,5 +8,7 @@ figure: fig-meta-page image-width=no
 figure: fig-meta-page-cell image-width=no
 figure: fig-meta-page-body image-width=no
 figure: - image-width=yes
+figure: fig-meta-page-two-1 image-width=no
+figure: fig-meta-page-two-2 image-width=no
 # wraps
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 30%, 40%, 40%)), column-gutter: 1em | plot.png no-alt | p | cites=0

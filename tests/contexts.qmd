@@ -244,3 +244,48 @@ The other tab.
 The paragraph after the second figure sits beside it. See @fig-first and @fig-second. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+## E8: a two-plot cell in a callout
+
+::: {.callout-note}
+```{r}
+#| label: fig-callout-two
+#| fig-cap: "A two-plot cell in a callout."
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+plot(10:1)
+```
+
+The paragraph after the two-plot cell in the callout. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+
+## E3: a two-plot margin cell
+
+```{r}
+#| label: fig-margin-two
+#| fig-cap: "A two-plot margin cell."
+#| column: margin
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+plot(10:1)
+```
+
+The paragraph after the two-plot margin cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## E3: a two-plot margin cell before a heading
+
+```{r}
+#| label: fig-margin-two-heading
+#| fig-cap: "A two-plot margin cell with a heading after it."
+#| column: margin
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+plot(10:1)
+```
+
+## After the margin cell
+
+The paragraph after the heading. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
