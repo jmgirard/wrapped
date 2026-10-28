@@ -42,10 +42,12 @@ shows the mean rating in each condition.
 ```
 
 The image below is part of the PDF through LaTeX of the example page that
-uses this figure, with more text beside it:
+uses this figure. A paragraph runs above the figure, and the next two
+paragraphs flow beside it. The last lines of the second one run under the
+figure at the full width of the text:
 
 <!-- The end of docs/images/make-images.R gives the commands that make this image. -->
-![A rendered page: three paragraphs flow on the left of a bar chart with the caption "Figure 1: Mean ratings by condition."](docs/images/readme-example.png)
+![A rendered page: a paragraph runs the full width above a bar chart with the caption "Figure 1: Mean ratings by condition." Two paragraphs flow on the left of the chart. The second one continues below the chart at the full width.](docs/images/readme-example.png)
 
 ## Learn more
 

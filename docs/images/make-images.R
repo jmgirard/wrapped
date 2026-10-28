@@ -43,4 +43,4 @@ out("badge.png", 400, 400, {
 # It is part of the first page of the PDF through LaTeX of the "A captioned
 # image" example page. It needs poppler. Run from the repository root:
 # quarto render docs/examples/image-figure.qmd --to pdf
-# pdftoppm -png -r 144 -f 1 -l 1 -x 150 -y 560 -W 940 -H 640 -singlefile docs/_site/examples/image-figure.pdf docs/images/readme-example
+# pdftoppm -png -r 144 -f 1 -l 1 -x 150 -y 555 -W 940 -H 690 -singlefile docs/_site/examples/image-figure.pdf docs/images/readme-example

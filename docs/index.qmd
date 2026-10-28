@@ -9,6 +9,9 @@ figure, to the left or right of it. The figure keeps its number, its
 caption, and its `@fig-` links.
 
 ::: demo
+This box shows the layout. The paragraph that you are reading comes before
+the figure, so it runs the full width of the box.
+
 ![Mean ratings by condition.](images/ratings.png){#fig-home .wrap-right width="40%"}
 
 This paragraph sits beside @fig-home. The figure has the class
@@ -16,11 +19,17 @@ This paragraph sits beside @fig-home. The figure has the class
 paragraphs after it flow on its left.
 
 One markdown syntax gives this layout in HTML, in PDF through LaTeX, in
-PDF through Typst, and in Word. Wrapping stops at the next block that is
-not a paragraph, such as a heading or a list.
-
-In a window 576px wide or narrower, the figure stops floating and takes
-the full width of the text column.
+PDF through Typst, and in Word. The figure keeps its number and its
+caption, and the text can point to it with a `@fig-` link, as the
+paragraph before this one does. Its width is 40% of the text column,
+which is the default. Each format draws the layout with its own tools:
+CSS in HTML, wrapfig in LaTeX, wrap-it in Typst, and a frame in Word. The
+text is not split into two columns. It flows beside the figure, and the
+last lines of this paragraph run under the figure, at the full width of
+the text. Wrapping stops at the next block that is not
+a paragraph, such as a heading or a list. In a window 576px wide or
+narrower, the figure stops floating and takes the full width of the text
+column.
 :::
 
 This version wraps figures in HTML output, revealjs slides and dashboards

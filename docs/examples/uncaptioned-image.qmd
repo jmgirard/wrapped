@@ -18,18 +18,24 @@ number:
 
 ## Result
 
+A badge, a logo, or an icon often has no caption and no number. This
+section uses one such image, and this paragraph comes before it, so it
+runs the full width of the text.
+
 ![](../images/badge.png){.wrap-right width="20%" fig-alt="A round blue badge with the letter w"}
 
 An image with no caption wraps in the same way as a captioned figure. The
 class `.wrap-right` puts it on the right, and the text flows on its left.
-
-In HTML and Word, the `fig-alt` attribute gives the image its alt text,
-which a screen reader reads in place of the image. In a PDF, alt text
-needs a tagged PDF (see the format pages).
-
-A small image like this one suits a logo or an icon at the start of a
-section. The image is 20% of the text width, so the text beside it keeps
-most of the line.
+The image is 20% of the text width, so the text beside it keeps most of
+the line. A small image like this one suits a logo or an icon at the start
+of a section. The image has no number, so the text cannot point to it
+with a `@fig-` link. The `width` attribute sets only the width, and the
+height follows from the image's shape, so this square image is as tall as
+it is wide. Because the image is short, the text passes its bottom before
+the end of this paragraph, and its last lines run under the image, at the
+full width of the text. In HTML and Word, the `fig-alt` attribute gives the image
+its alt text, which a screen reader reads in place of the image. In a PDF,
+alt text needs a tagged PDF (see the format pages).
 
 ## Next
 

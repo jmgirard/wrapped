@@ -4,6 +4,9 @@
 // report() returns one entry per wrapped figure, per wrap group that has a
 // block after it, and per image inside a wrapped float, each with `ok` and
 // the measured values.
+// For the docs site's example pages, serve docs/_site/ with this file in it
+// and run the `straddle()` calls that `python3 tests/docs_layout.py --js`
+// prints.
 
 const TOL = 1; // px
 
@@ -150,6 +153,56 @@ export function report() {
     groups: [...document.querySelectorAll(".wrap-group")].map(groupEntry).filter(Boolean),
     images: imageEntries(),
   };
+}
+
+// The line boxes of a paragraph, from its text's client rects merged by top.
+function paragraphLines(p) {
+  const range = document.createRange();
+  range.selectNodeContents(p);
+  const lines = [];
+  for (const r of range.getClientRects()) {
+    if (!r.width) continue;
+    const line = lines.find((l) => Math.abs(l.top - r.top) <= 3);
+    if (line) {
+      line.left = Math.min(line.left, r.left);
+      line.right = Math.max(line.right, r.right);
+      line.bottom = Math.max(line.bottom, r.bottom);
+    } else {
+      lines.push({ top: r.top, bottom: r.bottom, left: r.left, right: r.right });
+    }
+  }
+  return lines.sort((a, b) => a.top - b.top);
+}
+
+// The docs pages' check that tests/docs_layout.py runs on the PDFs, which
+// prints the `cases` for each page (`--js`). Each case lists words that
+// appear in the paragraph before a wrapped figure (`above`) and in the
+// paragraph that runs beside and below it (`straddle`), in figure order.
+export function straddle(cases) {
+  const figs = wrapped();
+  const paras = [...document.querySelectorAll("main p")];
+  const has = (p, words) => words.every((w) => p.textContent.replace(/\s+/g, " ").includes(w));
+  let pos = 0;
+  return cases.map((c, n) => {
+    const el = figs[n];
+    const box = el?.getBoundingClientRect();
+    const crosses = (l) => (c.side === "right" ? l.right > box.left + TOL : l.left < box.right - TOL);
+    const ai = paras.findIndex((p, i) => i >= pos && has(p, c.above));
+    const si = paras.findIndex((p, i) => i > ai && has(p, c.straddle));
+    const problems = [];
+    if (!el || sideOf(el) !== c.side) return { figure: el?.id, ok: false, problems: ["figure missing or on the other side"] };
+    if (ai < 0 || si < 0) return { figure: el.id, ok: false, problems: ["paragraph not found"] };
+    pos = si + 1;
+    const above = paragraphLines(paras[ai]);
+    const para = paragraphLines(paras[si]);
+    if (above.length < 2) problems.push(`paragraph above has ${above.length} line`);
+    else if (!above.slice(0, -1).every(crosses)) problems.push("a line above does not cross the figure");
+    const beside = para.filter((l) => l.bottom > box.top && l.top < box.bottom && !crosses(l));
+    const below = para.filter((l) => l.top >= box.bottom - TOL && crosses(l));
+    if (!beside.length) problems.push("no line of the paragraph beside the figure");
+    else if (!below.some((l) => l.top > beside[0].top)) problems.push("no later line below the figure that crosses it");
+    return { figure: el.id || el.querySelector("img")?.getAttribute("src"), ok: !problems.length, problems };
+  });
 }
 
 // At a viewport below the breakpoint: the computed float of each wrapped
