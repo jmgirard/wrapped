@@ -21,12 +21,12 @@ A paragraph that holds only a block shortcode, such as `{{< video >}}`, ends the
 
 ## Acceptance criteria
 
-- [ ] AC1: In `tests/stop-shortcode.qmd`, the video case's figure is taller than the paragraph beside it plus one line. The paragraph that holds only `{{< video >}}` is outside that figure's wrap group in all four formats. In the HTML, Typst, and Word renders the group holds the figure and only the paragraph before the video, as the committed snapshots record. A `LAYOUT` case in `tests/verify.py` finds the line after that paragraph at full width below the figure in the PDF through LaTeX.
-- [ ] AC2: In the same fixture, one case has a paragraph that holds only a shortcode from the fixture's own `shortcodes:` Lua file, which returns a div with a class. That paragraph ends the group: in the HTML render the group holds the figure and one paragraph, with no div after them.
-- [ ] AC3: In the same fixture, one case has a paragraph that holds only `{{< kbd >}}`, one of the eight joining shortcodes. In the HTML render that paragraph and the paragraph after it stay in the group.
-- [ ] AC4: In the same fixture, one case has `{{< include >}}` of a file with two paragraphs, on its own line after the paragraph beside the figure. In the HTML render the group holds the figure and three paragraphs.
-- [ ] AC5: In the same fixture, one case has a wrapped figure followed directly by a paragraph that holds only `{{< video >}}`. In the HTML render that figure keeps its normal layout, in no group, and the render prints no warning for it.
-- [ ] AC6: README "Where wrapping stops" says that a paragraph that holds exactly one shortcode and nothing else stops wrapping, and names the eight shortcodes that join. It says that such a paragraph right after a figure leaves the figure in its normal layout. It also says that Quarto expands `{{< include >}}` before the filter runs, so the included blocks follow the rule as written. DESIGN.md's stop rule, next-block rule, and filter step 1 say the same.
+- [x] AC1: In `tests/stop-shortcode.qmd`, the video case's figure is taller than the paragraph beside it plus one line. The paragraph that holds only `{{< video >}}` is outside that figure's wrap group in all four formats. In the HTML, Typst, and Word renders the group holds the figure and only the paragraph before the video, as the committed snapshots record. A `LAYOUT` case in `tests/verify.py` finds the line after that paragraph at full width below the figure in the PDF through LaTeX.
+- [x] AC2: In the same fixture, one case has a paragraph that holds only a shortcode from the fixture's own `shortcodes:` Lua file, which returns a div with a class. That paragraph ends the group: in the HTML render the group holds the figure and one paragraph, with no div after them.
+- [x] AC3: In the same fixture, one case has a paragraph that holds only `{{< kbd >}}`, one of the eight joining shortcodes. In the HTML render that paragraph and the paragraph after it stay in the group.
+- [x] AC4: In the same fixture, one case has `{{< include >}}` of a file with two paragraphs, on its own line after the paragraph beside the figure. In the HTML render the group holds the figure and three paragraphs.
+- [x] AC5: In the same fixture, one case has a wrapped figure followed directly by a paragraph that holds only `{{< video >}}`. In the HTML render that figure keeps its normal layout, in no group, and the render prints no warning for it.
+- [x] AC6: README "Where wrapping stops" says that a paragraph that holds exactly one shortcode and nothing else stops wrapping, and names the eight shortcodes that join. It says that such a paragraph right after a figure leaves the figure in its normal layout. It also says that Quarto expands `{{< include >}}` before the filter runs, so the included blocks follow the rule as written. DESIGN.md's stop rule, next-block rule, and filter step 1 say the same.
 - [ ] AC7: `python3 tests/verify.py` passes on the review head on macOS and in the `verify.yml` workflow.
 
 ## Coverage
@@ -67,3 +67,39 @@ A paragraph that holds only a block shortcode, such as `{{< video >}}`, ends the
 - 2026-10-28: claim audit: 20 claims read, 2 corrected — README.md, wrapped.lua. `meta` returns a block-valued key as is in block context, so "make text, an image, or paragraphs" became "usually make", with a `wrap-clear` hint; the video example now says it is a block in HTML and a link line elsewhere. DESIGN.md matched. The block-meta case predates M020 (every lone shortcode joined before), so it became the candidate row "Stop wraps at block meta values" rather than new scope.
 - 2026-10-28: claim audit re-read (same reader, once): both corrected claims match Quarto 1.10.19, and the `wrap-clear` hint works (a Div ends the group); no new false claim.
 - 2026-10-28: T5: `python3 tests/verify.py` (compare, no update) on macOS: "all 102 renders pass", 0 FAIL lines, "ok layout stop-rule case 12", "ok layout stop-shortcode video". The run began before the claim-audit commit, whose code change is a comment only. Status set to review.
+
+## Review
+
+Evidence on review head d5b29d2 (branch level with main e7c1526). `python3 tests/verify.py` on macOS: "all 102 renders pass", 0 FAIL lines, "ok stop-shortcode.html/.pdf/.typst/.docx", "ok layout stop-shortcode video", "ok layout stop-rule case 12".
+
+- AC1: LAYOUT case "video" passes (`stop_case`: the paragraph is beside the figure, and the URL line and "Full width text after the video." start below the figure, full width). Snapshots: HTML group `fig-sc-video, p`; Typst wrap for `fig-sc-video` lists `p`; Word frame for `fig-sc-video` lists `p, clear`; the tex summary puts `wrappedstop` after `fig-sc-video`. On main the group was `fig-sc-video, p, div, p` and the LAYOUT case failed (T1 work log).
+- AC2: HTML snapshot group `fig-sc-box, p` (the `stopbox` shortcode from `tests/stop-shortcode.lua` returns `div.stop-box`); on main it was `fig-sc-box, p, div, p`.
+- AC3: HTML snapshot group `fig-sc-kbd, p, p, p`: the paragraph beside, the `kbd` paragraph, and "Text after the kbd."
+- AC4: HTML snapshot group `fig-sc-include, p, p, p`: the paragraph beside and the two paragraphs of `tests/_stop-shortcode-include.qmd`.
+- AC5: HTML snapshot lists `fig-sc-next: - style=-` (no wrap class) and no group for it; its `# warnings` section is empty. The tex summary lists `figure: fig-sc-next [-]`, a normal figure.
+- AC6: README.md lines 174-185 state the lone-shortcode stop, name the eight joining shortcodes, and say Quarto expands `{{< include >}}` before the filter; the next-block paragraph names a figure right before a lone `{{< video >}}`. DESIGN.md's stop rule, next-block rule, and step 1 say the same (read on d5b29d2).
+- AC7: macOS half passes (above); the `verify.yml` half runs on the PR at step 8, and the box is ticked only on its green run.
+
+Consistency gate: `cairn_validate.py` "all checks passed". Version marker `_extension.yml` 0.2.0, unchanged on the branch (the one marker). verify passes (above). Changelog slot "none". No principle changed, so no `cairn_impact` run. Snapshot changes: four new files `tests/_snapshots/stop-shortcode.{html,pdf,typst,docx}.txt`, called for by AC1-AC5; no existing snapshot changed.
+
+spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a block shortcode with anything else on its line (`{{< video >}} <!-- note -->`, or the shortcode in a span) still joins, so the video can sit beside the figure; pagebreak had the same gap before M020 — follow-up, row "Stop wraps at shortcodes with comments".
+- diff-bug #2: the include case (AC4) passes on main too — reject, planned change: AC4 tests the README include claim the change adds.
+- diff-bug #3: the video and stopbox cases run the same predicate path — reject, planned change: both are criteria, and only stopbox fails an implementation that stops at a fixed block list.
+- diff-bug #4: only `kbd` of the eight joining names is tested — reject, planned change: one set lookup, accepted at the plan audit.
+- diff-bug #5: a shortcode whose name is not a string (`{{< {{< meta sc >}} >}}`) now stops — reject, planned change: unknown names stop by the user's plan choice.
+- diff-bug #6: DESIGN.md's "(corrected by the page-break hotfix, M020)" tag sits on the include sentence — fix now.
+- diff-bug #7: long unwrapped lines in DESIGN.md and README.md — fix now, with #6 (same lines).
+- blame-history #1: the stop-rule change has no D-entry, though D-003 and D-007 read "paragraph" and "stop rule" — fix now: new D-011.
+- blame-history #2: `find_shortcode` reads the custom id unguarded, so a nil id would crash — reject, false: Quarto's `create_custom_node_scaffold` (share/filters/main.lua:724-742) always sets `__quarto_custom_id`.
+- blame-history #3: an id missing from the table stops instead of joining — reject, planned change (unknown stops).
+- blame-history #4: block-valued `meta` joins — follow-up, existing row "Stop wraps at block meta values".
+- blame-history #5: the plan's rejected-alternative work-log line reads ambiguously — reject, style: history record, and the parked row states the promotion condition.
+- prior-review #1: block-valued `meta` joins although a list stops a wrap — follow-up, existing row "Stop wraps at block meta values".
+- prior-review #2: the README claim that a block-valued `meta` joins has no test — fix now: fixture case 6. The other untested claims it names are the eight-name set (one lookup, AC3) and DESIGN's embed sentence (a tracking record, from a scratch render) — rejected, planned change.
+- prior-review #3: cases 2 and 5 have no LAYOUT check, so only the browser checked them — reject, false: the four snapshots record both cases' groups and figure kinds in every format.
+- ripple #1: the candidate row "Stop wraps at video and embed shortcodes" still reads open — reject, planned change: step 9 hygiene graduates it.
+- ripple #2: the comment above `group_blocks` names only "the first block that is not a paragraph" — fix now.
+- ripple #3: the next-block and `no_text` comments say "not a paragraph" — fix now.
+- ripple #4: README's lead sentence of "Where wrapping stops" reads as the full rule — fix now.
+- ripple #5: DESIGN.md says Quarto expands `{{< embed >}}` before the filter, with no fixture — reject, false: the 2026-10-28 scratch render put the embedded table after the wrap group (Scope Out).
