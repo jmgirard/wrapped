@@ -88,13 +88,18 @@ wrapped:
 
 Stop rule: the figure wraps the paragraphs that follow it. Wrapping stops at
 the first block that is not a paragraph: a heading, list, figure, table, code
-block, callout, or horizontal rule. A paragraph that holds exactly one
-shortcode and nothing else also stops it, such as `{{< pagebreak >}}` or
+block, callout, or horizontal rule. A paragraph that holds one shortcode
+and nothing else that shows also stops it, such as `{{< pagebreak >}}` or
 `{{< video >}}`, because at `pre-quarto` the shortcode is not yet rendered
 and can make a block (corrected by the page-break hotfix, M020, D-011).
-Eight shortcodes that usually make text, an image, or paragraphs join
-instead (a `meta` value that is a block joins too): `meta`, `var`, `env`,
-`kbd`, `lipsum`, `placeholder`, `version`, and `brand`. Quarto expands
+Spaces, soft breaks, HTML comments, and one span around the shortcode show
+nothing (corrected M021, D-012). Eight shortcodes that usually make text,
+an image, or paragraphs join instead, also with a comment beside them:
+`meta`, `var`, `env`, `kbd`, `lipsum`, `placeholder`, `version`, and
+`brand`. A `meta` shortcode that is its paragraph's one inline stops when
+its value holds a block other than `Para` or `Plain`; a value of paragraphs
+only joins, and in any other form Quarto renders the value as text, so it
+joins (M021, D-012). Quarto expands
 `{{< include >}}` and `{{< embed >}}` before the filter runs, so their
 blocks follow the rule as written. An empty `::: {.wrap-clear}` div stops
 it earlier. HTML, LaTeX, Typst, and Word enforce the rule. In LaTeX a
@@ -105,7 +110,9 @@ text beside it (corrected M007).
 Next-block rule (D-003): a wrapped figure whose next block is not a
 paragraph has no text to wrap, so it keeps a normal figure with no warning.
 A paragraph that stops wrapping under the stop rule, such as a lone
-`{{< video >}}`, does not count as a paragraph here (M020, D-011). Of two
+`{{< video >}}` with or without comments or a span around it, or a lone
+`meta` whose value is a list, does not count as a paragraph here (M020,
+D-011; corrected M021). Of two
 wrapped figures in a row, the first keeps a normal figure and the second
 wraps. The figures of one code cell are the exception: a wrapped
 cell that makes more than one figure without `fig-subcap` keeps all of them
@@ -158,7 +165,9 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    (corrected M009). In a second pass, a `Shortcode` handler records the
    name of each shortcode by its custom id, so that the stop rule can tell
    a paragraph with a lone joining shortcode from one with any other
-   shortcode (corrected by the page-break hotfix, M020).
+   shortcode (corrected by the page-break hotfix, M020). It also records
+   each `meta` shortcode's key, which the stop rule looks up in the
+   metadata that the first pass keeps (corrected M021).
 2. It finds the contexts that cannot wrap: lists (definition lists
    included), callouts, column layouts, panel layouts, tabsets, asides,
    margin blocks (a `fig-column: margin` cell included), and subfigure
