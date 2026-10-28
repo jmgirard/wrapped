@@ -8,6 +8,15 @@ fig-sc-kbd: wrap-right style=--wrap-gap: 1em; --wrap-width: 35%
 fig-sc-include: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
 fig-sc-next: - style=-
 fig-sc-meta: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-comment: wrap-right style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-span: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-paras: wrap-right style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-kbd-comment: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-meta-comment: wrap-right style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-meta-nest: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-comment-next: - style=-
+fig-sc-meta-span: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-meta-index: wrap-right style=--wrap-gap: 1em; --wrap-width: 35%
 # images
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
@@ -15,9 +24,26 @@ plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=width:35.0% width=-
 plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=width:35.0% width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
 # groups
 fig-sc-video, p
 fig-sc-box, p
 fig-sc-kbd, p, p, p
 fig-sc-include, p, p, p
-fig-sc-meta, p, ul, p
+fig-sc-meta, p
+fig-sc-comment, p
+fig-sc-span, p
+fig-sc-paras, p, p, p, p
+fig-sc-kbd-comment, p, p, p
+fig-sc-meta-comment, p, p, p
+fig-sc-meta-nest, p
+fig-sc-meta-span, p, p, p
+fig-sc-meta-index, p

@@ -1130,6 +1130,10 @@ end
 local meta_fig_cap_location = nil
 local meta_cap_location = nil
 
+-- The document's metadata, read in the first pass, for the stop rule's
+-- meta shortcodes.
+local document_meta = {}
+
 -- The contexts that the document's fig-column, or else its column, gives a
 -- code cell's figure float (cell) and any other figure float (float); each
 -- is nil when the value names neither the margin nor a page-wide column
@@ -1200,6 +1204,7 @@ local function column_context(float, cell)
 end
 
 local function read_meta(meta)
+  document_meta = meta
   meta_fig_cap_location = meta_text(meta["fig-cap-location"])
   meta_cap_location = meta_text(meta["cap-location"])
   if is_docx then
@@ -1557,28 +1562,111 @@ local function is_comment(text)
   return body ~= nil and not body:find("-->", 1, true)
 end
 
--- Shortcode names by custom id, from the shortcode pass.
+-- Shortcode names, and the key of each meta shortcode, by custom id, from
+-- the shortcode pass.
 local shortcode_names = {}
+local meta_keys = {}
 
 local function find_shortcode(shortcode)
-  shortcode_names[shortcode.__quarto_custom_node.attributes.__quarto_custom_id] = shortcode.name
+  local id = shortcode.__quarto_custom_node.attributes.__quarto_custom_id
+  shortcode_names[id] = shortcode.name
+  if shortcode.name == "meta" then
+    for _, param in ipairs(shortcode.params) do
+      -- A key made by a nested shortcode is not known here, so it joins.
+      if param.type == "shortcode" then break end
+      if param.type == "param" then
+        -- As Quarto's meta shortcode, strip one pair of quotes around a key.
+        local key = param.value
+        if key:sub(1, 1) == '"' and key:sub(-1) == '"' then
+          key = key:sub(2, -2)
+        elseif key:sub(1, 1) == "'" and key:sub(-1) == "'" then
+          key = key:sub(2, -2)
+        end
+        meta_keys[id] = key
+        break
+      end
+    end
+  end
 end
 
 -- Quarto's shortcodes that usually make text, an image, or paragraphs, which
--- join a group when they are alone in a paragraph. A meta value can be a
--- block, such as a list, and still joins.
+-- join a group when the paragraph shows nothing else. A lone meta shortcode
+-- whose value holds a block other than a paragraph, such as a list, stops
+-- (block_meta).
 local JOINING_SHORTCODES = {
   meta = true, var = true, env = true, kbd = true, lipsum = true,
   placeholder = true, version = true, brand = true,
 }
 
--- True for a paragraph that holds only one shortcode, which Quarto has not
--- yet rendered, unless the shortcode is one that joins. Such a shortcode can
--- make a block, such as a page break or a video.
+-- The metadata value of a meta shortcode's key, read as Quarto's
+-- parseOption reads it: dots split the key into keys, `\.` is a dot in a
+-- key, and a number after the first key indexes a list.
+local function meta_value(key)
+  key = key:gsub("\\%.", "\1")
+  local value = document_meta
+  local first = true
+  for part in key:gmatch("[^.]+") do
+    if type(value) ~= "table" then return nil end
+    part = part:gsub("\1", "."):gsub("\\(.)", "%1")
+    value = value[not first and tonumber(part) or part]
+    first = false
+    if value == nil then return nil end
+  end
+  return value
+end
+
+-- True when a meta shortcode that is its paragraph's one inline makes a
+-- block other than a paragraph. Quarto renders the shortcode there as the
+-- value's blocks, and a one-item list as its item.
+local function block_meta(id)
+  local value = meta_keys[id] and meta_value(meta_keys[id])
+  while pandoc.utils.type(value) == "List" and #value == 1 do value = value[1] end
+  if pandoc.utils.type(value) ~= "Blocks" then return false end
+  for _, block in ipairs(value) do
+    if block.t ~= "Para" and block.t ~= "Plain" then return true end
+  end
+  return false
+end
+
+-- Inlines that show nothing beside a shortcode: spaces, line breaks in the
+-- source, and HTML comments.
+local function shows_nothing(el)
+  return el.t == "Space" or el.t == "SoftBreak"
+    or (el.t == "RawInline" and el.format:match("html") ~= nil and is_comment(el.text))
+end
+
+-- The one shortcode in `inlines` when the rest shows nothing, else nil. With
+-- `in_span`, a span whose own content is such a shortcode counts as it.
+local function lone_shortcode(inlines, in_span)
+  local found
+  for _, el in ipairs(inlines) do
+    if not shows_nothing(el) then
+      local shortcode = el.t == "Span" and (el.attributes.__quarto_custom_type == "Shortcode" and el
+        or in_span and lone_shortcode(el.content, false))
+      if not shortcode or found then return nil end
+      found = shortcode
+    end
+  end
+  return found
+end
+
+-- True for a paragraph that shows only one shortcode, which Quarto has not
+-- yet rendered, with nothing else but spaces, comments, and at most one span
+-- around it, unless the shortcode is one that joins. Such a shortcode can
+-- make a block, such as a page break or a video. A meta shortcode stops only
+-- when it is itself the paragraph's one inline, where Quarto renders its
+-- value as blocks; in a span or beside anything else Quarto renders the
+-- value as text.
 local function is_block_shortcode(para)
-  local span = #para.content == 1 and para.content[1]
-  return span and span.t == "Span" and span.attributes.__quarto_custom_type == "Shortcode"
-    and not JOINING_SHORTCODES[shortcode_names[span.attributes.__quarto_custom_id]]
+  local shortcode = lone_shortcode(para.content, true)
+  if not shortcode then return false end
+  local id = shortcode.attributes.__quarto_custom_id
+  if shortcode_names[id] == "meta" then
+    local only = #para.content == 1 and para.content[1]
+    return only and only.t == "Span" and only.attributes.__quarto_custom_type == "Shortcode"
+      and block_meta(id) or false
+  end
+  return not JOINING_SHORTCODES[shortcode_names[id]]
 end
 
 -- A block that a group takes in: a paragraph that does not start a wrap of
