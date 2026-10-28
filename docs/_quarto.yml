@@ -45,6 +45,7 @@ filters:
 format:
   html:
     toc: true
+    css: styles.css
 
 execute:
   freeze: auto

@@ -117,7 +117,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
       page. Render it, and confirm that `tests/verify.py` does not pick up
       `docs/` and that `quarto add` on a `git archive` zip still finds one
       extension (the `tests/_extensions` symlink is the precedent).
-- [ ] T2: Write the home page (what the filter does, which formats wrap,
+- [x] T2: Write the home page (what the filter does, which formats wrap,
       install, one live wrapped figure) and the getting-started page (the
       README's "Install" and "Wrap a figure" sections, each form shown live).
 - [ ] T3: Write the pages for width and gap (the CSS function check last,
@@ -173,6 +173,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: criteria audit (full): 7 findings, all taken except one. AC1 narrowed to a local render with R off PATH; AC2 gained the `pdfinfo` producer check; AC3 domain moved to `tests/layout.js` figures, fallbacks kept off the gallery, ledger moved to T9; AC4 domain moved to Pandoc blocks with the opening lines, ledger moved to T9; AC5 pinned to nine names; AC6 gained `--no-prompt`. The M024 live-site finding is answered by M024's tasks and the user's publish permission; the DESIGN.md "README states" finding went to M024.
 - 2026-10-28: implement started on m023-docs-site, cut from main at b7e62a3.
 - 2026-10-28: T1 done: `docs/` website with navbar and docked sidebar, stub pages, `freeze: auto`, `_extensions` symlink, and three images from `docs/images/make-images.R` (ragg, 144 dpi). `quarto render docs` exits 0; `tests/verify.py` lists its fixtures by name, so it does not read `docs/`; `quarto add` on `git archive` zips of the branch and of main installs the same 13 paths. A stray `git stash -u` moved the uncommitted work off disk for one command; `git stash pop` restored it.
+- 2026-10-28: T2 done: home page (what the filter does, formats, a live wrapped figure, install) and get-started page (Install and Wrap a figure, each form shown as source then as a live `.demo` result framed by `docs/styles.css`). The code-cell form runs once with `echo: fenced` and is frozen in `docs/_freeze/get-started/`. In the browser at 1280x900 all four figures float (fig-ratings, fig-groups, the badge image, fig-scatter).
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
