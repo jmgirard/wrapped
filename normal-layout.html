@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Where a figure keeps its normal layout – wrapped</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./formats/html.html" rel="next">
+<link href="./stopping.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1bda23ef02b1613632e48409ff51ea9e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">wrapped</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./get-started.html" aria-current="page"> 
+<span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./examples/index.html"> 
+<span class="menu-text">Examples</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./reference.html"> 
+<span class="menu-text">Reference</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jmgirard/wrapped"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./width-gap.html">Guide</a></li><li class="breadcrumb-item"><a href="./normal-layout.html">Where a figure keeps its normal layout</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">wrapped</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./get-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Get started</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Guide</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./width-gap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Width and gap</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./defaults.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Document defaults</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./stopping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Where wrapping stops</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./normal-layout.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Where a figure keeps its normal layout</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Formats</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./formats/html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">HTML, slides, and dashboards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./formats/latex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PDF through LaTeX</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./formats/typst.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PDF through Typst</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./formats/word.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Word</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./examples/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Examples</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Reference</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#places-that-keep-the-normal-layout-in-all-four-formats" id="toc-places-that-keep-the-normal-layout-in-all-four-formats" class="nav-link active" data-scroll-target="#places-that-keep-the-normal-layout-in-all-four-formats">Places that keep the normal layout in all four formats</a></li>
+  <li><a href="#when-a-figure-and-the-document-name-different-places" id="toc-when-a-figure-and-the-document-name-different-places" class="nav-link" data-scroll-target="#when-a-figure-and-the-document-name-different-places">When a figure and the document name different places</a></li>
+  <li><a href="#code-cells-with-more-than-one-figure" id="toc-code-cells-with-more-than-one-figure" class="nav-link" data-scroll-target="#code-cells-with-more-than-one-figure">Code cells with more than one figure</a></li>
+  <li><a href="#tables" id="toc-tables" class="nav-link" data-scroll-target="#tables">Tables</a></li>
+  <li><a href="#places-that-keep-the-normal-layout-in-some-formats" id="toc-places-that-keep-the-normal-layout-in-some-formats" class="nav-link" data-scroll-target="#places-that-keep-the-normal-layout-in-some-formats">Places that keep the normal layout in some formats</a></li>
+  <li><a href="#other-notes" id="toc-other-notes" class="nav-link" data-scroll-target="#other-notes">Other notes</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./width-gap.html">Guide</a></li><li class="breadcrumb-item"><a href="./normal-layout.html">Where a figure keeps its normal layout</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Where a figure keeps its normal layout</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Some places cannot hold a wrapped figure. A wrapped figure there renders as a normal figure, and the render prints one warning for it.</p>
+<div class="demo">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>A figure in a callout
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="fig-callout" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-callout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/ratings.png" class="img-fluid figure-img" style="width:35.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-callout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Mean ratings by condition.
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-callout" class="quarto-xref">Figure&nbsp;1</a> has the class <code>.wrap-right</code>, but it is in a callout, so it keeps its normal layout.</p>
+</div>
+</div>
+</div>
+<p>The render of this page prints this warning for <a href="#fig-callout" class="quarto-xref">Figure&nbsp;1</a>:</p>
+<pre><code>(W) wrapped: the figure #fig-callout is in a callout, so it does not wrap.</code></pre>
+<section id="places-that-keep-the-normal-layout-in-all-four-formats" class="level2">
+<h2 class="anchored" data-anchor-id="places-that-keep-the-normal-layout-in-all-four-formats">Places that keep the normal layout in all four formats</h2>
+<p>In HTML, PDF through LaTeX, PDF through Typst, and Word, a wrapped figure in one of the places in this first list does not wrap. It keeps its normal layout, and the render prints one warning for it. The warning names the figure’s id. If the figure has no id, the warning names its image file or says that the figure has no id. A code cell that makes more than one figure gets one warning for the cell instead, as stated below.</p>
+<ul>
+<li>The margin: a figure with the <code>.column-margin</code> class, a figure in a <code>.column-margin</code> or <code>.aside</code> div, or a code cell with <code>#| column: margin</code> or <code>#| fig-column: margin</code>. The figure stays in the margin, unless a document key comes first in PDF (see the order after this list). In PDF through LaTeX, Quarto puts a captioned image that has the <code>.column-margin</code> class and no <code>#fig-</code> id in the body instead. Word has no margin column, so there the figure is in the body. This item also covers <code>fig-column: margin</code> and <code>column: margin</code> in the document metadata. In HTML and Word, that value applies to every figure with a <code>#fig-</code> id and every code cell figure, even a cell with <code>#| fig-column: body</code>. In PDF, the order after this list decides. It does not apply to a captioned image with no id, which stays in the body. Slides have no margin column, so on a slide only the aside div keeps the figure normal (see <a href="./formats/html.html#slides">Slides</a>).</li>
+<li>A subfigure panel, such as a figure div with <code>layout-ncol</code>, or a subfigure inside a panel.</li>
+<li>A panel layout: a div or a code cell with <code>layout-ncol</code>, <code>layout-nrow</code>, or <code>layout</code>.</li>
+<li>A list, a definition list included, a callout, a <code>.columns</code> layout, or a tabset.</li>
+<li>In a dashboard, a code cell that is not inside a <code>.card</code> div (see <a href="./formats/html.html#dashboards">Dashboards</a>).</li>
+</ul>
+</section>
+<section id="when-a-figure-and-the-document-name-different-places" class="level2">
+<h2 class="anchored" data-anchor-id="when-a-figure-and-the-document-name-different-places">When a figure and the document name different places</h2>
+<p>A figure’s own class and the document’s <code>fig-column</code> or <code>column</code> can name different places. In PDF through LaTeX and PDF through Typst, the extension reads them in the order of Quarto 1.10.19, and the first one set decides:</p>
+<ol type="1">
+<li>the figure’s own <code>fig-column-*</code> class, such as <code>.fig-column-margin</code>,</li>
+<li>the document’s <code>fig-column</code>,</li>
+<li>the figure’s own <code>column-*</code> or <code>.aside</code> class, such as <code>.column-margin</code>,</li>
+<li>the document’s <code>column</code>.</li>
+</ol>
+<p>For a code cell’s figure, the document’s <code>fig-column</code>, else its <code>column</code>, decides over the cell’s own <code>column</code> or <code>fig-column</code> option. If the document sets <code>fig-column: body</code>, a <code>.column-margin</code> figure with a <code>#fig-</code> id wraps in PDF, because Quarto puts it in the body there. In HTML, the extension reads a margin or page-wide class on the figure or its code cell before the document’s key. In Word, it reads a margin class there first. In HTML and in Word, a body class, such as <code>.column-body</code>, does not override the document’s key.</p>
+</section>
+<section id="code-cells-with-more-than-one-figure" class="level2">
+<h2 class="anchored" data-anchor-id="code-cells-with-more-than-one-figure">Code cells with more than one figure</h2>
+<p>A code cell that makes more than one figure without <code>fig-subcap</code> or a layout option does not wrap either. An example is a cell that draws two plots. Each of its figures keeps its normal layout, and the render prints one warning that names the cell’s label. The cell can be in a place on this page where its format keeps the normal layout, such as the margin or a callout. Then that one warning names the cell and the place, and no warning names a figure of the cell. If no paragraph follows a cell outside these places, its figures keep their normal layout with no warning, as any wrapped figure does there. To wrap a plot, give it its own cell with a paragraph after it. A cell with <code>fig-subcap</code> makes a subfigure panel, and a cell with <code>layout-ncol</code>, <code>layout-nrow</code>, or <code>layout</code> makes a panel layout. The list above covers both.</p>
+</section>
+<section id="tables" class="level2">
+<h2 class="anchored" data-anchor-id="tables">Tables</h2>
+<p>A table float does not wrap either, and the render prints one warning that names it. A <code>#tbl-</code> div or a code cell with a <code>tbl-</code> label makes a table float.</p>
+</section>
+<section id="places-that-keep-the-normal-layout-in-some-formats" class="level2">
+<h2 class="anchored" data-anchor-id="places-that-keep-the-normal-layout-in-some-formats">Places that keep the normal layout in some formats</h2>
+<p>These places keep the normal layout only in the formats named. The render prints the same warning there, and the figure wraps in the other formats.</p>
+<ul>
+<li>A block quote: in PDF through LaTeX.</li>
+<li>A table cell: in Word and in PDF through LaTeX. In PDF through LaTeX, a captioned figure in a table cell fails to render, with or without the extension, so only an image with no caption renders there.</li>
+<li>A caption in the margin: in HTML. The extension follows where Quarto puts the caption. When the figure or its code cell sets <code>cap-location</code>, that value decides, and on a code cell <code>fig-cap-location</code> acts as <code>cap-location</code>. Without a <code>cap-location</code>, a <code>margin</code> value in any of three keys sends the caption to the margin: the figure’s <code>fig-cap-location</code>, the document’s <code>fig-cap-location</code>, and the document’s <code>cap-location</code>. A value other than <code>margin</code> in one of these three does not override <code>margin</code> in another. For a captioned image with no id, Quarto reads only the document’s <code>fig-cap-location</code>, else its <code>cap-location</code>. The <code>.margin-caption</code> and <code>.caption-margin</code> classes also send the caption to the margin. They work on the figure, on its image, and on its code cell, as in <code>#| classes: wrap-right .caption-margin</code>. For a captioned image with no id, only <code>.margin-caption</code> does this.</li>
+<li>A page-wide column: a page-wide class on the figure or on a div around it, or a code cell with <code>#| column: page</code> or <code>#| fig-column: page</code>. The classes are <code>.column-body-outset</code>, <code>.column-page-inset</code>, <code>.column-page</code>, <code>.column-screen-inset</code>, and <code>.column-screen</code>, each alone or with <code>-left</code> or <code>-right</code>, and <code>.column-screen-inset-shaded</code>. In HTML this covers all of them. In PDF through Typst it covers all of them on a div or a code cell. For a class on the figure itself, it covers only <code>.column-page</code> and <code>.column-screen</code>, each alone or with <code>-left</code> or <code>-right</code>. Quarto keeps the figure in the body for the others. In PDF through LaTeX it covers the classes that Quarto makes page-wide there: those that start with <code>.column-page</code> or <code>.column-screen</code> and do not end in <code>-left</code>. Word keeps the figure in the body, where it wraps. This item also covers a page-wide value of <code>fig-column</code> or <code>column</code> in the document metadata, such as <code>fig-column: page</code>. In HTML, that value applies to every figure with a <code>#fig-</code> id and every code cell figure, even a cell with <code>#| fig-column: body</code>. In PDF, the order after the first list decides. In PDF through Typst it applies as a class on the figure itself does, except on a code cell figure. It does not apply to a captioned image with no id, which stays in the body.</li>
+</ul>
+</section>
+<section id="other-notes" class="level2">
+<h2 class="anchored" data-anchor-id="other-notes">Other notes</h2>
+<ul>
+<li>A captioned image with no <code>#fig-</code> id wraps too, unless a place on this page applies to it, such as a caption in the margin. In HTML and Word it has no figure number. In PDF through LaTeX and Typst, Quarto numbers it.</li>
+<li>An image inside a link, or beside other content in its paragraph, does not wrap. In HTML, LaTeX, Typst, and Word the render prints a warning for it.</li>
+<li>In HTML, LaTeX, and Typst the sides are physical. In a right-to-left document, <code>.wrap-right</code> still puts the figure on the right. Right-to-left Word documents are not tested.</li>
+<li>A long caption wraps inside the figure box.</li>
+<li>If a page has margin content, such as a <code>.column-margin</code> note, a figure in the body of the page still wraps.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jmgirard\.github\.io\/wrapped\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./stopping.html" class="pagination-link" aria-label="Where wrapping stops">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Where wrapping stops</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./formats/html.html" class="pagination-link" aria-label="HTML, slides, and dashboards">
+        <span class="nav-page-text">HTML, slides, and dashboards</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

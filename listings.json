@@ -1,0 +1,17 @@
+[
+  {
+    "listing": "/examples/index.html",
+    "items": [
+      "/examples/image-figure.html",
+      "/examples/div-figure.html",
+      "/examples/uncaptioned-image.html",
+      "/examples/code-cell.html",
+      "/examples/both-sides.html",
+      "/examples/width-gap.html",
+      "/examples/defaults.html",
+      "/examples/wrap-clear.html",
+      "/examples/slides.html",
+      "/examples/dashboard.html"
+    ]
+  }
+]
