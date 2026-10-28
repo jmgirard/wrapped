@@ -105,6 +105,29 @@ Evidence, 2026-10-28, on the review head `1453ed2`, branch level with `main` (`e
 - ripple #6: the row "Trim the LaTeX stop gap at page tops" says no fixture covers a smaller `wrap-lines` — fix now, fixed 6bcd808: the clause is removed
 - Gate: `cairn_validate.py` passes. The one version marker, `_extensions/wrapped/_extension.yml`, reads 0.2.0. The verify command passes on the review head. The changelog slot is "none". No DESIGN.md principle changed, so `cairn_impact` was skipped.
 
+Pass 2 findings:
+
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: the case (c) precondition does not check that the second paragraph opens narrowed — fix now, fixed 66ee2f0: its first line must end left of the figure
+- diff-bug #2: case (c) checks the next figure's image top, which sits `\intextsep` below its paragraph, so that paragraph could sit beside the first caption — fix now, fixed 66ee2f0: the paragraph beside the next figure must also start below the first figure
+- diff-bug #3: cases (a) and (b) do not assert that the narrowed lines end above the figure's bottom — fix now, fixed 66ee2f0: (a) asserts its 4th line ends above the bottom, (b) that its line 4 is beside the figure
+- diff-bug #4: the docs' "in body text, the block that stops the wrap starts below the figure" has no exception for a page break before the figure's paragraph or a footnote beside the figure — fix now, fixed 66ee2f0: the docs name both limits
+- diff-bug #5: the two new candidate rows link different paths for the M025 file — fix now, fixed 66ee2f0: both link the archive path that hygiene writes
+- diff-bug #6: case (f) is not named by any criterion — reject, false: a test that pins the page check this change adds is in scope by the test rules, and T2's work log names it
+- diff-bug #7: the header comment says "the text skips" where the stop block moves — fix now, fixed 66ee2f0
+- blame-history #1: the docs' "prints over the figure" conflicts with D-011's "an early stop only leaves space" — reject, planned change: D-011's line is a reason for a shortcode stop rule, not a rule on wrap-lines, and the option the user chose at the question set said that text past the count still runs at full width, as wrapfig does
+- blame-history #2: a wrap that starts inside a box records a stale `\pagetotal` — reject, false: the filter writes `\wrappedstop` in the same block list as the figure, so the stop is inside the box too, where `\ifinner` skips nothing
+- blame-history #3: the skip leaves out the last line's `\pagedepth`, so the stop lands about one line depth lower — reject, false: the stop still starts below the figure, and `stop_gap` holds it within one line of the reference
+- prior-review #1: `\WFclear` at the start of `\wrapped@endwrap` resets the flag before a waiting figure's stop reads it — reject, false: a waiting figure never started a wrap, and its own `\begin{wrappedfigure}` already cleared the flag
+- prior-review #2: the case (c) precondition skips the first line — fix now, as diff-bug #1
+- ripple #1: the docs' "in body text" has no page limit — fix now, as diff-bug #4
+- ripple #2: `cairn/references/wrap-mechanisms.md` E9 has no "in body text" — fix now, fixed 66ee2f0
+- ripple #3: the row "Stop text overlap with small wrap-lines" still describes the defect — fix now: post-merge hygiene removes it, as pass 1 ripple #2
+- ripple #4: the row "Trim the LaTeX stop gap at page tops" says no fixture covers a page-top figure, but case (a) starts at a page top — reject, false: case (a)'s figure follows a heading, while that row means a figure that wrapfig places at the very top of a page
+- ripple #5: the comment "which is below the figure's bottom" gives no reason — fix now, fixed 66ee2f0: it states the `\WF@size` terms that put the point about `\intextsep` less half a line below the bottom
+- ripple #6: the `\WFclear` reset has no comment — fix now, fixed 66ee2f0
+- ripple #7: the header comment leaves out the box limit — fix now, fixed 66ee2f0
+
 Pass 2 evidence, 2026-10-28, on `de4b856`, level with `main` (`ecba1d8`), after the fix-now commit `6bcd808` and the AC1 amendment:
 
 - AC1 (amended): `python3 tests/verify.py` at `de4b856` prints `ok` for `small wrap-lines a`, `b`, and `c`. In each case the paragraph that holds the figure follows a heading at a page top, has no footnote, and the stop block starts below the figure on the figure's page (`stop_gap`, and `small_c_case`'s page and precondition checks). In (a) and (b), `stop_gap` holds the stop heading within one line of the "form A right" and "form C left" gaps.
