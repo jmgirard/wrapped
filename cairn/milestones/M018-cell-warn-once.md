@@ -97,6 +97,8 @@ the Word `# frames` bookmark field is not `<id>`. A cell warning reads
 - 2026-10-28: T1 done: the five two-plot cells go at the end of each fixture, so earlier figure numbers and snapshot lines stay as they are. Before the fix, margin-meta's PDF printed one warning for each of fig-meta-margin-two-1 and -2.
 - 2026-10-28: checkpoint, T2 half-done: the float_target change and the T3 README and E4 edits are in this commit. Snapshots are not written yet, so verify fails at this commit until the `--update` run lands.
 - 2026-10-28: snapshots written with `verify.py --update` (97 renders pass). The margin-meta Typst snapshot changed a line on main (`figure: -` became `figure: fig-meta-margin-two-1`), because typ_summary took the next margin cell's label for the no-id image. The cell moved above the no-id image section, and that fixture now only adds lines. The summary gap is a candidate row.
+- 2026-10-28: claim audit: 23 claims read, 1 corrected — README.md (the no-paragraph sentence now names cells outside these places; the same reader re-read it and it holds).
+- 2026-10-28: claim audit note, not changed: `several` counts tables too, so a cell with one figure and one table already printed "makes more than one figure" for its figure on main; no fixture covers it.
 - 2026-10-28: choice: the cell warning shares the context branch of float_target. A cell figure with no paragraph after it and no context still prints nothing, and a table in a cell keeps its own warning.
 
 ## Decisions
