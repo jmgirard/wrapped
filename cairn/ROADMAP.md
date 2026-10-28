@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-28 (triage: 19 candidate links moved to milestones/
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M020 | Stop wraps at block shortcodes | in-progress | — | normal | milestones/M020-shortcode-stop.md |
+| M020 | Stop wraps at block shortcodes | review | — | normal | milestones/M020-shortcode-stop.md |
 | M017 | Let slides wrap under margin settings | done | — | normal | milestones/archive/M017-slides-margin.md |
 | M018 | Warn once per cell under a context | done | — | normal | milestones/archive/M018-cell-warn-once.md |
 | M019 | Wrap figures in Typst columns | done | — | normal | milestones/archive/M019-typst-columns.md |

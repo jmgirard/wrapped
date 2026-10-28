@@ -1,6 +1,6 @@
 # M020: Stop wraps at block shortcodes
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -45,7 +45,7 @@ A paragraph that holds only a block shortcode, such as `{{< video >}}`, ends the
 - [x] T2: In `_extensions/wrapped/wrapped.lua` (`find_page_break` and `is_page_break`, near line 1560), record the name of each shortcode by custom id. Stop a group at a paragraph that holds exactly one shortcode outside the joining set. Update the comments, the filter list entry, and the snapshots. Read the snapshot diff, and make sure that `tests/stop-rule.qmd` case 12 still passes.
 - [x] T3: Measure the fixture's HTML render in the built-in browser with `tests/layout.js`. For the video and document-shortcode cases, the block after the group starts below the figure.
 - [x] T4: Update README "Where wrapping stops" and DESIGN.md (stop rule, next-block rule, filter step 1) as AC6 says. Check each claim against the renders of T1.
-- [ ] T5: Run `python3 tests/verify.py` on macOS. The `verify.yml` workflow runs it at review.
+- [x] T5: Run `python3 tests/verify.py` on macOS. The `verify.yml` workflow runs it at review.
 
 ## Work log
 
@@ -66,3 +66,4 @@ A paragraph that holds only a block shortcode, such as `{{< video >}}`, ends the
 - 2026-10-28: T4: README "Where wrapping stops" gains the shortcode paragraph (eight joining shortcodes, extension shortcodes stop, include expanded first) and the next-block example of a lone video. `{{< pagebreak >}}` moved from the block list into that paragraph. `tests/readme.qmd` is the README fixture, so README.md itself is not rendered.
 - 2026-10-28: claim audit: 20 claims read, 2 corrected — README.md, wrapped.lua. `meta` returns a block-valued key as is in block context, so "make text, an image, or paragraphs" became "usually make", with a `wrap-clear` hint; the video example now says it is a block in HTML and a link line elsewhere. DESIGN.md matched. The block-meta case predates M020 (every lone shortcode joined before), so it became the candidate row "Stop wraps at block meta values" rather than new scope.
 - 2026-10-28: claim audit re-read (same reader, once): both corrected claims match Quarto 1.10.19, and the `wrap-clear` hint works (a Div ends the group); no new false claim.
+- 2026-10-28: T5: `python3 tests/verify.py` (compare, no update) on macOS: "all 102 renders pass", 0 FAIL lines, "ok layout stop-rule case 12", "ok layout stop-shortcode video". The run began before the claim-audit commit, whose code change is a comment only. Status set to review.
