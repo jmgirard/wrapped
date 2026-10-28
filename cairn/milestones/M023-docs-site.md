@@ -135,7 +135,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
       `docs/_freeze/`.
 - [x] T7: Write `docs/reference.qmd` with the nine-row table and links to
       the topic pages.
-- [ ] T8: Add `.github/workflows/docs.yml`: checkout, Quarto release with
+- [x] T8: Add `.github/workflows/docs.yml`: checkout, Quarto release with
       TinyTeX through `quarto-dev/quarto-actions/setup`, and
       `quarto render docs`, on pull requests that change `docs/`,
       `_extensions/`, or the workflow, and by hand.
@@ -181,6 +181,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: T6 done: gallery `docs/examples/` with a table listing and ten pages (image, div, uncaptioned image, knitr code cell with `fig-format: png`, both sides, width and gap, document defaults, `wrap-clear`, slides, dashboard). The eight example pages render to HTML, LaTeX PDF, Typst PDF (`<name>-typst.pdf`), and docx; `docs/_freeze/examples/code-cell/` holds all four formats' results. In the browser at 1280x900, `tests/layout.js` (copied into `docs/_site/` to serve it same-origin) reports each of the 11 gallery figures with `float` on its side; the slides page's one group check is false because the block after the group is on a hidden slide, and a look at the slide shows the text beside the figure.
 - 2026-10-28: found and fixed: knitr ran the ```` ```{r} ```` cell inside a four-backtick `markdown` fence on `formats/html.qmd`, so the page showed knitr's output; the fence now writes ```` ```{{r}} ````, which knitr prints as `{r}`, and the stray `docs/_freeze/formats/` is gone.
 - 2026-10-28: T7 done: `docs/reference.qmd` has two tables, six rows for classes and attributes and three for `wrapped:` keys, each with values, default, and formats, linked to its topic page. A script over the 22 rendered pages found every internal link and anchor in `<main>` resolves.
+- 2026-10-28: T8 done: `.github/workflows/docs.yml` runs `quarto render docs` with `quarto-dev/quarto-actions/setup@v2` (release, TinyTeX) on pull requests to main that change `docs/**`, `_extensions/**`, or the workflow, and by hand; no R step. A clean clone at e0eada0 rendered with a PATH of symlinked quarto, python3, LaTeX, and pandoc plus system and TeX dirs, where `command -v R` and `command -v Rscript` found nothing: exit 0, one `(W)` line (the callout).
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
