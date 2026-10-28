@@ -138,6 +138,8 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
 - 2026-10-28: T3 done: `README.md` is 68 lines (from 612): the intro and format sentence, the site link, Install with the filter YAML, one `.wrap-right` example with the image, and a "Learn more" list linking each site page by its title.
 - 2026-10-28: T4: `quarto publish gh-pages docs --no-prompt` refused to make the branch ("does not have a branch named gh-pages"), so an empty orphan commit was pushed as `gh-pages` (git commit-tree, no checkout, as Quarto's docs do by hand); the publish then pushed 152 files (gh-pages 571506c); no `docs/_publish.yml` was written, and the CI step names its target.
 - 2026-10-28: T4 done: Pages source switched from `main` `/` to `gh-pages` `/` by `gh api -X PUT`; Pages build of 571506c built; all 23 HTML files of `docs/_site` return 200 at the same path on the live site with the same `<title>`; `quarto add jmgirard/wrapped` in a scratch folder still installs 0.2.0.
+- 2026-10-28: T5 edits: the eight DESIGN Known issues lines, the four candidate rows, the LESSONS `*` line, and the w3c-css-values "Traces to" line now name the `docs/` page and section that states each rule, each marked `corrected M024`; `tests/readme.qmd`'s title and intro name where each example lives now; DESIGN Distribution and CLAUDE.md Conventions gain the site, `quarto render docs`, and the publish workflow (CLAUDE.md also gains the `tests/verify.py` command, since it had no dev commands).
+- 2026-10-28: user asked mid-run to pause when implement is done, so implement ends with a close block naming `/milestone-review M024` instead of invoking review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

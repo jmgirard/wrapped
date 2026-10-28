@@ -34,4 +34,4 @@ on (M010 work log).
 
 - `_extensions/wrapped/wrapped.lua`, the calc parser above `css_length`: each rule above.
 - `tests/css-functions.qmd`: the valid and invalid values that test the rules.
-- `README.md`, Width and gap: the list of what the check accepts.
+- `docs/width-gap.qmd`, CSS functions in HTML: the list of what the check accepts (corrected M024).

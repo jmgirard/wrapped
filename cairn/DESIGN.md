@@ -33,7 +33,11 @@ install it with `quarto add jmgirard/wrapped`.
 
 **Distribution.** Public. Each version gets a `v<version>` tag and a GitHub
 release with notes from commit subjects. The version lives in
-`_extensions/wrapped/_extension.yml` and rises at release.
+`_extensions/wrapped/_extension.yml` and rises at release. The
+documentation site's source is `docs/`, rendered with `quarto render docs`.
+`.github/workflows/docs.yml` publishes it from `main` to the `gh-pages`
+branch, which GitHub Pages serves at https://jmgirard.github.io/wrapped/.
+`README.md` is a short page that points to the site (corrected M024).
 
 **Quarto version.** `quarto-required: ">=1.9.36"`. Quarto 1.9.36 is the first
 stable release whose source has the loader for an extension's
@@ -305,39 +309,47 @@ snapshot difference. The mechanism for each other format is in
   of a page moves to the next page with the text beside it, and the rest of
   the page stays blank. With `columns:` set, the same holds at the bottom of
   a column: the group moves to the next column. wrap-it puts the group in a
-  `box`, which does not break across pages or columns. The README states
-  this limit (M005, columns M019).
+  `box`, which does not break across pages or columns. The site's
+  `docs/formats/typst.qmd`, Limits, states this limit (M005, columns M019,
+  corrected M024).
 - Word: a frame that does not fit at the bottom of a page moves to the next
   page with the paragraph after it, and the rest of the page stays blank. A
-  Word frame does not break across pages. The README states this limit
-  (M006).
+  Word frame does not break across pages. The site's
+  `docs/formats/word.qmd`, Images and frames, states this limit (M006,
+  corrected M024).
 - PDF through Typst: a wrapped figure whose width plus its gap is as wide
   as the text or wider, or with `columns:` set as its column or wider
   (M019), takes the default width with no console warning,
   unless the width and the gap are both percents, because Typst has no
   function that prints one. When 40% plus the gap is that wide too, the
-  figure keeps 40% and the gap. The README states these limits (M010,
-  corrected M011).
+  figure keeps 40% and the gap. The site's `docs/formats/typst.qmd`,
+  Widths that leave no room, states these limits (M010, corrected M011,
+  corrected M024).
 - HTML: newer CSS forms that browsers accept, such as `round()`, `pi`, and
   typed arithmetic, warn and take the default, because the filter checks
-  the CSS Values 3 rules and `min()`, `max()`, and `clamp()`. The README
-  lists what the check accepts (M010).
+  the CSS Values 3 rules and `min()`, `max()`, and `clamp()`. The site's
+  `docs/width-gap.qmd`, CSS functions in HTML, lists what the check
+  accepts (M010, corrected M024).
 - HTML: a function width that is never above zero but that the check
   cannot show to be so prints no warning, such as
   `calc(min(1%, 1px) - min(1%, 1px))` or `calc(7mm - 0.7cm)`. The check
   keeps one term's limit for `min()` and `max()`, reads each relative unit
-  as unrelated to the others, and adds in floating point. The README says
-  the check warns only where it can show the result (M011).
+  as unrelated to the others, and adds in floating point. The site's
+  `docs/width-gap.qmd`, Widths that are never above zero, says the check
+  warns only where it can show the result (M011, corrected M024).
 - HTML: a `max()` or `clamp()` gap over two units whose terms are all
   below zero, such as `max(-2px, -1%)` or `clamp(-3px, -2%, -1px)`, prints
   no warning. The check reads such a value as zero or below, not as below
-  zero, and a gap of zero stays. The README states this limit (M012).
+  zero, and a gap of zero stays. The site's `docs/width-gap.qmd`, Gaps
+  below zero, states this limit (M012, corrected M024).
 - Word: with only a `wrapped:` gap set, 40% plus that gap can be as wide
   as the text, and a figure that sets neither its own width nor its own
-  gap then has no room for text, with no warning. The README states this
-  limit (M012).
+  gap then has no room for text, with no warning. The site's
+  `docs/defaults.qmd`, Rules for the keys, states this limit (M012,
+  corrected M024).
 - PDF through LaTeX: a captioned figure in a table cell fails the build
   ("Not in outer par mode") with or without the extension, because Quarto
   puts a figure float in a `longtable`. The extension keeps a wrapped one
   in its normal layout with a warning, so the failure is Quarto's. The
-  README states this limit (M013).
+  site's `docs/normal-layout.qmd`, Places that keep the normal layout in
+  some formats, states this limit (M013, corrected M024).

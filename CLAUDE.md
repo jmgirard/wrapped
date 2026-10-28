@@ -12,6 +12,12 @@ through LaTeX, PDF through Typst, and Word. The design is in
   version as it is until the next release.
 - Users install from `main` (`quarto add jmgirard/wrapped`), so `main` must
   render without errors at every commit.
+- Run the tests with `python3 tests/verify.py` from the repository root.
+- The documentation site is in `docs/`. Render it with `quarto render docs`.
+  `.github/workflows/docs.yml` publishes it to the `gh-pages` branch, which
+  serves https://jmgirard.github.io/wrapped/. A push to `main` that changes
+  `docs/`, `_extensions/`, or the workflow starts it. The README only points
+  to the site, so a rule for users goes on a site page.
 
 ## Project tracking (cairn)
 
