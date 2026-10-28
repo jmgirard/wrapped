@@ -16,6 +16,21 @@
   overflow: visible;
 }
 
+/* A dashboard makes a cell's wrappers flex containers (html-fill-container),
+   where a float has no effect. As blocks, they let the float reach the
+   paragraphs after the cell. */
+.wrap-group .cell.html-fill-container,
+.wrap-group .cell-output-display.html-fill-container {
+  display: block;
+}
+
+/* A dashboard card that fills its height lets a fill item shrink below its
+   content, so the block after the group would sit over the figure. At its
+   content height, the group makes the card scroll as a paragraph does. */
+.wrap-group.html-fill-item {
+  flex: 0 0 auto;
+}
+
 .quarto-float.wrap-right,
 .wrapped-image.wrap-right {
   float: right;
