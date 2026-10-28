@@ -168,8 +168,18 @@ Markdown can read the stars as emphasis and drop them.
 The figure wraps the paragraphs that follow it. Wrapping stops at the first
 block that is not a paragraph, and that block starts below the figure.
 Examples are a heading, a list, a table, a code block, a callout, another
-figure, a horizontal rule, and a `{{< pagebreak >}}` page break. An image
-with no caption and no wrap class counts as a paragraph.
+figure, and a horizontal rule. An image with no caption and no wrap class
+counts as a paragraph.
+
+A paragraph that holds exactly one shortcode and nothing else also stops
+wrapping, because the shortcode can make a block. Examples are a
+`{{< pagebreak >}}` page break and a `{{< video >}}`. This holds for a
+shortcode from another extension too, even one that makes text. Eight
+Quarto shortcodes make text, an image, or paragraphs, so a paragraph with
+one of them counts as a paragraph: `meta`, `var`, `env`, `kbd`, `lipsum`,
+`placeholder`, `version`, and `brand`. Quarto expands `{{< include >}}`
+before the filter runs, so the included blocks follow these rules as
+written.
 
 To stop wrapping earlier, put an empty `wrap-clear` div after the last
 paragraph that you want beside the figure:
@@ -180,7 +190,8 @@ paragraph that you want beside the figure:
 ```
 
 A wrapped figure with no paragraph right after it keeps its normal layout.
-An example is a figure right before a heading. In HTML, LaTeX, Typst, and
+An example is a figure right before a heading, or right before a paragraph
+that holds only a `{{< video >}}`. In HTML, LaTeX, Typst, and
 Word the render prints no warning for such a figure. The places in the
 lists of the next section are the exception: a figure there prints its
 warning with or without a paragraph after it. Of two wrapped figures in a
