@@ -1,0 +1,84 @@
+---
+title: "wrapped fixture: shortcodes and the stop rule"
+filters:
+  - wrapped
+shortcodes:
+  - stop-shortcode.lua
+format:
+  html: default
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
+  docx: default
+---
+
+```{=latex}
+% LaTeX only: full lines that show the width of the text block, and a page
+% for each case, for the position check in verify.py.
+This page has no figure, so its full lines show the width of the text block. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+\clearpage
+```
+
+## Case 1: video
+
+![Shortcode case 1.](plot.png){#fig-sc-video .wrap-right width="35%"}
+
+A short paragraph beside the video case.
+
+{{< video https://www.youtube.com/embed/wo9vZccmqwc >}}
+
+Full width text after the video. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+```{=latex}
+\clearpage
+```
+
+## Case 2: a document shortcode
+
+![Shortcode case 2.](plot.png){#fig-sc-box .wrap-left width="35%"}
+
+A short paragraph beside the document shortcode case.
+
+{{< stopbox >}}
+
+Text after the stop box.
+
+```{=latex}
+\clearpage
+```
+
+## Case 3: a shortcode that joins
+
+![Shortcode case 3.](plot.png){#fig-sc-kbd .wrap-right width="35%"}
+
+A short paragraph beside the kbd case.
+
+{{< kbd Ctrl-C >}}
+
+Text after the kbd.
+
+```{=latex}
+\clearpage
+```
+
+## Case 4: include
+
+![Shortcode case 4.](plot.png){#fig-sc-include .wrap-left width="35%"}
+
+A short paragraph beside the include case.
+
+{{< include _stop-shortcode-include.qmd >}}
+
+```{=latex}
+\clearpage
+```
+
+## Case 5: a video right after the figure
+
+![Shortcode case 5.](plot.png){#fig-sc-next .wrap-right width="35%"}
+
+{{< video https://www.youtube.com/embed/wo9vZccmqwc >}}
+
+Text after the second video.
