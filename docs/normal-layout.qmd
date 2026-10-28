@@ -1,0 +1,5 @@
+---
+title: "Where a figure keeps its normal layout"
+---
+
+This page is a stub.

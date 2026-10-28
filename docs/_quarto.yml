@@ -1,0 +1,50 @@
+project:
+  type: website
+
+website:
+  title: wrapped
+  description: A Quarto filter that wraps body text around figures.
+  site-url: https://jmgirard.github.io/wrapped/
+  repo-url: https://github.com/jmgirard/wrapped
+  page-navigation: true
+  navbar:
+    left:
+      - href: get-started.qmd
+        text: Get started
+      - href: examples/index.qmd
+        text: Examples
+      - href: reference.qmd
+        text: Reference
+    right:
+      - icon: github
+        href: https://github.com/jmgirard/wrapped
+        aria-label: GitHub
+  sidebar:
+    style: docked
+    contents:
+      - index.qmd
+      - get-started.qmd
+      - section: Guide
+        contents:
+          - width-gap.qmd
+          - defaults.qmd
+          - stopping.qmd
+          - normal-layout.qmd
+      - section: Formats
+        contents:
+          - formats/html.qmd
+          - formats/latex.qmd
+          - formats/typst.qmd
+          - formats/word.qmd
+      - examples/index.qmd
+      - reference.qmd
+
+filters:
+  - wrapped
+
+format:
+  html:
+    toc: true
+
+execute:
+  freeze: auto

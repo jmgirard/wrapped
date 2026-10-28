@@ -1,0 +1,5 @@
+---
+title: "Document defaults"
+---
+
+This page is a stub.
