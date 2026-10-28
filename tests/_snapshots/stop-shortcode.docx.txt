@@ -14,6 +14,7 @@ image: cx=2080259
 image: cx=2080259
 image: cx=1866900
 image: cx=2080259
+image: cx=2080259
 # frames
 frame right w=3276 gap=240 anchor=margin | fig-sc-video | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame left w=3276 gap=240 anchor=margin | fig-sc-box | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
@@ -27,3 +28,4 @@ frame left w=3276 gap=240 anchor=margin | fig-sc-kbd-comment | image plot.png fi
 frame right w=3276 gap=240 anchor=margin | fig-sc-meta-comment | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, p, clear | links=- cites=0
 frame left w=3276 gap=240 anchor=margin | fig-sc-meta-nest | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame left w=3276 gap=240 anchor=margin | fig-sc-meta-span | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, p, clear | links=- cites=0
+frame right w=3276 gap=240 anchor=margin | fig-sc-meta-index | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0

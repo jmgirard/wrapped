@@ -1572,6 +1572,8 @@ local function find_shortcode(shortcode)
   shortcode_names[id] = shortcode.name
   if shortcode.name == "meta" then
     for _, param in ipairs(shortcode.params) do
+      -- A key made by a nested shortcode is not known here, so it joins.
+      if param.type == "shortcode" then break end
       if param.type == "param" then
         -- As Quarto's meta shortcode, strip one pair of quotes around a key.
         local key = param.value
@@ -1589,7 +1591,8 @@ end
 
 -- Quarto's shortcodes that usually make text, an image, or paragraphs, which
 -- join a group when the paragraph shows nothing else. A lone meta shortcode
--- whose value holds another block, such as a list, stops (block_meta).
+-- whose value holds a block other than a paragraph, such as a list, stops
+-- (block_meta).
 local JOINING_SHORTCODES = {
   meta = true, var = true, env = true, kbd = true, lipsum = true,
   placeholder = true, version = true, brand = true,

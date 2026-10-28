@@ -18,6 +18,11 @@ stopnest:
     ~~~
     code from the nested metadata
     ~~~
+stopitems:
+  - |
+    - First item from the metadata list
+    - Second item from the metadata list
+  - Text from the metadata list
 format:
   html: default
   pdf:
@@ -222,3 +227,17 @@ A short paragraph beside the meta span case.
 [{{< meta stoplist >}}]{.meta-span}
 
 Text after the meta list in a span.
+
+```{=latex}
+\clearpage
+```
+
+## Case 15: a quoted meta key with a list index
+
+![Shortcode case 15.](plot.png){#fig-sc-meta-index .wrap-right width="35%"}
+
+A short paragraph beside the meta index case.
+
+{{< meta "stopitems.1" >}}
+
+Text after the indexed meta list.

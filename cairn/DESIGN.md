@@ -99,9 +99,8 @@ an image, or paragraphs join instead, also with a comment beside them:
 `brand`. A `meta` shortcode that is its paragraph's one inline stops when
 its value holds a block other than `Para` or `Plain`; a value of paragraphs
 only joins, and in any other form Quarto renders the value as text, so it
-joins (M021, D-012). Quarto expands
-`{{< include >}}` and `{{< embed >}}` before the filter runs, so their
-blocks follow the rule as written. An empty `::: {.wrap-clear}` div stops
+joins (M021, D-012). Quarto expands `{{< include >}}` and `{{< embed >}}`
+before the filter runs, so their blocks follow the rule as written. An empty `::: {.wrap-clear}` div stops
 it earlier. HTML, LaTeX, Typst, and Word enforce the rule. In LaTeX a
 `\wrappedstop` after the group skips the lines the figure's height still
 needs, and puts out a figure that moved and still waits, centered with no
@@ -111,10 +110,9 @@ Next-block rule (D-003): a wrapped figure whose next block is not a
 paragraph has no text to wrap, so it keeps a normal figure with no warning.
 A paragraph that stops wrapping under the stop rule, such as a lone
 `{{< video >}}` with or without comments or a span around it, or a lone
-`meta` whose value is a list, does not count as a paragraph here (M020,
-D-011; corrected M021). Of two
-wrapped figures in a row, the first keeps a normal figure and the second
-wraps. The figures of one code cell are the exception: a wrapped
+`meta` whose value holds a block other than a paragraph, does not count as
+a paragraph here (M020, D-011; corrected M021). Of two wrapped figures in
+a row, the first keeps a normal figure and the second wraps. The figures of one code cell are the exception: a wrapped
 cell that makes more than one figure without `fig-subcap` keeps all of them
 normal, with one warning for the cell (D-010, M014). That warning names
 the cell's context as its reason, and a cell in no context with no

@@ -156,16 +156,21 @@ float can overlap the figure, while an early stop only leaves space. The
 user also chose that a `video` stops the wrap in every format, though it is
 a block only in HTML, so the stop rule stays the same in all formats.
 
-### D-012: The lone-shortcode stop looks past comments and one span, and a block-valued meta stops (annotates D-011)
+### D-012: The lone-shortcode stop looks past comments and one span, and a block-valued meta stops (supersedes part of D-011)
 
 2026-10-28, M021. D-011's "exactly one shortcode and nothing else" now
 means one shortcode with nothing else that shows: spaces, soft breaks, HTML
-comments, and one span around it do not count, because Quarto still renders
-such a video as a block. One of the eight joining shortcodes in that form
-still joins. A `meta` shortcode that is its paragraph's one inline stops
+comments, and one span around it do not count. In HTML Quarto still
+renders such a video as a block, and D-011 stops a video in every format.
+A paragraph of one of the eight joining shortcodes with comments or a span
+around it still joins, with one exception. D-011 let every lone `meta`
+join; now a `meta` shortcode that is its paragraph's one inline stops
 when its value holds a block other than a paragraph, because Quarto then
 puts the value's blocks in the paragraph's place. The user chose at the
 plan's question set that a value of paragraphs only joins, over stopping
 at any block value, because paragraph text can wrap like typed text. A
 `meta` in any other form keeps joining, because Quarto renders its value as
-text there.
+text there. The meta stop follows the value in each format, so a key set
+for one format only stops in that format and joins in the others, where
+Quarto renders it as text. The new stop forms are blocks of D-007's stop
+rule and not paragraphs for D-003's next-block rule, as D-011's are.
