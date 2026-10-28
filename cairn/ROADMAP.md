@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-28 (M023 review: M020 row pruned; row "Correct the 
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M024 | Publish the site and shorten the README | in-progress | M023 | normal | milestones/M024-publish-docs.md |
+| M024 | Publish the site and shorten the README | review | M023 | normal | milestones/M024-publish-docs.md |
 | M021 | Stop wraps at more shortcode forms | done | — | normal | milestones/archive/M021-shortcode-stop-forms.md |
 | M022 | Wrap figures in dashboard cards | done | — | normal | milestones/archive/M022-dashboard-wraps.md |
 | M023 | Build the documentation site | done | — | normal | milestones/archive/M023-docs-site.md |

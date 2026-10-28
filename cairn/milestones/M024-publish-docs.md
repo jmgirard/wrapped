@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M024: Publish the site and shorten the README
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** M023   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -105,7 +105,7 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
       --no-prompt --no-browser`, switch the Pages source with
       `gh api -X PUT repos/jmgirard/wrapped/pages` (branch `gh-pages`, path
       `/`), wait for the Pages build, and fetch each page path.
-- [ ] T5: Update the AC4 pointers in place, each marked `corrected M024`
+- [x] T5: Update the AC4 pointers in place, each marked `corrected M024`
       where it is current knowledge, then DESIGN.md's Distribution and
       CLAUDE.md's dev commands (the site and `quarto render docs`).
 
@@ -142,6 +142,7 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
 - 2026-10-28: user asked mid-run to pause when implement is done, so implement ends with a close block naming `/milestone-review M024` instead of invoking review.
 - 2026-10-28: verify after T5: 102 of 103 renders pass; `meta-breakpoint.html` failed with quarto exit 139 ("Segmentation fault: 11" in Quarto's deno), a crash with no output to compare, not a snapshot difference; the branch changes no filter file, so the full suite is rerun.
 - 2026-10-28: claim audit: 38 claims read, 1 corrected — CLAUDE.md ("The README only points to the site": it also gives install steps and one example); the publish job's CI run is still untested (first run comes at the merge).
+- 2026-10-28: T5 done: verify rerun on 01ffbeb, all 103 renders pass (the segfault did not recur). All tasks checked; status review; paused for the user before `/milestone-review`.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
