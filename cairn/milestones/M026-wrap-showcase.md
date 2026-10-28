@@ -42,7 +42,7 @@ The site's example pages and the README image show body text above a wrapped fig
 - [x] T3: Do the same for `width-gap.qmd`, `defaults.qmd`, and both figures of `both-sides.qmd`.
 - [x] T4: Do the same for `code-cell.qmd` (the paragraph goes before the cell) and the `.demo` div of `docs/index.qmd`. Render `docs/` locally with R so that `docs/_freeze/examples/code-cell/` matches the new page.
 - [x] T5: Render `docs/`, convert each docx in P to PDF with LibreOffice, and run both readers over the 29 renders. Lengthen or move text until each figure passes, with the figure and its text on one page. Compare the `(W) wrapped:` lines with T1's.
-- [ ] T6: Update the crop in the final comment of `docs/images/make-images.R`, rerun its commands, and rewrite the README sentence before the image and the image's alt text.
+- [x] T6: Update the crop in the final comment of `docs/images/make-images.R`, rerun its commands, and rewrite the README sentence before the image and the image's alt text.
 - [ ] T7: Render `docs/` with no R (AC5), and run `python3 tests/verify.py`.
 
 ## Work log
@@ -65,6 +65,7 @@ The site's example pages and the README image show body text above a wrapped fig
 - 2026-10-28: T2-T4: each page got a full-width paragraph before its figure and a straddle paragraph. Paragraph lengths were set by T5's reads: LaTeX wrapfig narrows one or two lines past the figure's bottom, so each straddle paragraph runs 3 or more lines past it. `code-cell.qmd`'s paragraph above was cut to 2 lines because the longer one pushed the figure to page 2 in LaTeX, where it waited and left no text beside it.
 - 2026-10-28: T3: `both-sides.qmd` got a `{{< pagebreak >}}` after its rule, because in Typst the second figure's paragraph above fell at the bottom of page 1 and the figure on page 2. Chosen over shortening the first group, which then failed to pass its figure's bottom in LaTeX.
 - 2026-10-28: T5: all 24 figure checks pass on the 21 PDF renders, and `straddle()` passes all 9 HTML figures at 1280x900 on the 8 pages. The full `quarto render docs` printed the same sorted `(W) wrapped:` line as on `main`. Figure lines, enclosing divs, and YAML headers match `main` on all 8 pages, and the four freeze `hash` values equal the md5 of `code-cell.qmd`.
+- 2026-10-28: T6: the crop in `docs/images/make-images.R` is now `-H 690`, and `readme-example.png` is 940x690 with the paragraph above, the two paragraphs beside, and the lines under the chart. README's sentence and alt text name the three parts.
 
 ## Decisions
 
