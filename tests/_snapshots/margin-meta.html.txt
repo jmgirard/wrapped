@@ -1,4 +1,5 @@
 # warnings
+1x wrapped: the code cell #fig-meta-margin-two is in the margin, so it does not wrap.
 1x wrapped: the figure #fig-meta-body-cell is in the margin, so it does not wrap.
 1x wrapped: the figure #fig-meta-margin is in the margin, so it does not wrap.
 1x wrapped: the figure #fig-meta-margin-cell is in the margin, so it does not wrap.
@@ -10,12 +11,16 @@ fig-meta-margin: - style=-
 fig-meta-margin-div: - style=-
 fig-meta-margin-cell: - style=-
 fig-meta-body-cell: - style=-
+fig-meta-margin-two-1: - style=-
+fig-meta-margin-two-2: - style=-
 (box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
 # images
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 fig-meta-margin-cell-1.png: wrap=- style=- width=672
 fig-meta-body-cell-1.png: wrap=- style=- width=672
+fig-meta-margin-two-1.png: wrap=- style=- width=672
+fig-meta-margin-two-2.png: wrap=- style=- width=672
 plot.png: wrap=- style=- width=-
 # groups
 wrapped-image, p

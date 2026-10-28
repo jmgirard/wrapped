@@ -1,4 +1,5 @@
 # warnings
+1x wrapped: the code cell #fig-meta-page-two is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-meta-page is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-meta-page-body is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-meta-page-cell is page-wide, so it does not wrap.
@@ -9,10 +10,14 @@ fig-meta-page: - style=-
 fig-meta-page-cell: - style=-
 fig-meta-page-body: - style=-
 (box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
+fig-meta-page-two-1: - style=-
+fig-meta-page-two-2: - style=-
 # images
 plot.png: wrap=- style=- width=-
 fig-meta-page-cell-1.png: wrap=- style=- width=672
 fig-meta-page-body-1.png: wrap=- style=- width=672
 plot.png: wrap=- style=- width=-
+fig-meta-page-two-1.png: wrap=- style=- width=672
+fig-meta-page-two-2.png: wrap=- style=- width=672
 # groups
 wrapped-image, p

@@ -1,6 +1,8 @@
 # warnings
 1x wrapped: a figure with no id is in a column layout, so it does not wrap.
 1x wrapped: a figure with no id is in the margin, so it does not wrap.
+1x wrapped: the code cell #fig-callout-two is in a callout, so it does not wrap.
+1x wrapped: the code cell #fig-margin-two is in the margin, so it does not wrap.
 1x wrapped: the code cell #fig-three-plots makes more than one figure, so it does not wrap.
 1x wrapped: the code cell #fig-two-plots makes more than one figure, so it does not wrap.
 1x wrapped: the figure #fig-aside is in an aside, so it does not wrap.
@@ -56,6 +58,11 @@ image: cx=5334000
 image: cx=1066800
 image: cx=1600200
 image: cx=1783080
+image: cx=152400
+image: cx=4572000
+image: cx=4572000
+image: cx=4572000
+image: cx=4572000
 # frames
 frame right w=3744 gap=240 anchor=margin | fig-quote | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame right w=2808 gap=240 anchor=margin | fig-second | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-first,fig-second cites=0

@@ -1,9 +1,12 @@
 # warnings
+1x wrapped: the code cell #fig-meta-page-two makes more than one figure, so it does not wrap.
 # docx
 image: cx=2377440
 image: cx=4572000
 image: cx=4572000
 image: cx=1783080
+image: cx=4572000
+image: cx=4572000
 # frames
 frame right w=3744 gap=240 anchor=margin | fig-meta-page | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame right w=7200 gap=240 anchor=margin | fig-meta-page-cell | image fig-meta-page-cell-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0

@@ -1,4 +1,5 @@
 # warnings
+1x wrapped: the code cell #fig-col-two is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-col-body-cell is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-col-cell is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-col-page is page-wide, so it does not wrap.
@@ -9,10 +10,14 @@ fig-col-page: - style=-
 fig-col-cell: - style=-
 fig-col-body-cell: - style=-
 (box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
+fig-col-two-1: - style=-
+fig-col-two-2: - style=-
 # images
 plot.png: wrap=- style=- width=-
 fig-col-cell-1.png: wrap=- style=- width=672
 fig-col-body-cell-1.png: wrap=- style=- width=672
 plot.png: wrap=- style=- width=-
+fig-col-two-1.png: wrap=- style=- width=672
+fig-col-two-2.png: wrap=- style=- width=672
 # groups
 wrapped-image, p

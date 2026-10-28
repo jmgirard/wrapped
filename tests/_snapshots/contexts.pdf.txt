@@ -1,6 +1,8 @@
 # warnings
 1x wrapped: a figure with no id is in a column layout, so it does not wrap.
 1x wrapped: a figure with no id is in the margin, so it does not wrap.
+1x wrapped: the code cell #fig-callout-two is in a callout, so it does not wrap.
+1x wrapped: the code cell #fig-margin-two is in the margin, so it does not wrap.
 1x wrapped: the code cell #fig-three-plots makes more than one figure, so it does not wrap.
 1x wrapped: the code cell #fig-two-plots makes more than one figure, so it does not wrap.
 1x wrapped: the figure #fig-aside is in an aside, so it does not wrap.
@@ -47,3 +49,5 @@ figure: - [H] image=[keepaspectratio]
 figure: fig-first [-] image=[width=0.3\linewidth,height=\textheight,keepaspectratio]
 wrappedfigure: fig-second [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+figure: fig-callout-two-1 [H] image=[keepaspectratio]
+figure: fig-callout-two-2 [H] image=[keepaspectratio]

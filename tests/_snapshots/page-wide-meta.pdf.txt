@@ -1,4 +1,5 @@
 # warnings
+1x wrapped: the code cell #fig-meta-page-two is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-meta-page is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-meta-page-body is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-meta-page-cell is page-wide, so it does not wrap.
