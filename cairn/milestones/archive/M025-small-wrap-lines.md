@@ -1,0 +1,11 @@
+# M025: Stop text overlap with small wrap-lines
+
+**Status:** done (2026-10-28, PR #27 https://github.com/jmgirard/wrapped/pull/27)
+
+**Goal:** In PDF through LaTeX, the block that stops a wrap starts below the figure also after a small `wrap-lines` value ends the narrowed lines early.
+
+**Outcome:** `wrapped.tex` records `\pagetotal`, `\WF@size`, and `\ReadonlyShipoutCounter` in a `\WF@startwrapping` hook. Where the narrowed lines have ended and the start count is below wrapfig's own count, the new `\wrapped@skipbelow` skips the stop block to `\WF@size` less one `\baselineskip` below the start. It skips nothing inside a box (`\ifinner`) or after a page break, and `\WFclear` drops the start record. A default or larger count works as before. Text past the count still runs at full width over the figure, as wrapfig documents. `tests/stop-latex.qmd` gains cases (a) to (f) and a twin of (d), checked by `small_a_case` to `small_f_case` in `tests/verify.py`; (a) to (c) fail on `main`, and planted defects fail (d) and (f). `docs/formats/latex.qmd` states the smaller-value behavior and its one-page and footnote limits. DESIGN.md's `wrap-lines` row and stop-rule paragraph and `references/wrap-mechanisms.md` E9 follow. Suite: 103 renders, 64 layout cases.
+
+**Decisions:** D-015 (keep the count, move the stop block below the figure; annotates D-007). AC1 was narrowed at the user's choice to the tested cases: a paragraph after a heading at a page top, no footnote, Quarto's default spacing.
+
+**Review:** Criteria audit at plan (7 findings fixed). Claim audit 29 claims, 5 corrected. Two four-lens passes, 43 findings: 27 fixed (6bcd808, 66ee2f0; the skip gated to a small count, same-page checks, case preconditions, docs limits, stale text), 12 rejected (false or planned), 4 to the new row "Check small wrap-lines stops in more layouts". One amendment return (AC1), after two re-audits. New rows: "Check small wrap-lines in callouts" and "Check small wrap-lines stops in more layouts". Hygiene graduated "Stop text overlap with small wrap-lines", pruned the M022 row, captured one lesson, marked M004, M007, and M012 lessons used, and evicted the 2026-10-26 (M009) lesson by rank. CI on PR #27: verify 6m48s, render 1m05s, publish skipped.
