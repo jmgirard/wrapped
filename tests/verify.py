@@ -872,11 +872,12 @@ def column_image(boxes, edges, column, line):
     return max(images, key=lambda b: b.top)
 
 
-# Quarto's Typst page has 6 in of text, 648 px. In two columns Typst's
-# default gutter is 4% of that, so a column is (648 - 25.92) / 2 = 311 px
-# wide, and 40% of it is 124 px. 1 in is 72 pt, or 108 px.
+# Quarto's Typst page has 6 in of text, and Typst's default gutter between
+# two columns is 4% of it. Image widths in px at 1.5 px for each pt: 40% of
+# a column, 1 in, and 2.4 in.
 TYPST_COL_40 = 124
 TYPST_1IN = 108
+TYPST_2_4IN = 259
 
 
 def typst_column_case(para, column, want, before=None):
@@ -884,7 +885,8 @@ def typst_column_case(para, column, want, before=None):
     columns, whose image is `want` px wide and whose paragraph's first line
     sits beside it inside that column. With `before`, the words of a line
     that must be in the first column of the same page, with no text of the
-    figure's column above its image."""
+    figure's column above its image, and with the first column's text
+    ending two lines or more above the lowest line of the figure's column."""
     def case(boxes, edges, lh):
         col, line = find_column_line(boxes, edges, para)
         image = column_image(boxes, edges, col, line)
@@ -907,10 +909,20 @@ def typst_column_case(para, column, want, before=None):
             if first != 0 or start.page != image.page:
                 raise LayoutError(f"{before!r} is in column {first + 1} of page {start.page}, "
                                   f"not in column 1 of the figure's page {image.page}")
-            above = [b for b in join_lines(b for b in boxes if b.kind == "text" and b.page == image.page
-                                           and column_of(b, edges) == col) if b.bottom < image.top - NEAR]
+            def lines_of(c):
+                return join_lines(b for b in boxes if b.kind == "text" and b.page == image.page
+                                  and column_of(b, edges) == c)
+            own = lines_of(col)
+            above = [b for b in own if b.bottom < image.top - NEAR]
             if above:
                 raise LayoutError(f"{len(above)} lines of column {col + 1} end above the image")
+            firsts = lines_of(0)
+            tops = sorted(b.top for b in firsts)
+            pitch = statistics.median(b - a for a, b in zip(tops, tops[1:]))
+            end, foot = max(b.bottom for b in firsts), max(b.bottom for b in own)
+            if foot - end < 2 * pitch:
+                raise LayoutError(f"column 1 ends at {end:.0f} px, less than two lines above "
+                                  f"the foot of column {col + 1} at {foot:.0f} px")
     return case
 
 
@@ -918,7 +930,8 @@ def typst_columns_cases():
     yield "40% in column 1", typst_column_case("Marker forty", 0, TYPST_COL_40)
     yield "1in image in column 1", typst_column_case("Marker inch", 0, TYPST_1IN)
     yield "40% in column 2", typst_column_case("Marker second", 1, TYPST_COL_40)
-    yield "2.9in fills the column", typst_column_case("Marker fill", 1, TYPST_COL_40)
+    yield "2.5in with 0.5in gap fills the column", typst_column_case("Marker fill", 1, TYPST_COL_40)
+    yield "2.4in with 10% gap fits the column", typst_image_case("Fig CPct.", TYPST_2_4IN)
     yield "moved to column 2", typst_column_case("Marker moved", 1, TYPST_COL_40, before="Marker before")
 
 
@@ -941,7 +954,7 @@ TYPST_LAYOUT = {
 }
 
 # The fixtures in two columns, whose cases take the edges of each column
-# and no line height.
+# and no line height, so their cases must not read `lh`.
 COLUMN_LAYOUT = {"typst-columns"}
 
 

@@ -26,7 +26,9 @@ LaTeX, PDF through Typst, and docx, and the book project under `tests/book/`
 to HTML. It compares the parts that the filter changes with the snapshots
 in `tests/_snapshots/`. For `LAYOUT` fixtures, it reads where text starts
 beside and below each wrapped figure in the PDF through LaTeX (D-006). It reads
-`TYPST_LAYOUT` fixtures in the Typst PDF too (corrected M010). For `LOGS` fixtures, it reads the LaTeX log's warnings (corrected M009). It
+`TYPST_LAYOUT` fixtures in the Typst PDF too (corrected M010), and for
+`COLUMN_LAYOUT` fixtures, in two columns, which column holds each figure
+(corrected M019). For `LOGS` fixtures, it reads the LaTeX log's warnings (corrected M009). It
 exits with status 1 on a failed render, difference, layout case, or log
 check. It needs Quarto, R with knitr, TinyTeX, and poppler. After an
 intended output change, run it with `--update` and review the snapshot

@@ -73,7 +73,7 @@ filter carries it to the figure (`references/wrap-mechanisms.md`, S1; D-001).
 | Attribute | Values | Default | Notes |
 |---|---|---|---|
 | `.wrap-left`, `.wrap-right` | class | none | Turns wrapping on and picks the side. |
-| `width` | percent of text width, or an absolute length | `40%` | Width of the figure box, caption included. |
+| `width` | percent of text width (in Typst with `columns:` set, of column width), or an absolute length | `40%` | Width of the figure box, caption included. |
 | `wrap-gap` | length | `1em` | Space between the figure and the text. A gap below zero takes the default with a warning (corrected M012). |
 | `wrap-lines` | integer | auto | LaTeX only. The most narrowed lines; a stop block ends the wrap earlier (changed M007, D-007). |
 
@@ -213,7 +213,8 @@ passes (corrected M003):
    a sum of 100% or more, takes the default width with a warning. Any
    other width that with the gap is as wide as the text or wider takes the
    default in Typst, with no warning, through `wrapped-width` (corrected
-   M010, corrected M011). A code cell keeps its code above the call (corrected M005). In Word it groups as in HTML,
+   M010, corrected M011). With `columns:` set, the text is the figure's
+   column (M019). A code cell keeps its code above the call (corrected M005). In Word it groups as in HTML,
    and the `.wrap-group` div's `data-wrap-frame` holds the frame's side,
    width, and gap in twips. A percent is a share of the text width in the
    reference doc's `w:sectPr`, or 6.5 in when it has no page size or
@@ -241,8 +242,8 @@ passes (corrected M003):
    extension's `typst/packages` folder, and defines the helpers that turn a
    physical side into wrap-it's side in right-to-left text, read in context
    (corrected M005), and `wrapped-width`, which picks the first width that
-   with the gap fits the text width that `layout` gives (corrected M010,
-   corrected M011). Word needs nothing here. Elsewhere it prints
+   with the gap fits the text width that `layout` gives, the column width
+   with `columns:` set (corrected M010, corrected M011, corrected M019). Word needs nothing here. Elsewhere it prints
    one format warning.
 
 At `post-render`, `wrapped-docx.lua` turns each Word group into a frame. It
@@ -265,13 +266,14 @@ snapshot difference. The mechanism for each other format is in
   the page stays blank. With `columns:` set, the same holds at the bottom of
   a column: the group moves to the next column. wrap-it puts the group in a
   `box`, which does not break across pages or columns. The README states
-  this limit (M005, corrected M019).
+  this limit (M005, columns M019).
 - Word: a frame that does not fit at the bottom of a page moves to the next
   page with the paragraph after it, and the rest of the page stays blank. A
   Word frame does not break across pages. The README states this limit
   (M006).
 - PDF through Typst: a wrapped figure whose width plus its gap is as wide
-  as the text or wider takes the default width with no console warning,
+  as the text or wider, or with `columns:` set as its column or wider
+  (M019), takes the default width with no console warning,
   unless the width and the gap are both percents, because Typst has no
   function that prints one. When 40% plus the gap is that wide too, the
   figure keeps 40% and the gap. The README states these limits (M010,
