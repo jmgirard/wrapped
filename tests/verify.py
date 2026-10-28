@@ -45,7 +45,8 @@ the boxes of text lines and images with poppler's pdftohtml (brew install
 poppler, or apt install poppler-utils). It prints one line for each case it measured.
 For a fixture in TYPST_LAYOUT, it reads the PDF through Typst the same way
 after its Typst render, and checks each figure's image width and the first
-line of its paragraph beside it.
+line of its paragraph beside it. For a fixture in COLUMN_LAYOUT, whose
+pages are in two columns, it also checks which column holds each figure.
 
 For a fixture in LOGS, rendered with latex-clean: false so its LaTeX log
 stays, the script also reads the warnings that wrapped.tex writes to that
@@ -158,6 +159,7 @@ RENDERS = [
     ("typst-gap-percent", "typst", True),
     ("typst-gap-default", "typst", True),
     ("typst-overflow", "typst", True),
+    ("typst-columns", "typst", True),
     ("zero-meta", "html", True),
     ("zero-meta", "pdf", True),
     ("zero-meta", "typst", True),
@@ -797,6 +799,142 @@ def typst_gap_meta_cases():
     yield "default with gap too wide", typst_width_case("Fig MDefault.", "Marker fallback", TYPST_40)
 
 
+def join_lines(boxes):
+    """The text boxes as lines, each one box that joins the boxes on a page
+    that share a top, left to right."""
+    lines = []
+    for b in sorted((b for b in boxes if b.kind == "text"), key=lambda b: (b.page, b.top, b.left)):
+        last = lines[-1] if lines else None
+        if last and last.page == b.page and abs(b.top - last.top) <= NEAR:
+            lines[-1] = Box(b.page, "text", min(last.top, b.top), last.left, max(last.bottom, b.bottom),
+                            b.right, f"{last.text} {b.text}")
+        else:
+            lines.append(b)
+    return lines
+
+
+def column_edges(boxes):
+    """The left and right ends of each column's full lines on page 1, which
+    must hold no image and text in two columns. Text across the middle of
+    the page, such as the title, is allowed only above the columns and sets
+    no edge."""
+    if any(b.page == 1 and b.kind == "image" for b in boxes):
+        raise LayoutError("page 1 holds an image, so it does not show the columns")
+    text = [b for b in boxes if b.page == 1 and b.kind == "text"]
+    if not text:
+        raise LayoutError("page 1 has no text, so it does not show the columns")
+    middle = (min(b.left for b in text) + max(b.right for b in text)) / 2
+    sides = [[b for b in text if b.right <= middle], [b for b in text if b.left >= middle]]
+    if not all(sides):
+        raise LayoutError("a column of page 1 has no text")
+    top = min(b.top for side in sides for b in side)
+    if any(b.left < middle < b.right and b.bottom > top + NEAR for b in text):
+        raise LayoutError("page 1 has text across its middle beside the columns, so it does not show two columns")
+    edges = []
+    for side in sides:
+        lines = join_lines(side)
+        widest = max(b.right - b.left for b in lines)
+        full = [b for b in lines if b.right - b.left > 0.95 * widest]
+        edges.append((min(b.left for b in full), max(b.right for b in full)))
+    return edges
+
+
+def column_of(box, edges):
+    """The index of the column whose left edge is the last one at or left of
+    the box's left, so a box that runs past its column's right edge still
+    belongs to that column."""
+    starts = [i for i, (left, _) in enumerate(edges) if box.left >= left - NEAR]
+    if not starts:
+        raise LayoutError(f"a box at {box.left:.0f} px is left of every column")
+    return starts[-1]
+
+
+def find_column_line(boxes, edges, words):
+    """The one line that holds `words`, with the boxes joined in each
+    column, and the index of its column."""
+    lines = []
+    for i in range(len(edges)):
+        inside = [b for b in boxes if b.kind == "text" and column_of(b, edges) == i]
+        lines += [(i, b) for b in join_lines(inside) if words in " ".join(b.text.split())]
+    if len(lines) != 1:
+        raise LayoutError(f"{len(lines)} lines hold {words!r}")
+    return lines[0]
+
+
+def column_image(boxes, edges, column, line):
+    """The image in the line's column on its page that is placed lowest on
+    the page with its top at or above the line's bottom: the figure the
+    paragraph follows."""
+    images = [b for b in boxes if b.kind == "image" and b.page == line.page and column_of(b, edges) == column
+              and b.top <= line.bottom + NEAR]
+    if not images:
+        raise LayoutError("no image above or beside the paragraph in its column")
+    return max(images, key=lambda b: b.top)
+
+
+# Quarto's Typst page has 6 in of text, and Typst's default gutter between
+# two columns is 4% of it. Image widths in px at 1.5 px for each pt: 40% of
+# a column, 1 in, and 2.4 in.
+TYPST_COL_40 = 124
+TYPST_1IN = 108
+TYPST_2_4IN = 259
+
+
+def typst_column_case(para, column, want, before=None):
+    """A figure in column `column` (0 for the first) of a Typst page in two
+    columns, whose image is `want` px wide and whose paragraph's first line
+    sits beside it inside that column. With `before`, the words of a line
+    that must be in the first column of the same page, with no text of the
+    figure's column above its image, and with the first column's text
+    ending two lines or more above the lowest line of the figure's column."""
+    def case(boxes, edges, lh):
+        col, line = find_column_line(boxes, edges, para)
+        image = column_image(boxes, edges, col, line)
+        left, right = edges[col]
+        if col != column or image.left < left - NEAR or image.right > right + NEAR:
+            raise LayoutError(f"the image runs from {image.left:.0f} to {image.right:.0f} px in column {col + 1}, "
+                              f"not inside column {column + 1}")
+        if not (line.top < image.bottom and image.top < line.bottom):
+            raise LayoutError("the paragraph's first line is not beside the image")
+        if overlaps(line.left, line.right, image.left, image.right):
+            raise LayoutError("the paragraph overlaps the figure")
+        if line.left < left - NEAR or line.right > right + NEAR:
+            raise LayoutError(f"the paragraph's first line runs from {line.left:.0f} to {line.right:.0f} px, "
+                              f"outside the column edges {left:.0f} to {right:.0f} px")
+        got = image.right - image.left
+        if abs(got - want) > NEAR:
+            raise LayoutError(f"the image is {got:.0f} px wide, not {want:.0f} px")
+        if before is not None:
+            first, start = find_column_line(boxes, edges, before)
+            if first != 0 or start.page != image.page:
+                raise LayoutError(f"{before!r} is in column {first + 1} of page {start.page}, "
+                                  f"not in column 1 of the figure's page {image.page}")
+            def lines_of(c):
+                return join_lines(b for b in boxes if b.kind == "text" and b.page == image.page
+                                  and column_of(b, edges) == c)
+            own = lines_of(col)
+            above = [b for b in own if b.bottom < image.top - NEAR]
+            if above:
+                raise LayoutError(f"{len(above)} lines of column {col + 1} end above the image")
+            firsts = lines_of(0)
+            tops = sorted(b.top for b in firsts)
+            pitch = statistics.median(b - a for a, b in zip(tops, tops[1:]))
+            end, foot = max(b.bottom for b in firsts), max(b.bottom for b in own)
+            if foot - end < 2 * pitch:
+                raise LayoutError(f"column 1 ends at {end:.0f} px, less than two lines above "
+                                  f"the foot of column {col + 1} at {foot:.0f} px")
+    return case
+
+
+def typst_columns_cases():
+    yield "40% in column 1", typst_column_case("Marker forty", 0, TYPST_COL_40)
+    yield "1in image in column 1", typst_column_case("Marker inch", 0, TYPST_1IN)
+    yield "40% in column 2", typst_column_case("Marker second", 1, TYPST_COL_40)
+    yield "2.5in with 0.5in gap fills the column", typst_column_case("Marker fill", 1, TYPST_COL_40)
+    yield "2.4in with 10% gap fits the column", typst_image_case("Fig CPct.", TYPST_2_4IN)
+    yield "moved to column 2", typst_column_case("Marker moved", 1, TYPST_COL_40, before="Marker before")
+
+
 # The fixtures whose PDF through LaTeX the layout check reads, with their cases.
 LAYOUT = {
     "stop-rule": stop_rule_cases,
@@ -812,14 +950,22 @@ TYPST_LAYOUT = {
     "typst-wide-meta": typst_wide_meta_cases,
     "typst-gap": typst_gap_cases,
     "typst-gap-meta": typst_gap_meta_cases,
+    "typst-columns": typst_columns_cases,
 }
+
+# The fixtures in two columns, whose cases take the edges of each column
+# and no line height, so their cases must not read `lh`.
+COLUMN_LAYOUT = {"typst-columns"}
 
 
 def layout_check(fixture, cases):
     """Prints a line for each case. Returns the names of the failed cases."""
     try:
         boxes = pdf_boxes(TESTS / f"{fixture}.pdf")
-        edges, lh = text_edges(boxes), line_height(boxes)
+        if fixture in COLUMN_LAYOUT:
+            edges, lh = column_edges(boxes), None
+        else:
+            edges, lh = text_edges(boxes), line_height(boxes)
     except LayoutError as err:
         print(f"FAIL layout {fixture}: {err}")
         return [f"layout {fixture}"]

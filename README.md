@@ -407,7 +407,8 @@ work.
 
 The `width` and `wrap-gap` values change to Typst lengths:
 
-- A percent is that share of the text width.
+- A percent is that share of the text width, or of the column width in a
+  document with `columns:` set.
 - A `px` length, or a number with no unit, is 0.75 `pt` for each `px`, so
   `200px` is `150pt`. A `pc` length is 12 `pt` for each `pc`.
 - A length in `pt`, `mm`, `cm`, `in`, or `em` stays as it is, with its unit
@@ -428,10 +429,10 @@ percents with such a sum, takes the built-in 40%.
 
 A width plus its gap in other units can also fill the text. Examples are
 `5in` with a `1.5in` gap, and `99%` with a `1em` gap. Such a width also
-leaves no room for the text. The extension cannot know the text width, so
-Typst checks the width plus the gap while it lays out the page. The
-figure then takes the document default. If the document default plus the
-gap is that wide too, the figure takes the built-in 40%. Typst cannot
+leaves no room for the text. The extension cannot know the text width or
+the column width, so Typst checks the width plus the gap while it lays out
+the page. The figure then takes the document default. If the document
+default plus the gap is that wide too, the figure takes the built-in 40%. Typst cannot
 print a warning, so the render prints none for such a width. If 40% plus
 the gap is that wide too, the figure keeps 40% and the gap.
 
@@ -443,12 +444,19 @@ The sides stay physical in right-to-left text. Typst sets that direction
 from the document's `lang`, such as `lang: he`, or from a raw Typst
 `#set text(dir: rtl)`. Quarto does not pass `dir: rtl` to Typst.
 
+In a document with `columns:` set, such as `columns: 2`, a wrapped figure
+wraps inside its column. A percent width is a share of the column width,
+and Typst checks a width plus its gap against the column width. If a
+figure and the text beside it do not fit at the bottom of a column, they
+move to the next column. The rest of that column stays blank. The extension
+does not test a raw Typst `#columns()` call.
+
 wrap-it has limits:
 
 - wrap-it puts the figure and the text beside it in one box, and the box
-  does not break across pages. If the box does not fit at the bottom of a
-  page, it moves to the next page. The rest of the page before it stays
-  blank.
+  does not break across pages or columns. If the box does not fit at the
+  bottom of a page or a column, it moves to the next page or column. The
+  rest of the page or column before it stays blank.
 - When the text is longer than the figure, wrap-it breaks a paragraph at
   the word where the figure ends. The rest of that paragraph starts on a
   new line below the figure and runs the full width.
