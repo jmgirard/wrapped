@@ -142,9 +142,11 @@ under `typst/packages/` (D-004, corrected M006). Users reach it through
   request to `main` (`.github/workflows/verify.yml`, D-008, D-009).
 - The documentation site in `docs/` is a Quarto website that uses the
   extension through a `docs/_extensions` symlink. `.github/workflows/docs.yml`
-  renders it with `quarto render docs`, with no R, on any pull request and
-  any push to `main` that changes `docs/`, `_extensions/`, or the workflow,
-  and by hand. Code cells take their results from the committed
+  runs, with no R, on any pull request and any push to `main` that changes
+  `docs/`, `_extensions/`, or the workflow, and by hand. On `main` of
+  `jmgirard/wrapped` it renders and publishes the site to `gh-pages`; on any
+  other ref or repository it runs `quarto render docs` only (corrected
+  M024). Code cells take their results from the committed
   `docs/_freeze/`, so an edit to a page with a code cell is rendered
   locally with R and its `_freeze/` changes are committed with it (M023).
 

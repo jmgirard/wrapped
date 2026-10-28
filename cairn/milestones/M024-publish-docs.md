@@ -151,6 +151,8 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
      Entries carry their rationale; the counterweight `decisions format`
      advisory watches for pasted output, not for entry length (D-075). -->
 
+- 2026-10-28 (review): the `publish` job of `docs.yml` is the only job in the repo with `contents: write`, so its three actions are pinned to commit SHAs (checkout v7.0.1, quarto-actions v2), with the tag in a comment; the `render` job and `verify.yml` keep tags, since they run with a read-only token. A moved tag could otherwise push to `main`, which users install from. The job runs only in `jmgirard/wrapped`, so a fork's `main` renders and does not try to publish.
+
 ## Review
 <!-- owner: review · exclusive; evidence per criterion, consistency-gate
      results, review findings + triage. EXEMPT from the 150-line cap (M55),

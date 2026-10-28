@@ -41,7 +41,8 @@ Participants rated each clip on a scale from one to five. @fig-ratings
 shows the mean rating in each condition.
 ```
 
-In PDF through LaTeX, the example page with this figure renders as:
+The image below is part of the PDF through LaTeX of the example page that
+uses this figure, with more text beside it:
 
 <!-- The end of docs/images/make-images.R gives the commands that make this image. -->
 ![A rendered page: three paragraphs flow on the left of a bar chart with the caption "Figure 1: Mean ratings by condition."](docs/images/readme-example.png)
