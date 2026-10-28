@@ -322,6 +322,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="al">![Mean ratings by condition.](ratings.png)</span>{#fig-ratings .wrap-right width="40%"}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="result" class="level2">
 <h2 class="anchored" data-anchor-id="result">Result</h2>
+<p>Participants rated each clip on a scale from one to five. The study compared a control condition with a treatment condition, and the figure in this section shows the mean rating in each one. This paragraph comes before the figure, so it runs the full width of the text.</p>
 <div class="wrap-group">
 <div id="fig-ratings" class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" style="--wrap-width: 40%; --wrap-gap: 1em;">
 <figure class="quarto-float quarto-float-fig figure">
@@ -333,9 +334,8 @@ Figure&nbsp;1: Mean ratings by condition.
 </figcaption>
 </figure>
 </div>
-<p>Participants rated each clip on a scale from one to five. <a href="#fig-ratings" class="quarto-xref">Figure&nbsp;1</a> shows the mean rating in each condition. Ratings in the treatment condition were higher than ratings in the control condition.</p>
-<p>The figure keeps its number and its caption, and this paragraph can point to it with a <code>@fig-</code> link. The class <code>.wrap-right</code> puts the figure on the right side of the text, and the <code>width</code> attribute makes it 40% of the text width.</p>
-<p>The paragraphs after the figure flow beside it until the text passes the bottom of the figure. After that, they run the full width of the text. Each format draws the same layout with its own tools: CSS in HTML, wrapfig in LaTeX, wrap-it in Typst, and a frame in Word.</p>
+<p><a href="#fig-ratings" class="quarto-xref">Figure&nbsp;1</a> shows that ratings in the treatment condition were higher than ratings in the control condition. The figure keeps its number and its caption, and this paragraph can point to it with a <code>@fig-</code> link.</p>
+<p>The class <code>.wrap-right</code> puts the figure on the right side of the text, and the <code>width</code> attribute makes it 40% of the text width. The paragraphs after the figure flow on its left. Each format draws this layout with its own tools: CSS in HTML, wrapfig in LaTeX, wrap-it in Typst, and a frame in Word. The text does not stay in a column of its own. The first lines of this paragraph sit beside the figure, and its last lines run from the left edge of the text to the right edge, under the figure. Two columns or a table cannot give this layout, because their text stays in its own column from top to bottom. The figure’s number comes from its id, <code>#fig-ratings</code>, as it does for any figure in Quarto. Wrapping goes on in this way until the next block that is not a paragraph, such as the heading below.</p>
 </div>
 </section>
 <section id="next" class="level2">

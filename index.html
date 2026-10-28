@@ -307,6 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>wrapped is a Quarto filter extension. It lets body text flow beside a figure, to the left or right of it. The figure keeps its number, its caption, and its <code>@fig-</code> links.</p>
 <div class="demo">
+<p>This box shows the layout. The paragraph that you are reading comes before the figure, so it runs the full width of the box.</p>
 <div class="wrap-group">
 <div id="fig-home" class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" style="--wrap-width: 40%; --wrap-gap: 1em;">
 <figure class="quarto-float quarto-float-fig figure">
@@ -319,8 +320,7 @@ Figure&nbsp;1: Mean ratings by condition.
 </figure>
 </div>
 <p>This paragraph sits beside <a href="#fig-home" class="quarto-xref">Figure&nbsp;1</a>. The figure has the class <code>.wrap-right</code>, so it goes to the right side of the text column, and the paragraphs after it flow on its left.</p>
-<p>One markdown syntax gives this layout in HTML, in PDF through LaTeX, in PDF through Typst, and in Word. Wrapping stops at the next block that is not a paragraph, such as a heading or a list.</p>
-<p>In a window 576px wide or narrower, the figure stops floating and takes the full width of the text column.</p>
+<p>One markdown syntax gives this layout in HTML, in PDF through LaTeX, in PDF through Typst, and in Word. The figure keeps its number and its caption, and the text can point to it with a <code>@fig-</code> link, as the paragraph before this one does. Its width is 40% of the text column, which is the default. Each format draws the layout with its own tools: CSS in HTML, wrapfig in LaTeX, wrap-it in Typst, and a frame in Word. The text is not split into two columns. It flows beside the figure, and the last lines of this paragraph run under the figure, at the full width of the text. Wrapping stops at the next block that is not a paragraph, such as a heading or a list. In a window 576px wide or narrower, the figure stops floating and takes the full width of the text column.</p>
 </div>
 </div>
 <p>This version wraps figures in HTML output, revealjs slides and dashboards included, in PDF through LaTeX, in PDF through Typst, and in Word. In every other format, a wrapped figure renders as a normal figure, and the render prints one warning.</p>

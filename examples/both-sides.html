@@ -326,6 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="al">![Scores by hours of practice.](groups.png)</span>{#fig-left .wrap-left width="35%"}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="result" class="level2">
 <h2 class="anchored" data-anchor-id="result">Result</h2>
+<p>This page has two wrapped figures, one on each side of the text. Each figure picks its side with its own class, and this paragraph comes before the first one, so it runs the full width of the text.</p>
 <div class="wrap-group">
 <div id="fig-right" class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" style="--wrap-width: 35%; --wrap-gap: 1em;">
 <figure class="quarto-float quarto-float-fig figure">
@@ -338,10 +339,13 @@ Figure&nbsp;1: Mean ratings by condition.
 </figure>
 </div>
 <p><a href="#fig-right" class="quarto-xref">Figure&nbsp;1</a> has the class <code>.wrap-right</code>, so it sits on the right, and these paragraphs flow on its left.</p>
-<p>The figure wraps the paragraphs after it until a block that is not a paragraph. Here that block is the horizontal rule below.</p>
-<p>The rule starts below the figure, so the next figure starts on a clear line.</p>
+<p>The figure wraps the paragraphs after it until a block that is not a paragraph. Here that block is the horizontal rule below. The rule starts below the figure, so the next figure starts on a clear line. In the bar chart, the mean rating in the treatment condition is higher than in the control condition. The figure keeps its number, so the text can point to it, as the paragraph before this one does. Its width of 35% leaves the rest of the line, less the gap, for the text beside it. The class sets only the side and the <code>width</code> attribute sets only the size, so a change to one leaves the other as it is. Before the rule, the text of this paragraph passes the bottom of the figure, and its last lines run from the left edge of the text to the right edge, under the figure. The text beside the figure and the text under it read as one paragraph, not as two columns.</p>
 </div>
 <hr>
+<!-- Keeps the second figure and its text on one page in Typst and Word. In
+LaTeX the rule already starts page 2, so a break there would leave a page
+with only the rule. HTML has no pages. -->
+<p>The second figure comes after the rule. This paragraph comes before it, so, like the first paragraph of this section, it runs the full width of the text.</p>
 <div class="wrap-group">
 <div id="fig-left" class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" style="--wrap-width: 35%; --wrap-gap: 1em;">
 <figure class="quarto-float quarto-float-fig figure">
@@ -354,8 +358,7 @@ Figure&nbsp;2: Scores by hours of practice.
 </figure>
 </div>
 <p><a href="#fig-left" class="quarto-xref">Figure&nbsp;2</a> has the class <code>.wrap-left</code>, so it sits on the left, and these paragraphs flow on its right.</p>
-<p>Two wrapped figures right after each other do not both wrap: the first keeps its normal layout. Put at least one paragraph after each figure, as this page does.</p>
-<p>The heading after this paragraph stops the second wrap.</p>
+<p>Two wrapped figures right after each other do not both wrap: the first keeps its normal layout. Put at least one paragraph after each figure, as this page does. The scatter plot shows each participant’s score against the hours that they practiced, and scores rose with practice in both groups. Each group has its own color, so the two groups are easy to tell apart. Like the first figure, this one is 35% of the text width. The classes <code>.wrap-left</code> and <code>.wrap-right</code> take the same attributes, so this figure would move to the right side with a change of its class alone. The heading after this paragraph stops the second wrap. Before the heading, the text passes the bottom of the figure, and the last lines of this paragraph start at the left edge of the text again and run under the figure.</p>
 </div>
 </section>
 <section id="next" class="level2">

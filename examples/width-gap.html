@@ -322,6 +322,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="al">![Mean ratings.](ratings.png)</span>{#fig-ratings .wrap-left width="2.5in" wrap-gap="2em"}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="result" class="level2">
 <h2 class="anchored" data-anchor-id="result">Result</h2>
+<p>The figure in this section has a fixed width and a wider gap than the default. This paragraph comes before it, so it runs the full width of the text and shows how wide the text is.</p>
 <div class="wrap-group">
 <div id="fig-ratings" class="wrap-left quarto-float quarto-figure quarto-figure-center anchored" style="--wrap-width: 2.5in; --wrap-gap: 2em;">
 <figure class="quarto-float quarto-float-fig figure">
@@ -334,8 +335,7 @@ Figure&nbsp;1: Mean ratings.
 </figure>
 </div>
 <p><a href="#fig-ratings" class="quarto-xref">Figure&nbsp;1</a> is 2.5 inches wide in each of the four formats. An absolute length does not change with the width of the text, so in a narrow text column the figure takes a larger share of the line. In HTML, a window at the <a href="../defaults.html#breakpoint">breakpoint</a> or narrower is the exception: there the figure takes the full width of the text column.</p>
-<p>The gap between the figure and this text is <code>2em</code>, twice the default of <code>1em</code>. Each format converts both values to its own units.</p>
-<p>A percent width, such as the default 40%, is a share of the text width instead. Use a percent when the same document renders to pages of different widths.</p>
+<p>The gap between the figure and this text is <code>2em</code>, twice the default of <code>1em</code>. Word converts both values to its own units, and HTML, LaTeX, and Typst use them as written. A percent width, such as the default 40%, is a share of the text width instead. Use a percent when the same document renders to pages of different widths, and an absolute length when the figure must keep its size on every page. The last lines of this paragraph start at the left edge of the text again and run under the figure.</p>
 </div>
 </section>
 <section id="next" class="level2">

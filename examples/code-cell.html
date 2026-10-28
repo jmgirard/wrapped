@@ -321,6 +321,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>A code cell makes a figure when it has a <code>fig-</code> label and a <code>fig-cap</code>. The class goes in <code>#| classes:</code>, and the width in <code>#| out-width:</code>. This page shows the cell with its options:</p>
 <section id="result" class="level2">
 <h2 class="anchored" data-anchor-id="result">Result</h2>
+<p>The data are the <code>cars</code> data set that ships with R: the speed of each car and the distance that it took to stop. This paragraph comes before the cell, so it runs the full width of the text.</p>
 <div class="wrap-group">
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
@@ -345,8 +346,7 @@ Figure&nbsp;1: Stopping distance by speed.
 </div>
 </div>
 <p><a href="#fig-cars" class="quarto-xref">Figure&nbsp;1</a> comes from the R code above. The cell’s code stays above the figure, and the figure floats to the right of the paragraphs after the cell.</p>
-<p>The data are the <code>cars</code> data set that ships with R: the speed of each car and the distance that it took to stop. Faster cars took longer to stop.</p>
-<p>The site renders this page from results that Quarto saved when the cell last ran, so the site does not need R to build it.</p>
+<p>Faster cars took longer to stop. The figure has the same caption, number, and <code>@fig-</code> link as a figure written in markdown. The plot’s size in R sets its shape, and <code>out-width</code> scales it to 40% of the text width. The site renders this page from results that Quarto saved when the cell last ran, so the site does not need R to build it. The cell’s options start with <code>#|</code>, and knitr reads them before it runs the code. The last lines of this paragraph start at the left edge of the text again and run under the figure. Two columns or a table could not give this layout, because the text in them stays in its own column from top to bottom.</p>
 </div>
 </section>
 <section id="next" class="level2">

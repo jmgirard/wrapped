@@ -326,6 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="al">![Mean ratings by condition.](ratings.png)</span>{#fig-ratings .wrap-right}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="result" class="level2">
 <h2 class="anchored" data-anchor-id="result">Result</h2>
+<p>The <code>wrapped</code> key in this page’s YAML header sets a default width and gap for every wrapped figure on the page. This paragraph comes before the figure, so it runs the full width of the text.</p>
 <div class="wrap-group">
 <div id="fig-ratings" class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" style="--wrap-width: 30%; --wrap-gap: 1.5em;">
 <figure class="quarto-float quarto-float-fig figure">
@@ -338,8 +339,7 @@ Figure&nbsp;1: Mean ratings by condition.
 </figure>
 </div>
 <p><a href="#fig-ratings" class="quarto-xref">Figure&nbsp;1</a> takes the page’s default width of 30% and its gap of <code>1.5em</code>. Without the <code>wrapped</code> key, it would take the built-in 40% and <code>1em</code>.</p>
-<p>The defaults save you from repeating the same values on every figure. A figure’s own <code>width</code> or <code>wrap-gap</code> attribute still comes first.</p>
-<p>In HTML, the <code>wrapped</code> key also takes a <code>breakpoint</code>. In a window that wide or narrower, figures stop floating.</p>
+<p>The defaults save you from repeating the same values on every figure. A figure’s own <code>width</code> or <code>wrap-gap</code> attribute still comes first: a figure that sets its own <code>width</code> keeps that width, and the page’s gap still applies to it. The gap is the space between the figure and the text beside it, so this text sits a little farther from the figure than it would with the built-in <code>1em</code>. Both keys sit under <code>wrapped</code> in the YAML header, as the code at the top of this page shows. In HTML, the <code>wrapped</code> key also takes a <code>breakpoint</code>. In a window that wide or narrower, figures stop floating. In a wider window, and in each of the other formats, the text flows beside the figure until it passes the figure’s bottom, and the last lines of this paragraph run under the figure, at the full width of the text.</p>
 </div>
 </section>
 <section id="next" class="level2">
