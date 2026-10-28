@@ -3,6 +3,7 @@
 1x wrapped: a figure with no id is in the margin, so it does not wrap.
 1x wrapped: the code cell #fig-callout-two is in a callout, so it does not wrap.
 1x wrapped: the code cell #fig-margin-two is in the margin, so it does not wrap.
+1x wrapped: the code cell #fig-margin-two-heading is in the margin, so it does not wrap.
 1x wrapped: the code cell #fig-three-plots makes more than one figure, so it does not wrap.
 1x wrapped: the code cell #fig-two-plots makes more than one figure, so it does not wrap.
 1x wrapped: the figure #fig-aside is in an aside, so it does not wrap.
@@ -61,6 +62,8 @@ fig-callout-two-1: - style=-
 fig-callout-two-2: - style=-
 fig-margin-two-1: - style=-
 fig-margin-two-2: - style=-
+fig-margin-two-heading-1: - style=-
+fig-margin-two-heading-2: - style=-
 # images
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
@@ -99,6 +102,8 @@ fig-callout-two-1.png: wrap=- style=- width=672
 fig-callout-two-2.png: wrap=- style=- width=672
 fig-margin-two-1.png: wrap=- style=- width=672
 fig-margin-two-2.png: wrap=- style=- width=672
+fig-margin-two-heading-1.png: wrap=- style=- width=672
+fig-margin-two-heading-2.png: wrap=- style=- width=672
 # groups
 fig-quote, p
 fig-second, p, p

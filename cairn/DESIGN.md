@@ -19,8 +19,8 @@ install it with `quarto add jmgirard/wrapped`.
 - Use one width value for all formats.
 - In a format or context that cannot wrap, keep a normal figure and warn
   once: once for each render in a format, once for each figure in a
-  context, and once for a code cell that makes more than one figure
-  (corrected M003, M014).
+  context, and once for a code cell that makes more than one figure, in a
+  context or not (corrected M003, M014, M018).
 
 **Non-goals for version 1.**
 
@@ -99,7 +99,9 @@ paragraph has no text to wrap, so it keeps a normal figure with no warning.
 Of two wrapped figures in a row, the first keeps a normal figure and the
 second wraps. The figures of one code cell are the exception: a wrapped
 cell that makes more than one figure without `fig-subcap` keeps all of them
-normal, with one warning for the cell (D-010, M014).
+normal, with one warning for the cell (D-010, M014). That warning names
+the cell's context as its reason, and a cell in no context with no
+paragraph after it prints none (corrected M018).
 
 ## Function Families
 

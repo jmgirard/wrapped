@@ -3,6 +3,7 @@
 1x wrapped: a figure with no id is in the margin, so it does not wrap.
 1x wrapped: the code cell #fig-callout-two is in a callout, so it does not wrap.
 1x wrapped: the code cell #fig-margin-two is in the margin, so it does not wrap.
+1x wrapped: the code cell #fig-margin-two-heading is in the margin, so it does not wrap.
 1x wrapped: the code cell #fig-three-plots makes more than one figure, so it does not wrap.
 1x wrapped: the code cell #fig-two-plots makes more than one figure, so it does not wrap.
 1x wrapped: the figure #fig-aside is in an aside, so it does not wrap.

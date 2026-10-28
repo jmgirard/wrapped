@@ -1354,7 +1354,8 @@ local function float_target(float)
   -- A cell that makes more than one figure without `fig-subcap` keeps all
   -- its figures normal, with one warning for the cell at its first figure
   -- (D-010). The warning gives the figure's context as the reason when it
-  -- has one. A table keeps its own warning. Quarto numbers such figures
+  -- has one. A cell in no context with no paragraph after it prints no
+  -- warning. A table keeps its own warning. Quarto numbers such figures
   -- with the cell's label and `-1`, `-2`, and so on.
   local several = carried and cell.several and float.type == "Figure"
   -- A figure with no paragraph after it keeps a normal figure with no

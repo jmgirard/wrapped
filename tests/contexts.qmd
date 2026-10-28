@@ -273,3 +273,19 @@ plot(10:1)
 ```
 
 The paragraph after the two-plot margin cell. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## E3: a two-plot margin cell before a heading
+
+```{r}
+#| label: fig-margin-two-heading
+#| fig-cap: "A two-plot margin cell with a heading after it."
+#| column: margin
+#| classes: wrap-right
+#| out-width: !expr if (knitr::pandoc_to("docx")) "5in"
+plot(1:10)
+plot(10:1)
+```
+
+## After the margin cell
+
+The paragraph after the heading. Lorem ipsum dolor sit amet, consectetur adipiscing elit.

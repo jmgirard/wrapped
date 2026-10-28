@@ -197,7 +197,8 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a wrapped figure
 in one of the places in this first list does not wrap. It keeps
 its normal layout, and the render prints one warning for it. The warning
 names the figure's id. If the figure has no id, the warning names its image
-file or says that the figure has no id.
+file or says that the figure has no id. A code cell that makes more than
+one figure gets one warning for the cell instead, as stated below.
 
 - The margin: a figure with the `.column-margin` class, a figure in a
   `.column-margin` or `.aside` div, or a code cell with `#| column: margin`

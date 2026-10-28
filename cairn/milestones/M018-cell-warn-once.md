@@ -104,6 +104,8 @@ the Word `# frames` bookmark field is not `<id>`. A cell warning reads
 
 ## Decisions
 
+- 2026-10-28 (review): A code cell that makes more than one figure in a context prints one warning for the cell, with the context as its reason. This reverses M014's Scope Out clause, which kept the per-figure context warnings for such a cell, and stays within D-010, which sets one warning for the cell (blame-history #2).
+
 ## Review
 
 - AC1 (2026-10-28, head ff669bb): a scratch script read the committed snapshots for the five cells in the 18 format cases AC1 names. Each `# warnings` block holds exactly the line `1x wrapped: the code cell #<label> <reason>, so it does not wrap.` with AC1's reason (Word page-wide-meta: `makes more than one figure`), no warning names `<label>-1` or `-2`, and no wrap line names either figure (HTML `# figures` shows `-`, no `wrappedfigure:`, no Typst `# wraps` entry, no Word frame): 18 of 18 pass. Its wrap tests catch `fig-second`, which wraps, in all four contexts formats. The cells draw `plot(1:10)` and `plot(10:1)` with `#| classes: wrap-right`, no `fig-subcap`, and a paragraph after each (inside the callout for fig-callout-two). Before the fix, margin-meta's PDF warned for fig-meta-margin-two-1 and -2 apart (work log).
