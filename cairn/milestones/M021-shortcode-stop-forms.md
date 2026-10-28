@@ -96,6 +96,10 @@ Evidence at review head eb209c9: `python3 tests/verify.py` on macOS, all 102 ren
 - AC3 evidence: case 10 `fig-sc-kbd-comment` and case 11 `fig-sc-meta-comment` each `p, p, p` in HTML and Typst and `p, p, p, clear` in Word.
 - AC4 evidence: lines matching `fig-sc-(video|box|kbd|include|next)` followed by no letter or hyphen in the HEAD snapshots equal those at 093e4ef (HTML 9, Typst 9, Word 4, LaTeX 5 lines); each `# warnings` section has 0 lines.
 - AC5 evidence (read at e7bea21): README "Where wrapping stops" says spaces, line ends, HTML comments, and one span around the shortcode "show nothing", so a lone shortcode in those forms stops; the eight names count as a paragraph "also with a comment beside it"; a lone `meta` whose value "holds a block other than a paragraph" stops; "a `meta` value of paragraphs only counts as paragraphs"; "with a comment or a span around it" a `meta` counts as a paragraph. The DESIGN.md stop rule states each of the five with D-012. The README next-block paragraph names "a paragraph that stops wrapping under the rules above" with a video-and-comment example, and the DESIGN next-block rule names the comment and span forms and a block-valued `meta`. `grep -F` for "wrap-clear` div before", "joins too", and "still joins" in README.md, DESIGN.md, and wrapped.lua finds nothing; the comment above `JOINING_SHORTCODES` says a block-valued lone meta stops.
+- AC6 evidence (macOS half): `python3 tests/verify.py` at e7bea21 (after the review fixes), all 102 renders pass, 164 ok lines, 0 FAIL, exit 0. The PR's `verify` check is pending until step 8.
+- Consistency gate: `cairn_validate.py` all checks passed (exit 0); one version marker, `_extension.yml` 0.2.0, unchanged by the diff; verify passes at e7bea21 as above; changelog slot "none". No DESIGN principle changed, so `cairn_impact` is skipped.
+- Snapshot files (`_snaps` or `__snapshots__` directories) changed: none. The `tests/_snapshots/stop-shortcode.*` files change as the criteria call for: case 6's group, and cases 7 to 15 added.
+- Open-PR cap: 0 open PRs authored on jmgirard/wrapped, feature cap 1.
 
 spawned: diff-bug, blame-history, prior-review, ripple
 
