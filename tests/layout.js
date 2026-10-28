@@ -102,13 +102,15 @@ function figureEntry(el) {
 }
 
 // The block that follows a wrap group. A group that ends its section is
-// followed by the next section.
+// followed by the next section. In a dashboard, a group that ends its card
+// body has no next block, since the next card is laid out apart from it.
 function nextBlock(group) {
-  const main = group.closest("main") || document.body;
+  const main = group.closest(".card-body") || group.closest("main") || document.body;
+  const hidden = (el) => ["none", "contents"].includes(getComputedStyle(el).display) || el.tagName === "SCRIPT";
   let el = group;
   while (el && el !== main) {
     let next = el.nextElementSibling;
-    while (next && (getComputedStyle(next).display === "none" || next.tagName === "SCRIPT")) {
+    while (next && hidden(next)) {
       next = next.nextElementSibling;
     }
     if (next) return next;
@@ -125,7 +127,7 @@ function groupEntry(group) {
   const nextTop = next.getBoundingClientRect().top;
   return {
     figure: fig.id || fig.querySelector("img")?.getAttribute("src"),
-    next: next.tagName.toLowerCase() + (next.className ? "." + next.className.split(" ").join(".") : ""),
+    next: next.tagName.toLowerCase() + (next.getAttribute("class") ? "." + next.getAttribute("class").split(" ").join(".") : ""),
     figureBottom: Math.round(figBottom),
     nextTop: Math.round(nextTop),
     ok: nextTop >= figBottom - TOL,
