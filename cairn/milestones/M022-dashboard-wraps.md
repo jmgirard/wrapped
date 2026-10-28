@@ -79,6 +79,7 @@ In a Quarto dashboard, a wrapped code-cell figure inside a `.card` div wraps the
 - 2026-10-28: claim audit: 24 claims read, 3 corrected — README.md, tests/layout.js (README "a wrapped figure in a card" overstated: now names `.card` divs, the row or column card, and one-plot knitr cells; "in a row or a column" dropped from the cell-card claim, here and in DESIGN.md step 2; the `nextBlock` comment names `.card-body` and the skipped displays). Also `plot(ratings)` in the README example became `plot(1:10)`, since no example defines `ratings`.
 - 2026-10-28: claim audit re-read: `layout.js` and DESIGN.md corrections hold; the README's loose-card sentence said "a figure or an image", which reads as covering a code cell figure, so it now says "an image", the case the fixture tests.
 - 2026-10-28: T7: `python3 tests/verify.py` on macOS at 60f86ab: all 103 renders pass, exit 0. Later commits change README, DESIGN.md, and a `layout.js` comment only. Status → review.
+- 2026-10-28: step-7 approval: m022-dashboard-wraps approved for merge
 
 ## Decisions
 
