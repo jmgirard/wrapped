@@ -101,7 +101,7 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
       `docs/images/` with the command in a comment of the page or the
       README source.
 - [x] T3: Rewrite `README.md` to the short form.
-- [ ] T4: Publish from the branch with `quarto publish gh-pages docs
+- [x] T4: Publish from the branch with `quarto publish gh-pages docs
       --no-prompt --no-browser`, switch the Pages source with
       `gh api -X PUT repos/jmgirard/wrapped/pages` (branch `gh-pages`, path
       `/`), wait for the Pages build, and fetch each page path.
@@ -136,6 +136,8 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
 - 2026-10-28: T1 done: `docs.yml` has a `publish` job (contents: write, publish@v2, target gh-pages, path docs) that runs on a push or manual run on `main` only, so a manual run on another branch renders and does not publish; the `render` job runs on every other event. D-014 records the action.
 - 2026-10-28: T2 done: `docs/images/readme-example.png` is a 144-dpi crop of page 1 of `image-figure.pdf` (LaTeX); the two commands sit at the end of `docs/images/make-images.R`, whose header said it makes every image in the folder, and the README comment points there (the simple-english hook blocked the commands in the README comment); a rerun of the command gives a byte-identical PNG.
 - 2026-10-28: T3 done: `README.md` is 68 lines (from 612): the intro and format sentence, the site link, Install with the filter YAML, one `.wrap-right` example with the image, and a "Learn more" list linking each site page by its title.
+- 2026-10-28: T4: `quarto publish gh-pages docs --no-prompt` refused to make the branch ("does not have a branch named gh-pages"), so an empty orphan commit was pushed as `gh-pages` (git commit-tree, no checkout, as Quarto's docs do by hand); the publish then pushed 152 files (gh-pages 571506c); no `docs/_publish.yml` was written, and the CI step names its target.
+- 2026-10-28: T4 done: Pages source switched from `main` `/` to `gh-pages` `/` by `gh api -X PUT`; Pages build of 571506c built; all 23 HTML files of `docs/_site` return 200 at the same path on the live site with the same `<title>`; `quarto add jmgirard/wrapped` in a scratch folder still installs 0.2.0.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
