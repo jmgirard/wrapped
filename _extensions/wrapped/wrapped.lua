@@ -1049,7 +1049,10 @@ end
 local function find_contexts(doc)
   local filter
   local function mark(block)
-    if is_dashboard and block.t == "Div" and block.classes:includes("card") then
+    -- A card that is also a context, such as one with layout-ncol, is
+    -- marked as that context below.
+    if is_dashboard and block.t == "Div" and block.classes:includes("card")
+        and not block_context(block) then
       card_depth = card_depth + 1
       block.content = block.content:walk(filter)
       card_depth = card_depth - 1

@@ -1,6 +1,7 @@
 # warnings
 1x wrapped: the code cell #fig-dash-two is outside a card in a dashboard, so it does not wrap.
 1x wrapped: the figure #fig-dash-bare is outside a card in a dashboard, so it does not wrap.
+1x wrapped: the figure #fig-dash-panel is in a panel layout, so it does not wrap.
 # breakpoint
 576px
 # figures
@@ -8,6 +9,7 @@ fig-dash-md: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 (box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
 fig-dash-card: wrap-right style=--wrap-gap: 1em; --wrap-width: 35%
 fig-dash-nofill: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
+fig-dash-panel: - style=-
 fig-dash-bare: - style=-
 fig-dash-two-1: - style=-
 fig-dash-two-2: - style=-
@@ -16,6 +18,7 @@ plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 fig-dash-card-1.png: wrap=- style=- width=-
 fig-dash-nofill-1.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
 fig-dash-bare-1.png: wrap=- style=width:35.0% width=-
 fig-dash-two-1.png: wrap=- style=width:35.0% width=-
 fig-dash-two-2.png: wrap=- style=width:35.0% width=-

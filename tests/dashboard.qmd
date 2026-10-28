@@ -51,6 +51,12 @@ plot(1:5)
 The paragraph after the cell figure in a card that does not fill. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 :::
 
+::: {.card layout-ncol="2" title="A card that is a panel layout"}
+![A figure in a card that is a panel layout.](plot.png){#fig-dash-panel .wrap-right}
+
+The paragraph after the figure in a card that is a panel layout. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+:::
+
 ## Row
 
 ```{r}
