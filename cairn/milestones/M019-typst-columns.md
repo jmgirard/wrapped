@@ -1,13 +1,13 @@
 # M019: Wrap figures in Typst columns
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — the README gains claims about wrapped figures in Typst documents with `columns:` set
-- **Branch/PR:** —
+- **Branch/PR:** m019-typst-columns
 
 ## Goal
 
@@ -94,10 +94,10 @@ that holds the image. Each test allows `NEAR` (3 px).
 
 ## Tasks
 
-- [ ] T1: Write `tests/typst-columns.qmd` with `columns: 2`,
+- [x] T1: Write `tests/typst-columns.qmd` with `columns: 2`,
       `keep-typ: true`, and `fig-format: png`. Its title is narrower than
       a column. Its first page holds text in both columns and no image.
-      After a `{{< pagebreak >}}` come the cases of AC1 to AC4. Each
+      After a raw `#pagebreak()` block come the cases of AC1 to AC4. Each
       paragraph opens with marker words and leaves about 1 in of text
       beside its figure. Add the fixture to the render list in
       `tests/verify.py` with a snapshot.
@@ -133,5 +133,8 @@ that holds the image. Each test allows `NEAR` (3 px).
 - 2026-10-28: criteria audit (full mode, fresh Opus reader with a scratch render): 8 findings, all fixed. A title across both columns broke the edge reader, so the edges come from each column's lines with the title left out. Text edges run 3 to 7 px past the true column, so AC2 and AC3 state 124 px from the 311 px column. AC5 gained the blank-column fact and the `text width` search. AC6 bound the snapshot files, an instrument, and now binds unchanged `_extensions/wrapped/` and unchanged output. T2's plants now cover each test, and the edge reader. "In a column" and "above the image" are defined. Images are found by paragraph and boxes joined by line top. AC5 names `columns: 2` as the example, since only 2 is tested.
 - 2026-10-28: plan gate chose to test and document wrapping in Typst columns over a normal figure with a warning, as LaTeX does, because the scratch render wrapped each figure inside its column; falsified by a render where a figure in a Typst column overlaps text or leaves its column.
 - 2026-10-28: surface tier: user-facing, because the README gains claims users rely on.
+- 2026-10-28: implement started; branch m019-typst-columns cut from main at 0ddbcde.
+- 2026-10-28: T1 minor amendment: the fixture uses raw `#pagebreak()` and `#colbreak()` blocks. A `{{< pagebreak >}}` after a wrapped paragraph joins the wrap group and fails the Typst render, a filter bug outside this scope, now the candidate row "Keep page breaks out of Typst wraps".
+- 2026-10-28: T1 done: `tests/typst-columns.qmd` renders with no warning. Images measure 124 px (40%, 40% in column 2, 2.9in fallback, moved group) and 108 px (1in); the moved group starts column 2 of page 3. Added to RENDERS with its snapshot.
 
 ## Decisions

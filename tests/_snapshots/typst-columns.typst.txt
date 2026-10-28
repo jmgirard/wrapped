@@ -1,0 +1,12 @@
+# warnings
+# typ
+figure: fig-c40 image-width=yes
+figure: fig-cb image-width=yes
+figure: fig-cfill image-width=yes
+figure: fig-cmoved image-width=yes
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-c40 no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 1in, 40%, 40%)), column-gutter: 1em | plot.png alt="An image 1 in wide." | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-cb no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 2.9in, 40%, 40%)), column-gutter: 1em | fig-cfill no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-cmoved no-alt | p, p | cites=0

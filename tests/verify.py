@@ -158,6 +158,7 @@ RENDERS = [
     ("typst-gap-percent", "typst", True),
     ("typst-gap-default", "typst", True),
     ("typst-overflow", "typst", True),
+    ("typst-columns", "typst", True),
     ("zero-meta", "html", True),
     ("zero-meta", "pdf", True),
     ("zero-meta", "typst", True),
