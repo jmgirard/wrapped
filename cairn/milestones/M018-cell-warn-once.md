@@ -111,3 +111,27 @@ the Word `# frames` bookmark field is not `<id>`. A cell warning reads
 - AC1 (2026-10-28, head ff669bb): a scratch script read the committed snapshots for the five cells in the 18 format cases AC1 names. Each `# warnings` block holds exactly the line `1x wrapped: the code cell #<label> <reason>, so it does not wrap.` with AC1's reason (Word page-wide-meta: `makes more than one figure`), no warning names `<label>-1` or `-2`, and no wrap line names either figure (HTML `# figures` shows `-`, no `wrappedfigure:`, no Typst `# wraps` entry, no Word frame): 18 of 18 pass. Its wrap tests catch `fig-second`, which wraps, in all four contexts formats. The cells draw `plot(1:10)` and `plot(10:1)` with `#| classes: wrap-right`, no `fig-subcap`, and a paragraph after each (inside the callout for fig-callout-two). Before the fix, margin-meta's PDF warned for fig-meta-margin-two-1 and -2 apart (work log).
 - AC2 (2026-10-28, head ff669bb): README.md's section "Where a figure keeps its normal layout", paragraph on a code cell that makes more than one figure, reads: "The cell can be in a place in this section where its format keeps the normal layout, such as the margin or a callout. Then that one warning names the cell and the place, and no warning names a figure of the cell."
 - gate (2026-10-28, head ff669bb): `cairn_validate.py` exit 0, all checks passed. No DESIGN.md principle changed, so `cairn_impact` is skipped. The one version marker, `_extensions/wrapped/_extension.yml`, reads 0.1.0 and the branch leaves it unchanged. The changelog slot is "none". The verify check is under AC3.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a cell with one figure and one table float marks `several`, so in a context its figure now prints the cell warning, and the label strip cuts a final `-<digits>` from a one-figure id such as `fig-plot-2` — reject (edge): only a code cell that makes both a figure and a table float reaches it, outside the documented one-plot or multi-plot cell; the effect is warning text; M014's review rejected the same input as edge
+- diff-bug #2: in LaTeX and Typst the margin figures of the new cells have no summary line, so "keeps its normal layout" rests on a missing line — follow-up, row "List margin figures in the summaries" (extended to LaTeX)
+- diff-bug #3: no fixture for a multi-figure cell in a place with no paragraph after it, which the README now covers — fix now, fig-margin-two-heading in tests/contexts.qmd, fixed 4775d58
+- diff-bug #4: a cell whose figures had different contexts would give the first figure's reason — reject (false): every context source (context_of_float over the cell's blocks, column_context from the cell and document, cap-location copied from the cell) is the same for each float of a cell
+- diff-bug #5: the new code comment omits that a cell in no context with no paragraph after it prints no warning — fix now, fixed 4775d58
+- diff-bug #6: README paragraph lines wrap unevenly — reject (style)
+- diff-bug (c): column-meta, margin-meta, and contexts fig-margin-two cells run the same branch as other new cells — reject (planned change): AC1 names each cell, one per source of a place
+- blame-history #1: the plan line "falsified by a user report" means a report arrived — reject (false): the line states the evidence that would falsify the choice; no such report exists
+- blame-history #2: no record says M018 reverses M014's Scope Out clause (per-figure context warnings for such a cell) — fix now, milestone-local Decisions entry, fixed 4775d58
+- blame-history #3: DESIGN.md Goals says "once for each figure in a context" — fix now, fixed 4775d58
+- blame-history #4: the work log says all five cells go at a fixture's end, but margin-meta's moved — reject (false): the 2026-10-28 snapshot line records the move
+- blame-history #5: `several` counts tables — reject (edge), as diff-bug #1
+- blame-history #6: no main snapshot pins the old per-figure output for a cell in a place — reject (false): the new snapshots pin the new output, and the work log records the before-fix render
+- blame-history #7: README lines wrap unevenly — reject (style)
+- prior-review #1: DESIGN.md Goals contradicts the diff — fix now, as blame-history #3, fixed 4775d58
+- prior-review #2: no fixture for a cell in a place with no paragraph after it — fix now, as diff-bug #3, fixed 4775d58
+- prior-review #3: Typst margin cell figures have no summary line — follow-up, as diff-bug #2
+- prior-review #4: M014's archive Outcome records per-figure warnings for a cell in a context — reject (planned change): the reversal is the milestone's Goal, now recorded in the Decisions entry; the archive is history and stays
+- ripple #1: README.md's section opening says a place's warning names the figure's id — fix now, a sentence points to the cell paragraph, fixed 4775d58
+- ripple #2: DESIGN.md Goals per-figure clause — fix now, as blame-history #3, fixed 4775d58
+- ripple #3: the ROADMAP row "Warn once per cell under a context" describes the old behavior — reject (planned change): post-merge hygiene graduates the row
+- ripple #4: DESIGN.md next-block rule says such a cell has one warning, but a cell in no context with no paragraph after it has none — fix now, fixed 4775d58
+- snapshot: changed files are tests/_snapshots/{column-meta,contexts,margin-meta,page-wide-meta}.*.txt (14 files), which AC1 and AC3 call for — no finding
