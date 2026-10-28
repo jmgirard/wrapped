@@ -173,8 +173,8 @@ figure, and a horizontal rule. An image with no caption and no wrap class
 counts as a paragraph.
 
 A paragraph that holds one shortcode and nothing else that shows also stops
-wrapping, because the shortcode can make a block. Spaces, line breaks, HTML
-comments, and one span around the shortcode show nothing, so
+wrapping, because the shortcode can make a block. Spaces, line ends in the
+source, HTML comments, and one span around the shortcode show nothing, so
 `{{< video URL >}} <!-- note -->` and `[{{< video URL >}}]{.my-class}`
 stop wrapping too. Examples are a `{{< pagebreak >}}` page break and a
 `{{< video >}}`, which is a block in HTML and a link line in the other
@@ -182,13 +182,14 @@ formats. This holds for a shortcode from another extension too, even one
 that makes text. Eight Quarto shortcodes usually make text, an image, or
 paragraphs: `meta`, `var`, `env`, `kbd`, `lipsum`, `placeholder`,
 `version`, and `brand`. A paragraph with one of them counts as a
-paragraph, also with a comment beside it.
+paragraph, also with a comment beside it. The next paragraph gives the one
+exception.
 
 If a `{{< meta >}}` shortcode is alone in its paragraph and its value holds
 a block other than a paragraph, wrapping stops. Examples of such blocks are
-a list and a code block. A `meta` value of paragraphs only counts as paragraphs. With a comment or
-other text beside it, Quarto renders a `meta` value as text, so the
-paragraph counts as a paragraph. Quarto expands `{{< include >}}` before
+a list and a code block. A `meta` value of paragraphs only counts as
+paragraphs. With a comment, a span, or other text around it, Quarto renders
+a `meta` value as text, so the paragraph counts as a paragraph. Quarto expands `{{< include >}}` before
 the filter runs, so the included blocks follow these rules as written.
 
 To stop wrapping earlier, put an empty `wrap-clear` div after the last

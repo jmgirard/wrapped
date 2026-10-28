@@ -207,4 +207,18 @@ Text after the nested meta value.
 
 {{< video https://www.youtube.com/embed/wo9vZccmqwc >}} <!-- a note on the same line -->
 
-Text after the third video.
+Text after the video in case 13.
+
+```{=latex}
+\clearpage
+```
+
+## Case 14: a meta list in a span
+
+![Shortcode case 14.](plot.png){#fig-sc-meta-span .wrap-left width="35%"}
+
+A short paragraph beside the meta span case.
+
+[{{< meta stoplist >}}]{.meta-span}
+
+Text after the meta list in a span.
