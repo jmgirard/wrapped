@@ -183,6 +183,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: T10 done: `docs.yml` now runs on every pull request that changes its paths (no branch filter), on pushes to main with the same paths, and by hand; only pull-request runs cancel; its header says to re-render with R and commit `docs/_freeze/` after editing a page with a code cell (Ruby's YAML parser reads the three triggers and the concurrency expression). DESIGN.md Conventions gained the docs-site line, PROFILE.md's verify slot names `docs.yml`, the width-gap example notes the HTML breakpoint, width-gap.qmd links the LaTeX, Typst, and Word pages, the reference `width` row names `20em` and per-format units, `.gitattributes` marks `docs/_freeze/**` generated (`git check-attr` confirms), and make-images.R names ragg. Site render: one `(W)` line; 22 pages, all links resolve.
 - 2026-10-28: the T10 commit b73cdf3 broke two caps (PROFILE.md 120 lines, this file 154 plan-owned lines), caught by `cairn_validate` after the commit; PROFILE.md's new note is now one line (119) and the Tasks section was compressed in one rewrite; validate passes.
 - 2026-10-28: `python3 tests/verify.py` on 9d81552: all 103 renders pass. Implement done after return 1; status review.
+- 2026-10-28: step-7 approval: m023-docs-site approved for merge
 
 
 ## Decisions
