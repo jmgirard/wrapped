@@ -1,0 +1,75 @@
+---
+title: "wrapped fixture: dashboard cards"
+format: dashboard
+fig-format: png
+filters:
+  - wrapped
+---
+
+## Row
+
+### Column {width=60%}
+
+::: {.card title="A markdown figure"}
+![A markdown figure in a card.](plot.png){#fig-dash-md .wrap-right width="40%"}
+
+The paragraph after the markdown figure in a card. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+:::
+
+### Column
+
+![](plot.png){.wrap-left width="30%" fig-alt="A plot"}
+
+The paragraph after the image in a column's card. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## Row
+
+::: {.card title="A cell figure"}
+```{r}
+#| label: fig-dash-card
+#| fig-cap: "A cell figure in a card."
+#| classes: wrap-right
+#| out-width: "35%"
+plot(1:10)
+```
+
+The paragraph after the cell figure in a card. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+- A list after the paragraph.
+- It ends the wrap group.
+:::
+
+::: {.card fill="false" title="A cell figure in a card that does not fill"}
+```{r}
+#| label: fig-dash-nofill
+#| fig-cap: "A cell figure in a card that does not fill."
+#| classes: wrap-left
+#| out-width: "35%"
+plot(1:5)
+```
+
+The paragraph after the cell figure in a card that does not fill. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+:::
+
+## Row
+
+```{r}
+#| label: fig-dash-bare
+#| fig-cap: "A cell figure outside a card."
+#| classes: wrap-left
+#| out-width: "35%"
+plot(1:8)
+```
+
+The paragraph after the cell figure outside a card. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+
+```{r}
+#| label: fig-dash-two
+#| fig-cap: "Two plots outside a card."
+#| classes: wrap-right
+#| out-width: "35%"
+plot(1:3)
+plot(3:1)
+```
+
+The paragraph after the two plots outside a card. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.

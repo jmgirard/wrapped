@@ -174,6 +174,7 @@ RENDERS = [
     ("revealjs", "revealjs", True),
     ("revealjs-margin-meta", "revealjs", True),
     ("revealjs-column-margin", "revealjs", True),
+    ("dashboard", "dashboard", True),
     ("margin", "html", False),
     ("stop-rule", "html", False),
     ("rtl", "html", False),
@@ -1289,7 +1290,7 @@ def summary(fixture, fmt, log):
     if (TESTS / fixture).is_dir():
         for page in sorted((TESTS / fixture / "_book").glob("*.html")):
             parts += [f"## {page.name}", html_summary(page), "# xrefs", xref_summary(page)]
-    elif fmt in ("html", "revealjs"):
+    elif fmt in ("html", "revealjs", "dashboard"):
         parts.append(html_summary(TESTS / f"{fixture}.html"))
         if fixture in MARGIN_IDS:
             parts += ["# margin containers"] + margin_summary(fixture)

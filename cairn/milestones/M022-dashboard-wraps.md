@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M022: Wrap figures in dashboard cards
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — changes how wrapped figures render in Quarto dashboards
-- **Branch/PR:** —
+- **Branch/PR:** m022-dashboard-wraps
 
 ## Goal
 
@@ -50,7 +50,7 @@ In a Quarto dashboard, a wrapped code-cell figure inside a `.card` div wraps the
 
 ## Tasks
 
-- [ ] T1: Fixture first. Write `tests/dashboard.qmd` (`format: dashboard`, `filters: [wrapped]`, `fig-format: png`) with the six cases of AC1 and AC2, each figure followed by a paragraph of at least 3 lines; the two-plot cell needs a `fig-` label, or knitr makes no float. Add `("dashboard", "dashboard", True)` to `RENDERS` in `tests/verify.py` and make `summary` send a `dashboard` render to `html_summary`. Render with `main`'s filter, run `report()` at 1280x900, and confirm that each cell-in-card figure's entry has `ok: false` with `beside: false`, and that the cells outside a card keep a wrap class and print no warning.
+- [x] T1: Fixture first. Write `tests/dashboard.qmd` (`format: dashboard`, `filters: [wrapped]`, `fig-format: png`) with the six cases of AC1 and AC2, each figure followed by a paragraph of at least 3 lines; the two-plot cell needs a `fig-` label, or knitr makes no float. Add `("dashboard", "dashboard", True)` to `RENDERS` in `tests/verify.py` and make `summary` send a `dashboard` render to `html_summary`. Render with `main`'s filter, run `report()` at 1280x900, and confirm that each cell-in-card figure's entry has `ok: false` with `beside: false`, and that the cells outside a card keep a wrap class and print no warning.
 - [ ] T2: In `tests/layout.js`, make `nextBlock` stop at the group's closest `.card-body` (return null there), skip `display: contents` elements, and read the next block's classes with `getAttribute("class")`.
 - [ ] T3: In `wrapped.css`, give `.wrap-group .cell.html-fill-container` and `.wrap-group .cell-output-display.html-fill-container` `display: block`, with a comment that names the dashboard flex wrappers.
 - [ ] T4: In `wrapped.lua`, add an `is_dashboard` flag beside `is_revealjs` (line 38). In pass 2, mark a code cell Div that is not inside a `.card` Div as the context "is outside a card in a dashboard", so its floats get the context warning in the float pass and a two-figure cell gets the one cell warning. Contexts inside a `.card` div (a callout, a list) are still found.
@@ -69,6 +69,7 @@ In a Quarto dashboard, a wrapped code-cell figure inside a `.card` div wraps the
 - 2026-10-28: plan chose to scope the CSS rule to wrappers with `html-fill-container`, over setting every `.wrap-group .cell` to block, because only dashboards make those wrappers flex and the narrower rule leaves other HTML pages as they are; falsified by another Quarto HTML format that makes cell wrappers flex without that class.
 - 2026-10-28: plan chose a normal layout with a warning for a cell outside a card, over having the filter put the cell and its paragraphs in a `.card` div, because a card the user did not write changes the dashboard's layout and the user chose the fallback where a float cannot work; falsified by user reports that want such cells to wrap without a hand-written card.
 - 2026-10-28: criteria audit (full mode, fresh Opus reader): 11 items, 6 fixed, 5 no change. Fixed: `report()` gave false group entries in cards and threw in a sidebar (new T2 for `nextBlock`; AC1 names one in-card group, closed by a list); "becomes a card of its own" is false in sidebars, toolbars, and value boxes (neutral phrase "is outside a card in a dashboard"; Out names them); the snapshot records a cell group member as `cell` (AC3 counts exactly four group lines); AC2 names the warning phrase; one cell case stood in for fill and non-fill cards (fourth AC1 figure in a `fill="false"` card); a two-plot cell needs a `fig-` label (T1). No change: the T1 baselines, T3's CSS effect, the uncaptioned-image case (audit render `ok: true`), AC5, and the D-entries.
+- 2026-10-28: T1: `tests/dashboard.qmd` (figures `fig-dash-md`, an uncaptioned `plot.png`, `fig-dash-card`, `fig-dash-nofill`, `fig-dash-bare`, `fig-dash-two`) and a `dashboard` row in `RENDERS`. Baseline with `main`'s filter: `report()` at 1280x900 gives `fig-dash-card` and `fig-dash-nofill` `ok: false`, `beside: false`; `fig-dash-bare` keeps `wrap-left` and the only warning is the two-plot cell's "makes more than one figure"; every group but `fig-dash-card`'s reads a `bslib-tooltip` at top 0.
 
 ## Decisions
 
