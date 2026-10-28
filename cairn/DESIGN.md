@@ -91,8 +91,8 @@ the first block that is not a paragraph: a heading, list, figure, table, code
 block, callout, or horizontal rule. A paragraph that holds exactly one
 shortcode and nothing else also stops it, such as `{{< pagebreak >}}` or
 `{{< video >}}`, because at `pre-quarto` the shortcode is not yet rendered
-and can make a block. Eight shortcodes that make text, an image, or
-paragraphs join instead: `meta`, `var`, `env`, `kbd`, `lipsum`,
+and can make a block. Eight shortcodes that usually make text, an image,
+or paragraphs join instead (a `meta` value that is a block joins too): `meta`, `var`, `env`, `kbd`, `lipsum`,
 `placeholder`, `version`, and `brand`. Quarto expands `{{< include >}}`
 and `{{< embed >}}` before the filter runs, so their blocks follow the rule
 as written (corrected by the page-break hotfix, M020). An empty `::: {.wrap-clear}` div stops it

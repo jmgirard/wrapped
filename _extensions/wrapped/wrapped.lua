@@ -1564,8 +1564,9 @@ local function find_shortcode(shortcode)
   shortcode_names[shortcode.__quarto_custom_node.attributes.__quarto_custom_id] = shortcode.name
 end
 
--- Quarto's shortcodes that make text, an image, or paragraphs, which join a
--- group when they are alone in a paragraph.
+-- Quarto's shortcodes that usually make text, an image, or paragraphs, which
+-- join a group when they are alone in a paragraph. A meta value can be a
+-- block, such as a list, and still joins.
 local JOINING_SHORTCODES = {
   meta = true, var = true, env = true, kbd = true, lipsum = true,
   placeholder = true, version = true, brand = true,

@@ -173,11 +173,14 @@ counts as a paragraph.
 
 A paragraph that holds exactly one shortcode and nothing else also stops
 wrapping, because the shortcode can make a block. Examples are a
-`{{< pagebreak >}}` page break and a `{{< video >}}`. This holds for a
-shortcode from another extension too, even one that makes text. Eight
-Quarto shortcodes make text, an image, or paragraphs, so a paragraph with
-one of them counts as a paragraph: `meta`, `var`, `env`, `kbd`, `lipsum`,
-`placeholder`, `version`, and `brand`. Quarto expands `{{< include >}}`
+`{{< pagebreak >}}` page break and a `{{< video >}}`, which is a block in
+HTML and a link line in the other formats. This holds for a shortcode from
+another extension too, even one that makes text. Eight Quarto shortcodes
+usually make text, an image, or paragraphs, so a paragraph with one of them
+counts as a paragraph: `meta`, `var`, `env`, `kbd`, `lipsum`,
+`placeholder`, `version`, and `brand`. A `meta` shortcode whose value is a
+block, such as a list, also counts as a paragraph, so put a `wrap-clear`
+div before it. Quarto expands `{{< include >}}`
 before the filter runs, so the included blocks follow these rules as
 written.
 
