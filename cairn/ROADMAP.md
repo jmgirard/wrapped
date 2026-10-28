@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-28 (M024 review: M021 row pruned; no lesson capture
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M025 | Stop text overlap with small wrap-lines | planned | — | normal | milestones/M025-small-wrap-lines.md |
+| M025 | Stop text overlap with small wrap-lines | in-progress | — | normal | milestones/M025-small-wrap-lines.md |
 | M022 | Wrap figures in dashboard cards | done | — | normal | milestones/archive/M022-dashboard-wraps.md |
 | M023 | Build the documentation site | done | — | normal | milestones/archive/M023-docs-site.md |
 | M024 | Publish the site and shorten the README | done | M023 | normal | milestones/archive/M024-publish-docs.md |

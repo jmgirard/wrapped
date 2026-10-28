@@ -1,13 +1,13 @@
 # M025: Stop text overlap with small wrap-lines
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes where text lands in users' PDFs
-- **Branch/PR:** —
+- **Branch/PR:** m025-small-wrap-lines
 
 ## Goal
 
@@ -37,7 +37,7 @@ In PDF through LaTeX, the block that stops a wrap starts below the figure also a
 
 ## Tasks
 
-- [ ] T1: Add cases (a) to (e) and the twin of case (d) to `tests/stop-latex.qmd`, and add their checks to `stop_latex_cases` in `tests/verify.py`. Compare the heading gaps of (a) and (b) with the existing "form A right" and "form C left" cases, as `lines_case` does. Make sure that (a), (b), and (c) fail on `main`.
+- [x] T1: Add cases (a) to (e) and the twin of case (d) to `tests/stop-latex.qmd`, and add their checks to `stop_latex_cases` in `tests/verify.py`. Compare the heading gaps of (a) and (b) with the existing "form A right" and "form C left" cases, as `lines_case` does. Make sure that (a), (b), and (c) fail on `main`.
 - [ ] T2: In `_extensions/wrapped/wrapped.tex`, record the page and the `\pagetotal` where the wrap starts, in the `\WF@startwrapping` hook. If the narrowed lines ended on that page above the figure's bottom, make `\wrapped@endwrap` skip to below the figure. Keep the line-count skip for a wrap whose narrowed lines still run. Update the file's comments.
 - [ ] T3: Update the `wrap-lines` text of `docs/formats/latex.qmd` (AC5) and the `wrap-lines` row of `cairn/DESIGN.md`. Append a D-entry that annotates D-007: the stop block also skips below the figure after a smaller count ends. Refresh the `stop-latex` snapshot.
 - [ ] T4: Run `python3 tests/verify.py` in full.
@@ -53,6 +53,7 @@ In PDF through LaTeX, the block that stops a wrap starts below the figure also a
 - 2026-10-28: plan gate chose a measured skip at the stop block over raising a smaller count to wrapfig's count, because a smaller count is wrapfig's fix for paragraph spacing; falsified by a render where the measured skip leaves the stop block beside the figure on its page.
 - 2026-10-28: plan chose to measure only where the narrowed lines ended, over measuring every stop, because measuring every stop changes the default gap that the "Trim the LaTeX stop gap" row holds; falsified by a case where the line-count skip and the measured skip disagree by more than one line.
 - 2026-10-28: criteria audit (full mode, Opus reader): claim wider than two cases, no cap on the skip, no check against added space or a next-page stop, harness wording, AC2 claim wider than its check, stale Limits bullet, no D-007 annotation. All fixed: narrowed to body text outside boxes, cases (c) to (e), a one-line cap, harness detail moved behind layout claims, AC3 checks N narrowed lines, AC5 adds the Limits bullet, T3 adds the D-entry.
+- 2026-10-28: T1 done. Cases (a) to (e) and the twin of (d) are in `tests/stop-latex.qmd`, checked by `small_a_case` to `small_e_case` in `tests/verify.py`. On the unchanged filter, (a) and (b) fail with "the stop heading … starts above the figure's bottom", (c) fails with "the next wrapped figure starts above the figure's bottom", and (d) and (e) pass. Case (b) uses a 40% width so its stop heading sits clearly above the figure's bottom on `main`.
 
 ## Decisions
 

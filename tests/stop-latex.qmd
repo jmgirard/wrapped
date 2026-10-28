@@ -167,6 +167,93 @@ Text after stop lines extra.
 \clearpage
 ```
 
+## Small a
+
+![Small a.](plot.png){#fig-small-a .wrap-right width="35%" wrap-lines="4"}
+
+Four lines beside small a. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.
+
+### Stop small a
+
+Text after stop small a.
+
+```{=latex}
+\clearpage
+```
+
+## Small b
+
+![](plot.png){.wrap-left width="40%" wrap-lines="3"}
+
+First paragraph beside small b. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Second paragraph of small b.
+
+### Stop small b
+
+Text after stop small b.
+
+```{=latex}
+\clearpage
+```
+
+## Small c
+
+![Small c.](plot.png){#fig-small-c .wrap-right width="35%" wrap-lines="5"}
+
+First paragraph beside small c. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Second paragraph beside small c. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+
+![Small c next.](plot.png){#fig-small-c-next .wrap-right width="35%"}
+
+A short paragraph beside small c next.
+
+```{=latex}
+\clearpage
+```
+
+## Small d
+
+![Small d.](plot.png){#fig-small-d .wrap-right width="35%" wrap-lines="3"}
+
+Long paragraph beside small d. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ends at zeta.
+
+### Stop small d
+
+Text after stop small d.
+
+Twin paragraph of small d. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ends at omega.
+
+### Stop twin d
+
+Text after stop twin d.
+
+```{=latex}
+\clearpage
+```
+
+## Small e
+
+```{=latex}
+% Puts the figure near the bottom of the page, where it still fits, so
+% its paragraph ends at the page's bottom and the stop heading starts the
+% next page.
+\vspace{0.63\textheight}
+```
+
+![Small e.](plot.png){#fig-small-e .wrap-right width="35%" wrap-lines="3"}
+
+Long paragraph beside small e. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Ends at kappa.
+
+### Stop small e
+
+Text after stop small e.
+
+```{=latex}
+\clearpage
+```
+
 ## Page bottom
 
 ```{=latex}
