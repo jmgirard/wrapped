@@ -58,7 +58,17 @@ In PDF through LaTeX, the block that stops a wrap starts below the figure also a
 - 2026-10-28: T2 and T3 done. The full run failed only on the `stop-latex` snapshot, which lacked the seven new figures; the snapshot is refreshed. 64 layout cases passed, none failed.
 - 2026-10-28: T4 done. `python3 tests/verify.py` at `1b0b521` exits 0: all 103 renders pass and 64 layout cases pass.
 - 2026-10-28: claim audit: 29 claims read, 5 corrected — docs/formats/latex.qmd, _extensions/wrapped/wrapped.tex, tests/stop-latex.qmd. The corrections are text past the count "prints over the figure", the stop and Limits statements limited to body text, the skip comment matching the code, `\pagetotal` up to date in the main vertical list only, and the case (e) comment. The same reader re-read all five, and each holds. The `stop-latex` render after the edits keeps its snapshot and passes its layout cases.
+- 2026-10-28: review checkpoint: evidence recorded, criteria not yet ticked, because prior-review #1 asks for same-page checks in the new cases, and the evidence is re-run after that fix. Diff-bug and blame-history reviewers still running.
 
 ## Decisions
 
 ## Review
+
+Evidence, 2026-10-28, on the review head `1453ed2`, branch level with `main` (`ecba1d8`):
+
+- AC1: `python3 tests/verify.py` at `1453ed2` prints `ok` for `small wrap-lines a`, `b`, and `c`. `stop_gap` holds each heading of (a) and (b) below the figure and within one line of its reference gap. The same fixture rendered with `main`'s extension files (`ecba1d8`, scratch folder) fails (a) and (b) with "the stop heading … starts above the figure's bottom" and (c) with "the next wrapped figure starts above the figure's bottom".
+- AC2: the same run prints `ok` for `small wrap-lines d` (the heading gap is within 2 px of the twin's) and `small wrap-lines e` (the heading is on the next page, within one line of its top text edge).
+- AC3: the same run prints `ok` for `small wrap-lines b`. Its first 3 lines start right of the figure, and line 4 and the second paragraph start at the left edge.
+- AC4: the run exits 0. All 103 renders pass and 64 layout cases pass, none failed. `git diff ecba1d8 HEAD` deletes no line of `tests/verify.py`, `tests/stop-latex.qmd`, or `tests/_snapshots/`, so every case on `main` and its checks stand unchanged.
+- AC5: `docs/formats/latex.qmd` lines 31 to 34 say that LaTeX narrows that many lines, that the text after them runs at full width, also beside the figure, where it prints over the figure, and that in body text the stop block starts below the figure. The first Limits bullet adds that the extension skips to below the figure in body text. These statements match cases (a) and (b) (the narrowed count), (b) (full width over the left figure), and (a), (b), and (c) (the stop below the figure).
+- Gate: `cairn_validate.py` passes. The one version marker, `_extensions/wrapped/_extension.yml`, reads 0.2.0. The verify command passes on the review head. The changelog slot is "none". No DESIGN.md principle changed, so `cairn_impact` was skipped.
