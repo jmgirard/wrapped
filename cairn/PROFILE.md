@@ -21,10 +21,8 @@ repository root, run:
 python3 tests/verify.py
 ```
 
-It renders the fixtures under `tests/` to HTML, revealjs, and dashboard
-(corrected M022). It also renders them to PDF through LaTeX, PDF through
-Typst, and docx, and the book project under `tests/book/`
-to HTML. It compares the parts that the filter changes with the snapshots
+It renders the fixtures to HTML, revealjs, dashboard (corrected M022), PDF
+through LaTeX, PDF through Typst, and docx, and `tests/book/` to HTML. It compares the parts that the filter changes with the snapshots
 in `tests/_snapshots/`. For `LAYOUT` fixtures, it reads where text starts
 beside and below each wrapped figure in the PDF through LaTeX (D-006). It reads
 `TYPST_LAYOUT` fixtures in the Typst PDF too (corrected M010), and for two-column `COLUMN_LAYOUT` fixtures, each figure's column (corrected M019). For `LOGS` fixtures, it reads the LaTeX log's warnings (corrected M009). It
