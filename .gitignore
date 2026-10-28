@@ -2,6 +2,7 @@
 **/*.quarto_ipynb
 .DS_Store
 .claude/
+__pycache__/
 
 # cairn
 cairn/references/sources/
