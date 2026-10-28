@@ -23,3 +23,5 @@ wrappedfigure: fig-stop-10 [side=left,width=0.35\linewidth,gap=1em] image=[width
 wrappedstop
 wrappedfigure: fig-stop-11 [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+wrappedfigure: fig-stop-12 [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop

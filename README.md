@@ -168,8 +168,8 @@ Markdown can read the stars as emphasis and drop them.
 The figure wraps the paragraphs that follow it. Wrapping stops at the first
 block that is not a paragraph, and that block starts below the figure.
 Examples are a heading, a list, a table, a code block, a callout, another
-figure, and a horizontal rule. An image with no caption and no wrap class
-counts as a paragraph.
+figure, a horizontal rule, and a `{{< pagebreak >}}` page break. An image
+with no caption and no wrap class counts as a paragraph.
 
 To stop wrapping earlier, put an empty `wrap-clear` div after the last
 paragraph that you want beside the figure:

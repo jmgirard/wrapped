@@ -581,6 +581,20 @@ def stop_rule_cases():
         side = "left" if n % 2 == 0 else "right"
         yield f"case {n}", lambda bx, e, lh, n=n, side=side: stop_case(
             bx, e, lh, f"Stop-rule case {n}.", f"A short paragraph beside figure {n}.", side)
+    yield "case 12", page_break_case
+
+
+def page_break_case(boxes, edges, lh):
+    """Stop-rule case 12: a page break stops the wrap, so the paragraph
+    after it opens the next page at full width."""
+    p = find_text(boxes, "A short paragraph beside figure 12.")
+    fig = find_figure(boxes, "Stop-rule case 12.", p)
+    check_beside(fig, p, "left", edges, lh)
+    first = find_text(boxes, "Full width text after the page break.")
+    if first.page != p.page + 1:
+        raise LayoutError(f"the paragraph is on page {p.page} and the text after the break on page {first.page}")
+    own = [b for b in boxes if b.kind == "text" and b.page == first.page and abs(b.top - first.top) <= NEAR * 2]
+    check_full([own] + after(boxes, first), edges, "the paragraph after the page break")
 
 
 def stop_latex_cases():

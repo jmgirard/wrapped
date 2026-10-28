@@ -88,7 +88,9 @@ wrapped:
 
 Stop rule: the figure wraps the paragraphs that follow it. Wrapping stops at
 the first block that is not a paragraph: a heading, list, figure, table, code
-block, callout, or horizontal rule. An empty `::: {.wrap-clear}` div stops it
+block, callout, horizontal rule, or `{{< pagebreak >}}` page break, which at
+`pre-quarto` is still a paragraph that holds the shortcode (corrected by the
+page-break hotfix). An empty `::: {.wrap-clear}` div stops it
 earlier. HTML, LaTeX, Typst, and Word enforce the rule. In LaTeX a
 `\wrappedstop` after the group skips the lines the figure's height still
 needs, and puts out a figure that moved and still waits, centered with no
@@ -138,14 +140,17 @@ None yet.
 
 The extension is `_extensions/wrapped/`. `_extension.yml` holds the one
 version marker, runs `wrapped.lua` at `pre-quarto`, and runs
-`wrapped-docx.lua` at `post-render` (corrected M006). The filter makes seven
-passes (corrected M003):
+`wrapped-docx.lua` at `post-render` (corrected M006). The filter makes eight
+passes, two in step 1 (corrected M003, and by the page-break hotfix):
 
 1. It reads the `wrapped:` metadata and checks each length. In LaTeX it
    reads `classoption`, and a two-column document keeps normal figures.
    Columns that a class, `\twocolumn`, or `multicols` sets are found only
    while LaTeX runs, by the check in `wrapped.tex` at each figure (step 7)
-   (corrected M009).
+   (corrected M009). In a second pass, a `Shortcode` handler records each
+   `{{< pagebreak >}}` shortcode by its custom id, so that the stop rule
+   reads that shortcode's paragraph as a page break (corrected by the
+   page-break hotfix).
 2. It finds the contexts that cannot wrap: lists (definition lists
    included), callouts, column layouts, panel layouts, tabsets, asides,
    margin blocks (a `fig-column: margin` cell included), and subfigure

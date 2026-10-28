@@ -179,3 +179,17 @@ A short paragraph beside figure 11.
 :::
 
 Text after the stop block.
+
+```{=latex}
+\clearpage
+```
+
+## Case 12: page break
+
+![Stop-rule case 12.](plot.png){#fig-stop-12 .wrap-left width="35%"}
+
+A short paragraph beside figure 12.
+
+{{< pagebreak >}}
+
+Full width text after the page break. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
