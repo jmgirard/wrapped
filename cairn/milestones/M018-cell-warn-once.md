@@ -100,7 +100,8 @@ the Word `# frames` bookmark field is not `<id>`. A cell warning reads
 - 2026-10-28: claim audit: 23 claims read, 1 corrected — README.md (the no-paragraph sentence now names cells outside these places; the same reader re-read it and it holds).
 - 2026-10-28: claim audit note, not changed: `several` counts tables too, so a cell with one figure and one table already printed "makes more than one figure" for its figure on main; no fixture covers it.
 - 2026-10-28: T2, T3, T4 done: `python3 tests/verify.py` exits 0 (all 97 renders pass) at 9ef98de's code and snapshots; the later commit changes README prose only. Against main, `tests/_snapshots/` changes only the column-meta, contexts, margin-meta, and page-wide-meta files and removes no line. Status set to review.
-- 2026-10-28: choice: the cell warning shares the context branch of float_target. A cell figure with no paragraph after it and no context still prints nothing, and a table in a cell keeps its own warning.
+- 2026-10-28: choice: the cell warning shares the context branch of float_target.
+- 2026-10-28: step-7 approval: m018-cell-warn-once approved for merge A cell figure with no paragraph after it and no context still prints nothing, and a table in a cell keeps its own warning.
 
 ## Decisions
 
