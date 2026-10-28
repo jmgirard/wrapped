@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-28 (M025 review: M022 row pruned; "Stop text overlap with small wrap-lines" graduated; one lesson captured, M009's evicted by rank; validate green)_
+_Last hygiene check: 2026-10-28 (M026 review: M023 row pruned; two rows added; one lesson captured, M006's evicted by rank; validate green)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-28 (M025 review: M022 row pruned; "Stop text overla
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M026 | Show text wrapping past the figure in examples | review | — | normal | milestones/M026-wrap-showcase.md |
-| M023 | Build the documentation site | done | — | normal | milestones/archive/M023-docs-site.md |
 | M024 | Publish the site and shorten the README | done | M023 | normal | milestones/archive/M024-publish-docs.md |
 | M025 | Stop text overlap with small wrap-lines | done | — | normal | milestones/archive/M025-small-wrap-lines.md |
+| M026 | Show text wrapping past the figure in examples | done | — | normal | milestones/archive/M026-wrap-showcase.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
