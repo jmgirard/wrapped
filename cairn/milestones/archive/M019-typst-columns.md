@@ -1,0 +1,11 @@
+# M019: Wrap figures in Typst columns
+
+**Status:** done (2026-10-28, PR #20 https://github.com/jmgirard/wrapped/pull/20)
+
+**Goal:** In PDF through Typst, a document with `columns:` set wraps each wrapped figure inside its column, and the README says so.
+
+**Outcome:** No filter change. Quarto 1.10.19 writes `set page(columns: …)` for `columns:`, and inside a page column `layout` gives the column's size, so each group wraps in its column, and a percent width and `wrapped-width`'s fill check read the column width. A group that does not fit at a column's bottom moves to the next column, and the rest of that column stays blank. Tests: fixture `tests/typst-columns.qmd` (`columns: 2`, raw `#colbreak()` and `#pagebreak()` blocks) with six `TYPST_LAYOUT` cases: 40% (124 px) and 1in (108 px) in column 1, 40% in column 2, 2.5in with a 0.5in gap falling back to 40%, 2.4in with a 10% gap kept (259 px), and a moved group with column 1 ending two lines or more above the foot of column 2. `tests/verify.py` gains `column_edges` (each column's edges from page 1, the title allowed only above the columns), `column_of`, `find_column_line`, `column_image`, `typst_column_case`, and the `COLUMN_LAYOUT` set that `layout_check` reads. README "PDF through Typst", DESIGN (syntax table, filter text, two Typst Known issues), PROFILE verify slot, and wrap-mechanisms (W3 columns note, E10, new E22) name the column case. 98 renders on macOS and in CI.
+
+**Decisions:** none milestone-local. Plan choice in the work log: test and document wrapping in columns over a normal figure with a warning, as LaTeX does.
+
+**Review:** Plan criteria audit 8 findings, all fixed; claim audit 38 claims, 3 docstrings corrected. Fan-out, one pass, 27 findings: 17 fixed (the fill case could not show the gap is counted, untested blank-column and percent-gap claims, stale text-width wording across README, DESIGN, PROFILE, and wrap-mechanisms), 1 follow-up, 9 rejected; the gate's PROFILE.md 121-line cap breach fixed. Follow-ups: new rows "Keep page breaks out of Typst wraps" (a `{{< pagebreak >}}` after a wrapped paragraph fails the Typst render) and "Name column widths in Typst comments". Hygiene graduated "Check wrapped figures in Typst columns", pruned the M016 row, captured one lesson, evicted the M007 wrapfig `\WF@size` lesson by rank, and marked six used.
