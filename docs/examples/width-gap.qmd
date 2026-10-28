@@ -13,12 +13,12 @@ The figure on this page sets an absolute width and a gap of `2em`, twice
 the default:
 
 ```markdown
-![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-left width="2.5in" wrap-gap="2em"}
+![Mean ratings.](ratings.png){#fig-ratings .wrap-left width="2.5in" wrap-gap="2em"}
 ```
 
 ## Result
 
-![Mean ratings by condition.](../images/ratings.png){#fig-ratings .wrap-left width="2.5in" wrap-gap="2em"}
+![Mean ratings.](../images/ratings.png){#fig-ratings .wrap-left width="2.5in" wrap-gap="2em"}
 
 @fig-ratings is 2.5 inches wide in every format. An absolute length does
 not change with the width of the text, so in a narrow text column the
