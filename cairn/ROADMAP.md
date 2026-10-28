@@ -11,7 +11,7 @@ _Last hygiene check: 2026-10-28 (M017 done; its row graduated, M014's row pruned
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
 | M016 | Read figure columns in Quarto's order in PDF | done | — | normal | milestones/archive/M016-pdf-column-order.md |
 | M017 | Let slides wrap under margin settings | done | — | normal | milestones/archive/M017-slides-margin.md |
-| M018 | Warn once per cell under a context | in-progress | — | normal | milestones/M018-cell-warn-once.md |
+| M018 | Warn once per cell under a context | review | — | normal | milestones/M018-cell-warn-once.md |
 | M015 | Fall back in more margin and page forms | done | — | normal | milestones/archive/M015-margin-page-forms.md |
 
 ## Candidates

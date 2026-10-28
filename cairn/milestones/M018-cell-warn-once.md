@@ -1,6 +1,6 @@
 # M018: Warn once per cell under a context
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -75,12 +75,12 @@ the Word `# frames` bookmark field is not `<id>`. A cell warning reads
 ## Tasks
 
 - [x] T1: Add the five cells of AC1 to their fixtures.
-- [ ] T2: In `float_target`, print one warning for a cell with `several`
+- [x] T2: In `float_target`, print one warning for a cell with `several`
       set whose figures keep their normal layout for a place, and none for
       its figures. Write the snapshots.
-- [ ] T3: Update the README section "Where a figure keeps its normal
+- [x] T3: Update the README section "Where a figure keeps its normal
       layout" and row E4 of `cairn/references/wrap-mechanisms.md`.
-- [ ] T4: Run `python3 tests/verify.py` and compare `tests/_snapshots/`
+- [x] T4: Run `python3 tests/verify.py` and compare `tests/_snapshots/`
       with `main`.
 
 ## Work log
@@ -99,6 +99,7 @@ the Word `# frames` bookmark field is not `<id>`. A cell warning reads
 - 2026-10-28: snapshots written with `verify.py --update` (97 renders pass). The margin-meta Typst snapshot changed a line on main (`figure: -` became `figure: fig-meta-margin-two-1`), because typ_summary took the next margin cell's label for the no-id image. The cell moved above the no-id image section, and that fixture now only adds lines. The summary gap is a candidate row.
 - 2026-10-28: claim audit: 23 claims read, 1 corrected — README.md (the no-paragraph sentence now names cells outside these places; the same reader re-read it and it holds).
 - 2026-10-28: claim audit note, not changed: `several` counts tables too, so a cell with one figure and one table already printed "makes more than one figure" for its figure on main; no fixture covers it.
+- 2026-10-28: T2, T3, T4 done: `python3 tests/verify.py` exits 0 (all 97 renders pass) at 9ef98de's code and snapshots; the later commit changes README prose only. Against main, `tests/_snapshots/` changes only the column-meta, contexts, margin-meta, and page-wide-meta files and removes no line. Status set to review.
 - 2026-10-28: choice: the cell warning shares the context branch of float_target. A cell figure with no paragraph after it and no context still prints nothing, and a table in a cell keeps its own warning.
 
 ## Decisions
