@@ -62,6 +62,7 @@ In PDF through LaTeX, the block that stops a wrap starts below the figure also a
 - 2026-10-28: review checkpoint: fix-now work from the four lenses committed, full suite run on it in progress. The `stop-latex` fixture alone passes all 16 layout cases and keeps its snapshot.
 - 2026-10-28: `python3 tests/verify.py` on the files of `6bcd808` exits 0: all 103 renders pass and 64 layout cases pass.
 - 2026-10-28: amendment routed: AC1 — diff-bug #1: when TeX breaks the page just before the figure's first line, the narrowed lines end on the figure's page above its bottom, but the start's page count is stale and the stop block is not moved, so AC1's prose promises more than the code does; the case is outside AC1's named cases (a) to (c).
+- 2026-10-28: re-audit: AC1 (full) — the first amended wording ("no page break between the paragraph where wrapfig places the figure and the block that stops the wrap") still covers a paragraph moved to the next page; the one-line cap is false for case (d); "existing case of the same form" and "fails on `main`" bind the test fixture; the domain is wider than Quarto's default spacing; "the count that wrapfig takes" is off by one. All taken into the second wording, which goes to a second reader.
 
 ## Decisions
 
