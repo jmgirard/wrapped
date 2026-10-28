@@ -1,0 +1,45 @@
+# Renders the documentation site in docs/ (quarto render docs). Code cells
+# take their results from the committed docs/_freeze/, so this job needs no R.
+# An edit to any page with a code cell, prose included, makes its frozen
+# results stale, and this job then fails. Render the site locally with R
+# (quarto render docs) and commit the changed docs/_freeze/.
+name: docs
+
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+      - "_extensions/**"
+      - ".github/workflows/docs.yml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "_extensions/**"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer push to a pull request cancels its older run. On main a running
+# check is never cancelled, but a newer queued run replaces an older queued
+# one.
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: release
+          tinytex: true
+
+      - name: Render the site
+        run: quarto render docs

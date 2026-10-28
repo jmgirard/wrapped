@@ -1,0 +1,45 @@
+---
+title: "A figure div on the left"
+description: "A figure div with its caption as the last paragraph floats to the left."
+format:
+  html: default
+  pdf: default
+  typst:
+    output-file: div-figure-typst.pdf
+  docx: default
+---
+
+The figure on this page is a div. Its caption is the div's last
+paragraph:
+
+```markdown
+::: {#fig-groups .wrap-left width="35%"}
+![](groups.png)
+
+Scores by hours of practice in two groups.
+:::
+```
+
+## Result
+
+::: {#fig-groups .wrap-left width="35%"}
+![](../images/groups.png)
+
+Scores by hours of practice in two groups.
+:::
+
+@fig-groups shows each participant's score against the hours that they
+practiced. Scores rose with practice in both groups, and the second group
+practiced more hours.
+
+The class `.wrap-left` puts the figure on the left side of the text, so
+this text flows on its right. The figure is 35% of the text width, a
+little narrower than the default of 40%.
+
+The div form puts the caption in its own paragraph, which is easier to
+read and edit when the caption is long. The figure keeps its number, so
+the text can point to it.
+
+## Next
+
+A heading is not a paragraph, so wrapping stops before it.

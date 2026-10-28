@@ -1,0 +1,40 @@
+---
+title: "Stop a wrap early"
+description: "An empty wrap-clear div ends the wrap before the next paragraph."
+format:
+  html: default
+  pdf: default
+  typst:
+    output-file: wrap-clear-typst.pdf
+  docx: default
+---
+
+An empty `wrap-clear` div after a paragraph ends the wrap there:
+
+```markdown
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width="35%"}
+
+Only this paragraph sits beside the figure.
+
+::: {.wrap-clear}
+:::
+
+This paragraph starts below the figure.
+```
+
+## Result
+
+![Mean ratings by condition.](../images/ratings.png){#fig-ratings .wrap-right width="35%"}
+
+Only this paragraph sits beside @fig-ratings. The `wrap-clear` div comes
+right after it.
+
+::: {.wrap-clear}
+:::
+
+This paragraph comes after the `wrap-clear` div, so it starts below the
+figure and runs the full width of the text. Without the div, it would sit
+beside the figure too.
+
+Use the div to keep text that belongs to the next topic away from the
+figure.

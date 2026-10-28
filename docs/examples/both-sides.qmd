@@ -1,0 +1,50 @@
+---
+title: "Figures on both sides"
+description: "One figure floats to the right and a later one to the left."
+format:
+  html: default
+  pdf: default
+  typst:
+    output-file: both-sides-typst.pdf
+  docx: default
+---
+
+Each figure on this page picks its side with its own class:
+
+```markdown
+![Mean ratings by condition.](ratings.png){#fig-right .wrap-right width="35%"}
+
+...
+
+![Scores by hours of practice.](groups.png){#fig-left .wrap-left width="35%"}
+```
+
+## Result
+
+![Mean ratings by condition.](../images/ratings.png){#fig-right .wrap-right width="35%"}
+
+@fig-right has the class `.wrap-right`, so it sits on the right, and these
+paragraphs flow on its left.
+
+The figure wraps the paragraphs after it until a block that is not a
+paragraph. Here that block is the horizontal rule below.
+
+The rule starts below the figure, so the next figure starts on a clear
+line.
+
+* * *
+
+![Scores by hours of practice.](../images/groups.png){#fig-left .wrap-left width="35%"}
+
+@fig-left has the class `.wrap-left`, so it sits on the left, and these
+paragraphs flow on its right.
+
+Two wrapped figures right after each other do not both wrap: the first
+keeps its normal layout. Put at least one paragraph after each figure, as
+this page does.
+
+The heading after this paragraph stops the second wrap.
+
+## Next
+
+A heading is not a paragraph, so wrapping stops before it.

@@ -1,0 +1,31 @@
+---
+title: "Dashboard"
+description: "A wrapped figure in a dashboard card."
+format: dashboard
+---
+
+## Row
+
+::: {.card title="Ratings"}
+![Mean ratings by condition.](../images/ratings.png){#fig-ratings .wrap-right width="40%"}
+
+Ratings rose in both conditions. The figure floats to the right of the
+paragraphs after it, inside this card.
+
+A figure from a code cell wraps too when the cell and its paragraphs are
+in a `.card` div.
+:::
+
+::: {.card title="Source"}
+```markdown
+::: {.card title="Ratings"}
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width="40%"}
+
+Ratings rose in both conditions. The figure floats to the right of the
+paragraphs after it, inside this card.
+
+A figure from a code cell wraps too when the cell and its paragraphs are
+in a `.card` div.
+:::
+```
+:::

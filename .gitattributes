@@ -1,0 +1,3 @@
+# Quarto writes these files when it renders the docs site. They are not
+# source, so GitHub leaves them out of the repository's language count.
+docs/_freeze/** linguist-generated=true

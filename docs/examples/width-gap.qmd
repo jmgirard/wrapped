@@ -1,0 +1,38 @@
+---
+title: "Width and gap"
+description: "A figure sets an absolute width and a wider gap."
+format:
+  html: default
+  pdf: default
+  typst:
+    output-file: width-gap-typst.pdf
+  docx: default
+---
+
+The figure on this page sets an absolute width and a gap of `2em`, twice
+the default:
+
+```markdown
+![Mean ratings.](ratings.png){#fig-ratings .wrap-left width="2.5in" wrap-gap="2em"}
+```
+
+## Result
+
+![Mean ratings.](../images/ratings.png){#fig-ratings .wrap-left width="2.5in" wrap-gap="2em"}
+
+@fig-ratings is 2.5 inches wide in each of the four formats. An absolute
+length does not change with the width of the text, so in a narrow text
+column the figure takes a larger share of the line. In HTML, a window at
+the [breakpoint](../defaults.qmd#breakpoint) or narrower is the exception:
+there the figure takes the full width of the text column.
+
+The gap between the figure and this text is `2em`, twice the default of
+`1em`. Each format converts both values to its own units.
+
+A percent width, such as the default 40%, is a share of the text width
+instead. Use a percent when the same document renders to pages of
+different widths.
+
+## Next
+
+A heading is not a paragraph, so wrapping stops before it.

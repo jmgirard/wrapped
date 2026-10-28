@@ -1,0 +1,24 @@
+---
+title: "Examples"
+listing:
+  contents:
+    - image-figure.qmd
+    - div-figure.qmd
+    - uncaptioned-image.qmd
+    - code-cell.qmd
+    - both-sides.qmd
+    - width-gap.qmd
+    - defaults.qmd
+    - wrap-clear.qmd
+    - slides.qmd
+    - dashboard.qmd
+  type: table
+  fields: [title, description]
+  sort: false
+  filter-ui: false
+  sort-ui: false
+---
+
+Each example page shows its source and its result in HTML. Its "Other
+Formats" links give the same page as a PDF through LaTeX, a PDF through
+Typst, and a Word file. The slides and dashboard examples are HTML only.

@@ -1,0 +1,49 @@
+---
+title: "wrapped"
+subtitle: "Wrap body text around figures in Quarto"
+toc: false
+---
+
+wrapped is a Quarto filter extension. It lets body text flow beside a
+figure, to the left or right of it. The figure keeps its number, its
+caption, and its `@fig-` links.
+
+::: demo
+![Mean ratings by condition.](images/ratings.png){#fig-home .wrap-right width="40%"}
+
+This paragraph sits beside @fig-home. The figure has the class
+`.wrap-right`, so it goes to the right side of the text column, and the
+paragraphs after it flow on its left.
+
+One markdown syntax gives this layout in HTML, in PDF through LaTeX, in
+PDF through Typst, and in Word. Wrapping stops at the next block that is
+not a paragraph, such as a heading or a list.
+
+In a window 576px wide or narrower, the figure stops floating and takes
+the full width of the text column.
+:::
+
+This version wraps figures in HTML output, revealjs slides and dashboards
+included, in PDF through LaTeX, in PDF through Typst, and in Word. In
+every other format, a wrapped figure renders as a normal figure, and the
+render prints one warning.
+
+## Install
+
+The extension asks for Quarto 1.9.36 or later, and it is tested with Quarto
+1.10.19. In the folder of your project, run:
+
+```bash
+quarto add jmgirard/wrapped
+```
+
+Then add the filter to the document's YAML header:
+
+```yaml
+filters:
+  - wrapped
+```
+
+[Get started](get-started.qmd) shows each kind of figure that wraps. The
+[examples](examples/index.qmd) show each one rendered in HTML, in PDF
+through LaTeX, in PDF through Typst, and in Word.

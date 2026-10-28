@@ -1,0 +1,39 @@
+---
+title: "A captioned image"
+description: "A markdown image with a caption and an id floats to the right."
+format:
+  html: default
+  pdf: default
+  typst:
+    output-file: image-figure-typst.pdf
+  docx: default
+---
+
+The figure on this page comes from one line of markdown:
+
+```markdown
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width="40%"}
+```
+
+## Result
+
+![Mean ratings by condition.](../images/ratings.png){#fig-ratings .wrap-right width="40%"}
+
+Participants rated each clip on a scale from one to five. @fig-ratings
+shows the mean rating in each condition. Ratings in the treatment
+condition were higher than ratings in the control condition.
+
+The figure keeps its number and its caption, and this paragraph can point
+to it with a `@fig-` link. The class `.wrap-right` puts the figure on the
+right side of the text, and the `width` attribute makes it 40% of the
+text width.
+
+The paragraphs after the figure flow beside it until the text passes the
+bottom of the figure. After that, they run the full width of the text.
+Each format
+draws the same layout with its own tools: CSS in HTML, wrapfig in LaTeX,
+wrap-it in Typst, and a frame in Word.
+
+## Next
+
+A heading is not a paragraph, so wrapping stops before it.

@@ -1,0 +1,77 @@
+---
+title: "Word"
+---
+
+In Word output, the extension puts each wrapped figure in a Word frame. The
+image and its caption sit in the frame on the figure's side, and the
+paragraphs after the figure flow beside it. Citations and `@fig-` links in
+the text beside the figure work. An uncaptioned image keeps its `fig-alt`
+text as its alt text.
+
+## Width and gap
+
+The `width` and `wrap-gap` values change to Word lengths:
+
+- A percent above 0% and below 100% is that share of the text width. The
+  extension reads the text width from the page size and margins of the
+  reference doc that the document names with `reference-doc`. With no
+  reference doc, or a reference doc with no page size or margins, the text
+  width is 6.5 in: Word then shows a Letter page with 1 in margins.
+- A length in `in`, `cm`, `mm`, `pt`, or `pc`, in any letter case, keeps
+  its size. A `px` length, or a number with no unit, is 1/96 in for each
+  `px`. An `em` is 12 pt.
+- Any other unit, such as `ex`, `vw`, or `rem`, a `calc()`, `min()`,
+  `max()`, or `clamp()` value, a width of zero, and a gap of 0% print a
+  warning, and the document default applies. A figure can set its own gap
+  with which the document default leaves no room, as in the next items.
+  Then the width takes 40% instead.
+- A width or gap as wide as the text or wider, such as `100%` or `10in`,
+  leaves no room for the text. It prints a warning, and the document
+  default applies. In the cases that the next item names, a width takes
+  40% instead.
+- A width plus its gap as wide as the text or wider also leaves no room
+  for the text. Examples are `5in` with a `2in` gap on a 6.5 in text width,
+  and `95%` with a `2em` gap. Such a figure prints a warning, and it takes
+  the document default width. If the document default plus the gap is
+  that wide too, the figure takes the built-in 40%. If 40% plus the gap is
+  that wide too, the figure takes 40% and keeps the gap. This is so even
+  when its own width was narrower than 40%. The extension rounds
+  each value to twips (1/20 pt) before it adds them.
+- A `wrapped:` width that with the gap is as wide as the text or wider
+  prints one warning, and the document default width becomes 40%. A
+  `wrapped:` width that already printed its own warning prints no second
+  one. A figure that sets neither its own width nor its own gap prints no
+  warning of its own.
+
+The text width is the page width less the left and right margins and the
+gutter. A reference doc with more than one column keeps normal figures,
+and the render prints one warning.
+
+## Images and frames
+
+The image takes the width of the frame and keeps its shape. The extension
+does not use an image's `height` in a wrapped figure in Word, and the
+render prints a warning. The `wrap-lines` attribute does nothing in Word.
+
+A list in a figure div goes in the frame with the image and the caption.
+Word cannot put a code block, a table, a heading, a horizontal rule, or
+raw content in a frame. A figure div that holds one keeps its normal
+layout, and the render prints a warning.
+
+A frame does not break across pages. If a frame does not fit at the bottom
+of a page, Word moves it and the paragraph after it to the next page. The
+rest of the page before it stays blank.
+
+## Apps that show frames
+
+The extension is tested in these apps, with a test document that holds 15
+wrapped figures:
+
+- Microsoft Word 16.114 on macOS: text sits beside every wrapped figure.
+- LibreOffice 26.8 on macOS: text sits beside every wrapped figure.
+- Google Docs: no text sits beside the figure. The figure and its caption
+  sit on the figure's side on lines of their own, and the text starts
+  below them. Nothing is lost. This was checked on the first figure of the
+  test document.
+
+Right-to-left Word documents are not tested.

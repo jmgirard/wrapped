@@ -1,0 +1,90 @@
+---
+title: "Where wrapping stops"
+---
+
+The figure wraps the paragraphs that follow it. Wrapping stops at the first
+block that is not a paragraph, and that block starts below the figure.
+Examples of blocks that are not paragraphs are a heading, a list, a table,
+a code block, a callout, another figure, and a horizontal rule.
+
+::: demo
+![Mean ratings by condition.](images/ratings.png){#fig-list .wrap-right width="35%"}
+
+This paragraph wraps beside @fig-list, and so does the next one.
+
+The list after this paragraph is not a paragraph, so wrapping stops there.
+If the text beside a figure is shorter than the figure, the space beside
+the figure stays empty:
+
+- The list starts below the figure.
+- It runs the full width of the column.
+:::
+
+An image with no caption and no wrap class counts as a paragraph. Quarto
+expands `{{{< include >}}}` before the filter runs, so the included blocks
+follow these rules as written.
+
+## Stop wrapping earlier
+
+To stop wrapping earlier, put an empty `wrap-clear` div after the last
+paragraph that you want beside the figure:
+
+```markdown
+::: {.wrap-clear}
+:::
+```
+
+::: demo
+![Mean ratings by condition.](images/ratings.png){#fig-clear .wrap-left width="35%"}
+
+Only this paragraph sits beside @fig-clear.
+
+::: {.wrap-clear}
+:::
+
+An empty `wrap-clear` div comes before this paragraph, so it starts below
+the figure.
+:::
+
+In PDF through LaTeX, in PDF through Typst, and in Word, wrapping stops as
+in HTML, and a `wrap-clear` div works.
+
+## Shortcodes
+
+A paragraph that shows only one shortcode can also stop wrapping, because
+the shortcode can make a block. Spaces, line ends in the source, HTML
+comments, and one span around the shortcode show nothing, so
+`{{{< video URL >}}} <!-- note -->` and `[{{{< video URL >}}}]{.my-class}`
+stop wrapping too. Examples are a `{{{< pagebreak >}}}` page break and a
+`{{{< video >}}}`, which is a block in HTML and a link line in the other
+formats. This holds for a shortcode from another extension too, even one
+that makes text.
+
+Eight Quarto shortcodes usually make text, an image, or paragraphs:
+`meta`, `var`, `env`, `kbd`, `lipsum`, `placeholder`, `version`, and
+`brand`. A paragraph with one of them counts as a paragraph, also with a
+comment beside it. The next paragraph gives the one exception.
+
+If a `{{{< meta >}}}` shortcode is all that its paragraph holds and its
+value holds a block other than a paragraph, wrapping stops. Examples of
+such blocks are a list and a code block. A `meta` value of paragraphs only
+counts as paragraphs. With a comment or a span around it, Quarto renders a
+`meta` value as text, so the paragraph counts as a paragraph.
+
+## A figure with nothing to wrap
+
+A wrapped figure with no paragraph right after it keeps its normal layout.
+An example is a figure right before a heading. Another is a figure right
+before a paragraph that stops wrapping under the rules above. An example of
+such a paragraph holds only a `{{{< video >}}}` and a comment. In HTML,
+LaTeX, Typst, and Word the render prints no warning for such a figure. The
+places on [Where a figure keeps its normal layout](normal-layout.qmd) are
+the exception: a figure there prints its warning with or without a
+paragraph after it.
+
+## Two figures in a row
+
+Of two wrapped figures in a row, the first keeps its normal layout, and the
+second wraps the paragraphs after it. This does not hold for the figures of
+one code cell, which [Where a figure keeps its normal
+layout](normal-layout.qmd#code-cells-with-more-than-one-figure) covers.
