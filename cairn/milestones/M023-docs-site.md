@@ -123,7 +123,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - [x] T3: Write the pages for width and gap (the CSS function check last,
       under its own heading), document defaults, and where wrapping stops,
       each with live examples of the common case.
-- [ ] T4: Write the page on where a figure keeps its normal layout, with the
+- [x] T4: Write the page on where a figure keeps its normal layout, with the
       README's "Notes" placed on their topic pages. Show at least one
       fallback case live, with its warning text.
 - [ ] T5: Write the format pages: HTML with slides and dashboards, PDF
@@ -176,6 +176,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: T2 done: home page (what the filter does, formats, a live wrapped figure, install) and get-started page (Install and Wrap a figure, each form shown as source then as a live `.demo` result framed by `docs/styles.css`). The code-cell form runs once with `echo: fenced` and is frozen in `docs/_freeze/get-started/`. In the browser at 1280x900 all four figures float (fig-ratings, fig-groups, the badge image, fig-scatter).
 - 2026-10-28: T3 done: width-gap, defaults, and stopping pages carry README sections "Width and gap", "Document defaults", and "Where wrapping stops", plus the Notes item on values that are not lengths. Shortcodes in prose are escaped as `{{{< >}}}`. The defaults page sets `wrapped: width: 25%, gap: 30px` in its own YAML, and its figure measured 186px (25% of the 744px demo column) with a 30px margin; the list and `wrap-clear` demos start below their figures.
 - 2026-10-28: implement chose to edit tracking files with Edit from here on; the T2 tick went in through a python script, against the rulebook's file-edit rule.
+- 2026-10-28: T4 done: normal-layout page carries README "Where a figure keeps its normal layout" and the Notes items (no-id images, linked images, right-to-left sides, long captions, margin content; the non-length item went to width-gap). A live callout fallback shows the warning text copied from the render, `(W) wrapped: the figure #fig-callout is in a callout, so it does not wrap.`; it is the one warning in the full site render. The filter's warnings start with `(W)`, so a grep for "warn" misses them.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
