@@ -1,6 +1,6 @@
 # M019: Wrap figures in Typst columns
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -118,7 +118,7 @@ that holds the image. Each test allows `NEAR` (3 px).
       in `cairn/DESIGN.md` Known issues for columns. Update row W3 of
       `cairn/references/wrap-mechanisms.md` and add an edge-case row there
       for Typst `columns:`.
-- [ ] T4: Run `python3 tests/verify.py`. Compare `_extensions/wrapped/`
+- [x] T4: Run `python3 tests/verify.py`. Compare `_extensions/wrapped/`
       and `tests/_snapshots/` with `main`.
 
 ## Work log
@@ -139,5 +139,8 @@ that holds the image. Each test allows `NEAR` (3 px).
 - 2026-10-28: T2 choice: `column_edges` splits page 1 at the middle of its text and lets text cross the middle only above the columns (the title); `column_of` puts a box in the column whose left edge is the last at or left of it, so a line that runs past its column's right edge still fails the edge test. Fixtures in `COLUMN_LAYOUT` take these edges in `layout_check`.
 - 2026-10-28: T2 done: 5 `typst_columns_cases` pass. Plants, each red with its test's reason, then restored: no wrap class ("not beside the image"), second case in column 1 ("not inside column 2", 2 cases), 30% width ("93 px wide, not 124 px"), short filler ("not inside column 2"), page 1 in one column ("a column of page 1 has no text"), a -60pt gutter in `wrapped.lua` ("overlaps the figure", 5 cases), a colbreak before the moved figure ("8 lines of column 2 end above the image"). The restored render matches its snapshot.
 - 2026-10-28: T3 done: README "PDF through Typst" gains a columns paragraph, and both of its `text width` sentences name the column width. DESIGN's Typst page-bottom entry covers columns (corrected M019). wrap-mechanisms gains a W3 columns note and row E22.
+- 2026-10-28: T4 done: `python3 tests/verify.py` exit 0, "all 98 renders pass", with the 5 typst-columns layout cases ok. Against main, `_extensions/wrapped/` is unchanged and `tests/_snapshots/` only adds `typst-columns.typst.txt`.
+- 2026-10-28: claim audit: 38 claims read, 3 corrected — tests/verify.py (`column_edges`, `column_image`, and module docstrings; comment-only, re-read once and confirmed). README.md and tests/typst-columns.qmd held, with scratch renders confirming the 311 px column, 26 px gutter, column-width percents and fill check, and the moved group.
+- 2026-10-28: implement complete; status review.
 
 ## Decisions

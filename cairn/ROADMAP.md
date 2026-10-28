@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-28 (M018 done; its row graduated, M015's row pruned
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M019 | Wrap figures in Typst columns | in-progress | — | normal | milestones/M019-typst-columns.md |
+| M019 | Wrap figures in Typst columns | review | — | normal | milestones/M019-typst-columns.md |
 | M016 | Read figure columns in Quarto's order in PDF | done | — | normal | milestones/archive/M016-pdf-column-order.md |
 | M017 | Let slides wrap under margin settings | done | — | normal | milestones/archive/M017-slides-margin.md |
 | M018 | Warn once per cell under a context | done | — | normal | milestones/archive/M018-cell-warn-once.md |

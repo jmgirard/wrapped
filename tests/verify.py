@@ -45,8 +45,8 @@ the boxes of text lines and images with poppler's pdftohtml (brew install
 poppler, or apt install poppler-utils). It prints one line for each case it measured.
 For a fixture in TYPST_LAYOUT, it reads the PDF through Typst the same way
 after its Typst render, and checks each figure's image width and the first
-line of its paragraph beside it. For a fixture in COLUMN_LAYOUT, a page in
-two columns, it also checks which column holds each figure.
+line of its paragraph beside it. For a fixture in COLUMN_LAYOUT, whose
+pages are in two columns, it also checks which column holds each figure.
 
 For a fixture in LOGS, rendered with latex-clean: false so its LaTeX log
 stays, the script also reads the warnings that wrapped.tex writes to that
@@ -816,7 +816,8 @@ def join_lines(boxes):
 def column_edges(boxes):
     """The left and right ends of each column's full lines on page 1, which
     must hold no image and text in two columns. Text across the middle of
-    the page, such as the title, counts only above the columns."""
+    the page, such as the title, is allowed only above the columns and sets
+    no edge."""
     if any(b.page == 1 and b.kind == "image" for b in boxes):
         raise LayoutError("page 1 holds an image, so it does not show the columns")
     text = [b for b in boxes if b.page == 1 and b.kind == "text"]
@@ -861,8 +862,9 @@ def find_column_line(boxes, edges, words):
 
 
 def column_image(boxes, edges, column, line):
-    """The image in the line's column on its page with the lowest top at or
-    above the line's bottom: the figure the paragraph follows."""
+    """The image in the line's column on its page that is placed lowest on
+    the page with its top at or above the line's bottom: the figure the
+    paragraph follows."""
     images = [b for b in boxes if b.kind == "image" and b.page == line.page and column_of(b, edges) == column
               and b.top <= line.bottom + NEAR]
     if not images:
