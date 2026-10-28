@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-28 (M017 done; its row graduated, M014's row pruned, two candidate rows added in the M017 review)_
+_Last hygiene check: 2026-10-28 (M018 done; its row graduated, M015's row pruned, one candidate row added in M018)_
 
 ## Milestones
 
@@ -11,8 +11,7 @@ _Last hygiene check: 2026-10-28 (M017 done; its row graduated, M014's row pruned
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
 | M016 | Read figure columns in Quarto's order in PDF | done | — | normal | milestones/archive/M016-pdf-column-order.md |
 | M017 | Let slides wrap under margin settings | done | — | normal | milestones/archive/M017-slides-margin.md |
-| M018 | Warn once per cell under a context | review | — | normal | milestones/M018-cell-warn-once.md |
-| M015 | Fall back in more margin and page forms | done | — | normal | milestones/archive/M015-margin-page-forms.md |
+| M018 | Warn once per cell under a context | done | — | normal | milestones/archive/M018-cell-warn-once.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -38,7 +37,6 @@ _Last hygiene check: 2026-10-28 (M017 done; its row graduated, M014's row pruned
 - Fix the overfull LaTeX fixture page: in tests/fixture.qmd's PDF through LaTeX, page 4 runs past the page bottom (Figure 7 off the page) when a floating figure lands on the page with the knitr longtable. M007's stop spacing moved the fixture's content so that this happens; `main` renders it within bounds but overflows the same way with an 8-line hand shift, so the clash between the float and the longtable predates M007 (M007 review, prior-review #2 in both passes) — added 2026-10-26 — milestones/M007-latex-stops.md
 - Keep wrapped figures in multicols: with `classoption: twocolumn` the filter writes Quarto's normal float for a wrapped figure, and LaTeX drops it inside a raw `multicols` (multicol's "Floats and marginpars not allowed" warning; by-hand render at M009 implement). Letting `wrapped.tex` set it in place there, as M009 does without `classoption`, would keep it (M009 claim audit) — added 2026-10-26 — milestones/M009-latex-columns.md
 - Keep narrow widths when no width fits: in Word and in Typst, when the figure width, the document default, and 40% each fill the text with the gap, the figure takes 40%, so `width="0.5in"` with a `6in` gap widens to 40% (M012 claim audit). Keeping the narrower of the asked width and 40% would leave more room; the README states the current rule — added 2026-10-27 — milestones/M012-gap-checks.md
-- Warn once per cell under a context: a wrapped code cell that makes more than one figure inside a context, or under a document `fig-column` or `column` margin or page-wide value (since M015), prints one warning per figure, not D-010's one warning for the cell, because the context check runs before the cell check (M015 review, diff-bug #6, blame-history #3) — added 2026-10-27 — milestones/M015-margin-page-forms.md — started M018
 - Check HTML column order in a browser: in a bare HTML render of a document with `fig-column: body` and `column: page`, Quarto keeps a `.column-margin` figure in a margin container and gives a `.column-page` figure's image both `column-body` and `column-page`, so only the CSS shows the place. M016 reads Quarto's order in LaTeX and Typst only; HTML and Word still read a figure's own class first. The M016 claim audit's bare HTML renders put fig-order-page, fig-order-div, both column-order cells, fig-figm-figbody, fig-figm-div, and fig-marg-body in the body, which the filter keeps normal in HTML; only image floats with `.column-margin` stayed in the margin. Measure each case of M016's fixtures with `tests/layout.js` and follow what the browser shows (M016 criteria and claim audits) — added 2026-10-27 — milestones/M016-pdf-column-order.md
 - Wrap no-id margin images in PDF: in PDF through LaTeX and PDF through Typst, Quarto puts a captioned image with no id and `.column-margin` in the body, with or without document keys, but the filter keeps it normal with an "is in the margin" warning (`contexts` snapshots). The README notes the LaTeX case only (M016 criteria audit) — added 2026-10-27 — milestones/M016-pdf-column-order.md
 - Check wrapped figures in table cells: M013 keeps a figure in a table cell wrapping in Typst, where the probe render squeezed the caption into a narrow cell, and falls back in Word on the evidence of a LibreOffice render of the docx only. Check both in Typst's PDF and in Word itself (M013 review, prior-review #1 and #3) — added 2026-10-27 — milestones/M013-format-fallbacks.md
