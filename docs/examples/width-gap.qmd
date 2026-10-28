@@ -18,6 +18,10 @@ the default:
 
 ## Result
 
+The figure in this section has a fixed width and a wider gap than the
+default. This paragraph comes before it, so it runs the full width of the
+text and shows how wide the text is.
+
 ![Mean ratings.](../images/ratings.png){#fig-ratings .wrap-left width="2.5in" wrap-gap="2em"}
 
 @fig-ratings is 2.5 inches wide in each of the four formats. An absolute
@@ -27,11 +31,13 @@ the [breakpoint](../defaults.qmd#breakpoint) or narrower is the exception:
 there the figure takes the full width of the text column.
 
 The gap between the figure and this text is `2em`, twice the default of
-`1em`. Each format converts both values to its own units.
-
-A percent width, such as the default 40%, is a share of the text width
-instead. Use a percent when the same document renders to pages of
-different widths.
+`1em`. Each format converts both values to its own units. A percent width,
+such as the default 40%, is a share of the text width instead. Use a
+percent when the same document renders to pages of different widths, and
+an absolute length when the figure must keep its size on every page. After
+the text passes the bottom of the figure, each line starts at the left
+edge of the text again and runs under the figure, as the end of this
+paragraph shows.
 
 ## Next
 

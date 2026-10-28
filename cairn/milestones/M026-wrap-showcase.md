@@ -38,10 +38,10 @@ The site's example pages and the README image show body text above a wrapped fig
 ## Tasks
 
 - [x] T1: On `main`, render `docs/` from a clean `docs/.quarto` and write its sorted `(W) wrapped:` lines to the work log. Add `tests/docs_layout.py`, which reads the `pdftohtml -xml` line boxes of the LaTeX, Typst, and LibreOffice PDFs of the pages in P and checks AC1 (a) to (c) for each figure, and add a function to `tests/layout.js` that returns each paragraph's line rectangles for the same check in HTML. Make sure that both readers fail on `main`.
-- [ ] T2: Rewrite the Result sections of `image-figure.qmd`, `div-figure.qmd`, and `uncaptioned-image.qmd`: a paragraph of at least two lines before the figure, then a paragraph of about 8 lines that starts beside the figure and continues below it. The prose explains the example, in the site's plain style.
-- [ ] T3: Do the same for `width-gap.qmd`, `defaults.qmd`, and both figures of `both-sides.qmd`.
-- [ ] T4: Do the same for `code-cell.qmd` (the paragraph goes before the cell) and the `.demo` div of `docs/index.qmd`. Render `docs/` locally with R so that `docs/_freeze/examples/code-cell/` matches the new page.
-- [ ] T5: Render `docs/`, convert each docx in P to PDF with LibreOffice, and run both readers over the 29 renders. Lengthen or move text until each figure passes, with the figure and its text on one page. Compare the `(W) wrapped:` lines with T1's.
+- [x] T2: Rewrite the Result sections of `image-figure.qmd`, `div-figure.qmd`, and `uncaptioned-image.qmd`: a paragraph of at least two lines before the figure, then a paragraph of about 8 lines that starts beside the figure and continues below it. The prose explains the example, in the site's plain style.
+- [x] T3: Do the same for `width-gap.qmd`, `defaults.qmd`, and both figures of `both-sides.qmd`.
+- [x] T4: Do the same for `code-cell.qmd` (the paragraph goes before the cell) and the `.demo` div of `docs/index.qmd`. Render `docs/` locally with R so that `docs/_freeze/examples/code-cell/` matches the new page.
+- [x] T5: Render `docs/`, convert each docx in P to PDF with LibreOffice, and run both readers over the 29 renders. Lengthen or move text until each figure passes, with the figure and its text on one page. Compare the `(W) wrapped:` lines with T1's.
 - [ ] T6: Update the crop in the final comment of `docs/images/make-images.R`, rerun its commands, and rewrite the README sentence before the image and the image's alt text.
 - [ ] T7: Render `docs/` with no R (AC5), and run `python3 tests/verify.py`.
 
@@ -61,6 +61,10 @@ The site's example pages and the README image show body text above a wrapped fig
 - 2026-10-28: started on branch m026-wrap-showcase; `tests/__pycache__/` is untracked and left unstaged.
 - 2026-10-28: T1 baseline: `quarto render docs` on `main` (Quarto 1.10.19, clean `docs/.quarto`) exits 0 with one `(W) wrapped:` line, "the figure #fig-callout is in a callout, so it does not wrap."
 - 2026-10-28: T1: added `tests/docs_layout.py` (pdftohtml line boxes of the LaTeX, Typst, and LibreOffice PDFs) and `straddle()` in `tests/layout.js`. On `main`'s image-figure page both fail: LaTeX and Word "paragraph above has 1 line; no later line below the figure", Typst and HTML "paragraph above has 1 line". LibreOffice's PDF loses "e" and "g" in pdftohtml, so markers match with those letters removed.
+- 2026-10-28: T5: the marker reader could not match LibreOffice's garbled text (letters lost and added, "figrst"), so `tests/docs_layout.py` now finds paragraphs by line spacing and font: body font lines are paragraphs, larger lines headings, others code. Markers stay for the HTML check only. On a `main` render in a temporary worktree it fails all 24 figure checks.
+- 2026-10-28: T2-T4: each page got a full-width paragraph before its figure and a straddle paragraph. Paragraph lengths were set by T5's reads: LaTeX wrapfig narrows one or two lines past the figure's bottom, so each straddle paragraph runs 3 or more lines past it. `code-cell.qmd`'s paragraph above was cut to 2 lines because the longer one pushed the figure to page 2 in LaTeX, where it waited and left no text beside it.
+- 2026-10-28: T3: `both-sides.qmd` got a `{{< pagebreak >}}` after its rule, because in Typst the second figure's paragraph above fell at the bottom of page 1 and the figure on page 2. Chosen over shortening the first group, which then failed to pass its figure's bottom in LaTeX.
+- 2026-10-28: T5: all 24 figure checks pass on the 21 PDF renders, and `straddle()` passes all 9 HTML figures at 1280x900 on the 8 pages. The full `quarto render docs` printed the same sorted `(W) wrapped:` line as on `main`. Figure lines, enclosing divs, and YAML headers match `main` on all 8 pages, and the four freeze `hash` values equal the md5 of `code-cell.qmd`.
 
 ## Decisions
 

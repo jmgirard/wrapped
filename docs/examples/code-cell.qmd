@@ -16,6 +16,10 @@ shows the cell with its options:
 
 ## Result
 
+The data are the `cars` data set that ships with R: the speed of each car
+and the distance that it took to stop. This paragraph comes before the
+cell, so it runs the full width of the text.
+
 ```{r}
 #| echo: fenced
 #| label: fig-cars
@@ -30,11 +34,15 @@ plot(cars, pch = 19, col = "#3b6ea8",
 figure, and the figure floats to the right of the paragraphs after the
 cell.
 
-The data are the `cars` data set that ships with R: the speed of each car
-and the distance that it took to stop. Faster cars took longer to stop.
-
-The site renders this page from results that Quarto saved when the cell
-last ran, so the site does not need R to build it.
+Faster cars took longer to stop. The figure has the same caption, number,
+and `@fig-` link as a figure written in markdown. The plot's size in R
+sets its shape, and `out-width` scales it to 40% of the text width. The
+site renders this page from results that Quarto
+saved when the cell last ran, so the site does not need R to build it.
+After the text passes the bottom of the figure, each line starts at the
+left edge of the text again and runs under the figure, as the end of this
+paragraph shows. Two columns or a table could not give this layout,
+because the text in them stays in its own column from top to bottom.
 
 ## Next
 
