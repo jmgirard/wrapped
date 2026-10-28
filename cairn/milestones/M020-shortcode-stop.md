@@ -89,18 +89,20 @@ spawned: diff-bug, blame-history, prior-review, ripple
 - diff-bug #3: the video and stopbox cases run the same predicate path — reject, planned change: both are criteria, and only stopbox fails an implementation that stops at a fixed block list.
 - diff-bug #4: only `kbd` of the eight joining names is tested — reject, planned change: one set lookup, accepted at the plan audit.
 - diff-bug #5: a shortcode whose name is not a string (`{{< {{< meta sc >}} >}}`) now stops — reject, planned change: unknown names stop by the user's plan choice.
-- diff-bug #6: DESIGN.md's "(corrected by the page-break hotfix, M020)" tag sits on the include sentence — fix now.
-- diff-bug #7: long unwrapped lines in DESIGN.md and README.md — fix now, with #6 (same lines).
-- blame-history #1: the stop-rule change has no D-entry, though D-003 and D-007 read "paragraph" and "stop rule" — fix now: new D-011.
+- diff-bug #6: DESIGN.md's "(corrected by the page-break hotfix, M020)" tag sits on the include sentence — fix now, fixed 5751ee7.
+- diff-bug #7: long unwrapped lines in DESIGN.md and README.md — fix now, with #6 (same lines), fixed 5751ee7.
+- blame-history #1: the stop-rule change has no D-entry, though D-003 and D-007 read "paragraph" and "stop rule" — fix now: new D-011, fixed 5751ee7.
 - blame-history #2: `find_shortcode` reads the custom id unguarded, so a nil id would crash — reject, false: Quarto's `create_custom_node_scaffold` (share/filters/main.lua:724-742) always sets `__quarto_custom_id`.
 - blame-history #3: an id missing from the table stops instead of joining — reject, planned change (unknown stops).
 - blame-history #4: block-valued `meta` joins — follow-up, existing row "Stop wraps at block meta values".
 - blame-history #5: the plan's rejected-alternative work-log line reads ambiguously — reject, style: history record, and the parked row states the promotion condition.
 - prior-review #1: block-valued `meta` joins although a list stops a wrap — follow-up, existing row "Stop wraps at block meta values".
-- prior-review #2: the README claim that a block-valued `meta` joins has no test — fix now: fixture case 6. The other untested claims it names are the eight-name set (one lookup, AC3) and DESIGN's embed sentence (a tracking record, from a scratch render) — rejected, planned change.
+- prior-review #2: the README claim that a block-valued `meta` joins has no test — fix now: fixture case 6, fixed 5751ee7 and a32e397 (HTML group `fig-sc-meta, p, ul, p`, Typst `p, list, p`). The other untested claims it names are the eight-name set (one lookup, AC3) and DESIGN's embed sentence (a tracking record, from a scratch render) — rejected, planned change.
 - prior-review #3: cases 2 and 5 have no LAYOUT check, so only the browser checked them — reject, false: the four snapshots record both cases' groups and figure kinds in every format.
 - ripple #1: the candidate row "Stop wraps at video and embed shortcodes" still reads open — reject, planned change: step 9 hygiene graduates it.
-- ripple #2: the comment above `group_blocks` names only "the first block that is not a paragraph" — fix now.
-- ripple #3: the next-block and `no_text` comments say "not a paragraph" — fix now.
-- ripple #4: README's lead sentence of "Where wrapping stops" reads as the full rule — fix now.
+- ripple #2: the comment above `group_blocks` names only "the first block that is not a paragraph" — fix now, fixed 5751ee7.
+- ripple #3: the next-block and `no_text` comments say "not a paragraph" — fix now, fixed 5751ee7.
+- ripple #4: README's lead sentence of "Where wrapping stops" reads as the full rule — fix now, fixed 5751ee7.
+
+Fix-now verify on a32e397 (macOS): "all 102 renders pass", 0 FAIL lines, "ok layout stop-shortcode video", "ok layout stop-rule case 12"; the only snapshot change is case 6's lines in the four `stop-shortcode` snapshots. Snapshot list at a32e397: the same four new files, called for by AC1-AC5 and the case-6 fix.
 - ripple #5: DESIGN.md says Quarto expands `{{< embed >}}` before the filter, with no fixture — reject, false: the 2026-10-28 scratch render put the embedded table after the wrap group (Scope Out).
