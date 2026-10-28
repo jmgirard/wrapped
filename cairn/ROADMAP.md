@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-28 (M020 review: "Stop wraps at video and embed shortcodes" graduated; M017 row pruned; rows "Stop wraps at block meta values" and "Stop wraps at shortcodes with comments" added; one lesson captured, M008 CI lesson evicted by rank; validate green)_
+_Last hygiene check: 2026-10-28 (M021 review: "Stop wraps at block meta values" and "Stop wraps at shortcodes with comments" graduated; M018 row pruned; two [low] rows added; one lesson captured, M004 wrapfig lesson evicted by rank; validate green)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-28 (M020 review: "Stop wraps at video and embed sho
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M021 | Stop wraps at more shortcode forms | review | — | normal | milestones/M021-shortcode-stop-forms.md |
-| M018 | Warn once per cell under a context | done | — | normal | milestones/archive/M018-cell-warn-once.md |
 | M019 | Wrap figures in Typst columns | done | — | normal | milestones/archive/M019-typst-columns.md |
 | M020 | Stop wraps at block shortcodes | done | — | normal | milestones/archive/M020-shortcode-stop.md |
+| M021 | Stop wraps at more shortcode forms | done | — | normal | milestones/archive/M021-shortcode-stop-forms.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -46,8 +45,6 @@ _Last hygiene check: 2026-10-28 (M020 review: "Stop wraps at video and embed sho
 - Check margins in slidy and other slides: Quarto's `renderDivColumn` skips every HTML slide format (slidy, s5, dzslides, slideous, revealjs), but the filter's slide rule keys on revealjs only, so on the others a `.column-margin` figure still warns "is in the margin". No render has checked where those formats put it, and the README claims revealjs only (M017 review, diff-bug #5) — added 2026-10-28 — milestones/archive/M017-slides-margin.md
 - List margin figures in the summaries: `typ_summary` in `tests/verify.py` splits the `.typ` at each `#figure(` and takes the first label in a chunk, but a margin figure is `#notefigure(`, so a body figure with no id followed by a margin cell figure took that cell's label (`figure: fig-meta-margin-two-1`) and the margin figure got no line. M018 moved its margin-meta cell above the no-id image to keep the line (M018 implement). `tex_summary` lists only `figure` and `wrappedfigure` environments, so a LaTeX margin figure gets no line either, and a check that such a figure keeps its normal layout rests on a missing line (M018 review, diff-bug #2, prior-review #3) — added 2026-10-28 — milestones/archive/M018-cell-warn-once.md
 - Name column widths in Typst comments: the Typst code comments in `wrapped.lua` (`typst_open`, `TYPST_HEADER`) say a percent is a share of the text width and that `layout` gives the text width; with `columns:` set both are the column width (README since M019). M019 kept `_extensions/wrapped/` unchanged (M019 review, ripple #4) — added 2026-10-28 — milestones/archive/M019-typst-columns.md
-- Stop wraps at block meta values: a paragraph that holds only `{{< meta key >}}` joins a wrap group (M020's joining set), but Quarto resolves it in block context and returns a block-valued key as is, so a list from metadata lands beside the figure (M020 claim audit, scratch render). The README says to put a `wrap-clear` div before it. The filter could read the key's value from the metadata and stop at a block value — added 2026-10-28 — milestones/archive/M020-shortcode-stop.md — started M021
-- Stop wraps at shortcodes with comments: the stop rule stops only at a paragraph that holds exactly one shortcode and nothing else, so `{{< video URL >}} <!-- note -->` or a shortcode in a span still joins the group, and in HTML the video sits beside the figure (M020 review, diff-bug #1, scratch render). `{{< pagebreak >}}` had the same gap before M020. Ignoring inline comments and spans around a lone shortcode would close it — added 2026-10-28 — milestones/archive/M020-shortcode-stop.md — started M021
 - [low] Use the HTML stylesheet for EPUB: EPUB is HTML-based, so the W1 stylesheet can apply there. Version 1 keeps a normal figure in EPUB (W5) — added 2026-10-24 — references/wrap-mechanisms.md
 - [low] Keep wraps past hidden shortcode spans: a lone video in a `.content-visible when-format="html"` span stops the wrap in every format under M021's one-span rule, but Quarto removes the span after shortcodes run in the other formats, so the text after it runs below the figure with nothing between (M021 review, diff-bug #1, scratch Typst render). Skipping such spans would join there but put an HTML video beside the figure — added 2026-10-28 — milestones/archive/M021-shortcode-stop-forms.md
 - [low] Read meta values that later filters set: the stop rule reads a lone `meta` key's value in the filter's Meta pass, but Quarto re-reads options after every pre-quarto filter, so a filter listed after `wrapped` that sets or changes the key makes the stop use the old value (M021 review, diff-bug #3). No render checks it — added 2026-10-28 — milestones/archive/M021-shortcode-stop-forms.md
