@@ -167,8 +167,8 @@ Markdown can read the stars as emphasis and drop them.
 
 The figure wraps the paragraphs that follow it. Wrapping stops at the first
 block that is not a paragraph, and that block starts below the figure. A
-paragraph that holds only a shortcode can also stop it, as the next
-paragraph says. Examples of blocks that are not paragraphs are a heading, a list, a table, a code block, a callout, another
+paragraph that shows only one shortcode can also stop it, as the next two
+paragraphs say. Examples of blocks that are not paragraphs are a heading, a list, a table, a code block, a callout, another
 figure, and a horizontal rule. An image with no caption and no wrap class
 counts as a paragraph.
 
@@ -188,9 +188,10 @@ exception.
 If a `{{< meta >}}` shortcode is alone in its paragraph and its value holds
 a block other than a paragraph, wrapping stops. Examples of such blocks are
 a list and a code block. A `meta` value of paragraphs only counts as
-paragraphs. With a comment, a span, or other text around it, Quarto renders
-a `meta` value as text, so the paragraph counts as a paragraph. Quarto expands `{{< include >}}` before
-the filter runs, so the included blocks follow these rules as written.
+paragraphs. With a comment or a span around it, Quarto renders a `meta`
+value as text, so the paragraph counts as a paragraph. Quarto expands
+`{{< include >}}` before the filter runs, so the included blocks follow
+these rules as written.
 
 To stop wrapping earlier, put an empty `wrap-clear` div after the last
 paragraph that you want beside the figure:
@@ -203,8 +204,8 @@ paragraph that you want beside the figure:
 A wrapped figure with no paragraph right after it keeps its normal layout.
 An example is a figure right before a heading. Another is a figure right
 before a paragraph that stops wrapping under the rules above. An example of
-such a paragraph holds only a `{{< video >}}` and a comment. In HTML, LaTeX, Typst, and
-Word the render prints no warning for such a figure. The places in the
+such a paragraph holds only a `{{< video >}}` and a comment. In HTML,
+LaTeX, Typst, and Word the render prints no warning for such a figure. The places in the
 lists of the next section are the exception: a figure there prints its
 warning with or without a paragraph after it. Of two wrapped figures in a
 row, the first keeps its normal layout, and the second wraps the paragraphs

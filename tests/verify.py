@@ -622,7 +622,7 @@ def meta_paragraphs_case(boxes, edges, lh):
 
 
 def stop_shortcode_cases():
-    """A paragraph that holds only a video shortcode, which is a URL line in
+    """A paragraph that shows only a video shortcode, which is a URL line in
     LaTeX, stops the wrap, also with comments around it or in a span, and so
     does a lone meta shortcode whose value is a list; a meta value of
     paragraphs joins instead."""

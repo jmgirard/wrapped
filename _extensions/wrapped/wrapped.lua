@@ -1588,7 +1588,7 @@ local function find_shortcode(shortcode)
 end
 
 -- Quarto's shortcodes that usually make text, an image, or paragraphs, which
--- join a group when they are alone in a paragraph. A lone meta shortcode
+-- join a group when the paragraph shows nothing else. A lone meta shortcode
 -- whose value holds another block, such as a list, stops (block_meta).
 local JOINING_SHORTCODES = {
   meta = true, var = true, env = true, kbd = true, lipsum = true,
