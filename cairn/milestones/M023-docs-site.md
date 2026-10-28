@@ -126,7 +126,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - [x] T4: Write the page on where a figure keeps its normal layout, with the
       README's "Notes" placed on their topic pages. Show at least one
       fallback case live, with its warning text.
-- [ ] T5: Write the format pages: HTML with slides and dashboards, PDF
+- [x] T5: Write the format pages: HTML with slides and dashboards, PDF
       through LaTeX, PDF through Typst, and Word.
 - [ ] T6: Build the gallery: `docs/examples/index.qmd`, the example pages in
       four formats (image, div, uncaptioned image, code cell with
@@ -177,6 +177,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: T3 done: width-gap, defaults, and stopping pages carry README sections "Width and gap", "Document defaults", and "Where wrapping stops", plus the Notes item on values that are not lengths. Shortcodes in prose are escaped as `{{{< >}}}`. The defaults page sets `wrapped: width: 25%, gap: 30px` in its own YAML, and its figure measured 186px (25% of the 744px demo column) with a 30px margin; the list and `wrap-clear` demos start below their figures.
 - 2026-10-28: implement chose to edit tracking files with Edit from here on; the T2 tick went in through a python script, against the rulebook's file-edit rule.
 - 2026-10-28: T4 done: normal-layout page carries README "Where a figure keeps its normal layout" and the Notes items (no-id images, linked images, right-to-left sides, long captions, margin content; the non-length item went to width-gap). A live callout fallback shows the warning text copied from the render, `(W) wrapped: the figure #fig-callout is in a callout, so it does not wrap.`; it is the one warning in the full site render. The filter's warnings start with `(W)`, so a grep for "warn" misses them.
+- 2026-10-28: T5 done: format pages for HTML (with the README's "Slides" and "Dashboards" sections), PDF through LaTeX, PDF through Typst, and Word carry the README's format sections under task headings; the HTML page adds a short lead that links to the breakpoint, CSS functions, and normal-layout pages. The site render still prints only the callout warning.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

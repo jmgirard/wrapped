@@ -2,4 +2,68 @@
 title: "HTML, slides, and dashboards"
 ---
 
-This page is a stub.
+## HTML pages
+
+In HTML, a wrapped figure floats to its side, and the paragraphs after it
+flow beside it. In a window as wide as the
+[breakpoint](../defaults.qmd#breakpoint) or narrower, figures stop floating
+and take the full width of the text column. A width or gap can be a CSS
+length, a percent, or a [CSS function](../width-gap.qmd#css-functions-in-html).
+
+A figure in the margin, a figure with its caption in the margin, and a
+figure in a page-wide column keep their normal layout in HTML. [Where a
+figure keeps its normal layout](../normal-layout.qmd) gives the full list.
+
+## Slides
+
+In revealjs slides, a wrapped figure floats beside the paragraphs after it
+on the same slide, as on an HTML page:
+
+```markdown
+## Results
+
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width="40%"}
+
+Ratings rose in both conditions.
+```
+
+Slides have no margin column, no margin captions, and no page-wide
+columns. A figure with a margin caption or a page-wide class still wraps on
+a slide. A margin setting does not stop a figure from wrapping on a slide
+either: a `.column-margin` or `.fig-column-margin` class, a `.column-margin`
+div, a code cell with `#| column: margin` or `#| fig-column: margin`, or
+`fig-column: margin` or `column: margin` in the document metadata.
+
+By default, revealjs puts an `.aside` div at the foot of the slide. A
+figure in an aside div does not wrap. It keeps its normal layout, and the
+render prints one warning for it.
+
+## Dashboards
+
+In a dashboard (`format: dashboard`), a wrapped figure in a `.card` div
+floats beside the paragraphs after it in that card. So does an image in
+the card that Quarto makes for the text of a row or a column.
+Code cell figures are tested with knitr cells that make one plot.
+
+In a row or a column, Quarto makes a code cell outside a `.card` div into
+a card of its own. The paragraphs after the cell are then in another
+card. So a figure from any code cell outside a `.card` div keeps its
+normal layout. The render prints one warning for it, or one for a cell
+that makes more than one figure. To wrap the figure, put the cell and its
+paragraphs in a `.card` div:
+
+````markdown
+::: {.card title="Ratings"}
+```{r}
+#| label: fig-ratings
+#| fig-cap: "Mean ratings by condition."
+#| classes: wrap-right
+#| out-width: "40%"
+plot(1:10)
+```
+
+Ratings rose in both conditions.
+:::
+````
+
+Sidebars, tabsets, value boxes, and card toolbars are not tested.
