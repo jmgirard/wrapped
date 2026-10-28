@@ -27,10 +27,11 @@ also prints a warning in Word (see [Word](formats/word.qmd)).
 This figure is 3 inches wide, and a gap of `2em` separates it from this
 text, twice the default gap.
 
-The width and the gap convert to each format's own units. The
-pages for [PDF through LaTeX](formats/latex.qmd#width-and-gap),
-[PDF through Typst](formats/typst.qmd#width-and-gap), and
-[Word](formats/word.qmd#width-and-gap) give the rules for each one.
+HTML uses the width and the gap as written. PDF through LaTeX, PDF
+through Typst, and Word convert them to their own units, as the pages for
+[LaTeX](formats/latex.qmd#width-and-gap),
+[Typst](formats/typst.qmd#width-and-gap), and
+[Word](formats/word.qmd#width-and-gap) state.
 :::
 
 A `fig-align` attribute does not move the box. The class sets the side.
