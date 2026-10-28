@@ -4,6 +4,9 @@ filters:
   - wrapped
 shortcodes:
   - stop-shortcode.lua
+stoplist: |
+  - First item from the metadata
+  - Second item from the metadata
 format:
   html: default
   pdf:
@@ -82,3 +85,17 @@ A short paragraph beside the include case.
 {{< video https://www.youtube.com/embed/wo9vZccmqwc >}}
 
 Text after the second video.
+
+```{=latex}
+\clearpage
+```
+
+## Case 6: a meta value that is a block
+
+![Shortcode case 6.](plot.png){#fig-sc-meta .wrap-left width="35%"}
+
+A short paragraph beside the meta case.
+
+{{< meta stoplist >}}
+
+Text after the meta list.

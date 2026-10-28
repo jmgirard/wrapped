@@ -139,3 +139,19 @@ user chose this at the plan's question set over D-003's rule and over
 stacking the figures on one side. One rule holds in all four formats, and
 LaTeX's wrapfig and a Word frame each hold one figure, so a stack would
 need its own fallback there.
+
+### D-011: A paragraph with a lone shortcode stops a wrap unless the shortcode is one of eight that join (annotates D-003, D-007)
+
+2026-10-28, plan of M020. A paragraph that holds exactly one shortcode and
+nothing else ends a wrap group in every format, unless the shortcode is
+one of eight Quarto shortcodes that usually make text, an image, or
+paragraphs: `meta`, `var`, `env`, `kbd`, `lipsum`, `placeholder`,
+`version`, and `brand`. Such a paragraph is one of the blocks the stop rule
+names for D-007, and it is not a paragraph for D-003's next-block rule.
+The user chose at the plan's question set to stop at every shortcode that
+is not known to join, over stopping only at known block shortcodes
+(`pagebreak`, `video`, `contents`). The filter runs before shortcodes
+render, so it cannot see what an unknown shortcode makes. A block beside a
+float can overlap the figure, while an early stop only leaves space. The
+user also chose that a `video` stops the wrap in every format, though it is
+a block only in HTML, so the stop rule stays the same in all formats.

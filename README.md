@@ -166,8 +166,9 @@ Markdown can read the stars as emphasis and drop them.
 ## Where wrapping stops
 
 The figure wraps the paragraphs that follow it. Wrapping stops at the first
-block that is not a paragraph, and that block starts below the figure.
-Examples are a heading, a list, a table, a code block, a callout, another
+block that is not a paragraph, and that block starts below the figure. A
+paragraph that holds only a shortcode can also stop it, as the next
+paragraph says. Examples of blocks that are not paragraphs are a heading, a list, a table, a code block, a callout, another
 figure, and a horizontal rule. An image with no caption and no wrap class
 counts as a paragraph.
 
@@ -180,9 +181,8 @@ usually make text, an image, or paragraphs, so a paragraph with one of them
 counts as a paragraph: `meta`, `var`, `env`, `kbd`, `lipsum`,
 `placeholder`, `version`, and `brand`. A `meta` shortcode whose value is a
 block, such as a list, also counts as a paragraph, so put a `wrap-clear`
-div before it. Quarto expands `{{< include >}}`
-before the filter runs, so the included blocks follow these rules as
-written.
+div before it. Quarto expands `{{< include >}}` before the filter runs, so
+the included blocks follow these rules as written.
 
 To stop wrapping earlier, put an empty `wrap-clear` div after the last
 paragraph that you want beside the figure:

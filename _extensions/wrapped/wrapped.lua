@@ -886,8 +886,8 @@ local function count_top_floats(div)
   return n
 end
 
--- Custom ids of floats whose next block is not a paragraph, from the
--- next-block pass.
+-- Custom ids of floats whose next block is not a paragraph that joins a
+-- group, from the next-block pass.
 local no_text = {}
 
 -- Why a float keeps its normal layout, as "is in a list", by the float's
@@ -1601,7 +1601,8 @@ local function text_follows(blocks, i)
 end
 
 -- The next-block rule. A wrapped figure whose next block is not a
--- paragraph has no text to wrap, so it keeps a normal figure with no
+-- paragraph that joins a group, such as a heading or a lone block
+-- shortcode, has no text to wrap, so it keeps a normal figure with no
 -- warning. A float or a code cell has its floats recorded for the float
 -- pass. A captioned image with no id, or an image with no caption, loses
 -- its wrap class here. Runs before the float pass, on the blocks as written.
@@ -1702,7 +1703,9 @@ local function docx_group(members)
 end
 
 -- Groups each wrapped figure with the paragraphs after it. The group stops
--- at the first block that is not a paragraph (the stop rule). The group's
+-- at the first block that does not join it: a block that is not a
+-- paragraph, or a paragraph with a lone block shortcode (the stop rule,
+-- `joins_group`). The group's
 -- CSS contains its float, so the stop block starts below the figure. In
 -- Typst the group is a wrap-content call instead, and in LaTeX the group's
 -- blocks are followed by \wrappedstop.

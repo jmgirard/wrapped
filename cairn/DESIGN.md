@@ -91,12 +91,13 @@ the first block that is not a paragraph: a heading, list, figure, table, code
 block, callout, or horizontal rule. A paragraph that holds exactly one
 shortcode and nothing else also stops it, such as `{{< pagebreak >}}` or
 `{{< video >}}`, because at `pre-quarto` the shortcode is not yet rendered
-and can make a block. Eight shortcodes that usually make text, an image,
-or paragraphs join instead (a `meta` value that is a block joins too): `meta`, `var`, `env`, `kbd`, `lipsum`,
-`placeholder`, `version`, and `brand`. Quarto expands `{{< include >}}`
-and `{{< embed >}}` before the filter runs, so their blocks follow the rule
-as written (corrected by the page-break hotfix, M020). An empty `::: {.wrap-clear}` div stops it
-earlier. HTML, LaTeX, Typst, and Word enforce the rule. In LaTeX a
+and can make a block (corrected by the page-break hotfix, M020, D-011).
+Eight shortcodes that usually make text, an image, or paragraphs join
+instead (a `meta` value that is a block joins too): `meta`, `var`, `env`,
+`kbd`, `lipsum`, `placeholder`, `version`, and `brand`. Quarto expands
+`{{< include >}}` and `{{< embed >}}` before the filter runs, so their
+blocks follow the rule as written. An empty `::: {.wrap-clear}` div stops
+it earlier. HTML, LaTeX, Typst, and Word enforce the rule. In LaTeX a
 `\wrappedstop` after the group skips the lines the figure's height still
 needs, and puts out a figure that moved and still waits, centered with no
 text beside it (corrected M007).
@@ -104,8 +105,9 @@ text beside it (corrected M007).
 Next-block rule (D-003): a wrapped figure whose next block is not a
 paragraph has no text to wrap, so it keeps a normal figure with no warning.
 A paragraph that stops wrapping under the stop rule, such as a lone
-`{{< video >}}`, does not count as a paragraph here (M020). Of two wrapped figures in a row, the first keeps a normal figure and the
-second wraps. The figures of one code cell are the exception: a wrapped
+`{{< video >}}`, does not count as a paragraph here (M020, D-011). Of two
+wrapped figures in a row, the first keeps a normal figure and the second
+wraps. The figures of one code cell are the exception: a wrapped
 cell that makes more than one figure without `fig-subcap` keeps all of them
 normal, with one warning for the cell (D-010, M014). That warning names
 the cell's context as its reason, and a cell in no context with no
