@@ -1,0 +1,11 @@
+# warnings
+# tex
+wrappedfigure: fig-sc-video [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-sc-box [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-sc-kbd [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-sc-include [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+figure: fig-sc-next [-] image=[width=0.35\linewidth,height=\textheight,keepaspectratio]

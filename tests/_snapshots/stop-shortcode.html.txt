@@ -1,0 +1,20 @@
+# warnings
+# breakpoint
+576px
+# figures
+fig-sc-video: wrap-right style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-box: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-kbd: wrap-right style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-include: wrap-left style=--wrap-gap: 1em; --wrap-width: 35%
+fig-sc-next: - style=-
+# images
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=- width=-
+plot.png: wrap=- style=width:35.0% width=-
+# groups
+fig-sc-video, p
+fig-sc-box, p
+fig-sc-kbd, p, p, p
+fig-sc-include, p, p, p
