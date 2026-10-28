@@ -1,5 +1,57 @@
 ---
 title: "Document defaults"
+wrapped:
+  width: 25%
+  gap: 30px
 ---
 
-This page is a stub.
+The `wrapped` key in the YAML header sets the defaults for a document. A
+figure's own `width` or `wrap-gap` attribute comes first.
+
+```yaml
+wrapped:
+  width: 25%
+  gap: 30px
+  breakpoint: 800px
+```
+
+This page sets `width: 25%` and `gap: 30px` in its own YAML header. The
+figure below sets neither, so it takes both:
+
+```markdown
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right}
+```
+
+::: demo
+![Mean ratings by condition.](images/ratings.png){#fig-ratings .wrap-right}
+
+@fig-ratings takes the page's default width of 25%, not the built-in 40%,
+and a gap of 30 pixels.
+
+A figure on this page that sets its own `width` keeps that width, and the
+page's gap still applies to it.
+:::
+
+## Breakpoint
+
+In a window as wide as `breakpoint` or narrower, figures stop floating and
+take the full width of the text column. The default breakpoint is `576px`.
+
+## Rules for the keys
+
+The keys follow the rules of the attributes. A `width` of zero prints a
+warning, and the built-in 40% applies. A `gap` or `breakpoint` of zero stays
+as it is. A function `gap` that is negative or not finite at every size
+prints a warning, and the built-in `1em` applies. In Word, a `gap` of 0%
+prints a warning, and the built-in `1em` applies. In Word, a `width` that
+with the `gap` is as wide as the text or wider prints a warning, and the
+built-in 40% applies. With only a `gap` set, the width is already 40%, and
+40% plus that gap can leave no room with no warning. A `width`, `gap`, or
+`breakpoint` can be a `calc()`, `min()`, `max()`, or `clamp()` value,
+checked as on [Width and gap](width-gap.qmd#css-functions-in-html). A media
+query takes no percent and no `var()`. So a `breakpoint` with a percent or
+a `var()`, such as `calc(50%)`, prints a warning, and `576px` applies.
+
+Quarto reads the YAML values as Markdown. In a function value, put a space
+on each side of `*` and `/`, as in `calc(2 * 1em)`. Without the spaces,
+Markdown can read the stars as emphasis and drop them.

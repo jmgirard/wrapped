@@ -120,7 +120,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - [x] T2: Write the home page (what the filter does, which formats wrap,
       install, one live wrapped figure) and the getting-started page (the
       README's "Install" and "Wrap a figure" sections, each form shown live).
-- [ ] T3: Write the pages for width and gap (the CSS function check last,
+- [x] T3: Write the pages for width and gap (the CSS function check last,
       under its own heading), document defaults, and where wrapping stops,
       each with live examples of the common case.
 - [ ] T4: Write the page on where a figure keeps its normal layout, with the
@@ -174,6 +174,8 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: implement started on m023-docs-site, cut from main at b7e62a3.
 - 2026-10-28: T1 done: `docs/` website with navbar and docked sidebar, stub pages, `freeze: auto`, `_extensions` symlink, and three images from `docs/images/make-images.R` (ragg, 144 dpi). `quarto render docs` exits 0; `tests/verify.py` lists its fixtures by name, so it does not read `docs/`; `quarto add` on `git archive` zips of the branch and of main installs the same 13 paths. A stray `git stash -u` moved the uncommitted work off disk for one command; `git stash pop` restored it.
 - 2026-10-28: T2 done: home page (what the filter does, formats, a live wrapped figure, install) and get-started page (Install and Wrap a figure, each form shown as source then as a live `.demo` result framed by `docs/styles.css`). The code-cell form runs once with `echo: fenced` and is frozen in `docs/_freeze/get-started/`. In the browser at 1280x900 all four figures float (fig-ratings, fig-groups, the badge image, fig-scatter).
+- 2026-10-28: T3 done: width-gap, defaults, and stopping pages carry README sections "Width and gap", "Document defaults", and "Where wrapping stops", plus the Notes item on values that are not lengths. Shortcodes in prose are escaped as `{{{< >}}}`. The defaults page sets `wrapped: width: 25%, gap: 30px` in its own YAML, and its figure measured 186px (25% of the 744px demo column) with a 30px margin; the list and `wrap-clear` demos start below their figures.
+- 2026-10-28: implement chose to edit tracking files with Edit from here on; the T2 tick went in through a python script, against the rulebook's file-edit rule.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
