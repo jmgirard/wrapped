@@ -211,6 +211,8 @@ file or says that the figure has no id.
   `#fig-` id and every code cell figure, even a cell with
   `#| fig-column: body`. In PDF, the order after this list decides. It
   does not apply to a captioned image with no id, which stays in the body.
+  Slides have no margin column, so on a slide only the aside div keeps
+  the figure normal (see "Slides").
 - A subfigure panel, such as a figure div with `layout-ncol`, or a
   subfigure inside a panel.
 - A panel layout: a div or a code cell with `layout-ncol`, `layout-nrow`,
@@ -304,8 +306,16 @@ on the same slide, as on an HTML page:
 Ratings rose in both conditions.
 ```
 
-Slides have no margin captions and no page-wide columns, so a figure with
-a margin caption or a page-wide class still wraps on a slide.
+Slides have no margin column, no margin captions, and no page-wide
+columns. A figure with a margin caption or a page-wide class still wraps on
+a slide. A margin setting does not stop a figure from wrapping on a slide
+either: a `.column-margin` or `.fig-column-margin` class, a `.column-margin`
+div, a code cell with `#| column: margin` or `#| fig-column: margin`, or
+`fig-column: margin` or `column: margin` in the document metadata.
+
+By default, revealjs puts an `.aside` div at the foot of the slide. A
+figure in an aside div does not wrap. It keeps its normal layout, and the
+render prints one warning for it.
 
 ## PDF through LaTeX
 

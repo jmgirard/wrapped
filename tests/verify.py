@@ -166,6 +166,8 @@ RENDERS = [
     ("zero-width", "typst", True),
     ("book", "html", True),
     ("revealjs", "revealjs", True),
+    ("revealjs-margin-meta", "revealjs", True),
+    ("revealjs-column-margin", "revealjs", True),
     ("margin", "html", False),
     ("stop-rule", "html", False),
     ("rtl", "html", False),

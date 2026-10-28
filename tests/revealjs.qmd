@@ -30,3 +30,67 @@ The paragraph after the figure sits beside it, because slides have no margin cap
 ![A figure with the margin-caption class on a slide.](plot.png){#fig-slide-margincap .wrap-right width="40%" .margin-caption}
 
 The paragraph after the figure sits beside it, because slides have no margin captions. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A column-margin class on a slide
+
+![A figure with the column-margin class on a slide.](plot.png){#fig-slide-margin .wrap-right width="40%" .column-margin}
+
+The paragraph after the figure sits beside it, because slides have no margin column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A fig-column-margin class on a slide
+
+![A figure with the fig-column-margin class on a slide.](plot.png){#fig-slide-figmargin .wrap-right width="40%" .fig-column-margin}
+
+The paragraph after the figure sits beside it, because slides have no margin column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A column-margin div on a slide
+
+::: {.column-margin}
+![A figure in a column-margin div on a slide.](plot.png){#fig-slide-margin-div .wrap-right width="40%"}
+
+The paragraph after the figure sits beside it, because slides have no margin column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+
+## A margin cell on a slide
+
+```{r}
+#| label: fig-slide-margin-cell
+#| fig-cap: "A cell figure with column margin on a slide."
+#| column: margin
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the cell sits beside its figure, because slides have no margin column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## A fig-column margin cell on a slide
+
+```{r}
+#| label: fig-slide-figmargin-cell
+#| fig-cap: "A cell figure with fig-column margin on a slide."
+#| fig-column: margin
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the cell sits beside its figure, because slides have no margin column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## An aside on a slide
+
+::: {.aside}
+![A figure in an aside on a slide.](plot.png){#fig-slide-aside .wrap-right width="40%"}
+
+The paragraph after the figure. By default, revealjs puts an aside at the foot of the slide, so the figure keeps its normal layout.
+:::
+
+## A captioned image with no id and a margin class on a slide
+
+![A captioned image with no id and the column-margin class on a slide.](plot.png){.wrap-left width="30%" .column-margin}
+
+The paragraph after the captioned image sits beside it, because slides have no margin column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## An image with a margin class on a slide
+
+![](plot.png){.wrap-right width="30%" .column-margin}
+
+The paragraph after the image sits beside it, because slides have no margin column. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
