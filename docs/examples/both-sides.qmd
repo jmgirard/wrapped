@@ -46,7 +46,13 @@ paragraph, not as two columns.
 
 * * *
 
+<!-- Keeps the second figure and its text on one page in Typst and Word. In
+LaTeX the rule already starts page 2, so a break there would leave a page
+with only the rule. -->
+
+::: {.content-hidden when-format="pdf"}
 {{< pagebreak >}}
+:::
 
 The second figure comes after the rule. This paragraph comes before it,
 so, like the first paragraph of this section, it runs the full width of

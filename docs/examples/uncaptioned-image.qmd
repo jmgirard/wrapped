@@ -31,8 +31,8 @@ the line. A small image like this one suits a logo or an icon at the start
 of a section. The image has no number, so the text cannot point to it
 with a `@fig-` link. The `width` attribute sets only the width, and the
 height follows from the image's shape, so this square image is as tall as
-it is wide. Because the image is short, the text passes its bottom after
-a few lines. From there on, each line runs the full width of the text,
+it is wide. Because the image is short, the text passes its bottom before
+the end of this paragraph. From there on, each line runs the full width of the text,
 under the image. In HTML and Word, the `fig-alt` attribute gives the image
 its alt text, which a screen reader reads in place of the image. In a PDF,
 alt text needs a tagged PDF (see the format pages).

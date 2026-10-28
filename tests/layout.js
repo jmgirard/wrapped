@@ -172,8 +172,8 @@ function paragraphLines(p) {
 }
 
 // The docs pages' check that tests/docs_layout.py runs on the PDFs, which
-// prints the `cases` for each page (`--js`). Each case names the first and
-// last word of the paragraph before a wrapped figure (`above`) and of the
+// prints the `cases` for each page (`--js`). Each case lists words that
+// appear in the paragraph before a wrapped figure (`above`) and in the
 // paragraph that runs beside and below it (`straddle`), in figure order.
 export function straddle(cases) {
   const figs = wrapped();

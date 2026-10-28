@@ -1,6 +1,6 @@
 # M026: Show text wrapping past the figure in examples
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -43,7 +43,7 @@ The site's example pages and the README image show body text above a wrapped fig
 - [x] T4: Do the same for `code-cell.qmd` (the paragraph goes before the cell) and the `.demo` div of `docs/index.qmd`. Render `docs/` locally with R so that `docs/_freeze/examples/code-cell/` matches the new page.
 - [x] T5: Render `docs/`, convert each docx in P to PDF with LibreOffice, and run both readers over the 29 renders. Lengthen or move text until each figure passes, with the figure and its text on one page. Compare the `(W) wrapped:` lines with T1's.
 - [x] T6: Update the crop in the final comment of `docs/images/make-images.R`, rerun its commands, and rewrite the README sentence before the image and the image's alt text.
-- [ ] T7: Render `docs/` with no R (AC5), and run `python3 tests/verify.py`.
+- [x] T7: Render `docs/` with no R (AC5), and run `python3 tests/verify.py`.
 
 ## Work log
 
@@ -66,6 +66,10 @@ The site's example pages and the README image show body text above a wrapped fig
 - 2026-10-28: T3: `both-sides.qmd` got a `{{< pagebreak >}}` after its rule, because in Typst the second figure's paragraph above fell at the bottom of page 1 and the figure on page 2. Chosen over shortening the first group, which then failed to pass its figure's bottom in LaTeX.
 - 2026-10-28: T5: all 24 figure checks pass on the 21 PDF renders, and `straddle()` passes all 9 HTML figures at 1280x900 on the 8 pages. The full `quarto render docs` printed the same sorted `(W) wrapped:` line as on `main`. Figure lines, enclosing divs, and YAML headers match `main` on all 8 pages, and the four freeze `hash` values equal the md5 of `code-cell.qmd`.
 - 2026-10-28: T6: the crop in `docs/images/make-images.R` is now `-H 690`, and `readme-example.png` is 940x690 with the paragraph above, the two paragraphs beside, and the lines under the chart. README's sentence and alt text name the three parts.
+- 2026-10-28: T7: `python3 tests/verify.py` passes, all 103 renders.
+- 2026-10-28: claim audit: 105 claims read, 6 corrected — tests/layout.js, tests/docs_layout.py, docs/examples/width-gap.qmd, README.md, docs/examples/uncaptioned-image.qmd, docs/examples/both-sides.qmd. The `straddle()` comment named first and last words; the body font is counted over the PDF; HTML keeps width and gap as written; the README sentence named the wrong paragraph; "a few lines" was 7 to 9; the page break left a LaTeX page with only the rule.
+- 2026-10-28: both-sides fix: the page break moved into `::: {.content-hidden when-format="pdf"}`, so LaTeX has 2 pages with the rule at the top of page 2. Without any break, Typst and Word split the second figure from its text. This div is a second `::: {` line in AC2's grep, but it encloses no figure.
+- 2026-10-28: T7: after the fixes, `quarto render docs` from a clean `docs/.quarto` with no `Rscript` on `PATH` and `QUARTO_R`/`R_HOME` unset exits 0 with the same sorted `(W) wrapped:` line as `main`. `tests/docs_layout.py` passes 24 of 24, `straddle()` passes 9 of 9 at 1280x900, and the four freeze hashes equal md5 08a5ee68… of `code-cell.qmd`.
 
 ## Decisions
 

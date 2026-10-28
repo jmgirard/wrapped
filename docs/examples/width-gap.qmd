@@ -31,7 +31,8 @@ the [breakpoint](../defaults.qmd#breakpoint) or narrower is the exception:
 there the figure takes the full width of the text column.
 
 The gap between the figure and this text is `2em`, twice the default of
-`1em`. Each format converts both values to its own units. A percent width,
+`1em`. LaTeX, Typst, and Word convert both values to their own units, and
+HTML uses them as written. A percent width,
 such as the default 40%, is a share of the text width instead. Use a
 percent when the same document renders to pages of different widths, and
 an absolute length when the figure must keep its size on every page. After

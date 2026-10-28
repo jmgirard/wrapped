@@ -22,7 +22,7 @@ image and its last caption line.
 
 The PDF checks find paragraphs by line spacing, not by their words, since
 pdftohtml reads a LibreOffice PDF's text with letters lost and added. A
-line in the page's most common font is body text. A line with none of it
+line in the PDF's most common font, counted by characters, is body text. A line with none of it
 is a heading (larger) or code (not larger), and either ends a paragraph.
 
 `python3 tests/docs_layout.py --js` prints the call that runs the HTML check
