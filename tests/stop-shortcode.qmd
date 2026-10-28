@@ -136,7 +136,8 @@ Full width text after the commented video. Lorem ipsum dolor sit amet, consectet
 
 A short paragraph beside the span case.
 
-[<!-- a note in the span --> {{< video https://www.youtube.com/embed/wo9vZccmqwc >}}]{.video-span}
+[<!-- a note in the span --> {{< video https://www.youtube.com/embed/wo9vZccmqwc >}}
+<!-- a note after the video in the span -->]{.video-span} <!-- a note after the span -->
 
 Full width text after the video in a span. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
