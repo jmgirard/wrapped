@@ -133,7 +133,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
       `freeze`, left and right sides, width and gap, document defaults,
       `wrap-clear`), `slides.qmd`, and `dashboard.qmd`. Commit
       `docs/_freeze/`.
-- [ ] T7: Write `docs/reference.qmd` with the nine-row table and links to
+- [x] T7: Write `docs/reference.qmd` with the nine-row table and links to
       the topic pages.
 - [ ] T8: Add `.github/workflows/docs.yml`: checkout, Quarto release with
       TinyTeX through `quarto-dev/quarto-actions/setup`, and
@@ -180,6 +180,7 @@ A Quarto website in `docs/` carries all of the documentation as topic pages, wit
 - 2026-10-28: T5 done: format pages for HTML (with the README's "Slides" and "Dashboards" sections), PDF through LaTeX, PDF through Typst, and Word carry the README's format sections under task headings; the HTML page adds a short lead that links to the breakpoint, CSS functions, and normal-layout pages. The site render still prints only the callout warning.
 - 2026-10-28: T6 done: gallery `docs/examples/` with a table listing and ten pages (image, div, uncaptioned image, knitr code cell with `fig-format: png`, both sides, width and gap, document defaults, `wrap-clear`, slides, dashboard). The eight example pages render to HTML, LaTeX PDF, Typst PDF (`<name>-typst.pdf`), and docx; `docs/_freeze/examples/code-cell/` holds all four formats' results. In the browser at 1280x900, `tests/layout.js` (copied into `docs/_site/` to serve it same-origin) reports each of the 11 gallery figures with `float` on its side; the slides page's one group check is false because the block after the group is on a hidden slide, and a look at the slide shows the text beside the figure.
 - 2026-10-28: found and fixed: knitr ran the ```` ```{r} ```` cell inside a four-backtick `markdown` fence on `formats/html.qmd`, so the page showed knitr's output; the fence now writes ```` ```{{r}} ````, which knitr prints as `{r}`, and the stray `docs/_freeze/formats/` is gone.
+- 2026-10-28: T7 done: `docs/reference.qmd` has two tables, six rows for classes and attributes and three for `wrapped:` keys, each with values, default, and formats, linked to its topic page. A script over the 22 rendered pages found every internal link and anchor in `<main>` resolves.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
