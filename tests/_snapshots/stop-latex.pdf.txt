@@ -20,5 +20,19 @@ wrappedfigure: fig-lines-plain [side=right,width=0.35\linewidth,gap=1em] image=[
 wrappedstop
 wrappedfigure: fig-lines-extra [side=right,width=0.35\linewidth,gap=1em,lines=25] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+wrappedfigure: fig-small-a [side=right,width=0.35\linewidth,gap=1em,lines=4] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: - [side=left,width=0.4\linewidth,gap=1em,lines=3,caption=false] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-small-c [side=right,width=0.35\linewidth,gap=1em,lines=5] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-small-c-next [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-small-d [side=right,width=0.35\linewidth,gap=1em,lines=3] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-small-e [side=right,width=0.35\linewidth,gap=1em,lines=3] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-small-f [side=right,width=0.35\linewidth,gap=1em,lines=3] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
 wrappedfigure: fig-page-bottom [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
