@@ -1,63 +1,45 @@
 [
   {
-    "objectID": "stopping.html",
-    "href": "stopping.html",
-    "title": "Where wrapping stops",
+    "objectID": "examples/code-cell.html",
+    "href": "examples/code-cell.html",
+    "title": "A figure from a code cell",
     "section": "",
-    "text": "The figure wraps the paragraphs that follow it. Wrapping stops at the first block that is not a paragraph, and that block starts below the figure. Examples of blocks that are not paragraphs are a heading, a list, a table, a code block, a callout, another figure, and a horizontal rule.\nAn image with no caption and no wrap class counts as a paragraph. Quarto expands {{&lt; include &gt;}} before the filter runs, so the included blocks follow these rules as written.",
-    "crumbs": [
-      "Get started",
-      "Guide",
-      "Where wrapping stops"
-    ]
+    "text": "A code cell makes a figure when it has a fig- label and a fig-cap. The class goes in #| classes:, and the width in #| out-width:. This page shows the cell with its options:"
   },
   {
-    "objectID": "stopping.html#stop-wrapping-earlier",
-    "href": "stopping.html#stop-wrapping-earlier",
-    "title": "Where wrapping stops",
-    "section": "Stop wrapping earlier",
-    "text": "Stop wrapping earlier\nTo stop wrapping earlier, put an empty wrap-clear div after the last paragraph that you want beside the figure:\n::: {.wrap-clear}\n:::\n\n\n\n\n\n\n\n\nFigure 2: Mean ratings by condition.\n\n\n\nOnly this paragraph sits beside Figure 2.\n\n\n\n\nAn empty wrap-clear div comes before this paragraph, so it starts below the figure.\n\nIn PDF through LaTeX, in PDF through Typst, and in Word, wrapping stops as in HTML, and a wrap-clear div works.",
-    "crumbs": [
-      "Get started",
-      "Guide",
-      "Where wrapping stops"
-    ]
+    "objectID": "examples/code-cell.html#result",
+    "href": "examples/code-cell.html#result",
+    "title": "A figure from a code cell",
+    "section": "Result",
+    "text": "Result\n\n\n```{r}\n#| label: fig-cars\n#| fig-cap: \"Stopping distance by speed.\"\n#| classes: wrap-right\n#| out-width: \"40%\"\nplot(cars, pch = 19, col = \"#3b6ea8\",\n     xlab = \"Speed (mph)\", ylab = \"Stopping distance (ft)\")\n```\n\n\n\n\n\n\n\nFigure 1: Stopping distance by speed.\n\n\n\n\n\nFigure 1 comes from the R code above. The cell’s code stays above the figure, and the figure floats to the right of the paragraphs after the cell.\nThe data are the cars data set that ships with R: the speed of each car and the distance that it took to stop. Faster cars took longer to stop.\nThe site renders this page from results that Quarto saved when the cell last ran, so the site does not need R to build it."
   },
   {
-    "objectID": "stopping.html#shortcodes",
-    "href": "stopping.html#shortcodes",
-    "title": "Where wrapping stops",
-    "section": "Shortcodes",
-    "text": "Shortcodes\nA paragraph that shows only one shortcode can also stop wrapping, because the shortcode can make a block. Spaces, line ends in the source, HTML comments, and one span around the shortcode show nothing, so {{&lt; video URL &gt;}} &lt;!-- note --&gt; and [{{&lt; video URL &gt;}}]{.my-class} stop wrapping too. Examples are a {{&lt; pagebreak &gt;}} page break and a {{&lt; video &gt;}}, which is a block in HTML and a link line in the other formats. This holds for a shortcode from another extension too, even one that makes text.\nEight Quarto shortcodes usually make text, an image, or paragraphs: meta, var, env, kbd, lipsum, placeholder, version, and brand. A paragraph with one of them counts as a paragraph, also with a comment beside it. The next paragraph gives the one exception.\nIf a {{&lt; meta &gt;}} shortcode is all that its paragraph holds and its value holds a block other than a paragraph, wrapping stops. Examples of such blocks are a list and a code block. A meta value of paragraphs only counts as paragraphs. With a comment or a span around it, Quarto renders a meta value as text, so the paragraph counts as a paragraph.",
-    "crumbs": [
-      "Get started",
-      "Guide",
-      "Where wrapping stops"
-    ]
+    "objectID": "examples/code-cell.html#next",
+    "href": "examples/code-cell.html#next",
+    "title": "A figure from a code cell",
+    "section": "Next",
+    "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
   },
   {
-    "objectID": "stopping.html#a-figure-with-nothing-to-wrap",
-    "href": "stopping.html#a-figure-with-nothing-to-wrap",
-    "title": "Where wrapping stops",
-    "section": "A figure with nothing to wrap",
-    "text": "A figure with nothing to wrap\nA wrapped figure with no paragraph right after it keeps its normal layout. An example is a figure right before a heading. Another is a figure right before a paragraph that stops wrapping under the rules above. An example of such a paragraph holds only a {{&lt; video &gt;}} and a comment. In HTML, LaTeX, Typst, and Word the render prints no warning for such a figure. The places on Where a figure keeps its normal layout are the exception: a figure there prints its warning with or without a paragraph after it.",
-    "crumbs": [
-      "Get started",
-      "Guide",
-      "Where wrapping stops"
-    ]
+    "objectID": "examples/width-gap.html",
+    "href": "examples/width-gap.html",
+    "title": "Width and gap",
+    "section": "",
+    "text": "The figure on this page sets an absolute width and a gap of 2em, twice the default:"
   },
   {
-    "objectID": "stopping.html#two-figures-in-a-row",
-    "href": "stopping.html#two-figures-in-a-row",
-    "title": "Where wrapping stops",
-    "section": "Two figures in a row",
-    "text": "Two figures in a row\nOf two wrapped figures in a row, the first keeps its normal layout, and the second wraps the paragraphs after it. This does not hold for the figures of one code cell, which Where a figure keeps its normal layout covers.",
-    "crumbs": [
-      "Get started",
-      "Guide",
-      "Where wrapping stops"
-    ]
+    "objectID": "examples/width-gap.html#result",
+    "href": "examples/width-gap.html#result",
+    "title": "Width and gap",
+    "section": "Result",
+    "text": "Result\n\n\n\n\n\n\n\nFigure 1: Mean ratings.\n\n\n\nFigure 1 is 2.5 inches wide in each of the four formats. An absolute length does not change with the width of the text, so in a narrow text column the figure takes a larger share of the line. In HTML, a window at the breakpoint or narrower is the exception: there the figure takes the full width of the text column.\nThe gap between the figure and this text is 2em, twice the default of 1em. Each format converts both values to its own units.\nA percent width, such as the default 40%, is a share of the text width instead. Use a percent when the same document renders to pages of different widths."
+  },
+  {
+    "objectID": "examples/width-gap.html#next",
+    "href": "examples/width-gap.html#next",
+    "title": "Width and gap",
+    "section": "Next",
+    "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
   },
   {
     "objectID": "examples/div-figure.html",
@@ -81,81 +63,39 @@
     "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
   },
   {
-    "objectID": "examples/both-sides.html",
-    "href": "examples/both-sides.html",
-    "title": "Figures on both sides",
+    "objectID": "examples/image-figure.html",
+    "href": "examples/image-figure.html",
+    "title": "A captioned image",
     "section": "",
-    "text": "Each figure on this page picks its side with its own class:"
+    "text": "The figure on this page comes from one line of markdown:"
   },
   {
-    "objectID": "examples/both-sides.html#result",
-    "href": "examples/both-sides.html#result",
-    "title": "Figures on both sides",
+    "objectID": "examples/image-figure.html#result",
+    "href": "examples/image-figure.html#result",
+    "title": "A captioned image",
     "section": "Result",
-    "text": "Result\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nFigure 1 has the class .wrap-right, so it sits on the right, and these paragraphs flow on its left.\nThe figure wraps the paragraphs after it until a block that is not a paragraph. Here that block is the horizontal rule below.\nThe rule starts below the figure, so the next figure starts on a clear line.\n\n\n\n\n\n\n\n\n\nFigure 2: Scores by hours of practice.\n\n\n\nFigure 2 has the class .wrap-left, so it sits on the left, and these paragraphs flow on its right.\nTwo wrapped figures right after each other do not both wrap: the first keeps its normal layout. Put at least one paragraph after each figure, as this page does.\nThe heading after this paragraph stops the second wrap."
+    "text": "Result\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nParticipants rated each clip on a scale from one to five. Figure 1 shows the mean rating in each condition. Ratings in the treatment condition were higher than ratings in the control condition.\nThe figure keeps its number and its caption, and this paragraph can point to it with a @fig- link. The class .wrap-right puts the figure on the right side of the text, and the width attribute makes it 40% of the text width.\nThe paragraphs after the figure flow beside it until the text passes the bottom of the figure. After that, they run the full width of the text. Each format draws the same layout with its own tools: CSS in HTML, wrapfig in LaTeX, wrap-it in Typst, and a frame in Word."
   },
   {
-    "objectID": "examples/both-sides.html#next",
-    "href": "examples/both-sides.html#next",
-    "title": "Figures on both sides",
+    "objectID": "examples/image-figure.html#next",
+    "href": "examples/image-figure.html#next",
+    "title": "A captioned image",
     "section": "Next",
     "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
   },
   {
-    "objectID": "examples/code-cell.html",
-    "href": "examples/code-cell.html",
-    "title": "A figure from a code cell",
+    "objectID": "examples/wrap-clear.html",
+    "href": "examples/wrap-clear.html",
+    "title": "Stop a wrap early",
     "section": "",
-    "text": "A code cell makes a figure when it has a fig- label and a fig-cap. The class goes in #| classes:, and the width in #| out-width:. This page shows the cell with its options:"
+    "text": "An empty wrap-clear div after a paragraph ends the wrap there:"
   },
   {
-    "objectID": "examples/code-cell.html#result",
-    "href": "examples/code-cell.html#result",
-    "title": "A figure from a code cell",
+    "objectID": "examples/wrap-clear.html#result",
+    "href": "examples/wrap-clear.html#result",
+    "title": "Stop a wrap early",
     "section": "Result",
-    "text": "Result\n\n\n```{r}\n#| label: fig-cars\n#| fig-cap: \"Stopping distance by speed.\"\n#| classes: wrap-right\n#| out-width: \"40%\"\nplot(cars, pch = 19, col = \"#3b6ea8\",\n     xlab = \"Speed (mph)\", ylab = \"Stopping distance (ft)\")\n```\n\n\n\n\n\n\n\nFigure 1: Stopping distance by speed.\n\n\n\n\n\nFigure 1 comes from the R code above. The cell’s code stays above the figure, and the figure floats to the right of the paragraphs after the cell.\nThe data are the cars data set that ships with R: the speed of each car and the distance that it took to stop. Faster cars took longer to stop.\nThe site renders this page from results that Quarto saved when the cell last ran, so the site does not need R to build it."
-  },
-  {
-    "objectID": "examples/code-cell.html#next",
-    "href": "examples/code-cell.html#next",
-    "title": "A figure from a code cell",
-    "section": "Next",
-    "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
-  },
-  {
-    "objectID": "examples/slides.html#a-wrapped-figure-on-a-slide",
-    "href": "examples/slides.html#a-wrapped-figure-on-a-slide",
-    "title": "Slides",
-    "section": "A wrapped figure on a slide",
-    "text": "A wrapped figure on a slide\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nRatings rose in both conditions.\nThe figure floats to the right of the paragraphs after it on the same slide, as on an HTML page."
-  },
-  {
-    "objectID": "examples/slides.html#the-source",
-    "href": "examples/slides.html#the-source",
-    "title": "Slides",
-    "section": "The source",
-    "text": "The source\n## A wrapped figure on a slide\n\n![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width=\"40%\"}\n\nRatings rose in both conditions.\n\nThe figure floats to the right of the paragraphs after it on the same\nslide, as on an HTML page."
-  },
-  {
-    "objectID": "examples/width-gap.html",
-    "href": "examples/width-gap.html",
-    "title": "Width and gap",
-    "section": "",
-    "text": "The figure on this page sets an absolute width and a gap of 2em, twice the default:"
-  },
-  {
-    "objectID": "examples/width-gap.html#result",
-    "href": "examples/width-gap.html#result",
-    "title": "Width and gap",
-    "section": "Result",
-    "text": "Result\n\n\n\n\n\n\n\nFigure 1: Mean ratings.\n\n\n\nFigure 1 is 2.5 inches wide in each of the four formats. An absolute length does not change with the width of the text, so in a narrow text column the figure takes a larger share of the line. In HTML, a window at the breakpoint or narrower is the exception: there the figure takes the full width of the text column.\nThe gap between the figure and this text is 2em, twice the default of 1em. Each format converts both values to its own units.\nA percent width, such as the default 40%, is a share of the text width instead. Use a percent when the same document renders to pages of different widths."
-  },
-  {
-    "objectID": "examples/width-gap.html#next",
-    "href": "examples/width-gap.html#next",
-    "title": "Width and gap",
-    "section": "Next",
-    "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
+    "text": "Result\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nOnly this paragraph sits beside Figure 1. The wrap-clear div comes right after it.\n\n\n\n\nThis paragraph comes after the wrap-clear div, so it starts below the figure and runs the full width of the text. Without the div, it would sit beside the figure too.\nUse the div to keep text that belongs to the next topic away from the figure."
   },
   {
     "objectID": "normal-layout.html",
@@ -242,76 +182,6 @@
     ]
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "wrapped",
-    "section": "",
-    "text": "wrapped is a Quarto filter extension. It lets body text flow beside a figure, to the left or right of it. The figure keeps its number, its caption, and its @fig- links.\nThis version wraps figures in HTML output, revealjs slides and dashboards included, in PDF through LaTeX, in PDF through Typst, and in Word. In every other format, a wrapped figure renders as a normal figure, and the render prints one warning.",
-    "crumbs": [
-      "Get started",
-      "wrapped"
-    ]
-  },
-  {
-    "objectID": "index.html#install",
-    "href": "index.html#install",
-    "title": "wrapped",
-    "section": "Install",
-    "text": "Install\nThe extension asks for Quarto 1.9.36 or later, and it is tested with Quarto 1.10.19. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThen add the filter to the document’s YAML header:\nfilters:\n  - wrapped\nGet started shows each kind of figure that wraps. The examples show each one rendered in HTML, in PDF through LaTeX, in PDF through Typst, and in Word.",
-    "crumbs": [
-      "Get started",
-      "wrapped"
-    ]
-  },
-  {
-    "objectID": "formats/html.html",
-    "href": "formats/html.html",
-    "title": "HTML, slides, and dashboards",
-    "section": "",
-    "text": "In HTML, a wrapped figure floats to its side, and the paragraphs after it flow beside it. In a window as wide as the breakpoint or narrower, figures stop floating and take the full width of the text column. A width or gap can be a CSS length, a percent, or a CSS function.\nA figure in the margin, a figure with its caption in the margin, and a figure in a page-wide column keep their normal layout in HTML. Where a figure keeps its normal layout gives the full list.",
-    "crumbs": [
-      "Get started",
-      "Formats",
-      "HTML, slides, and dashboards"
-    ]
-  },
-  {
-    "objectID": "formats/html.html#html-pages",
-    "href": "formats/html.html#html-pages",
-    "title": "HTML, slides, and dashboards",
-    "section": "",
-    "text": "In HTML, a wrapped figure floats to its side, and the paragraphs after it flow beside it. In a window as wide as the breakpoint or narrower, figures stop floating and take the full width of the text column. A width or gap can be a CSS length, a percent, or a CSS function.\nA figure in the margin, a figure with its caption in the margin, and a figure in a page-wide column keep their normal layout in HTML. Where a figure keeps its normal layout gives the full list.",
-    "crumbs": [
-      "Get started",
-      "Formats",
-      "HTML, slides, and dashboards"
-    ]
-  },
-  {
-    "objectID": "formats/html.html#slides",
-    "href": "formats/html.html#slides",
-    "title": "HTML, slides, and dashboards",
-    "section": "Slides",
-    "text": "Slides\nIn revealjs slides, a wrapped figure floats beside the paragraphs after it on the same slide, as on an HTML page:\n## Results\n\n![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width=\"40%\"}\n\nRatings rose in both conditions.\nSlides have no margin column, no margin captions, and no page-wide columns. A figure with a margin caption or a page-wide class still wraps on a slide. A margin setting does not stop a figure from wrapping on a slide either: a .column-margin or .fig-column-margin class, a .column-margin div, a code cell with #| column: margin or #| fig-column: margin, or fig-column: margin or column: margin in the document metadata.\nBy default, revealjs puts an .aside div at the foot of the slide. A figure in an aside div does not wrap. It keeps its normal layout, and the render prints one warning for it.",
-    "crumbs": [
-      "Get started",
-      "Formats",
-      "HTML, slides, and dashboards"
-    ]
-  },
-  {
-    "objectID": "formats/html.html#dashboards",
-    "href": "formats/html.html#dashboards",
-    "title": "HTML, slides, and dashboards",
-    "section": "Dashboards",
-    "text": "Dashboards\nIn a dashboard (format: dashboard), a wrapped figure in a .card div floats beside the paragraphs after it in that card. So does an image in the card that Quarto makes for the text of a row or a column. Code cell figures are tested with knitr cells that make one plot.\nIn a row or a column, Quarto makes a code cell outside a .card div into a card of its own. The paragraphs after the cell are then in another card. So a figure from any code cell outside a .card div keeps its normal layout. The render prints one warning for it, or one for a cell that makes more than one figure. To wrap the figure, put the cell and its paragraphs in a .card div:\n::: {.card title=\"Ratings\"}\n```{r}\n#| label: fig-ratings\n#| fig-cap: \"Mean ratings by condition.\"\n#| classes: wrap-right\n#| out-width: \"40%\"\nplot(1:10)\n```\n\nRatings rose in both conditions.\n:::\nSidebars, tabsets, value boxes, and card toolbars are not tested.",
-    "crumbs": [
-      "Get started",
-      "Formats",
-      "HTML, slides, and dashboards"
-    ]
-  },
-  {
     "objectID": "formats/latex.html",
     "href": "formats/latex.html",
     "title": "PDF through LaTeX",
@@ -381,96 +251,6 @@
       "Get started",
       "Formats",
       "PDF through LaTeX"
-    ]
-  },
-  {
-    "objectID": "get-started.html",
-    "href": "get-started.html",
-    "title": "Get started",
-    "section": "",
-    "text": "The extension asks for Quarto 1.9.36 or later, and it is tested with Quarto 1.10.19. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThis command puts the extension under _extensions/. Then add the filter to the document’s YAML header:\nfilters:\n  - wrapped",
-    "crumbs": [
-      "Get started"
-    ]
-  },
-  {
-    "objectID": "get-started.html#install",
-    "href": "get-started.html#install",
-    "title": "Get started",
-    "section": "",
-    "text": "The extension asks for Quarto 1.9.36 or later, and it is tested with Quarto 1.10.19. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThis command puts the extension under _extensions/. Then add the filter to the document’s YAML header:\nfilters:\n  - wrapped",
-    "crumbs": [
-      "Get started"
-    ]
-  },
-  {
-    "objectID": "get-started.html#wrap-a-figure",
-    "href": "get-started.html#wrap-a-figure",
-    "title": "Get started",
-    "section": "Wrap a figure",
-    "text": "Wrap a figure\nAdd the class .wrap-right or .wrap-left to a figure. The class names the side that the figure goes to. The paragraphs after the figure flow beside it. Each form below shows its source, then the result.\n\nA captioned figure from a markdown image\n![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width=\"40%\"}\n\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nThe image form is the shortest. The text in the square brackets is the caption, and the #fig- id gives the figure its number, so this text can point to Figure 1.\nThe paragraphs after the figure flow beside it until the text passes the bottom of the figure. Then they run the full width of the column.\n\n\n\n\nA captioned figure from a div\n::: {#fig-groups .wrap-left width=\"35%\"}\n![](groups.png)\n\nRatings by group.\n:::\n\n\n\n\n\n\n\n\nFigure 2: Ratings by group.\n\n\n\nThe div form puts the caption in the last paragraph of the div, which keeps a long caption easy to read in the source. The class .wrap-left puts the figure on the left, and this text flows on its right.\nFigure 2 has a width of 35%, so the text beside it has a little more room than beside a figure at the default 40%.\n\n\n\n\nAn image with no caption\n![](logo.png){.wrap-right width=\"20%\" fig-alt=\"Lab logo\"}\n\n\n\n\n\nAn image with no caption wraps too. It gets no figure number. The fig-alt attribute gives it alt text.\nThe same rules about width and gap apply to it as to a captioned figure.\n\n\n\n\nA figure from a code cell\nGive the cell a fig- label and a fig-cap, so that Quarto makes a figure. Put the class in #| classes:, and set the width with #| out-width::\n\n\n\n```{r}\n#| label: fig-scatter\n#| fig-cap: \"A scatter plot.\"\n#| classes: wrap-right\n#| out-width: \"30%\"\nplot(1:10)\n```\n\n\n\n\n\n\n\nFigure 3: A scatter plot.\n\n\n\n\n\nThe plot from the cell above floats to the right, and this paragraph flows beside it. The cell’s code stays above the figure, at the full width of the column.\nFigure 3 is 30% of the text column wide, as #| out-width: asks.\n\n\nThe examples show each of these forms rendered in HTML, in PDF through LaTeX, in PDF through Typst, and in Word.",
-    "crumbs": [
-      "Get started"
-    ]
-  },
-  {
-    "objectID": "width-gap.html",
-    "href": "width-gap.html",
-    "title": "Width and gap",
-    "section": "",
-    "text": "The width attribute sets the width of the figure box, caption included. The image fills the box. A percent is a share of the text column. An absolute length, such as 3in or 250px, sets the width directly. The default width is 40%. A width of zero written as a number, such as 0%, 0in, or 0, prints a warning, and the document default applies.",
-    "crumbs": [
-      "Get started",
-      "Guide",
-      "Width and gap"
-    ]
-  },
-  {
-    "objectID": "width-gap.html#width",
-    "href": "width-gap.html#width",
-    "title": "Width and gap",
-    "section": "",
-    "text": "The width attribute sets the width of the figure box, caption included. The image fills the box. A percent is a share of the text column. An absolute length, such as 3in or 250px, sets the width directly. The default width is 40%. A width of zero written as a number, such as 0%, 0in, or 0, prints a warning, and the document default applies.",
-    "crumbs": [
-      "Get started",
-      "Guide",
-      "Width and gap"
-    ]
-  },
-  {
-    "objectID": "width-gap.html#gap",
-    "href": "width-gap.html#gap",
-    "title": "Width and gap",
-    "section": "Gap",
-    "text": "Gap\nThe wrap-gap attribute sets the space between the figure and the text. The default gap is 1em. A gap of zero stays as it is. In Word, a gap of 0% prints a warning. A width plus its gap as wide as the text or wider also prints a warning in Word (see Word).\n![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-left width=\"3in\" wrap-gap=\"2em\"}\n\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nThis figure is 3 inches wide, and a gap of 2em separates it from this text, twice the default gap.\nHTML uses the width and the gap as written. PDF through LaTeX, PDF through Typst, and Word convert them to their own units, as the pages for LaTeX, Typst, and Word state.\n\n\nA fig-align attribute does not move the box. The class sets the side.\nEach format reads width and wrap-gap in its own way. HTML takes CSS lengths and the CSS functions below. PDF through LaTeX, PDF through Typst, and Word each convert a fixed set of units.",
-    "crumbs": [
-      "Get started",
-      "Guide",
-      "Width and gap"
-    ]
-  },
-  {
-    "objectID": "width-gap.html#css-functions-in-html",
-    "href": "width-gap.html#css-functions-in-html",
-    "title": "Width and gap",
-    "section": "CSS functions in HTML",
-    "text": "CSS functions in HTML\nIn HTML, a width or gap can also be a calc(), min(), max(), or clamp() value, such as calc(100% - 2em) or min(40%, 300px). The extension checks the value first. A value that fails the check prints a warning, and the document default applies. The check accepts numbers, lengths in CSS units, percents, parentheses, var(--name), and the four functions inside one another, with these rules:\n\nA + or - between two values has a space on each side.\nThe values of a sum are all lengths and percents, or all numbers.\nA * has a number on one side, and a / has a number on its right.\nmin() and max() take one or more values, and clamp() takes three.\nThe result is a length or a percent, not a number.\n\nSome CSS that browsers accept also prints a warning:\n\nother functions, such as round() and env()\nconstants, such as pi\nnone in clamp()\na length divided by a length\na number with an exponent, such as 1e2px\nan empty var() fallback, such as var(--a,)\n\n\nWidths that are never above zero\nThe check also looks for a function width that is zero, negative, or not finite at every page and font size. A width that it can show is such a width prints a warning, and the document default applies. Examples are calc(0%), min(0px, 10%), calc(-10px), and calc(1px / 0). The check reads each unit other than an absolute unit as above zero and as not related to the other units. So a width such as calc(50% - 4in) or calc(1em - 1rem), which can be above zero, prints no warning. A width with var() never prints this warning. A gap or a breakpoint of zero stays as it is.\n\n\nGaps below zero\nThe check also looks for a function gap that is negative or not finite at every page and font size. A negative gap pulls the text over the figure. A gap that the check can show is such a gap prints a warning, and the document default applies. Examples are calc(-1em), min(-1px, 10%), and calc(1px / 0). A gap that is zero at every size, such as calc(1em - 1em), stays as it is. A gap that can be zero or above, such as calc(1em - 20px), prints no warning. The check cannot show that a max() or clamp() over two units is below zero. So such a gap, as max(-2px, -1%) or clamp(-3px, -2%, -1px), also prints no warning. LaTeX, Typst, and Word take no function gap, so such a gap prints a warning there in any case. For a gap that the check shows is below zero, that warning says so.",
-    "crumbs": [
-      "Get started",
-      "Guide",
-      "Width and gap"
-    ]
-  },
-  {
-    "objectID": "width-gap.html#values-that-are-not-lengths",
-    "href": "width-gap.html#values-that-are-not-lengths",
-    "title": "Width and gap",
-    "section": "Values that are not lengths",
-    "text": "Values that are not lengths\nIn HTML, LaTeX, Typst, and Word, a width or wrap-gap value that is not a length or a percent prints a warning, and the document default applies.",
-    "crumbs": [
-      "Get started",
-      "Guide",
-      "Width and gap"
     ]
   },
   {
@@ -570,6 +350,175 @@
     ]
   },
   {
+    "objectID": "get-started.html",
+    "href": "get-started.html",
+    "title": "Get started",
+    "section": "",
+    "text": "The extension asks for Quarto 1.9.36 or later, and it is tested with Quarto 1.10.19. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThis command puts the extension under _extensions/. Then add the filter to the document’s YAML header:\nfilters:\n  - wrapped",
+    "crumbs": [
+      "Get started"
+    ]
+  },
+  {
+    "objectID": "get-started.html#install",
+    "href": "get-started.html#install",
+    "title": "Get started",
+    "section": "",
+    "text": "The extension asks for Quarto 1.9.36 or later, and it is tested with Quarto 1.10.19. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThis command puts the extension under _extensions/. Then add the filter to the document’s YAML header:\nfilters:\n  - wrapped",
+    "crumbs": [
+      "Get started"
+    ]
+  },
+  {
+    "objectID": "get-started.html#wrap-a-figure",
+    "href": "get-started.html#wrap-a-figure",
+    "title": "Get started",
+    "section": "Wrap a figure",
+    "text": "Wrap a figure\nAdd the class .wrap-right or .wrap-left to a figure. The class names the side that the figure goes to. The paragraphs after the figure flow beside it. Each form below shows its source, then the result.\n\nA captioned figure from a markdown image\n![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width=\"40%\"}\n\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nThe image form is the shortest. The text in the square brackets is the caption, and the #fig- id gives the figure its number, so this text can point to Figure 1.\nThe paragraphs after the figure flow beside it until the text passes the bottom of the figure. Then they run the full width of the column.\n\n\n\n\nA captioned figure from a div\n::: {#fig-groups .wrap-left width=\"35%\"}\n![](groups.png)\n\nRatings by group.\n:::\n\n\n\n\n\n\n\n\nFigure 2: Ratings by group.\n\n\n\nThe div form puts the caption in the last paragraph of the div, which keeps a long caption easy to read in the source. The class .wrap-left puts the figure on the left, and this text flows on its right.\nFigure 2 has a width of 35%, so the text beside it has a little more room than beside a figure at the default 40%.\n\n\n\n\nAn image with no caption\n![](logo.png){.wrap-right width=\"20%\" fig-alt=\"Lab logo\"}\n\n\n\n\n\nAn image with no caption wraps too. It gets no figure number. The fig-alt attribute gives it alt text.\nThe same rules about width and gap apply to it as to a captioned figure.\n\n\n\n\nA figure from a code cell\nGive the cell a fig- label and a fig-cap, so that Quarto makes a figure. Put the class in #| classes:, and set the width with #| out-width::\n\n\n\n```{r}\n#| label: fig-scatter\n#| fig-cap: \"A scatter plot.\"\n#| classes: wrap-right\n#| out-width: \"30%\"\nplot(1:10)\n```\n\n\n\n\n\n\n\nFigure 3: A scatter plot.\n\n\n\n\n\nThe plot from the cell above floats to the right, and this paragraph flows beside it. The cell’s code stays above the figure, at the full width of the column.\nFigure 3 is 30% of the text column wide, as #| out-width: asks.\n\n\nThe examples show each of these forms rendered in HTML, in PDF through LaTeX, in PDF through Typst, and in Word.",
+    "crumbs": [
+      "Get started"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "wrapped",
+    "section": "",
+    "text": "wrapped is a Quarto filter extension. It lets body text flow beside a figure, to the left or right of it. The figure keeps its number, its caption, and its @fig- links.\nThis version wraps figures in HTML output, revealjs slides and dashboards included, in PDF through LaTeX, in PDF through Typst, and in Word. In every other format, a wrapped figure renders as a normal figure, and the render prints one warning.",
+    "crumbs": [
+      "Get started",
+      "wrapped"
+    ]
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "wrapped",
+    "section": "Install",
+    "text": "Install\nThe extension asks for Quarto 1.9.36 or later, and it is tested with Quarto 1.10.19. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThen add the filter to the document’s YAML header:\nfilters:\n  - wrapped\nGet started shows each kind of figure that wraps. The examples show each one rendered in HTML, in PDF through LaTeX, in PDF through Typst, and in Word.",
+    "crumbs": [
+      "Get started",
+      "wrapped"
+    ]
+  },
+  {
+    "objectID": "defaults.html",
+    "href": "defaults.html",
+    "title": "Document defaults",
+    "section": "",
+    "text": "The wrapped key in the YAML header sets the defaults for a document. A figure’s own width or wrap-gap attribute comes first.\nThis page sets width: 25% and gap: 30px in its own YAML header. The figure below sets neither, so it takes both:",
+    "crumbs": [
+      "Get started",
+      "Guide",
+      "Document defaults"
+    ]
+  },
+  {
+    "objectID": "defaults.html#breakpoint",
+    "href": "defaults.html#breakpoint",
+    "title": "Document defaults",
+    "section": "Breakpoint",
+    "text": "Breakpoint\nIn a window as wide as breakpoint or narrower, figures stop floating and take the full width of the text column. The default breakpoint is 576px.",
+    "crumbs": [
+      "Get started",
+      "Guide",
+      "Document defaults"
+    ]
+  },
+  {
+    "objectID": "defaults.html#rules-for-the-keys",
+    "href": "defaults.html#rules-for-the-keys",
+    "title": "Document defaults",
+    "section": "Rules for the keys",
+    "text": "Rules for the keys\nThe keys follow the rules of the attributes. A width of zero prints a warning, and the built-in 40% applies. A gap or breakpoint of zero stays as it is. A function gap that is negative or not finite at every size prints a warning, and the built-in 1em applies. In Word, a gap of 0% prints a warning, and the built-in 1em applies. In Word, a width that with the gap is as wide as the text or wider prints a warning, and the built-in 40% applies. With only a gap set, the width is already 40%, and 40% plus that gap can leave no room with no warning. A width, gap, or breakpoint can be a calc(), min(), max(), or clamp() value, checked as on Width and gap. A media query takes no percent and no var(). So a breakpoint with a percent or a var(), such as calc(50%), prints a warning, and 576px applies.\nQuarto reads the YAML values as Markdown. In a function value, put a space on each side of * and /, as in calc(2 * 1em). Without the spaces, Markdown can read the stars as emphasis and drop them.",
+    "crumbs": [
+      "Get started",
+      "Guide",
+      "Document defaults"
+    ]
+  },
+  {
+    "objectID": "reference.html",
+    "href": "reference.html",
+    "title": "Reference",
+    "section": "",
+    "text": "The classes, attributes, and wrapped: keys that control wrapping. Each name links to the page that gives its full rules.",
+    "crumbs": [
+      "Get started",
+      "Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#classes-and-attributes",
+    "href": "reference.html#classes-and-attributes",
+    "title": "Reference",
+    "section": "Classes and attributes",
+    "text": "Classes and attributes\nThese go on a figure or an image. On a code cell, the class goes in #| classes: and the width in #| out-width: (see Get started). “All four formats” means HTML, PDF through LaTeX, PDF through Typst, and Word. HTML includes revealjs slides and dashboards.\n\n\n\n\n\n\n\n\n\n\nName\nKind\nValues\nDefault\nWorks in\n\n\n\n\n.wrap-right\nclass\nnone\nnone\nAll four formats\n\n\n.wrap-left\nclass\nnone\nnone\nAll four formats\n\n\n.wrap-clear\nclass on an empty div\nnone\nnone\nAll four formats\n\n\nwidth\nattribute\nA percent of the text column, or a length such as 3in, 250px, or 20em. Each format takes its own set of units. In HTML, also a calc(), min(), max(), or clamp() value.\nThe document default, else 40%\nAll four formats, each with its own units\n\n\nwrap-gap\nattribute\nA length or a percent of the text column. In HTML, also a calc(), min(), max(), or clamp() value.\nThe document default, else 1em\nAll four formats, each with its own units\n\n\nwrap-lines\nattribute\nA number of lines\nCounted from the figure’s height\nPDF through LaTeX only\n\n\n\nwidth and wrap-gap convert to each format’s units as the pages for LaTeX, Typst, and Word state.",
+    "crumbs": [
+      "Get started",
+      "Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#document-keys",
+    "href": "reference.html#document-keys",
+    "title": "Reference",
+    "section": "Document keys",
+    "text": "Document keys\nThese go under the wrapped key in the YAML header of a document or a project. A figure’s own width or wrap-gap attribute comes first.\n\n\n\n\n\n\n\n\n\n\nName\nKind\nValues\nDefault\nWorks in\n\n\n\n\nwidth\nwrapped: key\nAs the width attribute\n40%\nAll four formats\n\n\ngap\nwrapped: key\nAs the wrap-gap attribute\n1em\nAll four formats\n\n\nbreakpoint\nwrapped: key\nA length, or a calc(), min(), max(), or clamp() value with no percent and no var()\n576px\nHTML only\n\n\n\nwrapped:\n  width: 25%\n  gap: 30px\n  breakpoint: 800px",
+    "crumbs": [
+      "Get started",
+      "Reference"
+    ]
+  },
+  {
+    "objectID": "formats/html.html",
+    "href": "formats/html.html",
+    "title": "HTML, slides, and dashboards",
+    "section": "",
+    "text": "In HTML, a wrapped figure floats to its side, and the paragraphs after it flow beside it. In a window as wide as the breakpoint or narrower, figures stop floating and take the full width of the text column. A width or gap can be a CSS length, a percent, or a CSS function.\nA figure in the margin, a figure with its caption in the margin, and a figure in a page-wide column keep their normal layout in HTML. Where a figure keeps its normal layout gives the full list.",
+    "crumbs": [
+      "Get started",
+      "Formats",
+      "HTML, slides, and dashboards"
+    ]
+  },
+  {
+    "objectID": "formats/html.html#html-pages",
+    "href": "formats/html.html#html-pages",
+    "title": "HTML, slides, and dashboards",
+    "section": "",
+    "text": "In HTML, a wrapped figure floats to its side, and the paragraphs after it flow beside it. In a window as wide as the breakpoint or narrower, figures stop floating and take the full width of the text column. A width or gap can be a CSS length, a percent, or a CSS function.\nA figure in the margin, a figure with its caption in the margin, and a figure in a page-wide column keep their normal layout in HTML. Where a figure keeps its normal layout gives the full list.",
+    "crumbs": [
+      "Get started",
+      "Formats",
+      "HTML, slides, and dashboards"
+    ]
+  },
+  {
+    "objectID": "formats/html.html#slides",
+    "href": "formats/html.html#slides",
+    "title": "HTML, slides, and dashboards",
+    "section": "Slides",
+    "text": "Slides\nIn revealjs slides, a wrapped figure floats beside the paragraphs after it on the same slide, as on an HTML page:\n## Results\n\n![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width=\"40%\"}\n\nRatings rose in both conditions.\nSlides have no margin column, no margin captions, and no page-wide columns. A figure with a margin caption or a page-wide class still wraps on a slide. A margin setting does not stop a figure from wrapping on a slide either: a .column-margin or .fig-column-margin class, a .column-margin div, a code cell with #| column: margin or #| fig-column: margin, or fig-column: margin or column: margin in the document metadata.\nBy default, revealjs puts an .aside div at the foot of the slide. A figure in an aside div does not wrap. It keeps its normal layout, and the render prints one warning for it.",
+    "crumbs": [
+      "Get started",
+      "Formats",
+      "HTML, slides, and dashboards"
+    ]
+  },
+  {
+    "objectID": "formats/html.html#dashboards",
+    "href": "formats/html.html#dashboards",
+    "title": "HTML, slides, and dashboards",
+    "section": "Dashboards",
+    "text": "Dashboards\nIn a dashboard (format: dashboard), a wrapped figure in a .card div floats beside the paragraphs after it in that card. So does an image in the card that Quarto makes for the text of a row or a column. Code cell figures are tested with knitr cells that make one plot.\nIn a row or a column, Quarto makes a code cell outside a .card div into a card of its own. The paragraphs after the cell are then in another card. So a figure from any code cell outside a .card div keeps its normal layout. The render prints one warning for it, or one for a cell that makes more than one figure. To wrap the figure, put the cell and its paragraphs in a .card div:\n::: {.card title=\"Ratings\"}\n```{r}\n#| label: fig-ratings\n#| fig-cap: \"Mean ratings by condition.\"\n#| classes: wrap-right\n#| out-width: \"40%\"\nplot(1:10)\n```\n\nRatings rose in both conditions.\n:::\nSidebars, tabsets, value boxes, and card toolbars are not tested.",
+    "crumbs": [
+      "Get started",
+      "Formats",
+      "HTML, slides, and dashboards"
+    ]
+  },
+  {
     "objectID": "formats/word.html",
     "href": "formats/word.html",
     "title": "Word",
@@ -618,125 +567,123 @@
     ]
   },
   {
-    "objectID": "reference.html",
-    "href": "reference.html",
-    "title": "Reference",
+    "objectID": "stopping.html",
+    "href": "stopping.html",
+    "title": "Where wrapping stops",
     "section": "",
-    "text": "The classes, attributes, and wrapped: keys that control wrapping. Each name links to the page that gives its full rules.",
-    "crumbs": [
-      "Get started",
-      "Reference"
-    ]
-  },
-  {
-    "objectID": "reference.html#classes-and-attributes",
-    "href": "reference.html#classes-and-attributes",
-    "title": "Reference",
-    "section": "Classes and attributes",
-    "text": "Classes and attributes\nThese go on a figure or an image. On a code cell, the class goes in #| classes: and the width in #| out-width: (see Get started). “All four formats” means HTML, PDF through LaTeX, PDF through Typst, and Word. HTML includes revealjs slides and dashboards.\n\n\n\n\n\n\n\n\n\n\nName\nKind\nValues\nDefault\nWorks in\n\n\n\n\n.wrap-right\nclass\nnone\nnone\nAll four formats\n\n\n.wrap-left\nclass\nnone\nnone\nAll four formats\n\n\n.wrap-clear\nclass on an empty div\nnone\nnone\nAll four formats\n\n\nwidth\nattribute\nA percent of the text column, or a length such as 3in, 250px, or 20em. Each format takes its own set of units. In HTML, also a calc(), min(), max(), or clamp() value.\nThe document default, else 40%\nAll four formats, each with its own units\n\n\nwrap-gap\nattribute\nA length or a percent of the text column. In HTML, also a calc(), min(), max(), or clamp() value.\nThe document default, else 1em\nAll four formats, each with its own units\n\n\nwrap-lines\nattribute\nA number of lines\nCounted from the figure’s height\nPDF through LaTeX only\n\n\n\nwidth and wrap-gap convert to each format’s units as the pages for LaTeX, Typst, and Word state.",
-    "crumbs": [
-      "Get started",
-      "Reference"
-    ]
-  },
-  {
-    "objectID": "reference.html#document-keys",
-    "href": "reference.html#document-keys",
-    "title": "Reference",
-    "section": "Document keys",
-    "text": "Document keys\nThese go under the wrapped key in the YAML header of a document or a project. A figure’s own width or wrap-gap attribute comes first.\n\n\n\n\n\n\n\n\n\n\nName\nKind\nValues\nDefault\nWorks in\n\n\n\n\nwidth\nwrapped: key\nAs the width attribute\n40%\nAll four formats\n\n\ngap\nwrapped: key\nAs the wrap-gap attribute\n1em\nAll four formats\n\n\nbreakpoint\nwrapped: key\nA length, or a calc(), min(), max(), or clamp() value with no percent and no var()\n576px\nHTML only\n\n\n\nwrapped:\n  width: 25%\n  gap: 30px\n  breakpoint: 800px",
-    "crumbs": [
-      "Get started",
-      "Reference"
-    ]
-  },
-  {
-    "objectID": "defaults.html",
-    "href": "defaults.html",
-    "title": "Document defaults",
-    "section": "",
-    "text": "The wrapped key in the YAML header sets the defaults for a document. A figure’s own width or wrap-gap attribute comes first.\nThis page sets width: 25% and gap: 30px in its own YAML header. The figure below sets neither, so it takes both:",
+    "text": "The figure wraps the paragraphs that follow it. Wrapping stops at the first block that is not a paragraph, and that block starts below the figure. Examples of blocks that are not paragraphs are a heading, a list, a table, a code block, a callout, another figure, and a horizontal rule.\nAn image with no caption and no wrap class counts as a paragraph. Quarto expands {{&lt; include &gt;}} before the filter runs, so the included blocks follow these rules as written.",
     "crumbs": [
       "Get started",
       "Guide",
-      "Document defaults"
+      "Where wrapping stops"
     ]
   },
   {
-    "objectID": "defaults.html#breakpoint",
-    "href": "defaults.html#breakpoint",
-    "title": "Document defaults",
-    "section": "Breakpoint",
-    "text": "Breakpoint\nIn a window as wide as breakpoint or narrower, figures stop floating and take the full width of the text column. The default breakpoint is 576px.",
+    "objectID": "stopping.html#stop-wrapping-earlier",
+    "href": "stopping.html#stop-wrapping-earlier",
+    "title": "Where wrapping stops",
+    "section": "Stop wrapping earlier",
+    "text": "Stop wrapping earlier\nTo stop wrapping earlier, put an empty wrap-clear div after the last paragraph that you want beside the figure:\n::: {.wrap-clear}\n:::\n\n\n\n\n\n\n\n\nFigure 2: Mean ratings by condition.\n\n\n\nOnly this paragraph sits beside Figure 2.\n\n\n\n\nAn empty wrap-clear div comes before this paragraph, so it starts below the figure.\n\nIn PDF through LaTeX, in PDF through Typst, and in Word, wrapping stops as in HTML, and a wrap-clear div works.",
     "crumbs": [
       "Get started",
       "Guide",
-      "Document defaults"
+      "Where wrapping stops"
     ]
   },
   {
-    "objectID": "defaults.html#rules-for-the-keys",
-    "href": "defaults.html#rules-for-the-keys",
-    "title": "Document defaults",
-    "section": "Rules for the keys",
-    "text": "Rules for the keys\nThe keys follow the rules of the attributes. A width of zero prints a warning, and the built-in 40% applies. A gap or breakpoint of zero stays as it is. A function gap that is negative or not finite at every size prints a warning, and the built-in 1em applies. In Word, a gap of 0% prints a warning, and the built-in 1em applies. In Word, a width that with the gap is as wide as the text or wider prints a warning, and the built-in 40% applies. With only a gap set, the width is already 40%, and 40% plus that gap can leave no room with no warning. A width, gap, or breakpoint can be a calc(), min(), max(), or clamp() value, checked as on Width and gap. A media query takes no percent and no var(). So a breakpoint with a percent or a var(), such as calc(50%), prints a warning, and 576px applies.\nQuarto reads the YAML values as Markdown. In a function value, put a space on each side of * and /, as in calc(2 * 1em). Without the spaces, Markdown can read the stars as emphasis and drop them.",
+    "objectID": "stopping.html#shortcodes",
+    "href": "stopping.html#shortcodes",
+    "title": "Where wrapping stops",
+    "section": "Shortcodes",
+    "text": "Shortcodes\nA paragraph that shows only one shortcode can also stop wrapping, because the shortcode can make a block. Spaces, line ends in the source, HTML comments, and one span around the shortcode show nothing, so {{&lt; video URL &gt;}} &lt;!-- note --&gt; and [{{&lt; video URL &gt;}}]{.my-class} stop wrapping too. Examples are a {{&lt; pagebreak &gt;}} page break and a {{&lt; video &gt;}}, which is a block in HTML and a link line in the other formats. This holds for a shortcode from another extension too, even one that makes text.\nEight Quarto shortcodes usually make text, an image, or paragraphs: meta, var, env, kbd, lipsum, placeholder, version, and brand. A paragraph with one of them counts as a paragraph, also with a comment beside it. The next paragraph gives the one exception.\nIf a {{&lt; meta &gt;}} shortcode is all that its paragraph holds and its value holds a block other than a paragraph, wrapping stops. Examples of such blocks are a list and a code block. A meta value of paragraphs only counts as paragraphs. With a comment or a span around it, Quarto renders a meta value as text, so the paragraph counts as a paragraph.",
     "crumbs": [
       "Get started",
       "Guide",
-      "Document defaults"
+      "Where wrapping stops"
     ]
   },
   {
-    "objectID": "examples/image-figure.html",
-    "href": "examples/image-figure.html",
-    "title": "A captioned image",
-    "section": "",
-    "text": "The figure on this page comes from one line of markdown:"
-  },
-  {
-    "objectID": "examples/image-figure.html#result",
-    "href": "examples/image-figure.html#result",
-    "title": "A captioned image",
-    "section": "Result",
-    "text": "Result\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nParticipants rated each clip on a scale from one to five. Figure 1 shows the mean rating in each condition. Ratings in the treatment condition were higher than ratings in the control condition.\nThe figure keeps its number and its caption, and this paragraph can point to it with a @fig- link. The class .wrap-right puts the figure on the right side of the text, and the width attribute makes it 40% of the text width.\nThe paragraphs after the figure flow beside it until the text passes the bottom of the figure. After that, they run the full width of the text. Each format draws the same layout with its own tools: CSS in HTML, wrapfig in LaTeX, wrap-it in Typst, and a frame in Word."
-  },
-  {
-    "objectID": "examples/image-figure.html#next",
-    "href": "examples/image-figure.html#next",
-    "title": "A captioned image",
-    "section": "Next",
-    "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
-  },
-  {
-    "objectID": "examples/uncaptioned-image.html",
-    "href": "examples/uncaptioned-image.html",
-    "title": "An image with no caption",
-    "section": "",
-    "text": "The image on this page has no caption and no id, so it gets no figure number:"
-  },
-  {
-    "objectID": "examples/uncaptioned-image.html#result",
-    "href": "examples/uncaptioned-image.html#result",
-    "title": "An image with no caption",
-    "section": "Result",
-    "text": "Result\n\n\n\n\nAn image with no caption wraps in the same way as a captioned figure. The class .wrap-right puts it on the right, and the text flows on its left.\nIn HTML and Word, the fig-alt attribute gives the image its alt text, which a screen reader reads in place of the image. In a PDF, alt text needs a tagged PDF (see the format pages).\nA small image like this one suits a logo or an icon at the start of a section. The image is 20% of the text width, so the text beside it keeps most of the line."
-  },
-  {
-    "objectID": "examples/uncaptioned-image.html#next",
-    "href": "examples/uncaptioned-image.html#next",
-    "title": "An image with no caption",
-    "section": "Next",
-    "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
-  },
-  {
-    "objectID": "examples/index.html",
-    "href": "examples/index.html",
-    "title": "Examples",
-    "section": "",
-    "text": "Each example page shows its source and its result in HTML. Its “Other Formats” links give the same page as a PDF through LaTeX, a PDF through Typst, and a Word file. The slides and dashboard examples are HTML only.\n\n\n\n\n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\n\n\n\n\n\nA captioned image\n\n\nA markdown image with a caption and an id floats to the right.\n\n\n\n\n\n\nA figure div on the left\n\n\nA figure div with its caption as the last paragraph floats to the left.\n\n\n\n\n\n\nAn image with no caption\n\n\nAn image with no caption floats to the right and keeps its alt text.\n\n\n\n\n\n\nA figure from a code cell\n\n\nA knitr code cell makes a figure that floats to the right.\n\n\n\n\n\n\nFigures on both sides\n\n\nOne figure floats to the right and a later one to the left.\n\n\n\n\n\n\nWidth and gap\n\n\nA figure sets an absolute width and a wider gap.\n\n\n\n\n\n\nDocument defaults\n\n\nThe wrapped key in the YAML header sets the width and gap for every figure.\n\n\n\n\n\n\nStop a wrap early\n\n\nAn empty wrap-clear div ends the wrap before the next paragraph.\n\n\n\n\n\n\nSlides\n\n\nA wrapped figure on a revealjs slide.\n\n\n\n\n\n\nDashboard\n\n\nA wrapped figure in a dashboard card.\n\n\n\n\n\n\nNo matching items",
+    "objectID": "stopping.html#a-figure-with-nothing-to-wrap",
+    "href": "stopping.html#a-figure-with-nothing-to-wrap",
+    "title": "Where wrapping stops",
+    "section": "A figure with nothing to wrap",
+    "text": "A figure with nothing to wrap\nA wrapped figure with no paragraph right after it keeps its normal layout. An example is a figure right before a heading. Another is a figure right before a paragraph that stops wrapping under the rules above. An example of such a paragraph holds only a {{&lt; video &gt;}} and a comment. In HTML, LaTeX, Typst, and Word the render prints no warning for such a figure. The places on Where a figure keeps its normal layout are the exception: a figure there prints its warning with or without a paragraph after it.",
     "crumbs": [
       "Get started",
-      "Examples"
+      "Guide",
+      "Where wrapping stops"
+    ]
+  },
+  {
+    "objectID": "stopping.html#two-figures-in-a-row",
+    "href": "stopping.html#two-figures-in-a-row",
+    "title": "Where wrapping stops",
+    "section": "Two figures in a row",
+    "text": "Two figures in a row\nOf two wrapped figures in a row, the first keeps its normal layout, and the second wraps the paragraphs after it. This does not hold for the figures of one code cell, which Where a figure keeps its normal layout covers.",
+    "crumbs": [
+      "Get started",
+      "Guide",
+      "Where wrapping stops"
+    ]
+  },
+  {
+    "objectID": "width-gap.html",
+    "href": "width-gap.html",
+    "title": "Width and gap",
+    "section": "",
+    "text": "The width attribute sets the width of the figure box, caption included. The image fills the box. A percent is a share of the text column. An absolute length, such as 3in or 250px, sets the width directly. The default width is 40%. A width of zero written as a number, such as 0%, 0in, or 0, prints a warning, and the document default applies.",
+    "crumbs": [
+      "Get started",
+      "Guide",
+      "Width and gap"
+    ]
+  },
+  {
+    "objectID": "width-gap.html#width",
+    "href": "width-gap.html#width",
+    "title": "Width and gap",
+    "section": "",
+    "text": "The width attribute sets the width of the figure box, caption included. The image fills the box. A percent is a share of the text column. An absolute length, such as 3in or 250px, sets the width directly. The default width is 40%. A width of zero written as a number, such as 0%, 0in, or 0, prints a warning, and the document default applies.",
+    "crumbs": [
+      "Get started",
+      "Guide",
+      "Width and gap"
+    ]
+  },
+  {
+    "objectID": "width-gap.html#gap",
+    "href": "width-gap.html#gap",
+    "title": "Width and gap",
+    "section": "Gap",
+    "text": "Gap\nThe wrap-gap attribute sets the space between the figure and the text. The default gap is 1em. A gap of zero stays as it is. In Word, a gap of 0% prints a warning. A width plus its gap as wide as the text or wider also prints a warning in Word (see Word).\n![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-left width=\"3in\" wrap-gap=\"2em\"}\n\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nThis figure is 3 inches wide, and a gap of 2em separates it from this text, twice the default gap.\nHTML uses the width and the gap as written. PDF through LaTeX, PDF through Typst, and Word convert them to their own units, as the pages for LaTeX, Typst, and Word state.\n\n\nA fig-align attribute does not move the box. The class sets the side.\nEach format reads width and wrap-gap in its own way. HTML takes CSS lengths and the CSS functions below. PDF through LaTeX, PDF through Typst, and Word each convert a fixed set of units.",
+    "crumbs": [
+      "Get started",
+      "Guide",
+      "Width and gap"
+    ]
+  },
+  {
+    "objectID": "width-gap.html#css-functions-in-html",
+    "href": "width-gap.html#css-functions-in-html",
+    "title": "Width and gap",
+    "section": "CSS functions in HTML",
+    "text": "CSS functions in HTML\nIn HTML, a width or gap can also be a calc(), min(), max(), or clamp() value, such as calc(100% - 2em) or min(40%, 300px). The extension checks the value first. A value that fails the check prints a warning, and the document default applies. The check accepts numbers, lengths in CSS units, percents, parentheses, var(--name), and the four functions inside one another, with these rules:\n\nA + or - between two values has a space on each side.\nThe values of a sum are all lengths and percents, or all numbers.\nA * has a number on one side, and a / has a number on its right.\nmin() and max() take one or more values, and clamp() takes three.\nThe result is a length or a percent, not a number.\n\nSome CSS that browsers accept also prints a warning:\n\nother functions, such as round() and env()\nconstants, such as pi\nnone in clamp()\na length divided by a length\na number with an exponent, such as 1e2px\nan empty var() fallback, such as var(--a,)\n\n\nWidths that are never above zero\nThe check also looks for a function width that is zero, negative, or not finite at every page and font size. A width that it can show is such a width prints a warning, and the document default applies. Examples are calc(0%), min(0px, 10%), calc(-10px), and calc(1px / 0). The check reads each unit other than an absolute unit as above zero and as not related to the other units. So a width such as calc(50% - 4in) or calc(1em - 1rem), which can be above zero, prints no warning. A width with var() never prints this warning. A gap or a breakpoint of zero stays as it is.\n\n\nGaps below zero\nThe check also looks for a function gap that is negative or not finite at every page and font size. A negative gap pulls the text over the figure. A gap that the check can show is such a gap prints a warning, and the document default applies. Examples are calc(-1em), min(-1px, 10%), and calc(1px / 0). A gap that is zero at every size, such as calc(1em - 1em), stays as it is. A gap that can be zero or above, such as calc(1em - 20px), prints no warning. The check cannot show that a max() or clamp() over two units is below zero. So such a gap, as max(-2px, -1%) or clamp(-3px, -2%, -1px), also prints no warning. LaTeX, Typst, and Word take no function gap, so such a gap prints a warning there in any case. For a gap that the check shows is below zero, that warning says so.",
+    "crumbs": [
+      "Get started",
+      "Guide",
+      "Width and gap"
+    ]
+  },
+  {
+    "objectID": "width-gap.html#values-that-are-not-lengths",
+    "href": "width-gap.html#values-that-are-not-lengths",
+    "title": "Width and gap",
+    "section": "Values that are not lengths",
+    "text": "Values that are not lengths\nIn HTML, LaTeX, Typst, and Word, a width or wrap-gap value that is not a length or a percent prints a warning, and the document default applies.",
+    "crumbs": [
+      "Get started",
+      "Guide",
+      "Width and gap"
     ]
   },
   {
@@ -761,17 +708,70 @@
     "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
   },
   {
-    "objectID": "examples/wrap-clear.html",
-    "href": "examples/wrap-clear.html",
-    "title": "Stop a wrap early",
+    "objectID": "examples/index.html",
+    "href": "examples/index.html",
+    "title": "Examples",
     "section": "",
-    "text": "An empty wrap-clear div after a paragraph ends the wrap there:"
+    "text": "Each example page shows its source and its result in HTML. Its “Other Formats” links give the same page as a PDF through LaTeX, a PDF through Typst, and a Word file. The slides and dashboard examples are HTML only.\n\n\n\n\n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\n\n\n\n\n\nA captioned image\n\n\nA markdown image with a caption and an id floats to the right.\n\n\n\n\n\n\nA figure div on the left\n\n\nA figure div with its caption as the last paragraph floats to the left.\n\n\n\n\n\n\nAn image with no caption\n\n\nAn image with no caption floats to the right and keeps its alt text.\n\n\n\n\n\n\nA figure from a code cell\n\n\nA knitr code cell makes a figure that floats to the right.\n\n\n\n\n\n\nFigures on both sides\n\n\nOne figure floats to the right and a later one to the left.\n\n\n\n\n\n\nWidth and gap\n\n\nA figure sets an absolute width and a wider gap.\n\n\n\n\n\n\nDocument defaults\n\n\nThe wrapped key in the YAML header sets the width and gap for every figure.\n\n\n\n\n\n\nStop a wrap early\n\n\nAn empty wrap-clear div ends the wrap before the next paragraph.\n\n\n\n\n\n\nSlides\n\n\nA wrapped figure on a revealjs slide.\n\n\n\n\n\n\nDashboard\n\n\nA wrapped figure in a dashboard card.\n\n\n\n\n\n\nNo matching items",
+    "crumbs": [
+      "Get started",
+      "Examples"
+    ]
   },
   {
-    "objectID": "examples/wrap-clear.html#result",
-    "href": "examples/wrap-clear.html#result",
-    "title": "Stop a wrap early",
+    "objectID": "examples/slides.html#a-wrapped-figure-on-a-slide",
+    "href": "examples/slides.html#a-wrapped-figure-on-a-slide",
+    "title": "Slides",
+    "section": "A wrapped figure on a slide",
+    "text": "A wrapped figure on a slide\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nRatings rose in both conditions.\nThe figure floats to the right of the paragraphs after it on the same slide, as on an HTML page."
+  },
+  {
+    "objectID": "examples/slides.html#the-source",
+    "href": "examples/slides.html#the-source",
+    "title": "Slides",
+    "section": "The source",
+    "text": "The source\n## A wrapped figure on a slide\n\n![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width=\"40%\"}\n\nRatings rose in both conditions.\n\nThe figure floats to the right of the paragraphs after it on the same\nslide, as on an HTML page."
+  },
+  {
+    "objectID": "examples/uncaptioned-image.html",
+    "href": "examples/uncaptioned-image.html",
+    "title": "An image with no caption",
+    "section": "",
+    "text": "The image on this page has no caption and no id, so it gets no figure number:"
+  },
+  {
+    "objectID": "examples/uncaptioned-image.html#result",
+    "href": "examples/uncaptioned-image.html#result",
+    "title": "An image with no caption",
     "section": "Result",
-    "text": "Result\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nOnly this paragraph sits beside Figure 1. The wrap-clear div comes right after it.\n\n\n\n\nThis paragraph comes after the wrap-clear div, so it starts below the figure and runs the full width of the text. Without the div, it would sit beside the figure too.\nUse the div to keep text that belongs to the next topic away from the figure."
+    "text": "Result\n\n\n\n\nAn image with no caption wraps in the same way as a captioned figure. The class .wrap-right puts it on the right, and the text flows on its left.\nIn HTML and Word, the fig-alt attribute gives the image its alt text, which a screen reader reads in place of the image. In a PDF, alt text needs a tagged PDF (see the format pages).\nA small image like this one suits a logo or an icon at the start of a section. The image is 20% of the text width, so the text beside it keeps most of the line."
+  },
+  {
+    "objectID": "examples/uncaptioned-image.html#next",
+    "href": "examples/uncaptioned-image.html#next",
+    "title": "An image with no caption",
+    "section": "Next",
+    "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
+  },
+  {
+    "objectID": "examples/both-sides.html",
+    "href": "examples/both-sides.html",
+    "title": "Figures on both sides",
+    "section": "",
+    "text": "Each figure on this page picks its side with its own class:"
+  },
+  {
+    "objectID": "examples/both-sides.html#result",
+    "href": "examples/both-sides.html#result",
+    "title": "Figures on both sides",
+    "section": "Result",
+    "text": "Result\n\n\n\n\n\n\n\nFigure 1: Mean ratings by condition.\n\n\n\nFigure 1 has the class .wrap-right, so it sits on the right, and these paragraphs flow on its left.\nThe figure wraps the paragraphs after it until a block that is not a paragraph. Here that block is the horizontal rule below.\nThe rule starts below the figure, so the next figure starts on a clear line.\n\n\n\n\n\n\n\n\n\nFigure 2: Scores by hours of practice.\n\n\n\nFigure 2 has the class .wrap-left, so it sits on the left, and these paragraphs flow on its right.\nTwo wrapped figures right after each other do not both wrap: the first keeps its normal layout. Put at least one paragraph after each figure, as this page does.\nThe heading after this paragraph stops the second wrap."
+  },
+  {
+    "objectID": "examples/both-sides.html#next",
+    "href": "examples/both-sides.html#next",
+    "title": "Figures on both sides",
+    "section": "Next",
+    "text": "Next\nA heading is not a paragraph, so wrapping stops before it."
   }
 ]
