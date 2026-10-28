@@ -143,6 +143,7 @@ that holds the image. Each test allows `NEAR` (3 px).
 - 2026-10-28: claim audit: 38 claims read, 3 corrected — tests/verify.py (`column_edges`, `column_image`, and module docstrings; comment-only, re-read once and confirmed). README.md and tests/typst-columns.qmd held, with scratch renders confirming the 311 px column, 26 px gutter, column-width percents and fill check, and the moved group.
 - 2026-10-28: implement complete; status review.
 - 2026-10-28: review pass 1: four lenses returned 27 findings; 17 fix-now landed in 144eb1c (fixture fill case now 2.5in with a 0.5in gap, a 2.4in case with a 10% gap, a two-line blank-column check, doc fixes). The consistency gate then failed on `cairn/PROFILE.md` at 121 lines (cap 120), fixed by keeping the new clause on the slot's existing long line. Full suite rerunning on the fixed head.
+- 2026-10-28: step-7 approval: m019-typst-columns approved for merge
 
 ## Decisions
 
