@@ -11,3 +11,16 @@ wrappedstop
 figure: fig-sc-next [-] image=[width=0.35\linewidth,height=\textheight,keepaspectratio]
 wrappedfigure: fig-sc-meta [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+wrappedfigure: fig-sc-comment [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-sc-span [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-sc-paras [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-sc-kbd-comment [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-sc-meta-comment [side=right,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-sc-meta-nest [side=left,width=0.35\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+figure: fig-sc-comment-next [-] image=[width=0.35\linewidth,height=\textheight,keepaspectratio]
