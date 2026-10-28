@@ -95,3 +95,33 @@ Evidence at review head eb209c9: `python3 tests/verify.py` on macOS, all 102 ren
 - AC2 evidence: HTML groups `fig-sc-meta, p` (case 6) and `fig-sc-meta-nest, p` (case 12, key `stopnest.mixed`, a paragraph and a code block); Typst `| p |` for both; Word `p, clear` for both. LAYOUT "meta list" ok (first list item below the figure). Case 9: HTML `fig-sc-paras, p, p, p, p`, Typst `p, p, p, p`, Word `p, p, p, p, clear`; LAYOUT "meta paragraphs" ok (first meta paragraph beside the figure).
 - AC3 evidence: case 10 `fig-sc-kbd-comment` and case 11 `fig-sc-meta-comment` each `p, p, p` in HTML and Typst and `p, p, p, clear` in Word.
 - AC4 evidence: lines matching `fig-sc-(video|box|kbd|include|next)` followed by no letter or hyphen in the HEAD snapshots equal those at 093e4ef (HTML 9, Typst 9, Word 4, LaTeX 5 lines); each `# warnings` section has 0 lines.
+
+spawned: diff-bug, blame-history, prior-review, ripple
+
+- diff-bug #1: a video in a `.content-visible when-format="html"` span stops the wrap in every format, but Quarto removes the span in the others, so space opens below the figure — follow-up, row "Keep wraps past hidden shortcode spans" (D-011 prefers an early stop to a block beside a float)
+- diff-bug #2: `{{< meta {{< var k >}} stoplist >}}` read `stoplist` as the key though Quarto reads the nested shortcode's result — fix now (a nested shortcode argument leaves the key unknown, so it joins), fixed 1526560
+- diff-bug #3: a pre-quarto filter after `wrapped` that changes a key makes the stop use the old value — follow-up, row "Read meta values that later filters set"
+- diff-bug #4: D-012 did not say a key set for one format stops only there — fix now, fixed 1526560
+- diff-bug #5: quote stripping and the number index had no case — fix now, case 15 `{{< meta "stopitems.1" >}}` stops in four formats and its HTML shows the indexed list, fixed 1526560
+- diff-bug #6: README long lines, the include sentence in the meta paragraph, "alone in its paragraph" — fix now, fixed 1526560
+- diff-bug #7: "another block" in the JOINING_SHORTCODES comment and the narrow DESIGN next-block wording — fix now, fixed 1526560
+- diff-bug #8: D-012 did not tie the new forms to D-003 and D-007 — fix now, fixed 1526560
+- diff-bug #9 (question c): LAYOUT cases "video comments", "video span", and "meta list" repeat case 1's LaTeX path — reject, planned change: AC1 and AC2 name them, and each failed on main first
+- blame-history #1: D-012 said "annotates" though it changes D-011's meta rule — fix now, heading now "supersedes part of D-011", fixed 1526560
+- blame-history #2: D-012 said Quarto renders such a video as a block, true only in HTML — fix now, fixed 1526560
+- blame-history #3: a span or comment around an unknown inline shortcode, such as an icon, now stops it too — follow-up, absorbed into the parked row "Let icon shortcodes join wrap groups"
+- blame-history #4: DESIGN next-block rule named only a list value — fix now, fixed 1526560
+- blame-history #5: `{{< meta >}}` with no key joins, though Quarto returns the raw shortcode as a block with a "Shortcode 'meta' not found" warning — reject, edge: a meta shortcode with no key is outside documented and common use, and Quarto warns
+- blame-history #6: an empty extra span beside a shortcode makes the paragraph join — reject, false: the README promises one span around the shortcode, and main also joined
+- blame-history #7: D-012 wording and DESIGN line breaks — fix now, fixed 1526560
+- prior-review #1: a block-valued meta now stops, reversing M020's tested result — reject, planned change (D-012, the user's answer)
+- prior-review #2: README lead sentence "holds only a shortcode" — fix now, fixed 83de8bc
+- prior-review #3: README "other text around it" for meta had no case — fix now, narrowed to a comment or a span (cases 11, 14), fixed 83de8bc
+- prior-review #4: README lines over 80 columns — fix now, fixed 83de8bc and 1526560
+- prior-review #5: the two absorbed candidate rows still list the work — reject, planned change: hygiene graduates them
+- prior-review #6: LaTeX layout checks cover cases 6 to 9 only — reject, planned change: Scope says LaTeX joining rests on the shared grouping path
+- ripple #1: candidate row "Stop wraps at block meta values" says the README advises a `wrap-clear` div — reject, planned change: hygiene graduates the row
+- ripple #2: candidate row "Stop wraps at shortcodes with comments" describes the old rule — reject, planned change: hygiene graduates the row
+- ripple #3: README lead sentence — fix now, fixed 83de8bc
+- ripple #4: verify.py docstring "holds only a video shortcode" — fix now, fixed 83de8bc
+- ripple #5: JOINING_SHORTCODES comment "alone in a paragraph" — fix now, fixed 83de8bc
