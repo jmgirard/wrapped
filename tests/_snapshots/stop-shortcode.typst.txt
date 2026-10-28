@@ -13,6 +13,7 @@ figure: fig-sc-kbd-comment image-width=yes
 figure: fig-sc-meta-comment image-width=yes
 figure: fig-sc-meta-nest image-width=yes
 figure: fig-sc-comment-next image-width=yes
+figure: fig-sc-meta-span image-width=yes
 # wraps
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-video no-alt | p | cites=0
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-box no-alt | p | cites=0
@@ -25,3 +26,4 @@ align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-kbd-comment no-alt | p, p, p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-meta-comment no-alt | p, p, p | cites=0
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-meta-nest no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 35%, 40%, 40%)), column-gutter: 1em | fig-sc-meta-span no-alt | p, p, p | cites=0
