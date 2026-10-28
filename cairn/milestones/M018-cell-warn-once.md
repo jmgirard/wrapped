@@ -39,7 +39,7 @@ HTML `# figures` line shows no wrap class, the LaTeX `# tex` block has no
 the Word `# frames` bookmark field is not `<id>`. A cell warning reads
 `1x wrapped: the code cell #<label> <reason>, so it does not wrap.`.
 
-- [ ] AC1: The work adds knitr cells with `#| classes: wrap-right` that
+- [x] AC1: The work adds knitr cells with `#| classes: wrap-right` that
       draw two plots without `fig-subcap`, each followed by a paragraph.
       In every snapshot of their fixtures, both figures of each cell keep
       their normal layout. The `# warnings` block has exactly one line
@@ -56,7 +56,7 @@ the Word `# frames` bookmark field is not `<id>`. A cell warning reads
     HTML, LaTeX, Typst, and Word.
   - `tests/contexts.qmd`, a cell with `#| column: margin`: `is in the
     margin` in HTML, LaTeX, Typst, and Word.
-- [ ] AC2: The README section "Where a figure keeps its normal layout"
+- [x] AC2: The README section "Where a figure keeps its normal layout"
       states that a cell that makes more than one figure, in one of the
       places it lists, prints one warning that names the cell and the
       place.
@@ -105,3 +105,7 @@ the Word `# frames` bookmark field is not `<id>`. A cell warning reads
 ## Decisions
 
 ## Review
+
+- AC1 (2026-10-28, head ff669bb): a scratch script read the committed snapshots for the five cells in the 18 format cases AC1 names. Each `# warnings` block holds exactly the line `1x wrapped: the code cell #<label> <reason>, so it does not wrap.` with AC1's reason (Word page-wide-meta: `makes more than one figure`), no warning names `<label>-1` or `-2`, and no wrap line names either figure (HTML `# figures` shows `-`, no `wrappedfigure:`, no Typst `# wraps` entry, no Word frame): 18 of 18 pass. Its wrap tests catch `fig-second`, which wraps, in all four contexts formats. The cells draw `plot(1:10)` and `plot(10:1)` with `#| classes: wrap-right`, no `fig-subcap`, and a paragraph after each (inside the callout for fig-callout-two). Before the fix, margin-meta's PDF warned for fig-meta-margin-two-1 and -2 apart (work log).
+- AC2 (2026-10-28, head ff669bb): README.md's section "Where a figure keeps its normal layout", paragraph on a code cell that makes more than one figure, reads: "The cell can be in a place in this section where its format keeps the normal layout, such as the margin or a callout. Then that one warning names the cell and the place, and no warning names a figure of the cell."
+- gate (2026-10-28, head ff669bb): `cairn_validate.py` exit 0, all checks passed. No DESIGN.md principle changed, so `cairn_impact` is skipped. The one version marker, `_extensions/wrapped/_extension.yml`, reads 0.1.0 and the branch leaves it unchanged. The changelog slot is "none". The verify check is under AC3.
