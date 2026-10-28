@@ -50,15 +50,28 @@
 % wrapfig counts the lines beside a figure from \WF@size, the figure's
 % height, or takes the wrap-lines value. \wrapped@startlines keeps the count
 % that the wrap started with, and \wrapped@startbs the \baselineskip that
-% wrapfig counted with.
+% wrapfig counted with. \wrapped@starttotal keeps \pagetotal at the start,
+% which wrapfig has just brought up to date, \wrapped@startsize keeps
+% \WF@size, and \wrapped@startpage the number of pages shipped out by then.
 \newcount\wrapped@startlines
 \newdimen\wrapped@startbs
+\newdimen\wrapped@starttotal
+\newdimen\wrapped@startsize
+\newcount\wrapped@startpage
+\newif\ifwrapped@started
 \g@addto@macro\WF@startwrapping{%
   \global\wrapped@startlines\c@WF@wrappedlines
-  \global\wrapped@startbs\baselineskip}
-% The lines skipped are the lines that wrapfig counts from the height, less
-% the lines already set beside the figure, less one. A wrap-lines value
-% larger than the height needs adds no space.
+  \global\wrapped@startbs\baselineskip
+  \global\wrapped@starttotal\pagetotal
+  \global\wrapped@startsize\WF@size
+  \global\wrapped@startpage\ReadonlyShipoutCounter
+  \global\wrapped@startedtrue}
+% Where the text is still narrowed, the lines skipped are the lines that
+% wrapfig counts from the height, less the lines already set beside the
+% figure, less one. A wrap-lines value larger than the height needs adds no
+% space. A wrap-lines value smaller than the height needs can end the
+% narrowed lines above the figure's bottom. Then \wrapped@skipbelow skips
+% to where the narrowed lines that wrapfig counts from the height would end.
 \newcommand*\wrapped@endwrap{%
   \ifvoid\WF@box\else \WFclear \fi
   \ifx\parshape\WF@fudgeparshape
@@ -69,6 +82,21 @@
     \advance\@tempcnta\c@WF@wrappedlines \advance\@tempcnta\m@ne
     \ifnum\@tempcnta>\z@ \vspace{\@tempcnta\wrapped@startbs}\fi
     \WFclear
+  \else
+    \ifwrapped@started \wrapped@skipbelow \fi
+  \fi
+  \global\wrapped@startedfalse}
+% \pagetotal is the height of the page so far. It describes the text only
+% in the main vertical list on the page where the wrap started, so inside a
+% box such as a callout, or after a page break, nothing is skipped.
+\newcommand*\wrapped@skipbelow{%
+  \par
+  \ifinner\else
+    \ifnum\wrapped@startpage=\ReadonlyShipoutCounter
+      \@tempdima\wrapped@starttotal \advance\@tempdima\wrapped@startsize
+      \advance\@tempdima-\wrapped@startbs \advance\@tempdima-\pagetotal
+      \ifdim\@tempdima>\z@ \vspace{\@tempdima}\fi
+    \fi
   \fi}
 \newcommand*\wrappedstop{\wrapped@endwrap}
 % wrapfig runs \WF@startfloating after the environment's groups end. Before

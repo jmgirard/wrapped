@@ -563,12 +563,13 @@ def lines_case(boxes, edges, lh):
                           f"and {gaps['plain']:.0f} px without it")
 
 
-def paragraph_lines(boxes, first, end):
+def paragraph_lines(boxes, first, end, leave=None):
     """The lines of the paragraph whose first line holds `first`, up to the
-    line that holds `end`, each as a list of the boxes that share its top."""
+    line that holds `end`, each as a list of the boxes that share its top.
+    The box `leave` is left out."""
     p = find_text(boxes, first)
     lines = [[b for b in boxes if b.kind == "text" and b.page == p.page and abs(b.top - p.top) <= NEAR * 2]]
-    for line in after(boxes, p):
+    for line in after(boxes, p, leave):
         if any(end in b.text for b in line):
             break
         lines.append(line)
@@ -590,7 +591,7 @@ def small_a_case(boxes, edges, lh):
     p = find_text(boxes, "Four lines beside small a.")
     fig = find_figure(boxes, "Small a.", p)
     check_beside(fig, p, "right", edges, lh)
-    lines = paragraph_lines(boxes, "Four lines beside small a.", "Stop small a")
+    lines = paragraph_lines(boxes, "Four lines beside small a.", "Stop small a", fig.caption)
     if len(lines) != 4:
         raise LayoutError(f"the paragraph beside small a has {len(lines)} lines, not 4")
     ref = find_text(boxes, "A short paragraph beside form A right.")
@@ -668,6 +669,18 @@ def small_e_case(boxes, edges, lh):
         raise LayoutError(f"the stop heading starts at {heading.top:.0f} px, not at the page's top text edge {top:.0f} px")
 
 
+def small_f_case(boxes, edges, lh):
+    """A count that ends early, and a paragraph that ends on the next page:
+    the stop heading is as far from the text as after a twin paragraph."""
+    fig = find_figure(boxes, "Small f.", find_text(boxes, "Long paragraph beside small f."))
+    last, got = heading_gap(boxes, "sigma.", "Stop small f")
+    if last.page != fig.page + 1:
+        raise LayoutError(f"the paragraph ends on page {last.page}, not on the page after the figure")
+    _, want = heading_gap(boxes, "theta.", "Stop twin f")
+    if abs(got - want) > 2:
+        raise LayoutError(f"the stop heading is {got:.0f} px below the last line, not {want:.0f} px as in the twin")
+
+
 def page_bottom_case(boxes, edges, lh):
     """A figure that moves to the next page after its paragraphs end there
     has no text beside it, and its stop text starts below it."""
@@ -720,6 +733,7 @@ def stop_latex_cases():
     yield "small wrap-lines c", small_c_case
     yield "small wrap-lines d", small_d_case
     yield "small wrap-lines e", small_e_case
+    yield "small wrap-lines f", small_f_case
     yield "page bottom", page_bottom_case
 
 

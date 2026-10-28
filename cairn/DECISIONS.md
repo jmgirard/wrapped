@@ -200,3 +200,17 @@ adds no new publisher of CI code. A `gh-pages` branch was chosen over a
 GitHub Actions Pages deploy because the branch can be published by hand
 and checked live before the merge. On a pull request the workflow only
 renders.
+
+### D-015: After a small wrap-lines count, the stop block skips below the figure (annotates D-007)
+
+2026-10-28, M025. D-007 skips space at the stop block only where the text
+is still narrowed. A `wrap-lines` value smaller than the figure needs can
+end the narrowed lines first, and then the stop block sat beside or over
+the figure. The user chose at the M025 plan's question set to keep the
+count for the narrowed lines and to move the stop block below the figure.
+wrapfig documents a smaller count as its fix for vertical space that it
+does not count, such as the space between paragraphs, so raising the count
+to the height count was rejected. The skip compares positions on the page
+where the wrap started, so it adds nothing after a page break or inside a
+box such as a callout. The text inside the paragraphs past the count still
+runs at full width, as wrapfig does.
