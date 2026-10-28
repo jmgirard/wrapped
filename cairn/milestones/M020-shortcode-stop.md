@@ -68,6 +68,7 @@ A paragraph that holds only a block shortcode, such as `{{< video >}}`, ends the
 - 2026-10-28: claim audit re-read (same reader, once): both corrected claims match Quarto 1.10.19, and the `wrap-clear` hint works (a Div ends the group); no new false claim.
 - 2026-10-28: T5: `python3 tests/verify.py` (compare, no update) on macOS: "all 102 renders pass", 0 FAIL lines, "ok layout stop-rule case 12", "ok layout stop-shortcode video". The run began before the claim-audit commit, whose code change is a comment only. Status set to review.
 - 2026-10-28: review fix-now run: the first `verify.py --update` stopped before any render when `quarto pandoc --print-default-data-file reference.docx` (in `tests/reference_narrow.py`) exited 139; the same command run alone at once exited 0, so the suite was rerun.
+- 2026-10-28: step-7 approval: m020-shortcode-stop approved for merge
 
 ## Review
 
