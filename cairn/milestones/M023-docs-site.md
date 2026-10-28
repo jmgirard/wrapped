@@ -257,3 +257,4 @@ Pass 2, review head 9952239, main b7e62a3 (unmoved).
 - prior-review #1: DESIGN.md's "on pull requests and pushes to `main`" reads as PRs to main only — fix now (with diff-bug #5)
 - ripple #1: the breakpoint sentence and the narrow-column sentence read against each other — fix now (as diff-bug #4)
 - ripple #2: DESIGN.md omits the manual trigger — fix now (as diff-bug #5)
+- Pass 2 fix-now items (diff-bug #1–#5; blame-history #3, #4; prior-review #1; ripple #1, #2): fixed c861083. After the fix: site render one `(W)` line, 22 pages with all links resolving, and the width-gap example's LaTeX, Typst, and Word pages still show text beside the figure. Snapshot files changed: none (`git diff --name-only main...HEAD` lists no `_snaps` or `__snapshots__` path). Open-PR read: no open PRs by the operator, under the feature cap of 1.
