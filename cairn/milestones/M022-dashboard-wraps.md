@@ -118,3 +118,4 @@ In a Quarto dashboard, a wrapped code-cell figure inside a `.card` div wraps the
 - ripple #5: DESIGN.md step 2's list of contexts omits the dashboard cell — fix now, fixed 4de44cb
 - ripple #6: `wrap-mechanisms.md` E8 omits the dashboard cell — fix now, fixed 4de44cb
 - snapshot: `tests/_snapshots/dashboard.dashboard.txt` — new file; AC2 and AC3 call for it, and the `fig-dash-panel` lines come from the diff-bug #1 fix
+- after fixes (2026-10-28): `python3 tests/verify.py` at 4de44cb exited 0, "all 103 renders pass"; `report()` at 1280x900 on that code still gives the four AC1 figures and the `fig-dash-card` group `ok: true` (next `ul` 706 px, figure bottom 542 px), and `stop-shortcode.html` 13 of 13 figure and group entries.
