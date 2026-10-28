@@ -7,6 +7,17 @@ shortcodes:
 stoplist: |
   - First item from the metadata
   - Second item from the metadata
+twopara: |
+  First paragraph from the metadata.
+
+  Second paragraph from the metadata.
+stopnest:
+  mixed: |
+    A paragraph from the nested metadata.
+
+    ~~~
+    code from the nested metadata
+    ~~~
 format:
   html: default
   pdf:
@@ -99,3 +110,100 @@ A short paragraph beside the meta case.
 {{< meta stoplist >}}
 
 Text after the meta list.
+
+```{=latex}
+\clearpage
+```
+
+## Case 7: a video with comments
+
+![Shortcode case 7.](plot.png){#fig-sc-comment .wrap-right width="35%"}
+
+A short paragraph beside the comment case.
+
+{{< video https://www.youtube.com/embed/wo9vZccmqwc >}} <!-- a note on the same line -->
+<!-- a note on the next line -->
+
+Full width text after the commented video. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+```{=latex}
+\clearpage
+```
+
+## Case 8: a video in a span
+
+![Shortcode case 8.](plot.png){#fig-sc-span .wrap-left width="35%"}
+
+A short paragraph beside the span case.
+
+[<!-- a note in the span --> {{< video https://www.youtube.com/embed/wo9vZccmqwc >}}]{.video-span}
+
+Full width text after the video in a span. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+```{=latex}
+\clearpage
+```
+
+## Case 9: a meta value that is paragraphs
+
+![Shortcode case 9.](plot.png){#fig-sc-paras .wrap-right width="35%"}
+
+A short paragraph beside the meta paragraphs case.
+
+{{< meta twopara >}}
+
+Text after the meta paragraphs.
+
+```{=latex}
+\clearpage
+```
+
+## Case 10: a joining shortcode with a comment
+
+![Shortcode case 10.](plot.png){#fig-sc-kbd-comment .wrap-left width="35%"}
+
+A short paragraph beside the kbd comment case.
+
+{{< kbd Ctrl-V >}} <!-- a note on the kbd -->
+
+Text after the kbd with a comment.
+
+```{=latex}
+\clearpage
+```
+
+## Case 11: a meta list with a comment
+
+![Shortcode case 11.](plot.png){#fig-sc-meta-comment .wrap-right width="35%"}
+
+A short paragraph beside the meta comment case.
+
+{{< meta stoplist >}} <!-- a note on the meta -->
+
+Text after the meta list with a comment.
+
+```{=latex}
+\clearpage
+```
+
+## Case 12: a nested meta value with a code block
+
+![Shortcode case 12.](plot.png){#fig-sc-meta-nest .wrap-left width="35%"}
+
+A short paragraph beside the nested meta case.
+
+{{< meta stopnest.mixed >}}
+
+Text after the nested meta value.
+
+```{=latex}
+\clearpage
+```
+
+## Case 13: a commented video right after the figure
+
+![Shortcode case 13.](plot.png){#fig-sc-comment-next .wrap-right width="35%"}
+
+{{< video https://www.youtube.com/embed/wo9vZccmqwc >}} <!-- a note on the same line -->
+
+Text after the third video.

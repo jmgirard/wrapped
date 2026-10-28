@@ -612,12 +612,31 @@ def stop_latex_cases():
     yield "page bottom", page_bottom_case
 
 
+def meta_paragraphs_case(boxes, edges, lh):
+    """Case 9: a meta value of paragraphs joins, so its first paragraph is
+    beside the figure."""
+    p = find_text(boxes, "A short paragraph beside the meta paragraphs case.")
+    fig = find_figure(boxes, "Shortcode case 9.", p)
+    check_beside(fig, p, "right", edges, lh)
+    check_beside(fig, find_text(boxes, "First paragraph from the metadata."), "right", edges, lh)
+
+
 def stop_shortcode_cases():
     """A paragraph that holds only a video shortcode, which is a URL line in
-    LaTeX, stops the wrap."""
+    LaTeX, stops the wrap, also with comments around it or in a span, and so
+    does a lone meta shortcode whose value is a list."""
     yield "video", lambda bx, e, lh: stop_case(
         bx, e, lh, "Shortcode case 1.", "A short paragraph beside the video case.", "right",
         full="Full width text after the video.")
+    yield "meta list", lambda bx, e, lh: stop_case(
+        bx, e, lh, "Shortcode case 6.", "A short paragraph beside the meta case.", "left")
+    yield "video comments", lambda bx, e, lh: stop_case(
+        bx, e, lh, "Shortcode case 7.", "A short paragraph beside the comment case.", "right",
+        full="Full width text after the commented video.")
+    yield "video span", lambda bx, e, lh: stop_case(
+        bx, e, lh, "Shortcode case 8.", "A short paragraph beside the span case.", "left",
+        full="Full width text after the video in a span.")
+    yield "meta paragraphs", meta_paragraphs_case
 
 
 def column_gap(boxes, edges, words):

@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-28 (M020 review: "Stop wraps at video and embed sho
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M021 | Stop wraps at more shortcode forms | planned | — | normal | milestones/M021-shortcode-stop-forms.md |
+| M021 | Stop wraps at more shortcode forms | in-progress | — | normal | milestones/M021-shortcode-stop-forms.md |
 | M018 | Warn once per cell under a context | done | — | normal | milestones/archive/M018-cell-warn-once.md |
 | M019 | Wrap figures in Typst columns | done | — | normal | milestones/archive/M019-typst-columns.md |
 | M020 | Stop wraps at block shortcodes | done | — | normal | milestones/archive/M020-shortcode-stop.md |
