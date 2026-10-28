@@ -84,6 +84,7 @@ A paragraph that holds one shortcode outside D-011's eight joining names ends th
 - 2026-10-28: claim audit: 70 claims read, 8 corrected — wrapped.lua, README.md, tests/verify.py, tests/stop-shortcode.qmd. Fixed: a `meta` list in a user span stopped the wrap though Quarto renders it inline (the meta test now needs the shortcode itself as the one inline; new joining case 14); `meta_value` read a number as a list index in the first key; quote stripping removed two pairs; README "line breaks" (now line ends in the source; a hard LineBreak joins), the eight joining names' exception, and the span form for `meta`; fixture "third video"; the stop_shortcode_cases docstring. Code in 93996c3; failing-first check of case 14 and the full verify rerun still owed.
 - 2026-10-28: case 14 with the filter of 1e41d39: HTML group `fig-sc-meta-span, p` (stopped, wrong); with the fix: `p, p, p` (joins). Snapshots in 1bead1d add only case 14's lines; the case 1 to 5 lines still match 093e4ef in all four.
 - 2026-10-28: T6 done: `python3 tests/verify.py` on macOS at 1bead1d, all 102 renders pass, exit 0, all five stop-shortcode LAYOUT cases ok. Status review. Deviations: AC1 reworded (user-approved); case 14 added from the claim audit. Open: none.
+- 2026-10-28: step-7 approval: m021-shortcode-stop-forms approved for merge
 
 ## Decisions
 
