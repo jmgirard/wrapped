@@ -55,7 +55,7 @@ In a Quarto dashboard, a wrapped code-cell figure inside a `.card` div wraps the
 - [x] T3: In `wrapped.css`, give `.wrap-group .cell.html-fill-container` and `.wrap-group .cell-output-display.html-fill-container` `display: block`, with a comment that names the dashboard flex wrappers, and give `.wrap-group.html-fill-item` `flex: 0 0 auto`.
 - [x] T4: In `wrapped.lua`, add an `is_dashboard` flag beside `is_revealjs` (line 38). In pass 2, mark a code cell Div that is not inside a `.card` Div as the context "is outside a card in a dashboard", so its floats get the context warning in the float pass and a two-figure cell gets the one cell warning. Contexts inside a `.card` div (a callout, a list) are still found.
 - [ ] T5: Run the fixture with `--update`, read the new snapshot, confirm that no other snapshot changes, and check AC1's figures and group with `report()` at 1280x900 in the built-in browser.
-- [ ] T6: Write the README and DESIGN.md text for AC4.
+- [x] T6: Write the README and DESIGN.md text for AC4.
 - [ ] T7: Run `python3 tests/verify.py` in full on macOS.
 
 ## Work log
@@ -74,6 +74,7 @@ In a Quarto dashboard, a wrapped code-cell figure inside a `.card` div wraps the
 - 2026-10-28: substantive amendment: Scope In and T3 add `.wrap-group.html-fill-item { flex: 0 0 auto }`. With the cell rule alone, `fig-dash-card` and `fig-dash-nofill` reported `ok: true`, but the fill card shrank `fig-dash-card`'s group to 116 px and its list started at 516 px over a figure ending at 588 px (group entry `ok: false`). With the rule, the list starts at 629 px and the card body scrolls. No criterion changes; AC1's group clause needs it.
 - 2026-10-28: T3: both rules in `wrapped.css`. After a cache-bypassing reload, `report()` at 1280x900 gives the four AC1 figures `ok: true` (the cell rule served from the render; the group rule injected in the page before the edit). Re-check from a fresh render at T5.
 - 2026-10-28: T4: `is_dashboard` flag; `find_contexts` walks a `.card` div's content with `card_depth` raised, and `block_context` names a `cell` Div (not `.markdown`, which Quarto unwraps) "is outside a card in a dashboard" at depth 0. Render: `fig-dash-bare` and `fig-dash-two` warn with that phrase and lose the wrap class; the four card figures keep theirs. A scratch render of a callout inside a `.card` still warns "is in a callout".
+- 2026-10-28: T6: README intro names dashboards, "Where a figure keeps its normal layout" gets a dashboard item, and a new "Dashboards" section (after "Slides") states the card rule, the fallback outside a `.card` div, a `.card` example, and that sidebars, tabsets, value boxes, and toolbars are not tested. DESIGN.md steps 2 and 5 name the context and the two CSS rules; the `verify.py` docstring names the dashboard snapshot.
 
 ## Decisions
 

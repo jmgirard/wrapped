@@ -4,10 +4,10 @@ wrapped is a Quarto filter extension. It lets body text flow beside a
 figure, to the left or right of it. The figure keeps its number, its
 caption, and its `@fig-` links.
 
-This version wraps figures in HTML output, revealjs slides included, in
-PDF through LaTeX, in PDF through Typst, and in Word. In every other
-format, a wrapped figure renders as a normal figure, and the render prints
-one warning. Dashboards are not tested yet.
+This version wraps figures in HTML output, revealjs slides and dashboards
+included, in PDF through LaTeX, in PDF through Typst, and in Word. In
+every other format, a wrapped figure renders as a normal figure, and the
+render prints one warning.
 
 ## Install
 
@@ -244,6 +244,8 @@ one figure gets one warning for the cell instead, as stated below.
   or `layout`.
 - A list, a definition list included, a callout, a `.columns` layout, or a
   tabset.
+- In a dashboard, a code cell that is not inside a `.card` div (see
+  "Dashboards").
 
 A figure's own class and the document's `fig-column` or `column` can name
 different places. In PDF through LaTeX and PDF through Typst, the
@@ -344,6 +346,34 @@ div, a code cell with `#| column: margin` or `#| fig-column: margin`, or
 By default, revealjs puts an `.aside` div at the foot of the slide. A
 figure in an aside div does not wrap. It keeps its normal layout, and the
 render prints one warning for it.
+
+## Dashboards
+
+In a dashboard (`format: dashboard`), a wrapped figure in a card floats
+beside the paragraphs after it in that card. This holds for an image and
+for a code cell figure too.
+
+In a row or a column, Quarto makes a code cell outside a `.card` div into
+a card of its own. The paragraphs after the cell are then in another card.
+So a figure from a code cell outside a `.card` div keeps its normal
+layout. The render prints one warning for it. To wrap the
+figure, put the cell and its paragraphs in a `.card` div:
+
+````markdown
+::: {.card title="Ratings"}
+```{r}
+#| label: fig-ratings
+#| fig-cap: "Mean ratings by condition."
+#| classes: wrap-right
+#| out-width: "40%"
+plot(ratings)
+```
+
+Ratings rose in both conditions.
+:::
+````
+
+Sidebars, tabsets, value boxes, and card toolbars are not tested.
 
 ## PDF through LaTeX
 

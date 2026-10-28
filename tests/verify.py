@@ -26,7 +26,7 @@ paragraph with the clearing break, with the link anchors and author-year
 citations in those paragraphs. It also counts framed paragraphs that are
 in no frame. The script first writes the reference docs of the docx
 fixtures with tests/reference_narrow.py. A revealjs
-snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
+or dashboard snapshot holds what an HTML snapshot holds. A fixture that is a folder is a
 book project: its snapshot holds the HTML parts of each page under _book/,
 and the href of each cross-reference link. For a fixture in MARGIN_IDS, the
 script also renders a copy with no filters and records whether the nearest

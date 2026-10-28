@@ -179,7 +179,11 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    column-page and column-screen names without -inset) (corrected M015). In
    LaTeX and Typst, a code cell's own column class names no context when
    the document sets `fig-column` or `column`, because the document's value
-   decides there (corrected M016). It
+   decides there (corrected M016). In a dashboard, a code cell outside a
+   `.card` div is a context ("is outside a card in a dashboard"), because
+   Quarto's post-render dashboard filter makes such a cell in a row or
+   column a card of its own; the walk tracks the `.card` divs around each
+   block (corrected M022). It
    records each float there by its custom id, and it removes the wrap class
    from a captioned image with no id or an image there, with a warning. In
    HTML, step 4 also keeps a float whose caption goes to the margin in its
@@ -224,6 +228,11 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    gets a `.wrapped-image` box that holds that opening (corrected M005).
 5. In HTML it groups each wrapped figure with the paragraphs after it in a
    `.wrap-group` div. The group's `display: flow-root` gives the stop rule.
+   A dashboard marks the group and a cell's `.cell` and
+   `.cell-output-display` wrappers as flex fill items and containers;
+   `wrapped.css` sets those cell wrappers to `display: block`, so the float
+   reaches the paragraphs, and the group to `flex: 0 0 auto`, so a card
+   that fills its height does not shrink it (corrected M022).
    In LaTeX it finds the same groups by the stop rule but writes no div: it
    puts an image with no caption in a raw `wrappedfigure`, and a raw
    `\wrappedstop` follows each group's last paragraph (corrected M007). In Typst it writes each group as raw Typst blocks around the figure and the
