@@ -886,8 +886,8 @@ local function count_top_floats(div)
   return n
 end
 
--- Custom ids of floats whose next block is not a paragraph, from the
--- next-block pass.
+-- Custom ids of floats whose next block is not a paragraph that joins a
+-- group, from the next-block pass.
 local no_text = {}
 
 -- Why a float keeps its normal layout, as "is in a list", by the float's
@@ -1557,28 +1557,35 @@ local function is_comment(text)
   return body ~= nil and not body:find("-->", 1, true)
 end
 
--- Custom ids of the {{< pagebreak >}} shortcodes, from the shortcode pass.
-local page_breaks = {}
+-- Shortcode names by custom id, from the shortcode pass.
+local shortcode_names = {}
 
-local function find_page_break(shortcode)
-  if shortcode.name == "pagebreak" then
-    page_breaks[shortcode.__quarto_custom_node.attributes.__quarto_custom_id] = true
-  end
+local function find_shortcode(shortcode)
+  shortcode_names[shortcode.__quarto_custom_node.attributes.__quarto_custom_id] = shortcode.name
 end
 
--- True for a paragraph that holds only a {{< pagebreak >}} shortcode,
--- which Quarto has not yet turned into a page break.
-local function is_page_break(para)
+-- Quarto's shortcodes that usually make text, an image, or paragraphs, which
+-- join a group when they are alone in a paragraph. A meta value can be a
+-- block, such as a list, and still joins.
+local JOINING_SHORTCODES = {
+  meta = true, var = true, env = true, kbd = true, lipsum = true,
+  placeholder = true, version = true, brand = true,
+}
+
+-- True for a paragraph that holds only one shortcode, which Quarto has not
+-- yet rendered, unless the shortcode is one that joins. Such a shortcode can
+-- make a block, such as a page break or a video.
+local function is_block_shortcode(para)
   local span = #para.content == 1 and para.content[1]
   return span and span.t == "Span" and span.attributes.__quarto_custom_type == "Shortcode"
-    and page_breaks[span.attributes.__quarto_custom_id] == true
+    and not JOINING_SHORTCODES[shortcode_names[span.attributes.__quarto_custom_id]]
 end
 
 -- A block that a group takes in: a paragraph that does not start a wrap of
--- its own and is not a page break, or a raw HTML comment, which shows
+-- its own and is not a block shortcode, or a raw HTML comment, which shows
 -- nothing.
 local function joins_group(block)
-  if block.t == "Para" then return lone_wrapped_image(block) == nil and not is_page_break(block) end
+  if block.t == "Para" then return lone_wrapped_image(block) == nil and not is_block_shortcode(block) end
   return block.t == "RawBlock" and block.format:match("html") ~= nil
     and is_comment(block.text)
 end
@@ -1594,7 +1601,8 @@ local function text_follows(blocks, i)
 end
 
 -- The next-block rule. A wrapped figure whose next block is not a
--- paragraph has no text to wrap, so it keeps a normal figure with no
+-- paragraph that joins a group, such as a heading or a lone block
+-- shortcode, has no text to wrap, so it keeps a normal figure with no
 -- warning. A float or a code cell has its floats recorded for the float
 -- pass. A captioned image with no id, or an image with no caption, loses
 -- its wrap class here. Runs before the float pass, on the blocks as written.
@@ -1695,7 +1703,9 @@ local function docx_group(members)
 end
 
 -- Groups each wrapped figure with the paragraphs after it. The group stops
--- at the first block that is not a paragraph (the stop rule). The group's
+-- at the first block that does not join it: a block that is not a
+-- paragraph, or a paragraph with a lone block shortcode (the stop rule,
+-- `joins_group`). The group's
 -- CSS contains its float, so the stop block starts below the figure. In
 -- Typst the group is a wrap-content call instead, and in LaTeX the group's
 -- blocks are followed by \wrappedstop.
@@ -1849,7 +1859,7 @@ end
 
 return {
   { Meta = read_meta },
-  { Shortcode = find_page_break },
+  { Shortcode = find_shortcode },
   { Pandoc = find_contexts },
   { Pandoc = find_no_text },
   {

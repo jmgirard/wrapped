@@ -138,6 +138,10 @@ RENDERS = [
     ("stop-rule", "pdf", True),
     ("stop-rule", "typst", True),
     ("stop-rule", "docx", True),
+    ("stop-shortcode", "html", True),
+    ("stop-shortcode", "pdf", True),
+    ("stop-shortcode", "typst", True),
+    ("stop-shortcode", "docx", True),
     ("stop-latex", "pdf", True),
     ("multicols", "pdf", True),
     ("twocolumn-class", "pdf", True),
@@ -608,6 +612,14 @@ def stop_latex_cases():
     yield "page bottom", page_bottom_case
 
 
+def stop_shortcode_cases():
+    """A paragraph that holds only a video shortcode, which is a URL line in
+    LaTeX, stops the wrap."""
+    yield "video", lambda bx, e, lh: stop_case(
+        bx, e, lh, "Shortcode case 1.", "A short paragraph beside the video case.", "right",
+        full="Full width text after the video.")
+
+
 def column_gap(boxes, edges, words):
     """The distance between the left edges of the two columns of the
     multicols whose first line holds `words`."""
@@ -953,6 +965,7 @@ def typst_columns_cases():
 LAYOUT = {
     "stop-rule": stop_rule_cases,
     "stop-latex": stop_latex_cases,
+    "stop-shortcode": stop_shortcode_cases,
     "multicols": multicols_cases,
     "twocolumn-class": twocolumn_class_cases,
     "twocolumn-switch": twocolumn_switch_cases,

@@ -88,18 +88,26 @@ wrapped:
 
 Stop rule: the figure wraps the paragraphs that follow it. Wrapping stops at
 the first block that is not a paragraph: a heading, list, figure, table, code
-block, callout, horizontal rule, or `{{< pagebreak >}}` page break, which at
-`pre-quarto` is still a paragraph that holds the shortcode (corrected by the
-page-break hotfix). An empty `::: {.wrap-clear}` div stops it
-earlier. HTML, LaTeX, Typst, and Word enforce the rule. In LaTeX a
+block, callout, or horizontal rule. A paragraph that holds exactly one
+shortcode and nothing else also stops it, such as `{{< pagebreak >}}` or
+`{{< video >}}`, because at `pre-quarto` the shortcode is not yet rendered
+and can make a block (corrected by the page-break hotfix, M020, D-011).
+Eight shortcodes that usually make text, an image, or paragraphs join
+instead (a `meta` value that is a block joins too): `meta`, `var`, `env`,
+`kbd`, `lipsum`, `placeholder`, `version`, and `brand`. Quarto expands
+`{{< include >}}` and `{{< embed >}}` before the filter runs, so their
+blocks follow the rule as written. An empty `::: {.wrap-clear}` div stops
+it earlier. HTML, LaTeX, Typst, and Word enforce the rule. In LaTeX a
 `\wrappedstop` after the group skips the lines the figure's height still
 needs, and puts out a figure that moved and still waits, centered with no
 text beside it (corrected M007).
 
 Next-block rule (D-003): a wrapped figure whose next block is not a
 paragraph has no text to wrap, so it keeps a normal figure with no warning.
-Of two wrapped figures in a row, the first keeps a normal figure and the
-second wraps. The figures of one code cell are the exception: a wrapped
+A paragraph that stops wrapping under the stop rule, such as a lone
+`{{< video >}}`, does not count as a paragraph here (M020, D-011). Of two
+wrapped figures in a row, the first keeps a normal figure and the second
+wraps. The figures of one code cell are the exception: a wrapped
 cell that makes more than one figure without `fig-subcap` keeps all of them
 normal, with one warning for the cell (D-010, M014). That warning names
 the cell's context as its reason, and a cell in no context with no
@@ -147,10 +155,10 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    reads `classoption`, and a two-column document keeps normal figures.
    Columns that a class, `\twocolumn`, or `multicols` sets are found only
    while LaTeX runs, by the check in `wrapped.tex` at each figure (step 7)
-   (corrected M009). In a second pass, a `Shortcode` handler records each
-   `{{< pagebreak >}}` shortcode by its custom id, so that the stop rule
-   reads that shortcode's paragraph as a page break (corrected by the
-   page-break hotfix).
+   (corrected M009). In a second pass, a `Shortcode` handler records the
+   name of each shortcode by its custom id, so that the stop rule can tell
+   a paragraph with a lone joining shortcode from one with any other
+   shortcode (corrected by the page-break hotfix, M020).
 2. It finds the contexts that cannot wrap: lists (definition lists
    included), callouts, column layouts, panel layouts, tabsets, asides,
    margin blocks (a `fig-column: margin` cell included), and subfigure
