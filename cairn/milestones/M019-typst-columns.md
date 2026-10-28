@@ -54,23 +54,23 @@ on the figure's page. That line overlaps the image's height. The line does
 not overlap the image across. The line lies within the edges of the column
 that holds the image. Each test allows `NEAR` (3 px).
 
-- [ ] AC1: In the fixture, a captioned figure and an uncaptioned image in
+- [x] AC1: In the fixture, a captioned figure and an uncaptioned image in
       the first column, and a captioned figure in the second column, each
       have their paragraph beside them. The render prints no warning that
       starts with `wrapped:`.
-- [ ] AC2: In the fixture, the image of a figure with `width="40%"` is
+- [x] AC2: In the fixture, the image of a figure with `width="40%"` is
       124 px wide, 40% of the 311 px column. Quarto 1.10.19's default Typst
       page has 648 px of text, and the column is half of that less Typst's
       default gutter of 4%. An image with `width="1in"` is 108 px wide.
       Each width allows `NEAR`.
-- [ ] AC3: In the fixture, a figure whose width plus its gap is wider than
+- [x] AC3: In the fixture, a figure whose width plus its gap is wider than
       its column and narrower than the page's text has a 124 px image,
       within `NEAR`, and its paragraph is beside it.
-- [ ] AC4: In the fixture, one wrapped figure's group does not fit in the
+- [x] AC4: In the fixture, one wrapped figure's group does not fit in the
       rest of the first column. Its image is in the second column of the
       same page, and no text line of that column ends above the image's
       top. Its paragraph is beside it.
-- [ ] AC5: The README section "PDF through Typst" states four facts for a
+- [x] AC5: The README section "PDF through Typst" states four facts for a
       document with `columns:` set, such as `columns: 2`. A wrapped figure
       wraps inside its column. A percent width, and the check of a width
       plus its gap, use the column's width. A figure with the text beside
@@ -145,3 +145,48 @@ that holds the image. Each test allows `NEAR` (3 px).
 - 2026-10-28: review pass 1: four lenses returned 27 findings; 17 fix-now landed in 144eb1c (fixture fill case now 2.5in with a 0.5in gap, a 2.4in case with a 10% gap, a two-line blank-column check, doc fixes). The consistency gate then failed on `cairn/PROFILE.md` at 121 lines (cap 120), fixed by keeping the new clause on the slot's existing long line. Full suite rerunning on the fixed head.
 
 ## Decisions
+
+## Review
+
+Evidence is from `python3 tests/verify.py` on 144eb1c (fix-now pass 1 in place), exit 0, "all 98 renders pass", run 2026-10-28 after the fixes. f3e8d68 changes only `cairn/` files.
+
+- AC1: `ok layout typst-columns 40% in column 1`, `1in image in column 1`, and `40% in column 2` (the beside tests and the column test); `ok typst-columns.typst`, whose snapshot's `# warnings` part holds no line, so the render printed no `wrapped:` warning.
+- AC2: the same three cases pass their width test: 124 px (`TYPST_COL_40`) for both 40% figures and 108 px (`TYPST_1IN`) for the 1in image, within `NEAR`. Pass-1 plant: a 30% width failed "the image is 93 px wide, not 124 px".
+- AC3: `ok layout typst-columns 2.5in with 0.5in gap fills the column`: 2.5in fits the column alone (207 pt), and with its 0.5in gap is wider than it and narrower than the 432 pt page text; the image is 124 px and the paragraph is beside it. Plant: a 0pt gap kept 2.5in, "the image is 270 px wide, not 124 px". Beside AC3, `2.4in with 10% gap fits the column` passes at 259 px; a 0.6in gap (10% of the page text) gave "124 px wide, not 259 px".
+- AC4: `ok layout typst-columns moved to column 2`: "Marker before" is in column 1 of page 3, the moved image is in column 2 of page 3 with no column-2 line ending above it, and its paragraph is beside it. Column 1 ends at 954 px and column 2's text at 1044 px, so the end of column 1 stays blank. Plants: shorter filler ("not inside column 2"), a colbreak before the figure ("8 lines of column 2 end above the image"), about 2 more filler lines ("column 1 ends at 1019 px, less than two lines above the foot of column 2 at 1044 px").
+- AC5: read at f3e8d68, README "PDF through Typst" states for `columns:` set, such as `columns: 2`: a figure "wraps inside its column"; "A percent width is a share of the column width, and Typst checks a width plus its gap against the column width"; a figure and its text that "do not fit at the bottom of a column ... move to the next column"; "The rest of that column stays blank". The section's two `text width` sentences both name the column width.
+- AC6: local run above exit 0. `git diff --stat main..HEAD -- _extensions` is empty; `tests/_snapshots/` against main only adds `typst-columns.typst.txt`, so every fixture on main renders to its snapshot on main. CI on the PR is read at step 8 and recorded here before the merge.
+
+Consistency gate: `cairn_validate.py` all checks passed at f3e8d68 (pass 1 first failed weight caps, `cairn/PROFILE.md` 121 lines, fixed in f3e8d68). No principle changed, so no `cairn_impact`. Profile slot: the one version marker, `_extension.yml` `version: 0.1.0`, is unchanged; the verify command passes (above); changelog "none". Snapshot files: none under a `_snaps` or `__snapshots__` directory; `tests/_snapshots/typst-columns.typst.txt` is new, as T1 calls for.
+
+spawned: diff-bug, blame-history, prior-review, ripple
+
+- diff-bug #1: the 2.9in fill case could not show the gap is counted (2.9in alone is wider than the column) — fix now, fixed 144eb1c (2.5in with a 0.5in gap; a 0pt-gap plant keeps 270 px).
+- diff-bug #2: "the rest of that column stays blank" had no test — fix now, fixed 144eb1c (the moved case checks column 1 ends two lines or more above the foot of column 2; plant red with that reason).
+- diff-bug #3: the percent-gap part of the README bullet had no test — fix now, fixed 144eb1c (2.4in with a 10% gap keeps 259 px; a 0.6in plant falls to 124 px).
+- diff-bug #4: the TYPST_COL_40 comment showed worked arithmetic — fix now, fixed 144eb1c (source facts only).
+- diff-bug #5: a column-2 line ends exactly `NEAR` past the edge, so a first line could fail on other fonts — reject, false: that line is no case's first line, and the bound is the same `NEAR` the existing Typst width cases use.
+- diff-bug #6: `lh=None` reaches the column cases — fix now, fixed 144eb1c (the COLUMN_LAYOUT comment says its cases must not read `lh`).
+- diff-bug #7: README line over width, column check stated twice, limits bullet pages only — fix now, fixed 144eb1c.
+- blame-history #1: a second W3 bullet in wrap-mechanisms — reject, false: the details list keys bullets by row, as "W4 schema order" already does.
+- blame-history #2: DESIGN's M010 Typst known issue had no column rule — fix now, fixed 144eb1c.
+- blame-history #3: "(M005, corrected M019)" overstates — fix now, fixed 144eb1c ("columns M019").
+- blame-history #4: `typst_column_case` repeats `typst_width_case` checks — reject, style: duplication with no defect; the column lookup and column test differ.
+- blame-history #5: the new helpers parallel `find_words`, `find_figure`, `after`, `text_edges` — reject, style: same ground as #4.
+- blame-history #6: COLUMN_LAYOUT repeats the fixture's `columns: 2` — reject, style: it follows the LAYOUT, TYPST_LAYOUT, and LOGS tables.
+- blame-history #7: README line 435 too long — fix now, fixed 144eb1c.
+- blame-history #8: is `review` a valid status — reject, false: it is one of the seven statuses.
+- prior-review #1: README limits bullet said pages only — fix now, fixed 144eb1c.
+- prior-review #2: README "fills the text" lines lack a column case — reject, false: in a column the text is the column's text, and the section states the column case.
+- prior-review #3: PROFILE.md verify slot did not name COLUMN_LAYOUT — fix now, fixed 144eb1c and f3e8d68.
+- prior-review #4: E22 left out the 40% second fallback — fix now, fixed 144eb1c.
+- ripple #1: ROADMAP candidate "Check wrapped figures in Typst columns" still open — reject, planned change: post-merge hygiene graduates it.
+- ripple #2: wrap-mechanisms W3 sketch said `layout` gives the text width — fix now, fixed 144eb1c.
+- ripple #3: DESIGN filter and header text stated Typst width rules against the text width — fix now, fixed 144eb1c.
+- ripple #4: `wrapped.lua` Typst comments say text width — follow-up, row "Name column widths in Typst comments" (AC6 keeps `_extensions/wrapped/` unchanged).
+- ripple #5: README 100% and fill rules name only "the text" — reject, false: same ground as prior-review #2.
+- ripple #6: README limits bullet pages only — fix now, fixed 144eb1c (same fix as diff-bug #7).
+- ripple #7: wrap-mechanisms E10 named only the page — fix now, fixed 144eb1c.
+- ripple #8: DESIGN syntax table said "percent of text width" — fix now, fixed 144eb1c.
+
+Return floor: no finding shows a criterion failing or a defect in what the extension does; the fixes are test and text gaps, so no return.
