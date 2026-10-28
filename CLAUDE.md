@@ -12,6 +12,10 @@ through LaTeX, PDF through Typst, and Word. The design is in
   version as it is until the next release.
 - Users install from `main` (`quarto add jmgirard/wrapped`), so `main` must
   render without errors at every commit.
+- Run the tests with `python3 tests/verify.py` from the repository root.
+- The documentation site is in `docs/`. Render it with `quarto render docs`.
+  The Distribution paragraph of `cairn/DESIGN.md` says how CI publishes it.
+  A rule for users goes on a site page, not in the README.
 
 ## Project tracking (cairn)
 

@@ -1,11 +1,11 @@
 ---
-title: "wrapped fixture: the README examples"
+title: "wrapped fixture: the README and site examples"
 filters:
   - wrapped
 format: html
 ---
 
-Each figure example in `README.md` appears here, with only ids and file names changed. The `wrap-clear` example is in `stop-rule.qmd`, the `wrapped:` example is in `defaults.qmd`, and the dashboard `.card` example has the shape of `fig-dash-card` in `dashboard.qmd`.
+These figure examples appear here with only ids and file names changed: the four forms in `docs/get-started.qmd` (the first is also the one example in `README.md`), the gap example in `docs/width-gap.qmd`, the `wrap-lines` example in `docs/formats/latex.qmd`, and the slide example in `docs/formats/html.qmd`. Other test files cover three more site examples: `stop-rule.qmd` has the `wrap-clear` example, `defaults.qmd` has the `wrapped:` example, and `fig-dash-card` in `dashboard.qmd` has the shape of the dashboard `.card` example.
 
 ![Mean ratings by condition.](plot.png){#fig-readme-md .wrap-right width="40%"}
 

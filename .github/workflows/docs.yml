@@ -1,8 +1,13 @@
 # Renders the documentation site in docs/ (quarto render docs). Code cells
-# take their results from the committed docs/_freeze/, so this job needs no R.
+# take their results from the committed docs/_freeze/, so neither job needs R.
 # An edit to any page with a code cell, prose included, makes its frozen
-# results stale, and this job then fails. Render the site locally with R
+# results stale, and the render then fails. Render the site locally with R
 # (quarto render docs) and commit the changed docs/_freeze/.
+#
+# On main of jmgirard/wrapped (a push or a manual run), the publish job
+# renders the site and pushes it to the gh-pages branch, which GitHub Pages
+# serves at https://jmgirard.github.io/wrapped/. Everywhere else, pull
+# requests and forks included, the render job only renders.
 name: docs
 
 on:
@@ -31,6 +36,9 @@ concurrency:
 
 jobs:
   render:
+    if: >-
+      github.event_name == 'pull_request' || github.ref != 'refs/heads/main' ||
+      github.repository != 'jmgirard/wrapped'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -43,3 +51,30 @@ jobs:
 
       - name: Render the site
         run: quarto render docs
+
+  publish:
+    if: >-
+      github.event_name != 'pull_request' && github.ref == 'refs/heads/main' &&
+      github.repository == 'jmgirard/wrapped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # The push to gh-pages needs a token that can write. Only this job gets
+    # one, so its actions are pinned to commit SHAs: a moved tag cannot run
+    # with write access.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2
+        with:
+          version: release
+          tinytex: true
+
+      - name: Render and publish the site
+        uses: quarto-dev/quarto-actions/publish@8a96df13519ee81fd526f2dfca5962811136661b # v2
+        with:
+          target: gh-pages
+          path: docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
