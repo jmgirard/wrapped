@@ -64,13 +64,16 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
       on what the extension does, the `quarto add jmgirard/wrapped` command,
       the `filters:` YAML, one wrapped-figure example, an image of a rendered
       wrapped figure, and a link to https://jmgirard.github.io/wrapped/.
-- [ ] AC4: Each line that names the README as the place where a rule is
-      stated names a place that states it: a site page, or the short README
-      where it still holds that rule. The domain is the lines that
-      `git grep -n -i readme -- ':!cairn/milestones' ':!cairn/DECISIONS.md'
-      ':!cairn/legacy'` lists on the branch head. A line that names the
-      README for another reason, such as the fixture name `readme`, is
-      outside it.
+- [ ] AC4: Each of these pointers names a place that states its rule on
+      the branch head: a site page, or the short README where it still
+      holds that rule. They are the eight "The README states" or "The
+      README says" lines of DESIGN.md's Known issues; the candidate rows
+      "Stop text overlap with small wrap-lines", "Keep narrow widths when no
+      width fits", "Wrap no-id margin images in PDF", and "Check margins in
+      slidy and other slides"; the LESSONS.md line "the README asks for
+      spaces around `*`"; and the "`README.md`, Width and gap" line of
+      `cairn/references/w3c-css-values.md`. The intro of
+      `tests/readme.qmd` states true facts about where each example lives.
 
 ## Coverage
 <!-- owner: plan · create/amend-via-gate; each acceptance criterion → the
@@ -102,8 +105,9 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
       --no-prompt --no-browser`, switch the Pages source with
       `gh api -X PUT repos/jmgirard/wrapped/pages` (branch `gh-pages`, path
       `/`), wait for the Pages build, and fetch each page path.
-- [ ] T5: Update the pointers: DESIGN.md Known issues and Distribution,
-      `tests/readme.qmd`'s intro, and CLAUDE.md's dev commands.
+- [ ] T5: Update the AC4 pointers in place, each marked `corrected M024`
+      where it is current knowledge, then DESIGN.md's Distribution and
+      CLAUDE.md's dev commands (the site and `quarto render docs`).
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates.
@@ -127,6 +131,7 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
 - 2026-10-28: plan gate chose a `gh-pages` branch over a GitHub Actions Pages deploy because the branch can be published and checked live before the merge; falsified by the `gh-pages` branch breaking `quarto add` or the Pages build.
 - 2026-10-28: criteria audit (full, shared with M023): AC2's live check needs a publish and a settings change before the merge, so T4 names both and the user allowed them; AC4 added for the seven DESIGN.md Known issues lines that say "The README states".
 - 2026-10-28: AC4 was rewritten after the audit and sent to a fresh reader; that re-audit was still running at the plan commit, so its result lands in a follow-up tracking commit.
+- 2026-10-28: AC4 re-audit (full, fresh reader): the grep domain mixed rule pointers with fixture ids, vendored file lists, and history, and T5 missed four candidate rows, one lesson, and one references line. AC4 now names a fixed list of pointers plus `tests/readme.qmd`'s intro; out of it on purpose: wrap-it's `typst.toml`, the `fig-readme-*` ids, `verify.py`'s fixture name, the M024 row, `wrap-mechanisms.md` E15 (a planning note), and the "README since M019" row (history).
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
