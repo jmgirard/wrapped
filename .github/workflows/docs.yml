@@ -3,6 +3,10 @@
 # An edit to any page with a code cell, prose included, makes its frozen
 # results stale, and this job then fails. Render the site locally with R
 # (quarto render docs) and commit the changed docs/_freeze/.
+#
+# On a pull request the render job only renders. On main (a push or a manual
+# run), the publish job renders the site and pushes it to the gh-pages branch,
+# which GitHub Pages serves at https://jmgirard.github.io/wrapped/.
 name: docs
 
 on:
@@ -31,6 +35,7 @@ concurrency:
 
 jobs:
   render:
+    if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -43,3 +48,23 @@ jobs:
 
       - name: Render the site
         run: quarto render docs
+
+  publish:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: release
+          tinytex: true
+
+      - name: Render and publish the site
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+          path: docs

@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M024: Publish the site and shorten the README
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** M023   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — the public docs site and the README   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m024-publish-docs   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -92,7 +92,7 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
      cites; an insertion, removal, or reorder renumbers the labels and the
      Coverage lines together. -->
 
-- [ ] T1: Add the publish job to `docs.yml`: `permissions: contents: write`,
+- [x] T1: Add the publish job to `docs.yml`: `permissions: contents: write`,
       `quarto-dev/quarto-actions/publish@v2` with `target: gh-pages` and
       `path: docs`, run only on `push` to `main` and `workflow_dispatch`.
       Record the new action in a D-entry (it extends D-008's CI tools).
@@ -132,6 +132,8 @@ https://jmgirard.github.io/wrapped/ serves the documentation site that CI rebuil
 - 2026-10-28: criteria audit (full, shared with M023): AC2's live check needs a publish and a settings change before the merge, so T4 names both and the user allowed them; AC4 added for the seven DESIGN.md Known issues lines that say "The README states".
 - 2026-10-28: AC4 was rewritten after the audit and sent to a fresh reader; that re-audit was still running at the plan commit, so its result lands in a follow-up tracking commit.
 - 2026-10-28: AC4 re-audit (full, fresh reader): the grep domain mixed rule pointers with fixture ids, vendored file lists, and history, and T5 missed four candidate rows, one lesson, and one references line. AC4 now names a fixed list of pointers plus `tests/readme.qmd`'s intro; out of it on purpose: wrap-it's `typst.toml`, the `fig-readme-*` ids, `verify.py`'s fixture name, the M024 row, `wrap-mechanisms.md` E15 (a planning note), and the "README since M019" row (history).
+- 2026-10-28: implement started on branch m024-publish-docs.
+- 2026-10-28: T1 done: `docs.yml` has a `publish` job (contents: write, publish@v2, target gh-pages, path docs) that runs on a push or manual run on `main` only, so a manual run on another branch renders and does not publish; the `render` job runs on every other event. D-014 records the action.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

@@ -188,3 +188,15 @@ cell and its paragraphs in a card for the user, because a card the user
 did not write changes the dashboard's layout; the README asks the user to
 write the `.card` div. A `.card` div that is itself a context, such as one
 with `layout-ncol`, keeps that context.
+
+### D-014: CI publishes the docs site with Quarto's publish action (extends D-008)
+
+2026-10-28, M024. The user chose at the M024 plan's question set to add
+`quarto-dev/quarto-actions/publish` to `.github/workflows/docs.yml`. On a
+push to `main` or a manual run on `main`, it renders `docs/` and pushes the
+site to the `gh-pages` branch, which GitHub Pages serves. The action comes
+from Quarto's own organization, as the setup action of D-008 does, so it
+adds no new publisher of CI code. A `gh-pages` branch was chosen over a
+GitHub Actions Pages deploy because the branch can be published by hand
+and checked live before the merge. On a pull request the workflow only
+renders.
