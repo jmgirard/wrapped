@@ -9,8 +9,9 @@ the text beside the figure work. A wrapped figure in a frame, captioned or
 not, has its `fig-alt` text as its alt text. In a framed div float with
 more than one image, the float's `fig-alt` text is the alt text of its
 first image unless that image has its own `fig-alt`, and of no other
-image. An image with its own `fig-alt` has that text, and another image
-keeps its description. A figure with no wrap class,
+image. An image with its own `fig-alt` has that text. Another image has
+the text in its square brackets as its alt text, so an image written
+`![](x.png)` has empty alt text. A figure with no wrap class,
 or a wrapped figure that keeps its normal layout in Word, keeps the alt
 text that Quarto gives it.
 

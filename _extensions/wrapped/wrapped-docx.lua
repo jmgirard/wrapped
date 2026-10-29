@@ -55,8 +55,8 @@ end
 -- the frame follows that one. Word reads the frame from either position,
 -- and its style from the last w:pPr that sets one. An image paragraph takes
 -- `image_style`, the style it had in the figure, because out of the figure
--- Pandoc gives it the body text style. `state.seen` is set once the frame's
--- first image has its alt text.
+-- Pandoc gives it the body text style. `state.seen` is set when the walk
+-- reaches the frame's first image, so no later image takes the float's alt.
 local function frame_para(block, frame, image_style, state)
   local first = block.content[1]
   local at = 1
