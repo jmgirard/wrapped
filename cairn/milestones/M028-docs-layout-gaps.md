@@ -154,3 +154,4 @@ The docs layout checks give the right result on three planted page faults that t
 - ripple #3: `cairn/PROFILE.md` lines 33 and 39 do not name the last-block rule — reject, false: as ripple #2.
 - after fixes (head 540bec7): AC1 plant 1 still prints only `FAIL: no paragraph runs from beside the figure to below it`; AC2 box `bottom` 867, `ok`; AC3 `FAIL: a p sits between the paragraph above and the figure`, exit 1; AC4 24 PDF `ok` lines with the same `--debug` boxes and blocks as at ea0b1fb, and 9 HTML `ok` lines, exit 0 each; the indented page and the 3 pt parskip page print `ok`.
 - snapshot files: none changed.
+- gate after fixes: `python3 tests/verify.py` passed all 103 renders at 540bec7; `cairn_validate.py` all checks passed at 27543a3.
