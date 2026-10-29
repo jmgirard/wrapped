@@ -120,7 +120,9 @@ paragraph has no text to wrap, so it keeps a normal figure with no warning.
 A paragraph that stops wrapping under the stop rule, such as a lone
 `{{< video >}}` with or without comments or a span around it, or a lone
 `meta` whose value holds a block other than a paragraph, does not count as
-a paragraph here (M020, D-011; corrected M021). Of two wrapped figures in
+a paragraph here (M020, D-011; corrected M021). Neither does a paragraph
+that holds only a wrapped image, or only a link that holds only one, since
+that image wraps on its own (corrected M031). Of two wrapped figures in
 a row, the first keeps a normal figure and the second wraps. The figures of one code cell are the exception: a wrapped
 cell that makes more than one figure without `fig-subcap` keeps all of them
 normal, with one warning for the cell (D-010, M014). That warning names

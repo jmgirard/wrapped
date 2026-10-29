@@ -10,22 +10,26 @@ Needs Quarto, R with knitr, TinyTeX, and poppler. Each render must exit with sta
 show what the filter decided. For every format it holds the extension's
 warnings. For HTML it also holds the breakpoint value, the wrap class and
 style of every figure or table div and wrapped box, the wrap class, style, and width
-of every image, and the members of every .wrap-group. Style declarations
+of every image and the target of a link around it, and the members of every .wrap-group. Style declarations
 are sorted, so their order does not count. For PDF it also holds the kind,
 label, and options of each figure environment and the options of its
-\includegraphics, with each \wrappedstop in its place, and for Typst the label of each #figure( call and
+\includegraphics and the target of an external link around it, with
+each \wrappedstop in its place, and for Typst the label of each #figure( call and
 whether its image keeps a width. For Typst it also holds each
 wrap-content call's options, the figure label or image in its box and its
-alt text, the kind of each block beside the box ("p" for a paragraph), the
+alt text and the target of an external link around that image, the kind
+of each block beside the box ("p" for a paragraph), the
 number of citations there, and the number of calls it could not read. For Word
 it also holds each image's width from word/document.xml, and each frame: its
 side, width, gap, and anchor, the figure bookmark open before it, whether
-each image fills the frame width and its alt text, whether each caption has
+each image fills the frame width, its alt text, and the target of an
+external link around it, whether each caption has
 the ImageCaption style, and the kind of each block after the frame up to the
 paragraph with the clearing break, with the link anchors and author-year
 citations in those paragraphs. It also counts framed paragraphs that are
 in no frame. For a fixture in DOCX_UNFRAMED_ALT, it also lists the alt text
-of each image outside a frame. The script first writes the reference docs of the docx
+of each image outside a frame, and for a fixture in DOCX_STYLES the last
+paragraph style of each framed image. The script first writes the reference docs of the docx
 fixtures with tests/reference_narrow.py. A revealjs or dashboard
 snapshot holds what an HTML snapshot holds. A fixture that is a folder
 is a book project: its snapshot holds the HTML parts of each page under _book/,
@@ -367,9 +371,8 @@ def tex_summary(path):
         kind, options, body = m.groups()
         label = re.search(r"\\label\{([^}]*)\}", body)
         image = re.search(r"\\includegraphics(?:\[([^\]]*)\])?", body)
-        # The target of the first link in the figure, such as a link around
-        # its image.
-        href = re.search(r"\\href\{([^}]*)\}\{", body)
+        # The target of an external link around the image.
+        href = re.search(r"\\href\{([^}]*)\}\{(?:\\pandocbounded\{)?\\includegraphics", body)
         lines.append(
             f"{kind}: {label.group(1) if label else '-'} [{options or '-'}] "
             f"image=[{(image.group(1) or '-') if image else '(none)'}]"
@@ -1306,9 +1309,8 @@ def typ_summary(path):
         box = label.group(1) if label else Path(image.group(1)).name if image else "-"
         alt_text = re.search(r'image\([^)]*alt: "([^"]*)"', fixed)
         alt = f'alt="{alt_text.group(1)}"' if alt_text else "no-alt"
-        # The target of the first link in the box, such as a link around its
-        # image.
-        href = re.search(r'#link\("([^"]*)"\)', fixed)
+        # The target of an external link around the image.
+        href = re.search(r'#link\("([^"]*)"\)\[#box\(image\(', fixed)
         if href:
             alt += f" link={href.group(1)}"
         blocks = [typ_block_kind(b.strip()) for b in re.split(r"\n\s*\n", body) if b.strip()]
@@ -1396,7 +1398,7 @@ def docx_frames(body, targets, image_styles=False):
                     if h.find(f".//{WP}extent") is not None and h.get(f"{R}id") in targets:
                         part += f" link={targets[h.get(f'{R}id')]}"
                 if image_styles:
-                    names =[s.get(f"{W}val") for s in p.iter(f"{W}pStyle")]
+                    names = [s.get(f"{W}val") for s in p.iter(f"{W}pStyle")]
                     part += f" style={names[-1] if names else '-'}"
                 parts.append(part)
             else:
