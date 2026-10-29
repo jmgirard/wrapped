@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M028: Close gaps in the docs layout checks
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** M027   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -64,7 +64,7 @@ The docs layout checks give the right result on three planted page faults that t
 - [x] T1: Build plant 1 and see it pass the M027 script. Change `blocks()` in `tests/docs_layout.py` so that a paragraph also ends where the next line starts with an indent or where the gap passes the page's line pitch by more than a small tolerance. Choose the rule from the measured gaps of the docs pages in all three PDFs.
 - [x] T2: Build plant 2 and see the caption line in `--debug`. Change the caption rule in `check()` so that a caption is found by its place under the image and its font or lead word, not by the 40 px and 30 px limits.
 - [x] T3: Build plant 3 and see it pass. In `straddle()` in `tests/layout.js`, fail when any block (paragraph, heading, code block, or list) sits between the paragraph above and the figure. Change `paragraphLines()` to the middle-inside-box join.
-- [ ] T4: Run the three plants against the M027 script and the new one, and record which line each run prints. Run AC4's local checks. Update the docstrings of both files and the header of `tests/layout.js` where the rules changed. Run `python3 tests/verify.py`.
+- [x] T4: Run the three plants against the M027 script and the new one, and record which line each run prints. Run AC4's local checks. Update the docstrings of both files and the header of `tests/layout.js` where the rules changed. Run `python3 tests/verify.py`.
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates.
@@ -99,6 +99,9 @@ The docs layout checks give the right result on three planted page faults that t
 - 2026-10-29: re-audit: AC1 (reduced) — bounded-promise and instrument: the Evidence clause's "reads the page's paragraphs as one block" stated the control's mechanism, wider than the run shows, so it dropped to what the run prints; proportionality: nothing.
 - 2026-10-29: re-audit: AC1 (reduced) — bounded-promise and proportionality: nothing; instrument: the Evidence clause states the control's output, a minor finding either way; answered and kept, since the T1 run observed that output and AC2 and AC3 record their controls the same way.
 - 2026-10-29: substantive amendment: AC1's M027 control prints "no paragraph above the figure on its page", not `ok`, so the Evidence clause names that output, and the new run must not print it. Wording only; the deliverable is unchanged, so no stop.
+- 2026-10-29: T4: plant runs, new script then M027 script: plant 1 LaTeX `FAIL: no paragraph runs from beside the figure to below it`, then `FAIL: no paragraph above the figure on its page`; plant 2 `--debug` box bottom 867 and `ok`, then bottom 781 and `ok` (caption 845 to 867); plant 3 `--html` `FAIL: a p sits between the paragraph above and the figure` with exit 1, then `ok` with exit 0.
+- 2026-10-29: T4: `python3 tests/verify.py` passes all 103 renders; after `quarto render docs` at 2a78a35, `tests/docs_layout.py` prints `ok` for all 24 LaTeX, Typst, and Word figures and `--html` for all 9 figures, both exit 0. Docstrings of both files and the `straddle()` comment name the new rules.
+- 2026-10-29: claim audit: not owed — internal tier.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
