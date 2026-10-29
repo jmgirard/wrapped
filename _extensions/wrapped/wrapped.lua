@@ -1992,16 +1992,15 @@ end
 
 -- A table's classes come from an attribute block at the end of its caption,
 -- as in `: A table {.wrap-left}`, which Quarto reads after this filter runs
--- (parseTableCaption in Quarto's filters/main.lua). This reads the block the
--- same way. A table with a tbl- id is a float, and the float pass warns for it.
+-- (parseTableCaption in Quarto's filters/main.lua). This reads the block's
+-- classes the same way. A table with a tbl- id is a float, and the float pass
+-- warns for it.
 local function unplaced_table(tbl)
   local long = tbl.caption.long
   local last = long and long[#long]
   if not last or not last.content or #last.content == 0 then return nil end
   local inlines = pandoc.Inlines(last.content)
-  while #inlines > 0 and (inlines[#inlines].t == "Space" or inlines[#inlines].t == "SoftBreak") do
-    inlines:remove(#inlines)
-  end
+  if #inlines > 0 and inlines[#inlines].t == "Space" then inlines:remove(#inlines) end
   local final = inlines[#inlines]
   if not final or final.t ~= "Str" or not final.text:match("}%s*$") then return nil end
   local first
