@@ -108,6 +108,16 @@ A div float with an alt on its second image.
 
 The paragraph beside the float with an alt on its second image. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+::: {#fig-two-icon .wrap-right width="30%" fig-alt="Alt for the float with an icon in its top caption" fig-cap-location="top"}
+![](plot.png)
+
+![](plot.png)
+
+A top caption with an icon ![](plot.png){width="0.2in"} in it.
+:::
+
+The paragraph beside the float with an icon in its top caption. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
 ## Framed figures with repeated spaces in fig-alt
 
 ![A markdown float with spaced alt.](plot.png){#fig-spaced .wrap-right width="30%" fig-alt="Alt  for the  spaced float"}

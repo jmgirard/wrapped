@@ -5,8 +5,9 @@ title: "Word"
 In Word output, the extension puts each wrapped figure in a Word frame. The
 image and its caption sit in the frame on the figure's side, and the
 paragraphs after the figure flow beside it. Citations and `@fig-` links in
-the text beside the figure work. A wrapped figure in a frame, captioned or
-not, has its `fig-alt` text as its alt text. In a framed div float with
+the text beside the figure work. A framed figure with one image, captioned
+or not, has its `fig-alt` text as its alt text, in place of the text in
+the image's square brackets. In a framed div float with
 more than one image, the float's `fig-alt` text is the alt text of its
 first image unless that image has its own `fig-alt`, and of no other
 image. An image with its own `fig-alt` has that text. Each later image

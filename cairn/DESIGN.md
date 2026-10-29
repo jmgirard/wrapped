@@ -301,12 +301,13 @@ removes Quarto's one-cell figure table, or turns a Pandoc `Figure` into its
 image and caption paragraphs, and puts the same `w:framePr` in a raw
 `w:pPr` on the image paragraph and each caption paragraph. Word reads the
 frame after Pandoc's and Quarto's own `w:pPr`. Each framed image takes
-its `fig-alt` text, or the `alt` that Quarto copies from a float's
-`fig-alt`, as its description, which Pandoc writes as its alt text
-(corrected M029). Quarto puts a float's `alt` on each of its images, so
-only the frame's first image takes it; a later image keeps its own
-`fig-alt` or its description. The text goes in as one `Str`, which keeps
-its repeated spaces (corrected M030). A clearing break,
+its own `fig-alt` text as its description, which Pandoc writes as its alt
+text (corrected M029). Quarto puts a float's `alt`, its copy of the
+float's `fig-alt`, on each of its images and on no image in a caption, so
+only the frame's first image that holds `alt` takes it, when that image
+has no `fig-alt` of its own; a later image keeps its own `fig-alt` or its
+description (D-018). The text goes in as one `Str`, which keeps its
+repeated spaces (corrected M030). A clearing break,
 `<w:br w:type="textWrapping" w:clear="all"/>`, ends the group's last
 paragraph (corrected M006).
 

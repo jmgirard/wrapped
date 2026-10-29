@@ -8,7 +8,8 @@
 -- frame with the group's paragraphs beside it. Pandoc writes every image
 -- inline and assigns its relationship id, so the image stays a Pandoc
 -- image, and a framed image takes its fig-alt text as its alt text (a
--- float's fig-alt goes on the frame's first image only). A
+-- float's fig-alt goes on the frame's first image only, unless that image
+-- has its own fig-alt). A
 -- clearing break after the group's last paragraph ends the wrap
 -- (the stop rule). Other formats are left as they are.
 
@@ -35,11 +36,11 @@ end
 -- Pandoc writes an image's description as its Word alt text. Quarto keeps a
 -- figure's fig-alt on its image, as `alt` on the image of a float and as
 -- `fig-alt` on a captioned image with no #fig- id, but leaves the
--- description empty or the caption. So a framed image takes that text in
--- place of its description, fig-alt first, as the alt text of a div float
--- is only in `alt`. Quarto puts a float's `alt` on each of its images, so
--- only the frame's first image (`first`) takes it, and a later image keeps
--- its own fig-alt or description. The text goes in as one Str, which keeps
+-- description empty or the caption. So a framed image takes its own
+-- fig-alt in place of its description. Quarto puts a float's `alt` on each
+-- of its images, so only the frame's first image (`first`) with no fig-alt
+-- of its own takes it, and a later image keeps its own fig-alt or
+-- description; the alt text of a div float is only in `alt`. The text goes in as one Str, which keeps
 -- its repeated spaces. An empty fig-alt gives empty alt text, as in HTML.
 local function alt_image(img, first)
   local alt = img.attributes["fig-alt"]
@@ -55,8 +56,10 @@ end
 -- the frame follows that one. Word reads the frame from either position,
 -- and its style from the last w:pPr that sets one. An image paragraph takes
 -- `image_style`, the style it had in the figure, because out of the figure
--- Pandoc gives it the body text style. `state.seen` is set when the walk
--- reaches the frame's first image, so no later image takes the float's alt.
+-- Pandoc gives it the body text style. `state.seen` is set at the frame's
+-- first image that holds Quarto's `alt`, so no later image takes the
+-- float's alt. An image in a caption, such as an icon, holds no `alt` and
+-- does not count, though a top caption comes before the images.
 local function frame_para(block, frame, image_style, state)
   local first = block.content[1]
   local at = 1
@@ -68,8 +71,11 @@ local function frame_para(block, frame, image_style, state)
   block.content:insert(at, pandoc.RawInline("openxml", frame_pr(frame, style)))
   return block:walk({
     Image = function(img)
-      local is_first = not state.seen
-      state.seen = true
+      local is_first = false
+      if img.attributes.alt ~= nil and not state.seen then
+        is_first = true
+        state.seen = true
+      end
       return alt_image(img, is_first)
     end,
   })

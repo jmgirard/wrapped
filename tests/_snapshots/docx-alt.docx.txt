@@ -18,6 +18,9 @@ image: cx=1783080
 image: cx=1783080
 image: cx=1783080
 image: cx=1783080
+image: cx=182880
+image: cx=1783080
+image: cx=1783080
 image: cx=1783080
 image: cx=1188720
 image: cx=1600200
@@ -39,6 +42,7 @@ frame right w=2808 gap=240 anchor=margin | - | image plot.png fills=yes alt=''; 
 frame left w=2808 gap=240 anchor=margin | fig-two | image plot.png fills=yes alt='Alt for the two-image float'; image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame right w=2808 gap=240 anchor=margin | fig-two-first | image plot.png fills=yes alt='Alt for the first image'; image plot.png fills=yes alt='The second image’s description.'; caption style=ImageCaption; caption style=ImageCaption | p, clear | links=- cites=0
 frame left w=2808 gap=240 anchor=margin | fig-two-second | image plot.png fills=yes alt='Alt for the float with an alt on its second image'; image plot.png fills=yes alt='Alt for the second image'; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=2808 gap=240 anchor=margin | fig-two-icon | image plot.png fills=no alt=''; image plot.png fills=yes alt='Alt for the float with an icon in its top caption'; image plot.png fills=yes alt='' | p, clear | links=- cites=0
 frame right w=2808 gap=240 anchor=margin | fig-spaced | image plot.png fills=yes alt='Alt  for the  spaced float'; caption style=ImageCaption | p, clear | links=- cites=0
 frame left w=1872 gap=240 anchor=margin | - | image plot.png fills=yes alt='Alt  for the  spaced image' | p, clear | links=- cites=0
 # images outside a frame

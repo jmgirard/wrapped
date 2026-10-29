@@ -64,6 +64,7 @@ In Word output, a framed div float that holds more than one image gives its `fig
 - 2026-10-29: T2 and T3 done: `python3 tests/verify.py` all 104 renders pass (exit 0), with only `tests/_snapshots/docx-alt.docx.txt` changed; `quarto render docs` exit 0. Claim audit (fresh Opus reader) running.
 - 2026-10-29: claim audit: 11 claims read, 2 corrected — `_extensions/wrapped/wrapped-docx.lua` (the `state.seen` comment said it was set once the first image had alt text; it is set when the walk reaches it), `docs/formats/word.qmd` ("another image keeps its description" left "description" undefined; the re-read found the first rewrite read as a general rule that a fig-two first image breaks, so the sentence now names each later image without its own `fig-alt`). `quarto render docs` exit 0 after the fix.
 - 2026-10-29: implement complete; status review.
+- 2026-10-29: checkpoint: review pass 1 fix-now work committed (caption-icon flag fix with the fig-two-icon regression case, D-018, wording in `docs/formats/word.qmd`, `cairn/DESIGN.md`, and `wrapped-docx.lua` comments); the suite, docs render, and docs layout rerun on this head is still running, and the Review section is not yet written.
 
 ## Decisions
 
