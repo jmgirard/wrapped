@@ -57,6 +57,7 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a link that carries a w
 - 2026-10-29: claim audit: 15 claims read, 2 corrected — docs/normal-layout.qmd (the warning is replaced by the one columns warning in Word with columns and LaTeX with `classoption: twocolumn`; the image wraps only with the link alone in its paragraph). Kept the warning's "A wrap class goes on an image or a figure." though it leaves out code cells, since AC1 fixes that text and a cell's class lands on its figure. `quarto render docs` exit 0 after the fix.
 - 2026-10-29: implement complete; status review.
 - 2026-10-29: review started; route (d), no PR; main has not moved since the branch was cut.
+- 2026-10-29: step-7 approval: m032-link-class-warning approved for merge
 
 ## Decisions
 
