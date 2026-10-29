@@ -44,10 +44,8 @@ cairn-file tests (`cairn_validate`, coverage completeness, `cairn_impact`):
 - Every version marker that `release-walk` names holds the same version.
 - The verify command passes on the review head: every fixture renders with
   no errors, every snapshot matches, and every layout and log check passes.
-- If the diff touches `docs/`, `_extensions/`, `tests/docs_layout.py`, or
-  `tests/layout.js`, the docs workflow's render job passes on the PR. Also,
-  `python3 tests/docs_layout.py` passes on the Mac after `quarto render docs`.
-  That run reads the Word PDFs too (added M027).
+- A diff that touches `docs/`, `_extensions/`, or the docs checkers passes the
+  docs workflow on the PR and `tests/docs_layout.py` on the Mac (added M027).
 - The changelog slot says "none", so the gate reads no changelog entry.
 
 ## test-doctrine
@@ -68,8 +66,7 @@ The release procedure `/cairn-release` follows. The version marker is
 `add_html_dependency` call carries no version, so it is not a marker. A later
 change can add the version to another file. If it does, that change names the
 file here. Every named marker holds the same version. The version rises at release (CLAUDE.md), so the
-release-time arm is the usual path.
-Before step 1 of `/cairn-release`,
+release-time arm is the usual path. Before step 1 of `/cairn-release`,
 run `git fetch --tags <base>` and read the remote default branch's tip:
 `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/cairn_versions.py" _extensions/wrapped/_extension.yml --at <base>/<default-branch>`.
 If `CLAUDE_PLUGIN_ROOT` is unset, use the cairn plugin's install directory.
@@ -96,8 +93,7 @@ commits (`start`), and whether a `v<version>` tag exists.
 - **Release notes.** With changelog "none", the notes are the commit subjects
   on the default branch since the previous `v*` tag:
   `git log --first-parent --format='- %s' <previous tag>..<tagged commit>`.
-  The previous tag is
-  `git describe --first-parent --tags --abbrev=0 --match 'v*' <tagged commit>^`.
+  The previous tag is `git describe --first-parent --tags --abbrev=0 --match 'v*' <tagged commit>^`.
   For a first release, with no previous `v*` tag, drop `<previous tag>..`.
   Where the `origin` remote is GitHub and `gh` is available, the handoff
   provides a `gh release create` command with these notes. cairn never runs

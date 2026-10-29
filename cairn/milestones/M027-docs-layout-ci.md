@@ -103,6 +103,7 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
 - 2026-10-29: T4 done: `python3 tests/verify.py` passed, "all 103 renders pass".
 - 2026-10-29: claim audit: not owed — internal tier.
 - 2026-10-29: implement complete, status review. The docs workflow has not run on the branch yet. Its first run comes with the PR at review.
+- 2026-10-29: PROFILE.md reached 123 lines (cap 120) after T4. The new gate bullet was shortened and two wrapped lines in release-walk were joined, giving 119 lines. Validate passes.
 - 2026-10-29: lessons used: 2026-10-28 (M020) browser viewport, 2026-10-28 (M023) Typst output-file, 2026-10-28 (M026) LibreOffice text and frozen pages, 2026-10-26 (M007) pdftohtml image files.
 
 ## Decisions
