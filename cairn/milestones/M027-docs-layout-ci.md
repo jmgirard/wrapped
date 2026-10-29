@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M027: Run the docs layout checks in CI
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -66,7 +66,7 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
 - [x] T1: Add `--site DIR` and `--no-word` to `tests/docs_layout.py` (`SITE` at line 43, `pdf_paths` at line 82). Update the docstring. Run the plain command on the Mac to show the PDF output is unchanged.
 - [x] T2: Add `--html` to `tests/docs_layout.py`. Serve the site folder and `tests/layout.js` from one temporary folder, open each page with Playwright at 1280x900, run the `straddle()` call that `--js` prints, and print one line per figure in the PDF lines' form. Exit with status 1 on any `ok: false`, on a missing page, or when Playwright is missing (a plain message). Install Playwright locally to run it.
 - [x] T3: Edit `.github/workflows/docs.yml`: install `poppler-utils` with the retry options of `verify.yml`, install a pinned Playwright and its Chromium, and add the two check steps after the render step. Drop the render job's `if` and give the publish job `needs: render`. Add the two test files to both `paths` filters. Rewrite the header comment to say what the render job checks and that Word is checked by hand. Write D-016 for the new CI tools.
-- [ ] T4: Update the verify and consistency-gate slots of `cairn/PROFILE.md` to name the CI check and the by-hand Word check. Run `python3 tests/verify.py`.
+- [x] T4: Update the verify and consistency-gate slots of `cairn/PROFILE.md` to name the CI check and the by-hand Word check. Run `python3 tests/verify.py`.
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates.
@@ -100,6 +100,9 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
 - 2026-10-29: T2 done: `--html` serves the site with a stdlib HTTP server on a free port, maps `/layout.js` to `tests/layout.js`, and runs `straddle()` through Playwright's sync API. Playwright pinned at 1.64.0 (released 2026-10-13), since 1.64.1 was 7 days old; installed for local runs in a scratch venv only. Local runs: 9 `ok` lines; plant with the image-figure straddle paragraph cut to one sentence printed `FAIL: no later line below the figure that crosses it`, exit 1; plant with no div-figure.html printed `examples/div-figure html: FAIL: page missing`, exit 1; with no Playwright, a plain message and exit 1.
 - 2026-10-29: T3 done: `docs.yml` render job drops its `if`, installs poppler and Playwright 1.64.0 in `$RUNNER_TEMP/venv` (system pip on Ubuntu 24.04 refuses installs), and runs `--no-word` then `--html`; the HTML step also runs after a failed PDF step. Publish has `needs: render`; both `paths` filters list the two test files; header comment rewritten. D-016 written. Parsed with PyYAML: jobs render and publish, publish needs render, render has no `if`. Not yet run in CI.
 - 2026-10-29: T4 in progress (checkpoint): PROFILE.md verify slot names `--html` and the CI run, and the consistency gate gains the docs check; `python3 tests/verify.py` is running, so T4 stays unchecked.
+- 2026-10-29: T4 done: `python3 tests/verify.py` passed, "all 103 renders pass".
+- 2026-10-29: claim audit: not owed — internal tier.
+- 2026-10-29: implement complete, status review. The docs workflow has not run on the branch yet. Its first run comes with the PR at review.
 - 2026-10-29: lessons used: 2026-10-28 (M020) browser viewport, 2026-10-28 (M023) Typst output-file, 2026-10-28 (M026) LibreOffice text and frozen pages, 2026-10-26 (M007) pdftohtml image files.
 
 ## Decisions

@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-28 (M026 review: M023 row pruned; two rows added; o
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M027 | Run the docs layout checks in CI | in-progress | — | normal | milestones/M027-docs-layout-ci.md |
+| M027 | Run the docs layout checks in CI | review | — | normal | milestones/M027-docs-layout-ci.md |
 | M028 | Close gaps in the docs layout checks | planned | M027 | normal | milestones/M028-docs-layout-gaps.md |
 | M024 | Publish the site and shorten the README | done | M023 | normal | milestones/archive/M024-publish-docs.md |
 | M025 | Stop text overlap with small wrap-lines | done | — | normal | milestones/archive/M025-small-wrap-lines.md |
