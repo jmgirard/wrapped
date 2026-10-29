@@ -66,6 +66,7 @@ In Word output, a framed div float that holds more than one image gives its `fig
 - 2026-10-29: implement complete; status review.
 - 2026-10-29: checkpoint: review pass 1 fix-now work committed (caption-icon flag fix with the fig-two-icon regression case, D-018, wording in `docs/formats/word.qmd`, `cairn/DESIGN.md`, and `wrapped-docx.lua` comments); the suite, docs render, and docs layout rerun on this head is still running, and the Review section is not yet written.
 - 2026-10-29: review pass 1: verify all 104 renders pass on c45783a, docs render and `tests/docs_layout.py` pass; 19 findings: 9 fixed in c45783a (counting ripple #1 and prior-review #4 once each), 8 rejected, 2 noted, 0 follow-up.
+- 2026-10-29: correction to the line above: the Review section's 19 findings are 8 fixed in c45783a, 9 rejected, 2 noted, 0 follow-up.
 
 ## Decisions
 
