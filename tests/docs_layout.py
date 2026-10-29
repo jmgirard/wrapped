@@ -25,18 +25,26 @@ pdftohtml reads a LibreOffice PDF's text with letters lost and added. A
 line in the PDF's most common font, counted by characters, is body text. A line with none of it
 is a heading (larger) or code (not larger), and either ends a paragraph.
 
-`python3 tests/docs_layout.py --js` prints the call that runs the HTML check
-in a browser with `straddle()` from tests/layout.js.
+`python3 tests/docs_layout.py --html` runs the HTML check instead. It
+serves the site with tests/layout.js at `/layout.js`, opens each page in
+CASES in headless Chromium at 1280x900, runs `straddle()`, and exits with
+status 1 if a figure fails or a page is missing. It needs Playwright for
+Python and its Chromium (`pip install playwright`, then
+`python3 -m playwright install chromium`). `--js` prints the `straddle()`
+calls to run by hand in a browser console instead.
 
 Options: `--site DIR` reads a rendered site in DIR in place of docs/_site/.
 `--no-word` skips the Word PDFs, so the run needs no `soffice`.
 """
 
+import functools
+import http.server
 import json
 import statistics
 import subprocess
 import sys
 import tempfile
+import threading
 import xml.etree.ElementTree as ET
 from collections import Counter
 from pathlib import Path
@@ -240,11 +248,56 @@ def check(texts, image, side, body, sizes):
     return problems
 
 
+class SiteHandler(http.server.SimpleHTTPRequestHandler):
+    """Serves the site, and tests/layout.js at `/layout.js`."""
+
+    def translate_path(self, path):
+        if path.split("?")[0] == "/layout.js":
+            return str(ROOT / "tests" / "layout.js")
+        return super().translate_path(path)
+
+    def log_message(self, *args):
+        pass
+
+
+def html_main():
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        sys.exit("--html needs Playwright for Python: pip install playwright, "
+                 "then python3 -m playwright install chromium")
+    handler = functools.partial(SiteHandler, directory=str(SITE))
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{server.server_address[1]}"
+    failed = 0
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        tab = browser.new_page(viewport={"width": 1280, "height": 900})
+        for page, cases in CASES.items():
+            if not (SITE / f"{page}.html").is_file():
+                print(f"{page} html: FAIL: page missing")
+                failed += 1
+                continue
+            tab.goto(f"{base}/{page}.html", wait_until="load")
+            results = tab.evaluate(
+                "async (cases) => (await import('/layout.js')).straddle(cases)", cases)
+            for n, r in enumerate(results):
+                status = "ok" if r["ok"] else "FAIL: " + "; ".join(r["problems"])
+                failed += not r["ok"]
+                print(f"{page} html figure {n + 1}: {status}")
+        browser.close()
+    server.shutdown()
+    return 1 if failed else 0
+
+
 def main():
     if "--js" in sys.argv:
         for page, cases in CASES.items():
             print(f"{page}.html: m.straddle({json.dumps(cases)})")
         return 0
+    if "--html" in sys.argv:
+        return html_main()
     failed = 0
     with tempfile.TemporaryDirectory() as tmp:
         for page, cases in CASES.items():
