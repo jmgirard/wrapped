@@ -62,6 +62,7 @@ A `#tbl-` float whose wrap class is in the attribute block at its caption's end 
 - 2026-10-29: T3: `tests/verify.py --update` passed all 105 renders and changed only the four `fixture` snapshots, read in full. New `TABLE_IDS` and `table_summary` add a `# tables` part to the fixture's HTML snapshot (table classes, caption text). Plant 1 (rewrite skipped): the fixture HTML summary lost two warnings and showed `wrap-left`/`wrap-right` on three float divs and tables. Plant 2 (block written with no `}`): `tbl-caption-block` lost `table-striped` and its caption showed `{.striped`. Filter restored after each.
 - 2026-10-29: claim audit: 21 claims read, 1 corrected — tests/verify.py (the `TABLE_IDS` comment said it records the classes that reach each table; it records only `table-striped` and wrap classes; re-read: holds). Other files read: wrapped.lua, docs/normal-layout.qmd, tests/fixture.qmd, cairn/DESIGN.md.
 - 2026-10-29: T3, T4 done: `python3 tests/verify.py` (no `--update`) passed all 105 renders at 8f793f1's code; T4 edited the Tables section of `docs/normal-layout.qmd` and DESIGN.md step 6; `quarto render docs` exit 0; `python3 tests/docs_layout.py` 24 `ok`, none failed (`--html` not run). Status set to review.
+- 2026-10-29: step-7 approval: m034-table-float-class approved for merge
 
 ## Decisions
 
