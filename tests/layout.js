@@ -156,14 +156,19 @@ export function report() {
   };
 }
 
-// The line boxes of a paragraph, from its text's client rects merged by top.
+// The line boxes of a paragraph, from its text's client rects. Inline code
+// can sit a few px lower than the text around it, so a rect joins a line
+// when its middle is inside the line's box, as `lines()` in
+// tests/docs_layout.py does for PDFs.
 function paragraphLines(p) {
   const range = document.createRange();
   range.selectNodeContents(p);
   const lines = [];
-  for (const r of range.getClientRects()) {
+  const rects = [...range.getClientRects()].sort((a, b) => a.top - b.top || b.height - a.height);
+  for (const r of rects) {
     if (!r.width) continue;
-    const line = lines.find((l) => Math.abs(l.top - r.top) <= 3);
+    const middle = (r.top + r.bottom) / 2;
+    const line = lines.find((l) => l.top <= middle && middle <= l.bottom);
     if (line) {
       line.left = Math.min(line.left, r.left);
       line.right = Math.max(line.right, r.right);
