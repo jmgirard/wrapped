@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M034: Warn for wrap classes on table floats
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -43,8 +43,8 @@ A `#tbl-` float whose wrap class is in the attribute block at its caption's end 
 
 - [x] T1: Add four cases to `tests/fixture.qmd`, each with its own table and a paragraph after it: the `#tbl-` div with `: Cap {.wrap-left .striped}`, a knitr cell with `#| tbl-cap: "Cap {.wrap-right}"`, a knitr cell with `#| classes: wrap-right` and `#| tbl-cap: "Cap {.wrap-left}"`, and the `#tbl-` div with `: Cap {.striped}`. Render HTML before the fix and record which print no warning and which float with a wrap class.
 - [x] T2: Factor the caption-block parse out of `unplaced_table` (`wrapped.lua:1998`) into a helper that returns the block's attributes and where it starts. In `float_target` (`wrapped.lua:1352`), for a table float, read the block from `float.caption_long`, take its wrap class for the warning when the float has none of its own, and rewrite the block without wrap classes on every table float, removing it when nothing is left.
-- [ ] T3: Update the four format snapshots of `tests/fixture.qmd` with `--update` and read the diff. The HTML snapshot records only wrap classes, so add a check to `tests/verify.py` that the AC2 and AC3 tables' `<table>` elements carry `table-striped` where named and that their captions hold no `{`. Plant a fault (skip the rewrite) and see the checks fail. Run `python3 tests/verify.py`.
-- [ ] T4: Edit the Tables section of `docs/normal-layout.qmd` and step 6 of `cairn/DESIGN.md`. Run `quarto render docs` and `python3 tests/docs_layout.py`.
+- [x] T3: Update the four format snapshots of `tests/fixture.qmd` with `--update` and read the diff. The HTML snapshot records only wrap classes, so add a check to `tests/verify.py` that the AC2 and AC3 tables' `<table>` elements carry `table-striped` where named and that their captions hold no `{`. Plant a fault (skip the rewrite) and see the checks fail. Run `python3 tests/verify.py`.
+- [x] T4: Edit the Tables section of `docs/normal-layout.qmd` and step 6 of `cairn/DESIGN.md`. Run `quarto render docs` and `python3 tests/docs_layout.py`.
 
 ## Work log
 
@@ -61,3 +61,4 @@ A `#tbl-` float whose wrap class is in the attribute block at its caption's end 
 - 2026-10-29: T2: `caption_block` (shared with `unplaced_table`) and `drop_caption_wrap` added to `wrapped.lua`; `float_target` runs the rewrite on every table float and takes its class last, after the float's own, a carried, and an image class. The block is written again from its parsed attributes, keeping an id only when the text opened with `{#`, as Quarto does. Scratch probes: a block with `data-x="1 \"q\""` leaves the same caption text as Quarto without the filter; a caption that is only `{.wrap-right}` leaves an empty caption. Checkpoint; T3 suite run and T4 docs render pending.
 - 2026-10-29: T3: `tests/verify.py --update` passed all 105 renders and changed only the four `fixture` snapshots, read in full. New `TABLE_IDS` and `table_summary` add a `# tables` part to the fixture's HTML snapshot (table classes, caption text). Plant 1 (rewrite skipped): the fixture HTML summary lost two warnings and showed `wrap-left`/`wrap-right` on three float divs and tables. Plant 2 (block written with no `}`): `tbl-caption-block` lost `table-striped` and its caption showed `{.striped`. Filter restored after each.
 - 2026-10-29: claim audit: 21 claims read, 1 corrected — tests/verify.py (the `TABLE_IDS` comment said it records the classes that reach each table; it records only `table-striped` and wrap classes; re-read: holds). Other files read: wrapped.lua, docs/normal-layout.qmd, tests/fixture.qmd, cairn/DESIGN.md.
+- 2026-10-29: T3, T4 done: `python3 tests/verify.py` (no `--update`) passed all 105 renders at 8f793f1's code; T4 edited the Tables section of `docs/normal-layout.qmd` and DESIGN.md step 6; `quarto render docs` exit 0; `python3 tests/docs_layout.py` 24 `ok`, none failed (`--html` not run). Status set to review.

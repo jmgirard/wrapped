@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-29 (M033 review: "Warn for a wrap class on a span" 
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M034 | Warn for wrap classes on table floats | in-progress | — | normal | milestones/M034-table-float-class.md |
+| M034 | Warn for wrap classes on table floats | review | — | normal | milestones/M034-table-float-class.md |
 | M033 | Warn for a wrap class on a span | done | — | normal | milestones/archive/M033-element-class-warning.md |
 | M032 | Warn for a wrap class on a link | done | — | normal | milestones/archive/M032-link-class-warning.md |
 | M031 | Wrap images inside links in all formats | done | — | normal | milestones/archive/M031-linked-images.md |
