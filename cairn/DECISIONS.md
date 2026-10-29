@@ -240,3 +240,16 @@ a normal figure in Word, with a warning, is a normal figure under the
 DESIGN.md goals, so it also keeps Quarto's alt text. Fixing every captioned
 figure in Word was rejected because the filter would then change figures
 that it does not wrap.
+
+### D-018: In a Word frame, a float's fig-alt goes on its first image only (narrows D-017)
+
+2026-10-29, M030. Quarto 1.10.19 copies a div float's `fig-alt` onto each
+of its images, so a framed float with two images gave both the same alt
+text. The user chose at the M030 plan's question set to put the float's
+text on the frame's first image only. A later image keeps its own
+`fig-alt`, or else the text in its square brackets, which is empty for
+`![](x.png)`, so a screen reader reads the float's text once. An image's
+own `fig-alt` wins on any image, the first included. Leaving the text on
+neither image, as Quarto's HTML does, was rejected because the float's
+`fig-alt` would then reach no reader in Word. Keeping it on every image was
+rejected because a reader would hear it once per image.

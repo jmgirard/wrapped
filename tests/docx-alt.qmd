@@ -76,6 +76,58 @@ The paragraph beside the uncaptioned image. Lorem ipsum dolor sit amet, consecte
 
 The paragraph beside the image with an empty alt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+## Framed div floats with two images
+
+::: {#fig-two .wrap-left width="30%" fig-alt="Alt for the two-image float"}
+![](plot.png)
+
+![](plot.png)
+
+A div float with two images.
+:::
+
+The paragraph beside the two-image float. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+::: {#fig-two-first .wrap-right width="30%" fig-alt="Alt for the float with an alt on its first image"}
+![](plot.png){fig-alt="Alt for the first image"}
+
+![The second image's description.](plot.png)
+
+A div float with an alt on its first image.
+:::
+
+The paragraph beside the float with an alt on its first image. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+::: {#fig-two-second .wrap-left width="30%" fig-alt="Alt for the float with an alt on its second image"}
+![](plot.png)
+
+![](plot.png){fig-alt="Alt for the second image"}
+
+A div float with an alt on its second image.
+:::
+
+The paragraph beside the float with an alt on its second image. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+::: {#fig-two-icon .wrap-right width="30%" fig-alt="Alt for the float with an icon in its top caption" fig-cap-location="top"}
+![](plot.png)
+
+![](plot.png)
+
+A top caption with an icon ![](plot.png){width="0.2in"} in it.
+:::
+
+The paragraph beside the float with an icon in its top caption. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## Framed figures with repeated spaces in fig-alt
+
+![A markdown float with spaced alt.](plot.png){#fig-spaced .wrap-right width="30%" fig-alt="Alt  for the  spaced float"}
+
+The paragraph beside the spaced float. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+![](plot.png){.wrap-left width="20%" fig-alt="Alt  for the  spaced image"}
+
+The paragraph beside the spaced image. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
 ## Figures outside a frame
 
 ![A float with no wrap class.](plot.png){#fig-plain width="30%" fig-alt="Alt for the plain float"}
