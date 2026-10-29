@@ -253,3 +253,22 @@ own `fig-alt` wins on any image, the first included. Leaving the text on
 neither image, as Quarto's HTML does, was rejected because the float's
 `fig-alt` would then reach no reader in Word. Keeping it on every image was
 rejected because a reader would hear it once per image.
+
+### D-019: Triage drops four candidate rows as not worth keeping
+
+2026-10-30, `/cairn-triage`. **Context:** a triage pass weighed every
+candidate row and Known issues entry. Four rows cited no issue and no user
+report, and each named an effect that only an undocumented input reaches
+or that changes no output. **Decision:** the user accepted dropping them.
+"Reject infinite widths and gaps": a width or gap with 310 or more digits
+reads as inf, so Typst gets `infpt` and TeX rejects the dimension ("Dimension
+too large"). "Check margins in slidy and other slides": in slidy, s5,
+dzslides, and slideous, a `.column-margin` figure still warns "is in the
+margin", where Quarto may not put it in a margin. "Name column widths in
+Typst comments": the comments at `typst_open` and `TYPST_HEADER` in
+`wrapped.lua` say "text width" where, with `columns:` set, the width is the
+column width. "Correct the cancel comment in verify.yml": the comment says
+runs on main are never cancelled, but a newer queued run replaces an older
+queued one. **Consequences:** a later finding of the same effect is not
+filed again unless a user reports it. Each drop can be reopened by an entry
+that supersedes this one.
