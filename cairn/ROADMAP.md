@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-29 (triage: "Correct the cancel comment in verify.yml" compressed to cite the archived M023 file; "Check small wrap-lines stops in more layouts" retitled "Test small wrap-lines stops in layouts"; no drops, no decision entry; validate green)_
+_Last hygiene check: 2026-10-29 (M029 review: "Carry fig-alt to Word alt text" graduated, its unframed half dropped under D-017; "Fix the Word alt text edge cases" added; M026 row pruned; validate green)_
 
 ## Milestones
 
@@ -9,8 +9,7 @@ _Last hygiene check: 2026-10-29 (triage: "Correct the cancel comment in verify.y
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M029 | Carry fig-alt to Word alt text | review | — | normal | milestones/M029-word-alt-text.md |
-| M026 | Show text wrapping past the figure in examples | done | — | normal | milestones/archive/M026-wrap-showcase.md |
+| M029 | Carry fig-alt to Word alt text | done | — | normal | milestones/archive/M029-word-alt-text.md |
 | M027 | Run the docs layout checks in CI | done | — | normal | milestones/archive/M027-docs-layout-ci.md |
 | M028 | Close gaps in the docs layout checks | done | M027 | normal | milestones/archive/M028-docs-layout-gaps.md |
 
@@ -29,7 +28,6 @@ _Last hygiene check: 2026-10-29 (triage: "Correct the cancel comment in verify.y
 - Cut the Ubuntu mirror from CI setup: `r-lib/actions/setup-r` still runs `apt-get update` and installs about 175 Ubuntu packages (gdebi-core, qpdf, devscripts, ghostscript), and the poppler step runs `apt-get update` too, so a slow mirror day can still stretch the job toward its 45-minute timeout. The Ubuntu R packages took 35m56s in one run before D-009 (M008 review pass 2, diff-bug #1, blame-history #1). Since M027 the docs workflow's render job also runs `apt-get update` for poppler and Playwright's `--with-deps`, and the publish job waits for it, so a slow mirror also delays the site (M027 review, blame-history #2) — added 2026-10-26 — milestones/archive/M008-ci-verify.md
 - Test the minimum Quarto version in CI: `quarto-required` says 1.9.36, but only 1.10.19 and later are tested (DESIGN.md, Quarto version). A CI job pinned to 1.9.36 would test the claim or show that the floor must rise. Left out of M008 — added 2026-10-26 — milestones/archive/M008-ci-verify.md
 - Fit images in wide Word frames: Pandoc caps an image at 8400 twips with the default reference doc, so a Word frame between 8400 twips and the text width (such as `width="95%"`) holds a narrower image. Widths at or above the text width take the default since M006 (M006 review, diff-bug #4). The docx-gap fixture's `fig-below` (8640-twip frame, 8400-twip image) records the case (M012 review, diff-bug #1) — added 2026-10-26 — milestones/archive/M006-word-wrap.md
-- Carry fig-alt to Word alt text: `fig-alt` on a captioned float or a captioned image gives no Word alt text (`descr` is empty or the caption), with or without the filter; only an uncaptioned image carries it (M006 review, diff-bug #11) — added 2026-10-26 — milestones/archive/M006-word-wrap.md — started M029
 - Warn when Word frames are not built: `wrapped.lua` run alone by path, without the extension's `wrapped-docx.lua`, marks Word groups that nothing turns into frames, so wrapped figures render as normal figures with no warning (M006 review, blame-history #4) — added 2026-10-26 — milestones/archive/M006-word-wrap.md
 - Trim the LaTeX stop gap at page tops: a wrapped figure placed at the top of a page leaves about one more blank line before its stop block than one in mid-page (60 px against 39 px in a scratch render), since wrapfig counts its lines from a height less \intextsep there. No fixture covers a page-top figure or a group that ends at a div's end (M007 review, diff-bug #7; corrected M025). The skip counts lines and ignores \parskip, so the gap below a figure grows about 10 px for each paragraph beside it, and when narrowed lines cross a page break the stop skips about 2 empty lines at the next page's top with no figure there (M007 review pass 2, diff-bug #3 and #4) — added 2026-10-26 — milestones/archive/M007-latex-stops.md
 - Check small wrap-lines in callouts: M025 moves a stop block below the figure after a small `wrap-lines` count ends, in body text outside boxes only. Inside a callout or other box, the page position that M025 measures describes the outer page, and no render checks a wrap there (M025 plan, criteria audit) — added 2026-10-28 — milestones/archive/M025-small-wrap-lines.md
