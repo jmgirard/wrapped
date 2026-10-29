@@ -67,3 +67,8 @@ wrappedfigure: fig-break [side=left,width=0.4\linewidth,gap=1em] image=[width=1\
 wrappedstop
 wrappedfigure: fig-break-lines [side=right,width=0.4\linewidth,gap=1em,lines=12] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+# tables
+tbl-caption-block: caption=A table float with a wrap class in its caption
+tbl-cell-block: caption=A table from a cell with a wrap class in its caption
+tbl-cell-both: caption=A table from a cell with wrap classes in two places
+tbl-striped: caption=A table float with a striped class in its caption

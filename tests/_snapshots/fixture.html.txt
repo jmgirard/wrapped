@@ -105,6 +105,6 @@ fig-break, p, p, p, p
 fig-break-lines, p, p, p, p
 # tables
 tbl-caption-block: table=table-striped caption=Table 2: A table float with a wrap class in its caption
-tbl-cell-block: table=table-striped caption=Table 3: A table from a cell with a wrap class in its caption
-tbl-cell-both: table=table-striped caption=Table 4: A table from a cell with wrap classes in two places
+tbl-cell-block: table=- caption=Table 3: A table from a cell with a wrap class in its caption
+tbl-cell-both: table=- caption=Table 4: A table from a cell with wrap classes in two places
 tbl-striped: table=table-striped caption=Table 5: A table float with a striped class in its caption
