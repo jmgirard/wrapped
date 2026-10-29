@@ -7,7 +7,8 @@
 -- each caption paragraph the same w:framePr, so Word shows them as one
 -- frame with the group's paragraphs beside it. Pandoc writes every image
 -- inline and assigns its relationship id, so the image stays a Pandoc
--- image. A clearing break after the group's last paragraph ends the wrap
+-- image, and a framed image takes its fig-alt text as its alt text. A
+-- clearing break after the group's last paragraph ends the wrap
 -- (the stop rule). Other formats are left as they are.
 
 if FORMAT ~= "docx" then return {} end
@@ -33,10 +34,13 @@ end
 -- Pandoc writes an image's description as its Word alt text. Quarto keeps a
 -- figure's fig-alt on its image, as `alt` on the image of a float and as
 -- `fig-alt` on a captioned image with no #fig- id, but leaves the
--- description empty or the caption. So a framed image takes that text.
+-- description empty or the caption. So a framed image takes that text in
+-- place of its description, fig-alt first, as the alt text of a div float
+-- is only in `alt`. An empty fig-alt gives empty alt text, as in HTML.
 local function alt_image(img)
-  local alt = img.attributes.alt or img.attributes["fig-alt"]
-  if alt and alt ~= "" then img.caption = pandoc.Inlines(alt) end
+  local alt = img.attributes["fig-alt"]
+  if alt == nil then alt = img.attributes.alt end
+  if alt ~= nil then img.caption = pandoc.Inlines(alt) end
   return img
 end
 

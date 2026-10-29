@@ -70,6 +70,12 @@ The paragraph beside the image with no alt. Lorem ipsum dolor sit amet, consecte
 
 The paragraph beside the uncaptioned image. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+## A framed figure with an empty fig-alt
+
+![A captioned image with an empty alt.](plot.png){.wrap-right width="30%" fig-alt=""}
+
+The paragraph beside the image with an empty alt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
 ## Figures outside a frame
 
 ![A float with no wrap class.](plot.png){#fig-plain width="30%" fig-alt="Alt for the plain float"}

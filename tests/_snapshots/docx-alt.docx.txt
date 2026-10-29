@@ -11,6 +11,7 @@ image: cx=1783080
 image: cx=2377440
 image: cx=1783080
 image: cx=1188720
+image: cx=1783080
 image: cx=1600200
 image: cx=1600200
 image: cx=152400
@@ -26,6 +27,7 @@ frame right w=2808 gap=240 anchor=margin | fig-md-none | image plot.png fills=ye
 frame left w=3744 gap=240 anchor=margin | fig-cell-none | image fig-cell-none-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame right w=2808 gap=240 anchor=margin | - | image plot.png fills=yes alt='A captioned image with no id and no alt.'; caption style=ImageCaption | p, clear | links=- cites=0
 frame left w=1872 gap=240 anchor=margin | - | image plot.png fills=yes alt='Alt for the uncaptioned image' | p, clear | links=- cites=0
+frame right w=2808 gap=240 anchor=margin | - | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 # images outside a frame
 image plot.png alt=''
 image plot.png alt='A captioned image with no wrap class.'

@@ -1425,7 +1425,10 @@ def docx_summary(path):
             if docx_frame(p) is not None:
                 continue
             for drawing in p.iter(f"{W}drawing"):
-                name = Path(drawing.find(f".//{PIC}cNvPr").get("descr") or "-").name
+                pic = drawing.find(f".//{PIC}cNvPr")
+                if pic is None:
+                    continue
+                name = Path(pic.get("descr") or "-").name
                 alt = drawing.find(f".//{WP}docPr").get("descr")
                 lines.append(f"image {name} alt={alt!r}")
     return "\n".join(lines)

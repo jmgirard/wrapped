@@ -72,3 +72,22 @@ In Word output, each captioned figure that the extension puts in a Word frame ha
 - AC1 evidence (2026-10-29, head 8953e03, scratch render of `tests/docx-alt.qmd` to docx with Quarto 1.10.19): the `wp:docPr descr` values of the six framed figures with `fig-alt` read "Alt for the markdown float", "Alt for the div float", "Alt for the inner image", "Alt for the image with no id", "Alt for the image with its own id", "Alt for the cell figure", each its own `fig-alt`; the fixture's 13 `fig-alt` texts have no duplicate (`sort | uniq -d` empty) and all open "Alt for", which no caption does.
 - AC2 evidence (same render): framed `#fig-md-none` `descr=""`; framed `#fig-cell-none` `descr=""`, as T1's dump predicts (no `alt` attribute); framed captioned image with no id and no alt "A captioned image with no id and no alt."; uncaptioned wrapped image "Alt for the uncaptioned image".
 - AC3 evidence (same render, against a render of a copy with the `filters:` key removed): `#fig-plain` `""` in both; the plain captioned image "A captioned image with no wrap class." in both; `#fig-callout` `""` in both, with the warning "wrapped: the figure #fig-callout is in a callout, so it does not wrap." and no frame around it (its `fig-alt` text is absent from `document.xml`).
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: an empty `fig-alt` was skipped, so a captioned image marked decorative with `fig-alt=""` got its caption as alt text (HTML gives `alt=""`) — fix now (empty `fig-alt` now gives empty alt text; fixture case "A captioned image with an empty alt.": its caption on the previous code, `''` with the fix)
+- diff-bug #2: a framed float with two images and `fig-alt` gives both the same alt text — follow-up, row "Fix the Word alt text edge cases"
+- diff-bug #3: `wrapped_image_docx`'s copy of `fig-alt` into an uncaptioned caption is now repeated by `alt_image` — follow-up, same row
+- diff-bug #4: the uncaptioned image and `#logo` fixture cases repeat covered paths — reject, planned change (AC1 and AC2 name both cases; the criteria audit asked for `#logo`)
+- diff-bug #5: `pandoc.Inlines` collapses repeated spaces in alt text — follow-up, row "Fix the Word alt text edge cases"
+- diff-bug #6: the unframed-image section of `docx_summary` raises on a drawing with no picture element, and its docstring line is long — fix now (skips such a drawing); the line length: reject, style
+- diff-bug #7: the "Carry fig-alt to Word alt text" row must record that its unframed half was dropped — fix now, at hygiene (its graduation names D-017)
+- diff-bug #8: a wrapped image inside a link is not framed in Word — follow-up, row "Fix the Word alt text edge cases"
+- blame-history #1: `alt_image` puts `fig-alt` before an existing description, unlike the "no description" guard in wrapped.lua, and nothing records the change — fix now (the `alt_image` comment says the text takes the place of the description)
+- blame-history #2: an author-written `alt` on an inner image overrode `fig-alt` — fix now (`fig-alt` is read first, then `alt`)
+- blame-history #3: the Word docs page does not say that Quarto leaves an unwrapped float with empty alt text — reject, planned change (the page states what the filter does; D-017)
+- blame-history #4: the docstring line is 85 characters — reject, style
+- prior-review #1: the snapshot records `alt=''` for unframed floats, keeping the M006 finding for them — reject, planned change (D-017)
+- prior-review #2: an empty `alt` before a set `fig-alt` would skip `fig-alt` — fix now (same change as blame-history #2)
+- prior-review #3, #4: no regression found (descr fallback, knitr widths) — noted
+- ripple #1: the candidate row still reads as an open bug — fix now, at hygiene (row graduates)
+- ripple #2: the `wrapped-docx.lua` paragraph of DESIGN.md does not name the alt-text step — fix now (sentence added, corrected M029)
+- ripple #3: the `wrapped-docx.lua` file header does not name it — fix now (clause added)
