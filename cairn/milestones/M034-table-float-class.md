@@ -62,3 +62,27 @@ A `#tbl-` float whose wrap class is in the attribute block at its caption's end 
 - 2026-10-29: T3: `tests/verify.py --update` passed all 105 renders and changed only the four `fixture` snapshots, read in full. New `TABLE_IDS` and `table_summary` add a `# tables` part to the fixture's HTML snapshot (table classes, caption text). Plant 1 (rewrite skipped): the fixture HTML summary lost two warnings and showed `wrap-left`/`wrap-right` on three float divs and tables. Plant 2 (block written with no `}`): `tbl-caption-block` lost `table-striped` and its caption showed `{.striped`. Filter restored after each.
 - 2026-10-29: claim audit: 21 claims read, 1 corrected — tests/verify.py (the `TABLE_IDS` comment said it records the classes that reach each table; it records only `table-striped` and wrap classes; re-read: holds). Other files read: wrapped.lua, docs/normal-layout.qmd, tests/fixture.qmd, cairn/DESIGN.md.
 - 2026-10-29: T3, T4 done: `python3 tests/verify.py` (no `--update`) passed all 105 renders at 8f793f1's code; T4 edited the Tables section of `docs/normal-layout.qmd` and DESIGN.md step 6; `quarto render docs` exit 0; `python3 tests/docs_layout.py` 24 `ok`, none failed (`--html` not run). Status set to review.
+
+## Decisions
+
+## Review
+
+Pass 1, 2026-10-29. Main had not moved since the branch was cut. Copilot round off.
+
+spawned: diff-bug, blame-history, prior-review, ripple
+
+- diff-bug #1: `drop_caption_wrap` keeps the Space before the block and adds another, so LaTeX and Word captions end in a space (`\caption{A table float with a wrap class in its caption␤}` in the fixture), and a block with an id or attribute left gets two spaces before it — fix now.
+- diff-bug #2: `table_summary` whitespace-normalizes captions, so it cannot see finding #1, and searches past the float's end — fix now (bounded at the float's `</figure>`; new `tex_table_summary` marks a LaTeX caption that ends in white space).
+- diff-bug #3: the `table-striped` field for the two knitr tables records knitr's default, not the filter — fix now (`TABLE_IDS` records `table-striped` only where the caption block sets `.striped`).
+- diff-bug #4: the `tests/verify.py` docstring does not name `TABLE_IDS` or the `# tables` parts — fix now.
+- diff-bug #5: the docs sentence reads as if `tbl-cap` takes the `: ` form — fix now (names `#| tbl-cap: "A table {.wrap-left}"`).
+- diff-bug #6: subtable panels now warn and lose the class too, with no fixture — reject, planned change: Scope Out names subtable panels as untested.
+- blame-history #1: the fix rests on Quarto 1.10.19's order (block read from the float caption after pre-quarto filters), and older supported versions are untested — follow-up, absorbed into "Test the minimum Quarto version in CI".
+- blame-history #2: removing the class reverses M033's keep-the-class choice with no D-entry — reject, planned change: the user chose removal at the question set (work log), and M033's choice covered elements that no style reads, while `wrapped.css` selects `.quarto-float.wrap-*`, M033's own falsifying condition.
+- blame-history #3: a `#tbl-` float with a wrap class does not set `found_wrap`, so a format that does not wrap prints no format warning — follow-up, new row "Count table floats in the format warning" (predates M034).
+- blame-history #4: `pairs(attr.attributes)` may reorder attributes — reject, false: `pandoc lua` iterated `z a m b y` in source order on three runs.
+- blame-history #5: `table_summary` searches with no end bound — fix now (same fix as diff-bug #2).
+- prior-review #1: the 43 new fixture lines may worsen the known overfull LaTeX page 4 — reject, false: LaTeX renders of main's and the branch's fixture both end page 4's content at 1238 px on a 1188 px page (pdftohtml), the existing row "Fix the overfull LaTeX fixture page".
+- prior-review #2: `cairn/references/wrap-mechanisms.md` row E5 not updated — reject, false: E5 reads "`#tbl-` float with a wrap class | Normal table. One warning.", which holds for the caption-block form.
+- ripple #1: the candidate row "Warn for wrap classes on table floats" goes stale at merge — reject, planned change: post-merge hygiene graduates it.
+- ripple #2: the `tests/verify.py` docstring omits the `# tables` part — fix now (same fix as diff-bug #4).

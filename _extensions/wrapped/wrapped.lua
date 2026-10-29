@@ -1377,6 +1377,11 @@ local function drop_caption_wrap(float)
   local class = attr and wrap_class(attr.classes)
   if not class then return nil end
   strip_wrap(attr.classes)
+  -- The text before the block ends in the space before it, which Quarto
+  -- removes only when the block is still there to be read.
+  while #before > 0 and (before[#before].t == "Space" or before[#before].t == "SoftBreak") do
+    before:remove(#before)
+  end
   local parts = {}
   if keep_id and attr.identifier ~= "" then parts[#parts + 1] = "#" .. attr.identifier end
   for _, c in ipairs(attr.classes) do parts[#parts + 1] = "." .. c end
