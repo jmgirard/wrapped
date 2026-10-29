@@ -42,7 +42,7 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
 - [x] AC3: In a site copy where the straddle paragraph of `examples/image-figure.html` is cut to one sentence, `--html` prints a `FAIL` line that names `examples/image-figure` and exits with status 1. In a site copy with no `examples/div-figure.html`, it prints a `FAIL` line that names `examples/div-figure` and exits with status 1. Evidence: two local runs with `--site`.
 - [x] AC4: In `docs.yml` at the review head, the publish job has `needs: render`. The `if` of the render job admits a push to `main` and a manual run on `main` of jmgirard/wrapped. Evidence: a read of the file.
 - [x] AC5: On the Mac, after `quarto render docs`, `python3 tests/docs_layout.py` with no option prints an `ok` line for each figure of each page in `CASES` outside `HTML_ONLY`, for `latex`, `typst`, and `word`. Evidence: one local run at the review head.
-- [ ] AC6: `python3 tests/verify.py` passes at the review head.
+- [x] AC6: `python3 tests/verify.py` passes at the review head.
 
 ## Coverage
 <!-- owner: plan · create/amend-via-gate; each acceptance criterion → the
@@ -104,6 +104,7 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
 - 2026-10-29: claim audit: not owed — internal tier.
 - 2026-10-29: implement complete, status review. The docs workflow has not run on the branch yet. Its first run comes with the PR at review.
 - 2026-10-29: PROFILE.md reached 123 lines (cap 120) after T4. The new gate bullet was shortened and two wrapped lines in release-walk were joined, giving 119 lines. Validate passes.
+- 2026-10-29: T2 departs from its task text: the site and `tests/layout.js` are not copied into one temporary folder. The HTTP handler maps `/layout.js` to `tests/layout.js` and serves the rest from the site folder (M027 review, diff-bug #9).
 - 2026-10-29: lessons used: 2026-10-28 (M020) browser viewport, 2026-10-28 (M023) Typst output-file, 2026-10-28 (M026) LibreOffice text and frozen pages, 2026-10-26 (M007) pdftohtml image files.
 
 ## Decisions
@@ -112,6 +113,8 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
      EXEMPT from the 150-line cap (D-074) because D-045 makes it history like the work log — dated dispositions, never edited — so the cap must never demand a trim here either.
      Entries carry their rationale; the counterweight `decisions format`
      advisory watches for pasted output, not for entry length (D-075). -->
+
+- 2026-10-29 (review): A push to `main` now renders the site twice, once in the render job for the checks and once in the publish job. M024 kept one render on `main` by giving the render job an `if`. M027 drops that `if` so the publish job can wait for the checks without gaining install steps in the job that has write access. The second render takes about 1.5 minutes and reads the same commit and `_freeze/`.
 
 ## Review
 <!-- owner: review · exclusive; evidence per criterion, consistency-gate
@@ -124,3 +127,42 @@ Evidence at 5b27b23, 2026-10-29, after `quarto render docs` on this branch.
 - AC3: plant 1 (site copy, image-figure straddle paragraph cut to its first sentence): `--html --site` printed `examples/image-figure html figure 1: FAIL: no later line below the figure that crosses it`, exit 1. Plant 2 (site copy with no `examples/div-figure.html`): printed `examples/div-figure html: FAIL: page missing`, exit 1. The other 8 lines were `ok` in each run.
 - AC4: `.github/workflows/docs.yml` line 82 has `needs: render` under `publish:` (line 81). The `render:` job (line 50) has no `if`, so it runs on a push to `main` and a manual run on `main`.
 - AC5: `python3 tests/docs_layout.py` with no option printed 24 `ok` lines (8 figures for each of latex, typst, word) and exit 0.
+- AC6: `python3 tests/verify.py` at 601c632 printed "all 103 renders pass", exit 0.
+
+Consistency gate at 601c632: `cairn_validate.py` all checks passed. Version markers: no file under `_extensions/` changed, so `_extension.yml` keeps its version. Verify: AC6. Docs check: AC5 on the Mac, and the PR run (AC1, AC2) at step 8. Changelog: none.
+
+spawned: diff-bug, blame-history, prior-review, ripple
+
+- diff-bug #1: `playwright install chromium` without `--with-deps` may lack system libraries in CI — fix now
+- diff-bug #2: the 20-minute render timeout now also holds apt-get and a Chromium download — fix now (45 minutes, as verify.yml)
+- diff-bug #3: Playwright's own dependencies (greenlet, pyee) are not pinned — follow-up, new row "Pin the docs CI Python packages"
+- diff-bug #4: publish renders again instead of publishing the checked site — reject, planned change (plan work-log line: gate publish with `needs: render` so the job with write access gains no steps)
+- diff-bug #5: an exception in `tab.evaluate` ends the run with a traceback and no `FAIL` line — fix now
+- diff-bug #6: `--site --html` takes `--html` as the folder — fix now
+- diff-bug #7: `--site=DIR` and misspelled options are ignored, so `--site=DIR` checks the default site — fix now (unknown arguments stop the run)
+- diff-bug #8: the docs.yml header says "each example page", but CASES holds `index`, checked in HTML only — fix now
+- diff-bug #9: T2 said one temporary folder, the code maps `/layout.js` in the handler; not in the work log — fix now (work-log line)
+- diff-bug #10: the check runs at `load` without `document.fonts.ready` — fix now
+- diff-bug #11: the PDF step uses system `python3`, the HTML step the venv — reject, style
+- diff-bug #12: DESIGN.md's Distribution paragraph does not name the checks — fix now
+- diff-bug #13: the gate bullet makes the Mac Word run owed for every `_extensions/` change — reject, planned change (T4)
+- blame-history #1: main now renders twice, and no decision records the reversal of M024's split — fix now (milestone Decisions entry)
+- blame-history #2: a slow Ubuntu mirror can now delay the main publish — follow-up, absorbed into "Cut the Ubuntu mirror from CI setup"
+- blame-history #3: D-014 and DESIGN.md say pull requests only render — DESIGN.md fix now; D-014 reject, false: D-014 is history, and D-016 extends it and states the checks
+- blame-history #4: no `--with-deps` — fix now (same fix as diff-bug #1)
+- blame-history #5: `option()` exits at import time — reject, false: `git grep docs_layout` finds no importer
+- prior-review #1: DESIGN.md docs.yml paragraph stale, as in M024 diff-bug #4 — fix now
+- prior-review #2: the 1.25-pitch paragraph split now gates CI — follow-up, M028 (planned)
+- prior-review #3: caption reach and `straddle()` order now gate CI — follow-up, M028 (planned)
+- prior-review #4: CI's floating Quarto and TinyTeX can shift page fit — reject, planned change (D-008 release channel)
+- prior-review #5: render and publish conditions no longer exclude each other — reject, planned change (AC4)
+- ripple #1: DESIGN.md lines 148-151, trigger list and ref split — fix now
+- ripple #2: DESIGN.md path list lacks the two test files — fix now
+- ripple #3: the candidate row still says "only by hand" — reject, planned change: hygiene graduates the row at merge
+- ripple #4: DESIGN.md line 38 omits the check before publish — fix now
+- ripple #5: the docstring's first paragraph names no options — fix now
+- ripple #6: `tests/layout.js` header names no `--html` — fix now
+- ripple #7: CLAUDE.md "main must render" names no layout gate — reject, false: the rule is about rendering and still holds
+- ripple #8: PROFILE.md "(needs `soffice` and poppler)" — reject, false: the same sentence names `--html` and Playwright
+
+Fix-now checks after the fixes: `--site=docs/_site`, `--no-words`, and `--site --html` each stop with a message, exit 1. `--no-word` 16 `ok`, `--html` 9 `ok`, plain 24 `ok`. Plants 1 and 2 print the same `FAIL` lines as above. Plant 3 (site copy whose image-figure page throws on `document.fonts`) printed `examples/image-figure html: FAIL: Page.evaluate: Error: planted`, the other 8 `ok`, exit 1. `python3 tests/verify.py`: all 103 renders pass.

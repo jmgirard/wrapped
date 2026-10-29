@@ -35,7 +35,7 @@ install it with `quarto add jmgirard/wrapped`.
 release with notes from commit subjects. The version lives in
 `_extensions/wrapped/_extension.yml` and rises at release. The
 documentation site's source is `docs/`, rendered with `quarto render docs`.
-`.github/workflows/docs.yml` publishes it from `main` to the `gh-pages`
+`.github/workflows/docs.yml` checks its layout and publishes it from `main` to the `gh-pages`
 branch, which GitHub Pages serves at https://jmgirard.github.io/wrapped/.
 `README.md` is a short page that points to the site (corrected M024).
 
@@ -145,10 +145,12 @@ under `typst/packages/` (D-004, corrected M006). Users reach it through
 - The documentation site in `docs/` is a Quarto website that uses the
   extension through a `docs/_extensions` symlink. `.github/workflows/docs.yml`
   runs, with no R, on any pull request and any push to `main` that changes
-  `docs/`, `_extensions/`, or the workflow, and by hand. On `main` of
-  `jmgirard/wrapped` it renders and publishes the site to `gh-pages`; on any
-  other ref or repository it runs `quarto render docs` only (corrected
-  M024). Code cells take their results from the committed
+  `docs/`, `_extensions/`, `tests/docs_layout.py`, `tests/layout.js`, or the
+  workflow, and by hand. Its render job runs `quarto render docs` and then
+  the layout checks of `tests/docs_layout.py` in LaTeX, Typst, and HTML
+  (D-016). On `main` of `jmgirard/wrapped` the publish job then renders and
+  publishes the site to `gh-pages`, only after the render job passes
+  (corrected M024, M027). Code cells take their results from the committed
   `docs/_freeze/`, so an edit to a page with a code cell is rendered
   locally with R and its `_freeze/` changes are committed with it (M023).
 

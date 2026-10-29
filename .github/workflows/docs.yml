@@ -5,11 +5,12 @@
 # (quarto render docs) and commit the changed docs/_freeze/.
 #
 # The render job runs on every event. After the render, it checks that each
-# example page in CASES of tests/docs_layout.py shows text above, beside,
-# and below its wrapped figure in the PDF through LaTeX, the PDF through
-# Typst (poppler), and HTML (Playwright's Chromium). The Word check is not
-# run here, because LibreOffice on Ubuntu breaks lines in other places than
-# on the Mac. Run `python3 tests/docs_layout.py` there for Word.
+# page in CASES of tests/docs_layout.py shows text above, beside, and below
+# its wrapped figure: in the PDF through LaTeX and the PDF through Typst
+# (poppler) for the pages outside HTML_ONLY, and in HTML (Playwright's
+# Chromium) for all of them. The Word check is not run here, because
+# LibreOffice on Ubuntu breaks lines in other places than on the Mac. Run
+# `python3 tests/docs_layout.py` there for Word.
 #
 # On main of jmgirard/wrapped (a push or a manual run), the publish job
 # runs after the render job passes. It renders the site again and pushes it
@@ -47,9 +48,10 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # 45 minutes, as in verify.yml: the apt-get steps can be slow (D-009).
   render:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
 
@@ -68,7 +70,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends -o Acquire::Retries=3 poppler-utils
           python3 -m venv "$RUNNER_TEMP/venv"
           "$RUNNER_TEMP/venv/bin/pip" install playwright==1.64.0
-          "$RUNNER_TEMP/venv/bin/python" -m playwright install chromium
+          "$RUNNER_TEMP/venv/bin/python" -m playwright install --with-deps chromium
 
       - name: Check the PDF layout (LaTeX and Typst)
         run: python3 tests/docs_layout.py --no-word

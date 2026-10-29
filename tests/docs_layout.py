@@ -5,9 +5,10 @@ root:
 
     python3 tests/docs_layout.py
 
-It reads the PDF through LaTeX, the PDF through Typst, and a LibreOffice PDF
-of the Word file of each page in CASES, and exits with status 1 if a figure
-fails. For each wrapped figure, the figure's page must have:
+By default it reads the PDF through LaTeX, the PDF through Typst, and a
+LibreOffice PDF of the Word file of each page in CASES outside HTML_ONLY,
+and exits with status 1 if a figure fails. The options below skip Word or
+run the HTML check instead. For each wrapped figure, the figure's page must have:
 
 - a paragraph of at least two lines before the figure (before a code block
   there, for a code cell), each line but the last crossing the figure's
@@ -34,7 +35,9 @@ Python and its Chromium (`pip install playwright`, then
 calls to run by hand in a browser console instead.
 
 Options: `--site DIR` reads a rendered site in DIR in place of docs/_site/.
-`--no-word` skips the Word PDFs, so the run needs no `soffice`.
+`--no-word` skips the Word PDFs, so the run needs no `soffice`. `--debug`
+prints each figure box and the page's blocks. Any other argument stops the
+run with a message.
 """
 
 import functools
@@ -52,17 +55,25 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def option(name):
-    """The value after `name` in the command line, or None."""
-    if name in sys.argv:
-        i = sys.argv.index(name) + 1
-        if i < len(sys.argv):
-            return sys.argv[i]
-        sys.exit(f"{name} needs a value")
-    return None
+FLAGS = {"--js", "--html", "--no-word", "--debug"}
 
 
-SITE = Path(option("--site") or ROOT / "docs" / "_site").resolve()
+def site_option():
+    """The folder after `--site`, or None. Stops on an unknown argument."""
+    args, site, i = sys.argv[1:], None, 0
+    while i < len(args):
+        if args[i] == "--site":
+            if i + 1 == len(args) or args[i + 1].startswith("--"):
+                sys.exit("--site needs a folder")
+            site, i = args[i + 1], i + 2
+        elif args[i] in FLAGS:
+            i += 1
+        else:
+            sys.exit(f"unknown argument: {args[i]}")
+    return site
+
+
+SITE = Path(site_option() or ROOT / "docs" / "_site").resolve()
 WORD = "--no-word" not in sys.argv
 
 # Per page, one entry per wrapped figure in page order. The PDF checks read
@@ -279,9 +290,15 @@ def html_main():
                 print(f"{page} html: FAIL: page missing")
                 failed += 1
                 continue
-            tab.goto(f"{base}/{page}.html", wait_until="load")
-            results = tab.evaluate(
-                "async (cases) => (await import('/layout.js')).straddle(cases)", cases)
+            try:
+                tab.goto(f"{base}/{page}.html", wait_until="load")
+                results = tab.evaluate(
+                    "async (cases) => { await document.fonts.ready;"
+                    " return (await import('/layout.js')).straddle(cases); }", cases)
+            except Exception as err:
+                print(f"{page} html: FAIL: {str(err).splitlines()[0]}")
+                failed += 1
+                continue
             for n, r in enumerate(results):
                 status = "ok" if r["ok"] else "FAIL: " + "; ".join(r["problems"])
                 failed += not r["ok"]

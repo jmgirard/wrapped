@@ -4,9 +4,10 @@
 // report() returns one entry per wrapped figure, per wrap group that has a
 // block after it, and per image inside a wrapped float, each with `ok` and
 // the measured values.
-// For the docs site's example pages, serve docs/_site/ with this file in it
-// and run the `straddle()` calls that `python3 tests/docs_layout.py --js`
-// prints.
+// For the docs site's example pages, `python3 tests/docs_layout.py --html`
+// runs `straddle()` on each page in headless Chromium. To run it by hand,
+// serve docs/_site/ with this file in it and run the `straddle()` calls
+// that `python3 tests/docs_layout.py --js` prints.
 
 const TOL = 1; // px
 
