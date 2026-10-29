@@ -1,6 +1,6 @@
 # M029: Carry fig-alt to Word alt text
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -63,3 +63,4 @@ In Word output, each captioned figure that the extension puts in a Word frame ha
 - 2026-10-29: checkpoint: T2 code and snapshot and T3's `docs/formats/word.qmd` sentence written; `quarto render docs` exited 0; the full `python3 tests/verify.py` run is in progress, so T2 and T3 stay unticked.
 - 2026-10-29: T2 and T3 done: `python3 tests/verify.py` passed (all 104 renders, `ok docx-alt.docx`); `git diff main...HEAD --stat -- tests/_snapshots` lists only `docx-alt.docx.txt`.
 - 2026-10-29: claim audit: 15 claims read, 1 corrected — tests/docx-alt.qmd (heading "Framed figures with no fig-alt" also held the uncaptioned image with `fig-alt`; retitled), also tests/verify.py (the unframed-image section read the first `wp:docPr` of a paragraph for each image; it now reads each `w:drawing`'s own); the same reader re-read both: hold. Files read: wrapped-docx.lua, docs/formats/word.qmd, tests/verify.py, tests/docx-alt.qmd, tests/_snapshots/docx-alt.docx.txt.
+- 2026-10-29: implement complete: `python3 tests/verify.py` passed at e25c3c9 (all 104 renders); status set to review.
