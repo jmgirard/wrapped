@@ -44,8 +44,8 @@ In Word output, a framed div float that holds more than one image gives its `fig
 ## Tasks
 
 - [x] T1: In `tests/docx-alt.qmd`, add each case of AC1, AC2, and AC3 as a wrapped figure followed by a paragraph, with unique `fig-alt` texts and each image in a paragraph of its own (`docx_summary` reads one image per paragraph). Render the one fixture on the unchanged filter (the one-fixture command in `cairn/LESSONS.md`, 2026-10-27 M012). Confirm that each two-image float's frame line shows two `image` parts, and confirm the faults: both AC1 images and the second image of AC2's first float show the float's text, and the AC3 lines show one space.
-- [ ] T2: In `wrapped-docx.lua`, make `alt_image` set the caption to one `pandoc.Str` of the text (no inlines for an empty text), and pass it whether the image is the frame's first, so `alt` applies to the first image only. The flag is set once per frame in `frame_first`, for the figure-table path and the `.wrapped-image` path. Update the comments above `alt_image` and in the file header. In `wrapped.lua`, remove the `fig-alt` copy from `wrapped_image_docx` (about line 1553) and the sentence about it in its comment. Write the snapshot from the fixed render and read that the AC1 to AC4 lines match. Run `python3 tests/verify.py`.
-- [ ] T3: Add the multi-image rule to the alt-text sentences at `docs/formats/word.qmd:8`, from the T2 render, and to the `wrapped-docx.lua` paragraph of `cairn/DESIGN.md` (about line 303). Run `quarto render docs`.
+- [x] T2: In `wrapped-docx.lua`, make `alt_image` set the caption to one `pandoc.Str` of the text (no inlines for an empty text), and pass it whether the image is the frame's first, so `alt` applies to the first image only. The flag is set once per frame in `frame_first`, for the figure-table path and the `.wrapped-image` path. Update the comments above `alt_image` and in the file header. In `wrapped.lua`, remove the `fig-alt` copy from `wrapped_image_docx` (about line 1553) and the sentence about it in its comment. Write the snapshot from the fixed render and read that the AC1 to AC4 lines match. Run `python3 tests/verify.py`.
+- [x] T3: Add the multi-image rule to the alt-text sentences at `docs/formats/word.qmd:8`, from the T2 render, and to the `wrapped-docx.lua` paragraph of `cairn/DESIGN.md` (about line 303). Run `quarto render docs`.
 
 ## Work log
 
@@ -61,6 +61,7 @@ In Word output, a framed div float that holds more than one image gives its `fig
 - 2026-10-29: implement: branch m030-word-alt-edges cut from origin/main at af54cb1; status in-progress.
 - 2026-10-29: T1 done: five cases added to `tests/docx-alt.qmd` (fig-two, fig-two-first, fig-two-second, fig-spaced, a spaced uncaptioned image); the unchanged filter gives both fig-two images and fig-two-first's second image the float's text, and both spaced texts one space. Each two-image frame line shows two `image` parts. fig-two-first's second image, a lone captioned image, becomes a Pandoc Figure, so its description also shows as a caption paragraph, as on main. Snapshot not yet written, so `tests/verify.py` fails on this commit.
 - 2026-10-29: checkpoint: T2 code and snapshot written (`alt_image` takes a per-frame `first` flag through `frame_blocks`' new `state` table, and sets one `pandoc.Str`; `wrapped_image_docx` copy removed); the one-fixture render matches AC1 to AC4. T3's doc and DESIGN.md sentences written. The full `tests/verify.py` run and `quarto render docs` are still running or not yet run, so T2 and T3 stay unticked.
+- 2026-10-29: T2 and T3 done: `python3 tests/verify.py` all 104 renders pass (exit 0), with only `tests/_snapshots/docx-alt.docx.txt` changed; `quarto render docs` exit 0. Claim audit (fresh Opus reader) running.
 
 ## Decisions
 
