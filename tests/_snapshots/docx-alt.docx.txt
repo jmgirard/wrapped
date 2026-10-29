@@ -1,0 +1,35 @@
+# warnings
+1x wrapped: the figure #fig-callout is in a callout, so it does not wrap.
+# docx
+image: cx=1783080
+image: cx=1783080
+image: cx=1783080
+image: cx=1783080
+image: cx=1783080
+image: cx=2377440
+image: cx=1783080
+image: cx=2377440
+image: cx=1783080
+image: cx=1188720
+image: cx=1783080
+image: cx=1600200
+image: cx=1600200
+image: cx=152400
+image: cx=1600200
+# frames
+frame right w=2808 gap=240 anchor=margin | fig-md | image plot.png fills=yes alt='Alt for the markdown float'; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=2808 gap=240 anchor=margin | fig-div | image plot.png fills=yes alt='Alt for the div float'; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=2808 gap=240 anchor=margin | fig-inner | image plot.png fills=yes alt='Alt for the inner image'; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=2808 gap=240 anchor=margin | - | image plot.png fills=yes alt='Alt for the image with no id'; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=2808 gap=240 anchor=margin | logo | image plot.png fills=yes alt='Alt for the image with its own id'; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=3744 gap=240 anchor=margin | fig-cell | image fig-cell-1.png fills=yes alt='Alt for the cell figure'; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=2808 gap=240 anchor=margin | fig-md-none | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=3744 gap=240 anchor=margin | fig-cell-none | image fig-cell-none-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=2808 gap=240 anchor=margin | - | image plot.png fills=yes alt='A captioned image with no id and no alt.'; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=1872 gap=240 anchor=margin | - | image plot.png fills=yes alt='Alt for the uncaptioned image' | p, clear | links=- cites=0
+frame right w=2808 gap=240 anchor=margin | - | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+# images outside a frame
+image plot.png alt=''
+image plot.png alt='A captioned image with no wrap class.'
+image note.png alt=''
+image plot.png alt=''
