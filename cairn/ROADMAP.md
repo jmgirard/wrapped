@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-29 (M030 review: "Fix the Word alt text edge cases"
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M031 | Wrap images inside links in all formats | in-progress | — | normal | milestones/M031-linked-images.md |
+| M031 | Wrap images inside links in all formats | review | — | normal | milestones/M031-linked-images.md |
 | M030 | Fix the Word alt text edge cases | done | — | normal | milestones/archive/M030-word-alt-edges.md |
 | M029 | Carry fig-alt to Word alt text | done | — | normal | milestones/archive/M029-word-alt-text.md |
 | M028 | Close gaps in the docs layout checks | done | M027 | normal | milestones/archive/M028-docs-layout-gaps.md |
