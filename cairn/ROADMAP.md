@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-29 (M029 review: "Carry fig-alt to Word alt text" graduated, its unframed half dropped under D-017; "Fix the Word alt text edge cases" added; M026 row pruned; validate green)_
+_Last hygiene check: 2026-10-29 (M030 review: "Fix the Word alt text edge cases" graduated; M027 row pruned; validate green)_
 
 ## Milestones
 
@@ -9,9 +9,8 @@ _Last hygiene check: 2026-10-29 (M029 review: "Carry fig-alt to Word alt text" g
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M030 | Fix the Word alt text edge cases | review | — | normal | milestones/M030-word-alt-edges.md |
+| M030 | Fix the Word alt text edge cases | done | — | normal | milestones/archive/M030-word-alt-edges.md |
 | M029 | Carry fig-alt to Word alt text | done | — | normal | milestones/archive/M029-word-alt-text.md |
-| M027 | Run the docs layout checks in CI | done | — | normal | milestones/archive/M027-docs-layout-ci.md |
 | M028 | Close gaps in the docs layout checks | done | M027 | normal | milestones/archive/M028-docs-layout-gaps.md |
 
 ## Candidates
@@ -49,7 +48,6 @@ _Last hygiene check: 2026-10-29 (M029 review: "Carry fig-alt to Word alt text" g
 - Say LaTeX narrows lines past figures: wrapfig keeps one or two lines narrow past a wrapped figure's bottom (image-figure's PDF: figure bottom at y=814, narrow lines at y=816 and 836), and the Limits section of `docs/formats/latex.qmd` does not say so (M026 review, diff-bug #2) — added 2026-10-28 — milestones/archive/M026-wrap-showcase.md
 - Pin the docs CI Python packages: the docs workflow pins `playwright==1.64.0`, but pip resolves its dependencies (greenlet, pyee) fresh on each run with no hashes, so a new release of one can change or break a run on a pull request that changed nothing (M027 review, diff-bug #3) — added 2026-10-29 — milestones/archive/M027-docs-layout-ci.md
 - Harden and test the docs layout checks: `caption()` in `tests/docs_layout.py` takes a short body line within 1.5 heights under a same-font caption when the line lies inside the caption's first line, as with a two-line caption at a left image's edge ("end." in a div-figure LaTeX simulation). The three plants that prove M028's rules live only in a scratch copy of the site, so a regression passes `tests/verify.py` (M028 review, diff-bug #5, prior-review #5) — added 2026-10-29 — milestones/archive/M028-docs-layout-gaps.md
-- Fix the Word alt text edge cases: a framed float div that holds two images and sets `fig-alt` gives both images that text in Word, while HTML gives neither an alt. `alt_image` collapses repeated spaces in the text, and `wrapped_image_docx` still copies `fig-alt` into an uncaptioned image's caption, which `alt_image` now repeats in a frame (M029 review, diff-bug #2, #3, #5). Its linked-image part moved to "Wrap images inside links in all formats" at the M030 plan — added 2026-10-29 — milestones/archive/M029-word-alt-text.md — started M030
 - Wrap images inside links in all formats: a wrapped image inside a link, `[![](plot.png){.wrap-left fig-alt="A"}](url)`, wraps in no format, since `lone_wrapped_image` does not look inside a `Link`. The filter warns that the image "is not a figure or the only content of its paragraph" (scratch HTML render, 2026-10-29), and in Word the image gets empty alt text. This predates M029 (M029 review, diff-bug #8; moved from "Fix the Word alt text edge cases" at the M030 plan) — added 2026-10-29 — milestones/archive/M029-word-alt-text.md
 - [low] Check wraps in dashboard sidebars: M022 checks wrapped figures in dashboard cards only. Sidebars, tabsets (`{.tabset}` on a heading), value boxes, and card toolbars have no render; a code cell in a `.sidebar`, `.toolbar`, or `.valuebox` div gets M022's "is outside a card in a dashboard" warning, and a markdown figure there is unchecked (M022 criteria audit). Also unchecked in a dashboard: margin and page-wide classes, which still name a place there (`has_page_layout`), on a figure or on a `.card` div; a Jupyter markdown cell, which the cell rule skips; and a Jupyter `output: asis` cell, which Quarto does not make a card but the rule treats as outside a card (M022 review, blame-history #3, prior-review #1, #3, #4, diff-bug #3) — added 2026-10-28 — milestones/archive/M022-dashboard-wraps.md
 - [low] Use the HTML stylesheet for EPUB: EPUB is HTML-based, so the W1 stylesheet can apply there. Version 1 keeps a normal figure in EPUB (W5) — added 2026-10-24 — references/wrap-mechanisms.md
