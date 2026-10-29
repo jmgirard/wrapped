@@ -11,7 +11,7 @@
 
 ## Goal
 
-In Word output, a framed figure that holds more than one image puts its `fig-alt` text on its first image only, and every framed image's alt text keeps the repeated spaces of its `fig-alt`.
+In Word output, a framed div float that holds more than one image gives its `fig-alt` text to no image but its first, and every framed image's alt text keeps the repeated spaces of its `fig-alt`.
 
 ## Scope
 
@@ -26,11 +26,11 @@ In Word output, a framed figure that holds more than one image puts its `fig-alt
 ## Acceptance criteria
 
 - [ ] AC1: In the docx render of `tests/docx-alt.qmd`, a framed div float that sets `fig-alt` and holds two images, each with no `fig-alt` and no description, has the float's `fig-alt` text as the first image's `descr` and an empty `descr` on the second image, as its frame line in `tests/_snapshots/docx-alt.docx.txt` records.
-- [ ] AC2: In the same render, a framed div float that sets `fig-alt` and holds a first image with its own `fig-alt` and a second image with a description and no `fig-alt` has the first image's own `fig-alt` as its `descr` and the second image's description as its `descr`, as its frame line records.
+- [ ] AC2: In the same render, a framed div float that sets `fig-alt` and holds a first image with its own `fig-alt` and a second image with a description and no `fig-alt` has the first image's own `fig-alt` as its `descr` and the second image's description as its `descr`; and a framed div float that sets `fig-alt` and holds a first image with no `fig-alt` and no description and a second image with its own `fig-alt` has the float's text as the first image's `descr` and the second image's own `fig-alt` as its `descr`; each as its frame line records.
 - [ ] AC3: In the same render, a framed uncaptioned image and a framed markdown image float, each with a `fig-alt` that holds two spaces in a row, have that text with both spaces as their image's `descr`, as their frame lines record.
 - [ ] AC4: `wrapped_image_docx` in `_extensions/wrapped/wrapped.lua` does not read `fig-alt`, and in the same render the existing uncaptioned image's frame line still records `alt='Alt for the uncaptioned image'`.
-- [ ] AC5: `python3 tests/verify.py` exits 0, and `git diff main --stat -- tests/_snapshots` lists only `tests/_snapshots/docx-alt.docx.txt`.
-- [ ] AC6: `docs/formats/word.qmd` says that in a wrapped figure with more than one image, the figure's `fig-alt` text is the alt text of its first image only, and that an image with its own `fig-alt` has that text; `quarto render docs` exits 0.
+- [ ] AC5: `python3 tests/verify.py` exits 0, and the branch changes `tests/_snapshots/docx-alt.docx.txt` and no other snapshot file (`git diff main --stat -- tests/_snapshots`).
+- [ ] AC6: `docs/formats/word.qmd` says that in a framed div float with more than one image, the float's `fig-alt` text is the alt text of its first image unless that image has its own `fig-alt`, and of no other image, and that an image with its own `fig-alt` has that text; `quarto render docs` exits 0.
 
 ## Coverage
 
@@ -43,7 +43,7 @@ In Word output, a framed figure that holds more than one image puts its `fig-alt
 
 ## Tasks
 
-- [ ] T1: In `tests/docx-alt.qmd`, add each case of AC1, AC2, and AC3 as a wrapped figure followed by a paragraph, with unique `fig-alt` texts. Render the one fixture on the unchanged filter (the one-fixture command in `cairn/LESSONS.md`, 2026-10-27 M012) and confirm the faults: both AC1 images and the AC2 second image show the float's text, and the AC3 lines show one space.
+- [ ] T1: In `tests/docx-alt.qmd`, add each case of AC1, AC2, and AC3 as a wrapped figure followed by a paragraph, with unique `fig-alt` texts and each image in a paragraph of its own (`docx_summary` reads one image per paragraph). Render the one fixture on the unchanged filter (the one-fixture command in `cairn/LESSONS.md`, 2026-10-27 M012). Confirm that each two-image float's frame line shows two `image` parts, and confirm the faults: both AC1 images and the second image of AC2's first float show the float's text, and the AC3 lines show one space.
 - [ ] T2: In `wrapped-docx.lua`, make `alt_image` set the caption to one `pandoc.Str` of the text (no inlines for an empty text), and pass it whether the image is the frame's first, so `alt` applies to the first image only. The flag is set once per frame in `frame_first`, for the figure-table path and the `.wrapped-image` path. Update the comments above `alt_image` and in the file header. In `wrapped.lua`, remove the `fig-alt` copy from `wrapped_image_docx` (about line 1553) and the sentence about it in its comment. Write the snapshot from the fixed render and read that the AC1 to AC4 lines match. Run `python3 tests/verify.py`.
 - [ ] T3: Add the multi-image rule to the alt-text sentences at `docs/formats/word.qmd:8`, from the T2 render, and to the `wrapped-docx.lua` paragraph of `cairn/DESIGN.md` (about line 303). Run `quarto render docs`.
 
@@ -57,6 +57,7 @@ In Word output, a framed figure that holds more than one image puts its `fig-alt
 - 2026-10-29: collision check: absorbs the candidate row "Fix the Word alt text edge cases" in part; its linked-image sentence moves to the new row "Wrap images inside links in all formats" (the user's answer). D-017 holds (framed figures only). M029 shipped the rule this changes. Inbox sweep found 0 open issues and 0 open PRs.
 - 2026-10-29: plan gate chose a first-image flag per frame in the post-render pass over marking the first image in the pre-quarto pass, because at post-render every image of a float still holds Quarto's `alt` copy and the frame's walk sees the images in document order; falsified by a framed figure whose first image in `word/document.xml` is not the first image `frame_blocks` walks.
 - 2026-10-29: checkpoint: plan committed while the full criteria audit (fresh Opus reader) runs; its findings and dispositions follow in a later line.
+- 2026-10-29: criteria audit (full, fresh Opus reader): 10 findings. Fixed: #1 T1 puts each image in its own paragraph and checks two `image` parts; #3 AC2 adds a later image with its own `fig-alt`; #6 AC6 says the float's text skips a first image with its own `fig-alt`, and names framed figures only; #7 AC6 and the Goal narrowed to div floats; #8 AC5 reworded as a property of the branch. Answered by a scratch render (2026-10-29, filter plus post-render dump): #2 a second image's description reaches post-render as an image paragraph and is framed, so AC2 stands; #4 a markdown float's `alt` keeps two spaces at post-render; #5 an uncaptioned image keeps `fig-alt` at post-render. #9 the DESIGN.md and code comment edits stay task items, read at the review gate. #10 no action (discrimination confirmed).
 
 ## Decisions
 
