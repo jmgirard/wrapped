@@ -356,8 +356,9 @@ def margin_summary(fixture):
 
 
 # Table floats whose caption ends in an attribute block. The HTML figures
-# list shows only wrap classes, so this records the classes that reach each
-# float's table and the caption text left after Quarto reads the block.
+# list shows only wrap classes, so this records whether `table-striped` or a
+# wrap class reaches each float's table, and the caption text left after
+# Quarto reads the block.
 TABLE_IDS = {"fixture": ["tbl-caption-block", "tbl-cell-block", "tbl-cell-both", "tbl-striped"]}
 
 
