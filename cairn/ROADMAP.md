@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-29 (triage: "Correct the cancel comment in verify.y
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M029 | Carry fig-alt to Word alt text | planned | — | normal | milestones/M029-word-alt-text.md |
+| M029 | Carry fig-alt to Word alt text | in-progress | — | normal | milestones/M029-word-alt-text.md |
 | M026 | Show text wrapping past the figure in examples | done | — | normal | milestones/archive/M026-wrap-showcase.md |
 | M027 | Run the docs layout checks in CI | done | — | normal | milestones/archive/M027-docs-layout-ci.md |
 | M028 | Close gaps in the docs layout checks | done | M027 | normal | milestones/archive/M028-docs-layout-gaps.md |

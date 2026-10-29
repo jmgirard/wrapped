@@ -24,7 +24,8 @@ each image fills the frame width and its alt text, whether each caption has
 the ImageCaption style, and the kind of each block after the frame up to the
 paragraph with the clearing break, with the link anchors and author-year
 citations in those paragraphs. It also counts framed paragraphs that are
-in no frame. The script first writes the reference docs of the docx
+in no frame. For a fixture in DOCX_UNFRAMED_ALT, it also lists the alt text
+of each image outside a frame. The script first writes the reference docs of the docx
 fixtures with tests/reference_narrow.py. A revealjs or dashboard
 snapshot holds what an HTML snapshot holds. A fixture that is a folder
 is a book project: its snapshot holds the HTML parts of each page under _book/,
@@ -91,6 +92,7 @@ RENDERS = [
     ("docx-gap-meta", "docx", True),
     ("docx-gap-meta-wide", "docx", True),
     ("docx-overflow", "docx", True),
+    ("docx-alt", "docx", True),
     ("meta-breakpoint", "html", True),
     ("meta-string", "html", True),
     ("meta-calc-bad", "html", True),
@@ -1399,6 +1401,11 @@ def docx_frames(body):
     return lines, framed
 
 
+# Fixtures whose docx snapshot also lists the alt text of each image outside
+# a frame.
+DOCX_UNFRAMED_ALT = {"docx-alt"}
+
+
 def docx_summary(path):
     # The width Word shows for each image, in EMU, in document order, then
     # each frame.
@@ -1412,6 +1419,15 @@ def docx_summary(path):
     others = sum(1 for p in body.iter(f"{W}p") if docx_frame(p) is not None) - framed
     if others:
         lines.append(f"framed paragraphs outside a frame: {others}")
+    if path.stem in DOCX_UNFRAMED_ALT:
+        lines.append("# images outside a frame")
+        for p in body.iter(f"{W}p"):
+            if docx_frame(p) is not None:
+                continue
+            for pic in p.iter(f"{PIC}cNvPr"):
+                name = Path(pic.get("descr") or "-").name
+                alt = p.find(f".//{WP}docPr").get("descr")
+                lines.append(f"image {name} alt={alt!r}")
     return "\n".join(lines)
 
 

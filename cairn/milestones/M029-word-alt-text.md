@@ -1,13 +1,13 @@
 # M029: Carry fig-alt to Word alt text
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes the alt text in users' Word documents
-- **Branch/PR:** —
+- **Branch/PR:** m029-word-alt-text
 
 ## Goal
 
@@ -40,7 +40,7 @@ In Word output, each captioned figure that the extension puts in a Word frame ha
 
 ## Tasks
 
-- [ ] T1: Write `tests/docx-alt.qmd` with the six framed forms of AC1, the four framed cases of AC2, and the three unframed figures of AC3, each followed by a paragraph. Add `("docx-alt", "docx", True)` to the fixture list in `tests/verify.py` (about line 82). In `docx_summary` (`tests/verify.py:1402`), add a section that lists each image outside a frame with its `descr`, for fixtures named in a new set, as `MARGIN_IDS` does for HTML, so other snapshots stay as they are. Render on the unchanged filter and confirm that the four AC1 float and cell forms show `alt=''` and the two captioned images show their captions. Dump the knitr cell's image attributes at post-render for AC2. Render a copy with `filters:` removed and write each AC3 figure's `descr` in a work-log line.
+- [x] T1: Write `tests/docx-alt.qmd` with the six framed forms of AC1, the four framed cases of AC2, and the three unframed figures of AC3, each followed by a paragraph. Add `("docx-alt", "docx", True)` to the fixture list in `tests/verify.py` (about line 82). In `docx_summary` (`tests/verify.py:1402`), add a section that lists each image outside a frame with its `descr`, for fixtures named in a new set, as `MARGIN_IDS` does for HTML, so other snapshots stay as they are. Render on the unchanged filter and confirm that the four AC1 float and cell forms show `alt=''` and the two captioned images show their captions. Dump the knitr cell's image attributes at post-render for AC2. Render a copy with `filters:` removed and write each AC3 figure's `descr` in a work-log line.
 - [ ] T2: In `wrapped-docx.lua`, in `frame_blocks` or the `Image` walk it runs, set each framed image's caption to the text of its `alt` attribute, else its `fig-alt` attribute, when one is set. Write the snapshot from the fixed render and read that the AC1, AC2, and AC3 lines match. Run `python3 tests/verify.py`.
 - [ ] T3: Rewrite the alt-text sentence at `docs/formats/word.qmd:8` from the T2 render. Run `quarto render docs`.
 
@@ -55,3 +55,7 @@ In Word output, each captioned figure that the extension puts in a Word frame ha
 - 2026-10-29: plan gate chose setting the image caption in the post-render pass over carrying `fig-alt` in a `data-` attribute from the pre-quarto pass, because the image still holds `alt` or `fig-alt` at post-render in all five forms; falsified by a framed form whose image holds neither at post-render.
 - 2026-10-29: checkpoint: plan committed while the full criteria audit (fresh Opus reader) runs; its findings and dispositions follow in a later line.
 - 2026-10-29: criteria audit (full mode, fresh Opus reader) returned 9 findings, all fixed: AC1 drops the circular snapshot clause and requires unique `fig-alt` texts that differ from captions; AC1 names where `fig-alt` sits on the inner-image form and adds a captioned image with a non-`fig-` id; AC2 adds a knitr cell with no `fig-alt`; AC3 compares to T1's recorded unfiltered baseline and adds a wrapped float in a callout that falls back; AC4 diffs `main...HEAD`; AC5 names fallback figures; T1's pre-fix check now expects captions on the two captioned images; D-017 was written at plan time (e1ff7b8); finding 9 (proportion) needed no change.
+- 2026-10-29: implement started on branch m029-word-alt-text, cut from main at 84c71b8.
+- 2026-10-29: T1 done: `tests/docx-alt.qmd` and the `DOCX_UNFRAMED_ALT` section of `docx_summary`; on the unchanged filter the markdown, div, inner-image, and cell floats show `alt=''` and the two captioned images show their captions; the full `verify` run waits for T2, which writes the fixture's snapshot.
+- 2026-10-29: T1 AC2 dump: the framed knitr cell with no `fig-alt` has no `alt` attribute at post-render, so its `descr` stays empty.
+- 2026-10-29: T1 AC3 baseline (render with `filters:` removed): the plain float `''`, the plain captioned image 'A captioned image with no wrap class.', the callout float `''`.
