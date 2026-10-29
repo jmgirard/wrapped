@@ -27,8 +27,8 @@ In Word output, each captioned figure that the extension puts in a Word frame ha
 - [x] AC1: In the docx render of `tests/docx-alt.qmd`, each of these framed figures has its `fig-alt` text as its image's `descr` in `word/document.xml`: a markdown image float, a div float with `fig-alt` on the div, a float div with the wrap class and `fig-alt` on its inner image, a captioned image with no id, a captioned image with a non-`fig-` id, and a knitr code cell with `#| fig-alt:`. Each `fig-alt` text in the fixture is unique and differs from every caption.
 - [x] AC2: In the same render, a framed markdown float with no `fig-alt` has an empty `descr`; a framed knitr cell with no `fig-alt` has the `descr` that T1's dump predicts (the text of its image's `alt` attribute at post-render, else empty); a framed captioned image with no id and no `fig-alt` has its caption text; and an uncaptioned wrapped image with `fig-alt` has that text.
 - [x] AC3: In the same render, a float with no wrap class and a captioned image with no id and no wrap class, each with `fig-alt`, and a wrapped float with `fig-alt` in a callout, which warns and stays out of a frame, have the `descr` that T1 recorded from a render of the fixture with `filters:` removed.
-- [ ] AC4: `python3 tests/verify.py` exits 0, and at the branch tip `git diff main...HEAD --stat -- tests/_snapshots` lists only `tests/_snapshots/docx-alt.docx.txt`.
-- [ ] AC5: `docs/formats/word.qmd` says that a wrapped figure in a Word frame, captioned or not, has its `fig-alt` text as its alt text, and that a figure with no wrap class, or a wrapped figure that keeps a normal figure in Word, keeps the alt text Quarto gives it; `quarto render docs` exits 0.
+- [x] AC4: `python3 tests/verify.py` exits 0, and at the branch tip `git diff main...HEAD --stat -- tests/_snapshots` lists only `tests/_snapshots/docx-alt.docx.txt`.
+- [x] AC5: `docs/formats/word.qmd` says that a wrapped figure in a Word frame, captioned or not, has its `fig-alt` text as its alt text, and that a figure with no wrap class, or a wrapped figure that keeps a normal figure in Word, keeps the alt text Quarto gives it; `quarto render docs` exits 0.
 
 ## Coverage
 
@@ -73,21 +73,25 @@ In Word output, each captioned figure that the extension puts in a Word frame ha
 - AC2 evidence (same render): framed `#fig-md-none` `descr=""`; framed `#fig-cell-none` `descr=""`, as T1's dump predicts (no `alt` attribute); framed captioned image with no id and no alt "A captioned image with no id and no alt."; uncaptioned wrapped image "Alt for the uncaptioned image".
 - AC3 evidence (same render, against a render of a copy with the `filters:` key removed): `#fig-plain` `""` in both; the plain captioned image "A captioned image with no wrap class." in both; `#fig-callout` `""` in both, with the warning "wrapped: the figure #fig-callout is in a callout, so it does not wrap." and no frame around it (its `fig-alt` text is absent from `document.xml`).
 - spawned: diff-bug, blame-history, prior-review, ripple
-- diff-bug #1: an empty `fig-alt` was skipped, so a captioned image marked decorative with `fig-alt=""` got its caption as alt text (HTML gives `alt=""`) — fix now (empty `fig-alt` now gives empty alt text; fixture case "A captioned image with an empty alt.": its caption on the previous code, `''` with the fix)
+- diff-bug #1: an empty `fig-alt` was skipped, so a captioned image marked decorative with `fig-alt=""` got its caption as alt text (HTML gives `alt=""`) — fix now (empty `fig-alt` now gives empty alt text; fixture case "A captioned image with an empty alt.": its caption on the previous code, `''` with the fix), fixed 68e6c6d
 - diff-bug #2: a framed float with two images and `fig-alt` gives both the same alt text — follow-up, row "Fix the Word alt text edge cases"
 - diff-bug #3: `wrapped_image_docx`'s copy of `fig-alt` into an uncaptioned caption is now repeated by `alt_image` — follow-up, same row
 - diff-bug #4: the uncaptioned image and `#logo` fixture cases repeat covered paths — reject, planned change (AC1 and AC2 name both cases; the criteria audit asked for `#logo`)
 - diff-bug #5: `pandoc.Inlines` collapses repeated spaces in alt text — follow-up, row "Fix the Word alt text edge cases"
-- diff-bug #6: the unframed-image section of `docx_summary` raises on a drawing with no picture element, and its docstring line is long — fix now (skips such a drawing); the line length: reject, style
+- diff-bug #6: the unframed-image section of `docx_summary` raises on a drawing with no picture element, and its docstring line is long — fix now (skips such a drawing), fixed 68e6c6d; the line length: reject, style
 - diff-bug #7: the "Carry fig-alt to Word alt text" row must record that its unframed half was dropped — fix now, at hygiene (its graduation names D-017)
 - diff-bug #8: a wrapped image inside a link is not framed in Word — follow-up, row "Fix the Word alt text edge cases"
-- blame-history #1: `alt_image` puts `fig-alt` before an existing description, unlike the "no description" guard in wrapped.lua, and nothing records the change — fix now (the `alt_image` comment says the text takes the place of the description)
-- blame-history #2: an author-written `alt` on an inner image overrode `fig-alt` — fix now (`fig-alt` is read first, then `alt`)
+- blame-history #1: `alt_image` puts `fig-alt` before an existing description, unlike the "no description" guard in wrapped.lua, and nothing records the change — fix now (the `alt_image` comment says the text takes the place of the description), fixed 68e6c6d
+- blame-history #2: an author-written `alt` on an inner image overrode `fig-alt` — fix now (`fig-alt` is read first, then `alt`), fixed 68e6c6d
 - blame-history #3: the Word docs page does not say that Quarto leaves an unwrapped float with empty alt text — reject, planned change (the page states what the filter does; D-017)
 - blame-history #4: the docstring line is 85 characters — reject, style
 - prior-review #1: the snapshot records `alt=''` for unframed floats, keeping the M006 finding for them — reject, planned change (D-017)
-- prior-review #2: an empty `alt` before a set `fig-alt` would skip `fig-alt` — fix now (same change as blame-history #2)
+- prior-review #2: an empty `alt` before a set `fig-alt` would skip `fig-alt` — fix now (same change as blame-history #2), fixed 68e6c6d
 - prior-review #3, #4: no regression found (descr fallback, knitr widths) — noted
 - ripple #1: the candidate row still reads as an open bug — fix now, at hygiene (row graduates)
-- ripple #2: the `wrapped-docx.lua` paragraph of DESIGN.md does not name the alt-text step — fix now (sentence added, corrected M029)
-- ripple #3: the `wrapped-docx.lua` file header does not name it — fix now (clause added)
+- ripple #2: the `wrapped-docx.lua` paragraph of DESIGN.md does not name the alt-text step — fix now (sentence added, corrected M029), fixed 68e6c6d
+- ripple #3: the `wrapped-docx.lua` file header does not name it — fix now (clause added), fixed 68e6c6d
+- AC1–AC3 after the fixes (head 68e6c6d): `python3 tests/verify.py` prints `ok docx-alt.docx`, so the render matches `tests/_snapshots/docx-alt.docx.txt`, whose frame and unframed-image lines hold the AC1–AC3 values above unchanged, plus the new empty-alt frame `alt=''`.
+- AC4 evidence (head 68e6c6d): `python3 tests/verify.py` exit 0, "all 104 renders pass", 0 FAIL lines; `git diff main...HEAD --stat -- tests/_snapshots` lists only `tests/_snapshots/docx-alt.docx.txt` (35 insertions).
+- AC5 evidence (head 68e6c6d): `quarto render docs` exit 0; the rendered `docs/_site/formats/word.html` reads "A wrapped figure in a frame, captioned or not, has its fig-alt text as its alt text. A figure with no wrap class, or a wrapped figure that keeps its normal layout in Word, keeps the alt text that Quarto gives it."
+- Gate: `cairn_validate.py` all checks passed; no principle changed, so `cairn_impact` skipped; version marker `_extension.yml` 0.2.0, the only marker, tag v0.2.0 present, unchanged by the branch; `python3 tests/docs_layout.py` on the Mac exit 0 with 24 `ok` lines (LaTeX, Typst, Word) and no other line; `--html` was not run (it needs Playwright from a scratch venv; the diff changes one Word-page sentence); the docs workflow on the PR is checked at merge; changelog slot "none".
