@@ -51,7 +51,7 @@ local two_column = false
 -- Set in the first pass: meta_fig_column_set when the document sets
 -- fig-column, and meta_column_set when it sets fig-column or column.
 local meta_fig_column_set, meta_column_set = false, false
--- found_wrap: a figure or image carries a wrap class, so a format that
+-- found_wrap: a figure, image, div, or link carries a wrap class, so a format that
 -- cannot wrap prints its one warning. placed: a figure or image wraps, so
 -- the document needs the stylesheet, the LaTeX environment, or wrap-it.
 local found_wrap = false
@@ -1932,6 +1932,21 @@ local function unplaced_div(div)
   return div
 end
 
+-- A link with a wrap class, such as `[![](logo.png)](url){.wrap-left}`,
+-- wraps nothing, with a warning in a format that wraps. An image inside it
+-- wraps only by its own class. The link keeps its class, which no style
+-- reads.
+local function unplaced_link(link)
+  if not wrap_class(link.classes) then return nil end
+  found_wrap = true
+  if wraps() then
+    quarto.log.warning(string.format(
+      "wrapped: the link to %s is not a figure, so it does not wrap. A wrap class goes on an image or a figure.",
+      link.target))
+  end
+  return nil
+end
+
 local function add_html_assets()
   -- No version here: `_extension.yml` holds the one version marker.
   quarto.doc.add_html_dependency({
@@ -1997,6 +2012,6 @@ return {
     Figure = figure_block,
   },
   { Blocks = group_blocks },
-  { Image = unplaced_image, Div = unplaced_div },
+  { Image = unplaced_image, Div = unplaced_div, Link = unplaced_link },
   { Pandoc = finish },
 }

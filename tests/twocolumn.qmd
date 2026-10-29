@@ -11,3 +11,5 @@ classoption: twocolumn
 ![A wrapped figure in a two-column document.](plot.png){#fig-two .wrap-right width="40%"}
 
 The figure keeps a normal layout, and the render prints one warning. See @fig-two. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+See [the example page](https://example.org/two-column-link){.wrap-left}. The link with a wrap class prints no warning of its own here, only the one warning above.

@@ -14,3 +14,5 @@ or `python3 tests/verify.py`, which writes the reference docs.
 ![A figure in a two-column document.](plot.png){#fig-columns .wrap-right width="40%"}
 
 The paragraph after the figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+See [the example page](https://example.org/docx-columns-link){.wrap-left}. The link with a wrap class prints no warning of its own here, only the one warning above.
