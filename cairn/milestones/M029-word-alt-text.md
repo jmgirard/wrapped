@@ -41,8 +41,8 @@ In Word output, each captioned figure that the extension puts in a Word frame ha
 ## Tasks
 
 - [x] T1: Write `tests/docx-alt.qmd` with the six framed forms of AC1, the four framed cases of AC2, and the three unframed figures of AC3, each followed by a paragraph. Add `("docx-alt", "docx", True)` to the fixture list in `tests/verify.py` (about line 82). In `docx_summary` (`tests/verify.py:1402`), add a section that lists each image outside a frame with its `descr`, for fixtures named in a new set, as `MARGIN_IDS` does for HTML, so other snapshots stay as they are. Render on the unchanged filter and confirm that the four AC1 float and cell forms show `alt=''` and the two captioned images show their captions. Dump the knitr cell's image attributes at post-render for AC2. Render a copy with `filters:` removed and write each AC3 figure's `descr` in a work-log line.
-- [ ] T2: In `wrapped-docx.lua`, in `frame_blocks` or the `Image` walk it runs, set each framed image's caption to the text of its `alt` attribute, else its `fig-alt` attribute, when one is set. Write the snapshot from the fixed render and read that the AC1, AC2, and AC3 lines match. Run `python3 tests/verify.py`.
-- [ ] T3: Rewrite the alt-text sentence at `docs/formats/word.qmd:8` from the T2 render. Run `quarto render docs`.
+- [x] T2: In `wrapped-docx.lua`, in `frame_blocks` or the `Image` walk it runs, set each framed image's caption to the text of its `alt` attribute, else its `fig-alt` attribute, when one is set. Write the snapshot from the fixed render and read that the AC1, AC2, and AC3 lines match. Run `python3 tests/verify.py`.
+- [x] T3: Rewrite the alt-text sentence at `docs/formats/word.qmd:8` from the T2 render. Run `quarto render docs`.
 
 ## Work log
 
@@ -61,3 +61,4 @@ In Word output, each captioned figure that the extension puts in a Word frame ha
 - 2026-10-29: T1 AC3 baseline (render with `filters:` removed): the plain float `''`, the plain captioned image 'A captioned image with no wrap class.', the callout float `''`.
 - 2026-10-29: T2 implementation choice: `alt_image` runs in `frame_para`, because `frame_blocks`'s topdown walk stops at each paragraph and never reaches its images; it reads `alt` before `fig-alt`, since a div float holds only `alt`.
 - 2026-10-29: checkpoint: T2 code and snapshot and T3's `docs/formats/word.qmd` sentence written; `quarto render docs` exited 0; the full `python3 tests/verify.py` run is in progress, so T2 and T3 stay unticked.
+- 2026-10-29: T2 and T3 done: `python3 tests/verify.py` passed (all 104 renders, `ok docx-alt.docx`); `git diff main...HEAD --stat -- tests/_snapshots` lists only `docx-alt.docx.txt`.
