@@ -303,7 +303,10 @@ image and caption paragraphs, and puts the same `w:framePr` in a raw
 frame after Pandoc's and Quarto's own `w:pPr`. Each framed image takes
 its `fig-alt` text, or the `alt` that Quarto copies from a float's
 `fig-alt`, as its description, which Pandoc writes as its alt text
-(corrected M029). A clearing break,
+(corrected M029). Quarto puts a float's `alt` on each of its images, so
+only the frame's first image takes it; a later image keeps its own
+`fig-alt` or its description. The text goes in as one `Str`, which keeps
+its repeated spaces (corrected M030). A clearing break,
 `<w:br w:type="textWrapping" w:clear="all"/>`, ends the group's last
 paragraph (corrected M006).
 

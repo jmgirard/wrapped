@@ -1543,17 +1543,13 @@ local function wrapped_image_typst(img)
 end
 
 -- In Word, an image with no caption goes in a .wrapped-image box that holds
--- its frame. As in LaTeX, an image with fig-alt and no description takes
--- fig-alt as its description, which Pandoc writes as the image's alt text.
+-- its frame. The image keeps its fig-alt, which wrapped-docx.lua sets as
+-- its alt text when it frames the image.
 local function wrapped_image_docx(img)
   local class = wrap_class(img.classes)
   local frame, w = docx_frame(class, img.attributes.width, img.attributes["wrap-gap"],
     pandoc.utils.stringify(img.src))
   clean_image(img)
-  local alt = img.attributes["fig-alt"]
-  if alt and #img.caption == 0 then
-    img.caption = pandoc.Inlines(alt)
-  end
   return pandoc.Div(docx_size(pandoc.Blocks({ pandoc.Plain({ img }) }), w),
     pandoc.Attr("", { "wrapped-image", class }, { ["data-wrap-frame"] = frame }))
 end

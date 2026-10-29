@@ -7,7 +7,8 @@
 -- each caption paragraph the same w:framePr, so Word shows them as one
 -- frame with the group's paragraphs beside it. Pandoc writes every image
 -- inline and assigns its relationship id, so the image stays a Pandoc
--- image, and a framed image takes its fig-alt text as its alt text. A
+-- image, and a framed image takes its fig-alt text as its alt text (a
+-- float's fig-alt goes on the frame's first image only). A
 -- clearing break after the group's last paragraph ends the wrap
 -- (the stop rule). Other formats are left as they are.
 
@@ -36,11 +37,16 @@ end
 -- `fig-alt` on a captioned image with no #fig- id, but leaves the
 -- description empty or the caption. So a framed image takes that text in
 -- place of its description, fig-alt first, as the alt text of a div float
--- is only in `alt`. An empty fig-alt gives empty alt text, as in HTML.
-local function alt_image(img)
+-- is only in `alt`. Quarto puts a float's `alt` on each of its images, so
+-- only the frame's first image (`first`) takes it, and a later image keeps
+-- its own fig-alt or description. The text goes in as one Str, which keeps
+-- its repeated spaces. An empty fig-alt gives empty alt text, as in HTML.
+local function alt_image(img, first)
   local alt = img.attributes["fig-alt"]
-  if alt == nil then alt = img.attributes.alt end
-  if alt ~= nil then img.caption = pandoc.Inlines(alt) end
+  if alt == nil and first then alt = img.attributes.alt end
+  if alt ~= nil then
+    img.caption = alt == "" and pandoc.Inlines({}) or pandoc.Inlines({ pandoc.Str(alt) })
+  end
   return img
 end
 
@@ -49,8 +55,9 @@ end
 -- the frame follows that one. Word reads the frame from either position,
 -- and its style from the last w:pPr that sets one. An image paragraph takes
 -- `image_style`, the style it had in the figure, because out of the figure
--- Pandoc gives it the body text style.
-local function frame_para(block, frame, image_style)
+-- Pandoc gives it the body text style. `state.seen` is set once the frame's
+-- first image has its alt text.
+local function frame_para(block, frame, image_style, state)
   local first = block.content[1]
   local at = 1
   if first and first.t == "RawInline" and first.format == "openxml"
@@ -59,7 +66,13 @@ local function frame_para(block, frame, image_style)
   end
   local style = has_image(block) and image_style or nil
   block.content:insert(at, pandoc.RawInline("openxml", frame_pr(frame, style)))
-  return block:walk({ Image = alt_image })
+  return block:walk({
+    Image = function(img)
+      local is_first = not state.seen
+      state.seen = true
+      return alt_image(img, is_first)
+    end,
+  })
 end
 
 -- A Figure (a captioned image with no #fig- id) has no place for a raw
@@ -102,16 +115,17 @@ end
 
 -- Frames every paragraph in a list of blocks, at any depth, the paragraphs
 -- of a Pandoc Figure (its image and its caption) and of a list included.
-local function frame_blocks(blocks, frame, image_style)
+-- One `state` table serves the whole frame.
+local function frame_blocks(blocks, frame, image_style, state)
   return blocks:walk({
     traverse = "topdown",
     Figure = function(fig)
       local div = figure_paras(fig)
-      div.content = frame_blocks(div.content, frame, "CaptionedFigure")
+      div.content = frame_blocks(div.content, frame, "CaptionedFigure", state)
       return div, false
     end,
-    Para = function(p) return frame_para(p, frame, image_style), false end,
-    Plain = function(p) return frame_para(p, frame, image_style), false end,
+    Para = function(p) return frame_para(p, frame, image_style, state), false end,
+    Plain = function(p) return frame_para(p, frame, image_style, state), false end,
   })
 end
 
@@ -139,7 +153,7 @@ local function frame_first(blocks, frame)
     if not frameable(div.content) then
       return nil, name, "holds a block that Word cannot put in a frame"
     end
-    return pandoc.Div(frame_blocks(div.content, frame, "Compact"), pandoc.Attr(div.identifier)), name
+    return pandoc.Div(frame_blocks(div.content, frame, "Compact", {}), pandoc.Attr(div.identifier)), name
   end
   if first.t == "Table" then
     local div = figure_div(first)
@@ -154,7 +168,7 @@ local function frame_first(blocks, frame)
     if not frameable(first.content) then
       return "a wrapped image", "holds a block that Word cannot put in a frame"
     end
-    first.content = frame_blocks(first.content, frame, nil)
+    first.content = frame_blocks(first.content, frame, nil, {})
     return "a wrapped image"
   end
   local name, why = "a wrapped figure", "is not in a form that the filter knows"
