@@ -214,6 +214,7 @@ class Decisions(HTMLParser):
         self.groups = []
         self.in_group = False
         self.level = 0  # open elements below the current .wrap-group
+        self.link = None  # the href of the open <a>, if any
 
     def describe(self, tag, attrs):
         classes = attrs.get("class") or ""
@@ -237,11 +238,15 @@ class Decisions(HTMLParser):
             self.groups.append([])
             self.in_group = True
             self.level = 0
+        if tag == "a":
+            self.link = attrs.get("href")
         if tag == "img":
-            # revealjs puts the image path in data-src.
+            # revealjs puts the image path in data-src. An image inside a
+            # link also records the link's target.
             src = Path(attrs.get("src") or attrs.get("data-src", "")).name
+            link = f" link={self.link}" if self.link else ""
             self.images.append(
-                f"{src}: wrap={wrap_classes(classes)} style={style_text(attrs.get('style'))} width={attrs.get('width', '-')}"
+                f"{src}: wrap={wrap_classes(classes)} style={style_text(attrs.get('style'))} width={attrs.get('width', '-')}{link}"
             )
         if tag != "div":
             return
@@ -250,6 +255,8 @@ class Decisions(HTMLParser):
             self.figures.append(f"{name}: {wrap_classes(classes)} style={style_text(attrs.get('style'))}")
 
     def handle_endtag(self, tag):
+        if tag == "a":
+            self.link = None
         if not self.in_group or tag in VOID:
             return
         if self.level == 0:
@@ -360,9 +367,12 @@ def tex_summary(path):
         kind, options, body = m.groups()
         label = re.search(r"\\label\{([^}]*)\}", body)
         image = re.search(r"\\includegraphics(?:\[([^\]]*)\])?", body)
+        # A linked image records the link's target.
+        href = re.search(r"\\href\{([^}]*)\}\{", body)
         lines.append(
             f"{kind}: {label.group(1) if label else '-'} [{options or '-'}] "
             f"image=[{(image.group(1) or '-') if image else '(none)'}]"
+            + (f" link={href.group(1)}" if href else "")
         )
     return "\n".join(lines)
 
@@ -1295,6 +1305,10 @@ def typ_summary(path):
         box = label.group(1) if label else Path(image.group(1)).name if image else "-"
         alt_text = re.search(r'image\([^)]*alt: "([^"]*)"', fixed)
         alt = f'alt="{alt_text.group(1)}"' if alt_text else "no-alt"
+        # A linked image records the link's target.
+        href = re.search(r'#link\("([^"]*)"\)', fixed)
+        if href:
+            alt += f" link={href.group(1)}"
         blocks = [typ_block_kind(b.strip()) for b in re.split(r"\n\s*\n", body) if b.strip()]
         # A narrative citation is a #cite( call, and a bracketed one is @key.
         cites = len(re.findall(r"#cite\(|(?<![\w.@])@[\w:-]+", body))
@@ -1308,6 +1322,8 @@ def typ_summary(path):
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 WP = "{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}"
 PIC = "{http://schemas.openxmlformats.org/drawingml/2006/picture}"
+R = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
+RELS = "{http://schemas.openxmlformats.org/package/2006/relationships}"
 EMU_PER_TWIP = 635
 # A citation as citeproc writes it in the text: "Smith and Doe (2020)".
 AUTHOR_YEAR = re.compile(r"[A-Z][\w-]+(?: and [A-Z][\w-]+| et al\.)? \(\d{4}\)")
@@ -1323,11 +1339,13 @@ def docx_frame(p):
     return None
 
 
-def docx_frames(body):
+def docx_frames(body, targets, image_styles=False):
     """Each frame in the body: consecutive top-level paragraphs with the same
     w:framePr. Each frame records its side, width, gap, and anchor, the
     bookmark open before it ("-" if none), each image's file name, whether
-    it fills the frame width, and its alt text, whether each caption
+    it fills the frame width, its alt text, the target of a link around it
+    (from `targets`, relationship id to target), and with `image_styles` the last
+    w:pStyle of its paragraph, the style Word applies, whether each caption
     paragraph has the ImageCaption style, and the kind of each block after
     it up to and including the paragraph that holds the clearing break ("p"
     for a paragraph). It also records the anchors of the links in those
@@ -1370,7 +1388,14 @@ def docx_frames(body):
                 name = Path(p.find(f".//{PIC}cNvPr").get("descr") or "-").name
                 fills = abs(int(extent.get("cx")) - width * EMU_PER_TWIP) <= EMU_PER_TWIP
                 alt = p.find(f".//{WP}docPr").get("descr")
-                parts.append(f"image {name} fills={'yes' if fills else 'no'} alt={alt!r}")
+                part = f"image {name} fills={'yes' if fills else 'no'} alt={alt!r}"
+                for h in p.iter(f"{W}hyperlink"):
+                    if h.find(f".//{WP}extent") is not None and h.get(f"{R}id") in targets:
+                        part += f" link={targets[h.get(f'{R}id')]}"
+                if image_styles:
+                    names =[s.get(f"{W}val") for s in p.iter(f"{W}pStyle")]
+                    part += f" style={names[-1] if names else '-'}"
+                parts.append(part)
             else:
                 styles = [s.get(f"{W}val") for s in p.iter(f"{W}pStyle")]
                 parts.append(f"caption style={'ImageCaption' if 'ImageCaption' in styles else '-'}")
@@ -1405,16 +1430,22 @@ def docx_frames(body):
 # a frame.
 DOCX_UNFRAMED_ALT = {"docx-alt"}
 
+# Fixtures whose docx snapshot also records the paragraph style of each
+# framed image.
+DOCX_STYLES = {"docx-alt"}
+
 
 def docx_summary(path):
     # The width Word shows for each image, in EMU, in document order, then
     # each frame.
     with zipfile.ZipFile(path) as docx:
         xml = docx.read("word/document.xml").decode("utf-8")
+        rels = ET.fromstring(docx.read("word/_rels/document.xml.rels"))
+    targets = {r.get("Id"): r.get("Target") for r in rels.iter(f"{RELS}Relationship")}
     lines = [f"image: cx={cx}" for cx in re.findall(r'<wp:extent cx="(\d+)"', xml)]
     body = ET.fromstring(xml).find(f"{W}body")
     lines.append("# frames")
-    frames, framed = docx_frames(body)
+    frames, framed = docx_frames(body, targets, path.stem in DOCX_STYLES)
     lines += frames
     others = sum(1 for p in body.iter(f"{W}p") if docx_frame(p) is not None) - framed
     if others:

@@ -141,3 +141,13 @@ The paragraph after the figure in the callout.
 :::
 
 The last paragraph.
+
+## Framed figures with a linked image
+
+[![A linked markdown float.](plot.png){#fig-md-link .wrap-right width="30%" fig-alt="Alt for the linked markdown float"}](https://example.com)
+
+The paragraph beside the linked markdown float. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+[![A linked captioned image with no id.](plot.png){.wrap-left width="30%" fig-alt="Alt for the linked image with no id"}](https://example.com)
+
+The paragraph beside the linked image with no id. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

@@ -1,13 +1,13 @@
 # M031: Wrap images inside links in all formats
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes how linked images render in users' documents in all four formats
-- **Branch/PR:** —
+- **Branch/PR:** m031-linked-images
 
 ## Goal
 
@@ -63,6 +63,8 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a wrapped image that is
 - 2026-10-29: plan gate chose to keep the link around the image inside the wrap box over dropping the link and wrapping the bare image, because dropping it loses the user's link in every format; falsified by a format in which a link inside the wrap box breaks the box's layout (the image not beside the text in a render).
 - 2026-10-29: checkpoint: plan committed while the full criteria audit (fresh Opus reader) runs; its findings and dispositions follow in a later line.
 - 2026-10-29: criteria audit (full, fresh Opus reader): 13 findings. Fixed: #1 each case gets its own image file and AC4 says a warning for each image; #2 AC4's "no link removed" dropped, since no summary records unframed links; #3 T1 reads the Word rels part for link targets; #4 each AC4 case under its own heading, AC1 has two paragraphs; #5 AC4 adds the next-block case (a heading after a linked image) and the back-to-back case (D-003), both behavior changes the rule makes; #6 AC5 and T1 name the last `w:pStyle`; #7 Goal covers alt text and Word style, HTML alt text put in Out with its reason; #8 AC1 says requested width and names the alt text; #11 AC6 says the class goes on the image. No action: #9, #10, #12, #13 (no problem found).
+- 2026-10-29: implement started on branch m031-linked-images.
+- 2026-10-29: checkpoint: T1–T4 edits made (fixture and docx-alt cases, seven image copies, link and style summary fields, `lone_wrapped_image` with `only_inline` and `placed_image`, `has_image` in links, docs and DESIGN.md); one-fixture renders match AC1–AC5 and snapshots are written; `quarto render docs` exit 0; full `tests/verify.py` still running, so no task is checked yet.
 
 ## Decisions
 

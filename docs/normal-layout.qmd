@@ -143,9 +143,9 @@ prints the same warning there, and the figure wraps in the other formats.
 - A captioned image with no `#fig-` id wraps too, unless a place on this
   page applies to it, such as a caption in the margin. In HTML and Word it
   has no figure number. In PDF through LaTeX and Typst, Quarto numbers it.
-- An image inside a link, or beside other content in its paragraph, does
+- An image beside other content in its paragraph, or in its link, does
   not wrap. In HTML, LaTeX, Typst, and Word the render prints a warning for
-  it.
+  it. An image that is the only content of a link wraps.
 - In HTML, LaTeX, and Typst the sides are physical. In a right-to-left
   document, `.wrap-right` still puts the figure on the right. Right-to-left
   Word documents are not tested.

@@ -1499,22 +1499,42 @@ local function figure_block(fig)
   return box, false
 end
 
--- A paragraph that holds only an image with a wrap class, and no caption.
-local function lone_wrapped_image(block)
-  if block.t ~= "Para" then return nil end
-  local img
-  for _, inline in ipairs(block.content) do
-    if inline.t == "Image" and not img then
-      img = inline
-    elseif inline.t ~= "Space" and inline.t ~= "SoftBreak" then
-      return nil
+-- The one inline in a list of inlines, spaces aside, or nil.
+local function only_inline(inlines)
+  local found
+  for _, inline in ipairs(inlines) do
+    if inline.t ~= "Space" and inline.t ~= "SoftBreak" then
+      if found then return nil end
+      found = inline
     end
   end
-  if img and wrap_class(img.classes) then return img end
+  return found
+end
+
+-- A paragraph that holds only an image with a wrap class, and no caption,
+-- or only a link that holds only such an image. Returns the image and the
+-- link, if any. Quarto makes a linked image with a caption a figure.
+local function lone_wrapped_image(block)
+  if block.t ~= "Para" then return nil end
+  local inline = only_inline(block.content)
+  local link
+  if inline and inline.t == "Link" then
+    link = inline
+    inline = only_inline(link.content)
+  end
+  if inline and inline.t == "Image" and wrap_class(inline.classes) then return inline, link end
   return nil
 end
 
-local function wrapped_image_div(img)
+-- The inline that a wrap box holds: the image, or the link with the image
+-- as its content.
+local function placed_image(img, link)
+  if not link then return img end
+  link.content = pandoc.Inlines({ img })
+  return link
+end
+
+local function wrapped_image_div(img, link)
   local class = wrap_class(img.classes)
   strip_wrap(img.classes)
   local width = img.attributes.width
@@ -1522,14 +1542,14 @@ local function wrapped_image_div(img)
   img.attributes.width = nil
   img.attributes["wrap-gap"] = nil
   img.attributes["wrap-lines"] = nil
-  return pandoc.Div({ pandoc.Plain({ img }) }, pandoc.Attr("", { "wrapped-image", class },
+  return pandoc.Div({ pandoc.Plain({ placed_image(img, link) }) }, pandoc.Attr("", { "wrapped-image", class },
     { style = style_for(width, gap, pandoc.utils.stringify(img.src), nil) }))
 end
 
 -- In Typst, an image with no caption goes in a .wrapped-image box that the
 -- grouping pass opens into a wrap-content call. As in LaTeX, an image with
 -- fig-alt and no description takes fig-alt as its description.
-local function wrapped_image_typst(img)
+local function wrapped_image_typst(img, link)
   local class = wrap_class(img.classes)
   local open = typst_open(class, img.attributes.width, img.attributes["wrap-gap"],
     pandoc.utils.stringify(img.src))
@@ -1538,19 +1558,19 @@ local function wrapped_image_typst(img)
   if alt and #img.caption == 0 then
     img.caption = pandoc.Inlines(alt)
   end
-  return pandoc.Div({ pandoc.Plain({ img }) }, pandoc.Attr("", { "wrapped-image", class },
+  return pandoc.Div({ pandoc.Plain({ placed_image(img, link) }) }, pandoc.Attr("", { "wrapped-image", class },
     { ["data-wrap-open"] = open }))
 end
 
 -- In Word, an image with no caption goes in a .wrapped-image box that holds
 -- its frame. The image keeps its fig-alt, which wrapped-docx.lua sets as
 -- its alt text when it frames the image.
-local function wrapped_image_docx(img)
+local function wrapped_image_docx(img, link)
   local class = wrap_class(img.classes)
   local frame, w = docx_frame(class, img.attributes.width, img.attributes["wrap-gap"],
     pandoc.utils.stringify(img.src))
   clean_image(img)
-  return pandoc.Div(docx_size(pandoc.Blocks({ pandoc.Plain({ img }) }), w),
+  return pandoc.Div(docx_size(pandoc.Blocks({ pandoc.Plain({ placed_image(img, link) }) }), w),
     pandoc.Attr("", { "wrapped-image", class }, { ["data-wrap-frame"] = frame }))
 end
 
@@ -1560,7 +1580,7 @@ end
 -- and no description takes fig-alt as its description. The caption=false
 -- option sets the image in place, not as a float, where the text runs in
 -- columns.
-local function wrapped_image_tex(img)
+local function wrapped_image_tex(img, link)
   local class = wrap_class(img.classes)
   local opts = tex_options(class, img.attributes.width, img.attributes["wrap-gap"],
     img.attributes["wrap-lines"], pandoc.utils.stringify(img.src)) .. ",caption=false"
@@ -1571,7 +1591,7 @@ local function wrapped_image_tex(img)
   end
   return pandoc.List({
     pandoc.RawBlock("latex", "\\begin{wrappedfigure}[" .. opts .. "]\n\\centering"),
-    pandoc.Plain({ img }),
+    pandoc.Plain({ placed_image(img, link) }),
     pandoc.RawBlock("latex", "\\end{wrappedfigure}"),
   })
 end
@@ -1823,21 +1843,21 @@ local function group_blocks(blocks)
   while i <= #blocks do
     local b = blocks[i]
     local members
-    local img = lone_wrapped_image(b)
+    local img, link = lone_wrapped_image(b)
     if img then
       found_wrap = true
       if is_html then
         placed = true
-        members = pandoc.List({ wrapped_image_div(img) })
+        members = pandoc.List({ wrapped_image_div(img, link) })
       elseif is_typst then
         placed = true
-        members = pandoc.List({ wrapped_image_typst(img) })
+        members = pandoc.List({ wrapped_image_typst(img, link) })
       elseif is_docx then
         placed = true
-        members = pandoc.List({ wrapped_image_docx(img) })
+        members = pandoc.List({ wrapped_image_docx(img, link) })
       elseif is_latex then
         placed = true
-        members = wrapped_image_tex(img)
+        members = wrapped_image_tex(img, link)
       else
         strip_wrap(img.classes)
       end
@@ -1882,8 +1902,8 @@ local function group_blocks(blocks)
 end
 
 -- An image whose wrap class is still there after the grouping pass sits
--- where the filter cannot place a box, such as inside a link or beside
--- other content in a paragraph. It keeps a normal layout, with a warning in
+-- where the filter cannot place a box, such as beside other content in its
+-- paragraph or in its link. It keeps a normal layout, with a warning in
 -- a format that wraps. Other formats print the one format warning instead.
 local function unplaced_image(img)
   if not wrap_class(img.classes) then return nil end

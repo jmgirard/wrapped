@@ -111,9 +111,41 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 ## An image inside a link
 
-[![](plot.png){.wrap-left width="20%"}](https://example.com)
+[![](link.png){.wrap-left width="20%" wrap-gap="2em" fig-alt="A linked plot"}](https://example.com)
+
+The linked image wraps, and this paragraph runs beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+The second paragraph after the linked image joins its group. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A link with a word beside its image
+
+[![](link-text.png){.wrap-right width="20%"} Example](https://example.com)
 
 The image above does not wrap, and the render prints a warning for it.
+
+## A link with two images
+
+[![](link-two-a.png){.wrap-left width="20%"}![](link-two-b.png){.wrap-left width="20%"}](https://example.com)
+
+The images above do not wrap, and the render prints a warning for each.
+
+## A word beside a linked image
+
+See [![](link-beside.png){.wrap-right width="20%"}](https://example.com)
+
+The image above does not wrap, and the render prints a warning for it.
+
+## A linked image before a heading
+
+[![](link-heading.png){.wrap-left width="20%"}](https://example.com)
+
+## A float before a linked image
+
+![A float right before a linked image.](plot.png){#fig-before-link .wrap-right width="20%"}
+
+[![](link-after.png){.wrap-left width="20%"}](https://example.com)
+
+The float above keeps its normal figure, and the linked image wraps this paragraph. See @fig-before-link.
 
 ## A comment after the figure
 

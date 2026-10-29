@@ -69,6 +69,8 @@ Mean ratings by condition.
 ```
 
 Uncaptioned image: `![](logo.png){.wrap-right width="20%" fig-alt="Lab logo"}`.
+The same image as the only content of a link wraps and keeps its link:
+`[![](logo.png){.wrap-right}](https://example.com)` (corrected M031).
 
 Figure from a code cell: `#| classes: wrap-right` beside `#| fig-cap:`. The
 class lands on the cell's enclosing div, not on the figure node, and the
