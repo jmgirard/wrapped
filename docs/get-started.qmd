@@ -82,6 +82,14 @@ An image with no caption wraps too. It gets no figure number. The
 The same rules about width and gap apply to it as to a captioned figure.
 :::
 
+An image that is the only content of a link, with the link alone in its
+paragraph, wraps too, and it keeps its link. Put the wrap class on the
+image, not on the link:
+
+```markdown
+[![](logo.png){.wrap-right width="20%" fig-alt="Lab logo"}](https://example.com)
+```
+
 ### A figure from a code cell
 
 Give the cell a `fig-` label and a `fig-cap`, so that Quarto makes a figure.

@@ -1,7 +1,10 @@
 # warnings
 1x wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.
 1x wrapped: the div #note is not a figure, so it does not wrap.
-1x wrapped: the image plot.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the image link-beside.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the image link-text.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the image link-two-a.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the image link-two-b.png is not a figure or the only content of its paragraph, so it does not wrap.
 1x wrapped: the table #tbl-cars is not a figure, so it does not wrap.
 1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
 1x wrapped: width "clamp(150px, 30%, 400px)" on #fig-clamp is not a length that Word can use, so it is 40%.
@@ -19,7 +22,14 @@ image: cx=2667000
 image: cx=2667000
 image: cx=1600200
 image: cx=1188720
+image: cx=1188720
 image: cx=1066800
+image: cx=1066800
+image: cx=1066800
+image: cx=1066800
+image: cx=1066800
+image: cx=1066800
+image: cx=1188720
 image: cx=1783080
 image: cx=2377440
 image: cx=1783080
@@ -36,6 +46,8 @@ frame right w=3276 gap=480 anchor=margin | fig-inner | image plot.png fills=yes 
 frame left w=3744 gap=240 anchor=margin | fig-cell | image fig-cell-1.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-cell cites=0
 frame right w=1872 gap=240 anchor=margin | - | image plot.png fills=yes alt='A small plot' | p, p, clear | links=- cites=0
 frame right w=1872 gap=480 anchor=margin | - | image plot.png fills=yes alt='Lab logo'; caption style=ImageCaption | p, p, clear | links=- cites=0
+frame left w=1872 gap=480 anchor=margin | - | image link.png fills=yes alt='A linked plot' link=https://example.com | p, p, clear | links=- cites=0
+frame left w=1872 gap=240 anchor=margin | - | image link-after.png fills=yes alt='' link=https://example.com | p, clear | links=fig-before-link cites=0
 frame right w=2808 gap=240 anchor=margin | fig-comment | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-comment cites=0
 frame left w=3744 gap=240 anchor=margin | fig-bad-width | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-bad-width cites=0
 frame right w=2808 gap=240 anchor=margin | fig-styled | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-styled cites=0

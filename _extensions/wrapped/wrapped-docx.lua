@@ -26,9 +26,15 @@ local function frame_pr(frame, style)
     frame.width, frame.gap, frame.side)
 end
 
+-- True when a paragraph holds an image at its top level or in a link there.
 local function has_image(block)
   for _, inline in ipairs(block.content) do
     if inline.t == "Image" then return true end
+    if inline.t == "Link" then
+      for _, el in ipairs(inline.content) do
+        if el.t == "Image" then return true end
+      end
+    end
   end
   return false
 end

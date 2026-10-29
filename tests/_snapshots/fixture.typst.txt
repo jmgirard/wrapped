@@ -1,7 +1,10 @@
 # warnings
 1x wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.
 1x wrapped: the div #note is not a figure, so it does not wrap.
-1x wrapped: the image plot.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the image link-beside.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the image link-text.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the image link-two-a.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the image link-two-b.png is not a figure or the only content of its paragraph, so it does not wrap.
 1x wrapped: the table #tbl-cars is not a figure, so it does not wrap.
 1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
 1x wrapped: width "clamp(150px, 30%, 400px)" on #fig-clamp is not a length that Typst can use, so it is 40%.
@@ -19,6 +22,7 @@ figure: tbl-cars image-width=no
 figure: fig-after-table image-width=yes
 figure: fig-unwrapped-cell image-width=yes
 figure: - image-width=yes
+figure: fig-before-link image-width=yes
 figure: fig-comment image-width=yes
 figure: fig-bad-width image-width=yes
 figure: fig-styled image-width=yes
@@ -35,6 +39,8 @@ align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-cell no-alt | p, p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 20%, 40%, 40%)), column-gutter: 1em | plot.png alt="A small plot" | p, p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 2em, 20%, 40%, 40%)), column-gutter: 2em | plot.png no-alt | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 2em, 20%, 40%, 40%)), column-gutter: 2em | link.png alt="A linked plot" link=https://example.com | p, p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 20%, 40%, 40%)), column-gutter: 1em | link-after.png no-alt link=https://example.com | p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 30%, 40%, 40%)), column-gutter: 1em | fig-comment no-alt | p, p | cites=0
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-bad-width no-alt | p, p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 30%, 40%, 40%)), column-gutter: 1em | fig-styled no-alt | p, p | cites=0

@@ -10,22 +10,26 @@ Needs Quarto, R with knitr, TinyTeX, and poppler. Each render must exit with sta
 show what the filter decided. For every format it holds the extension's
 warnings. For HTML it also holds the breakpoint value, the wrap class and
 style of every figure or table div and wrapped box, the wrap class, style, and width
-of every image, and the members of every .wrap-group. Style declarations
+of every image and the target of a link around it, and the members of every .wrap-group. Style declarations
 are sorted, so their order does not count. For PDF it also holds the kind,
 label, and options of each figure environment and the options of its
-\includegraphics, with each \wrappedstop in its place, and for Typst the label of each #figure( call and
+\includegraphics and the target of an external link around it, with
+each \wrappedstop in its place, and for Typst the label of each #figure( call and
 whether its image keeps a width. For Typst it also holds each
 wrap-content call's options, the figure label or image in its box and its
-alt text, the kind of each block beside the box ("p" for a paragraph), the
+alt text and the target of an external link around that image, the kind
+of each block beside the box ("p" for a paragraph), the
 number of citations there, and the number of calls it could not read. For Word
 it also holds each image's width from word/document.xml, and each frame: its
 side, width, gap, and anchor, the figure bookmark open before it, whether
-each image fills the frame width and its alt text, whether each caption has
+each image fills the frame width, its alt text, and the target of an
+external link around it, whether each caption has
 the ImageCaption style, and the kind of each block after the frame up to the
 paragraph with the clearing break, with the link anchors and author-year
 citations in those paragraphs. It also counts framed paragraphs that are
 in no frame. For a fixture in DOCX_UNFRAMED_ALT, it also lists the alt text
-of each image outside a frame. The script first writes the reference docs of the docx
+of each image outside a frame, and for a fixture in DOCX_STYLES the last
+paragraph style of each framed image. The script first writes the reference docs of the docx
 fixtures with tests/reference_narrow.py. A revealjs or dashboard
 snapshot holds what an HTML snapshot holds. A fixture that is a folder
 is a book project: its snapshot holds the HTML parts of each page under _book/,
@@ -214,6 +218,7 @@ class Decisions(HTMLParser):
         self.groups = []
         self.in_group = False
         self.level = 0  # open elements below the current .wrap-group
+        self.link = None  # the href of the open <a>, if any
 
     def describe(self, tag, attrs):
         classes = attrs.get("class") or ""
@@ -237,11 +242,15 @@ class Decisions(HTMLParser):
             self.groups.append([])
             self.in_group = True
             self.level = 0
+        if tag == "a":
+            self.link = attrs.get("href")
         if tag == "img":
-            # revealjs puts the image path in data-src.
+            # revealjs puts the image path in data-src. An image inside a
+            # link also records the link's target.
             src = Path(attrs.get("src") or attrs.get("data-src", "")).name
+            link = f" link={self.link}" if self.link else ""
             self.images.append(
-                f"{src}: wrap={wrap_classes(classes)} style={style_text(attrs.get('style'))} width={attrs.get('width', '-')}"
+                f"{src}: wrap={wrap_classes(classes)} style={style_text(attrs.get('style'))} width={attrs.get('width', '-')}{link}"
             )
         if tag != "div":
             return
@@ -250,6 +259,8 @@ class Decisions(HTMLParser):
             self.figures.append(f"{name}: {wrap_classes(classes)} style={style_text(attrs.get('style'))}")
 
     def handle_endtag(self, tag):
+        if tag == "a":
+            self.link = None
         if not self.in_group or tag in VOID:
             return
         if self.level == 0:
@@ -360,9 +371,12 @@ def tex_summary(path):
         kind, options, body = m.groups()
         label = re.search(r"\\label\{([^}]*)\}", body)
         image = re.search(r"\\includegraphics(?:\[([^\]]*)\])?", body)
+        # The target of an external link around the image.
+        href = re.search(r"\\href\{([^}]*)\}\{(?:\\pandocbounded\{)?\\includegraphics", body)
         lines.append(
             f"{kind}: {label.group(1) if label else '-'} [{options or '-'}] "
             f"image=[{(image.group(1) or '-') if image else '(none)'}]"
+            + (f" link={href.group(1)}" if href else "")
         )
     return "\n".join(lines)
 
@@ -1295,6 +1309,10 @@ def typ_summary(path):
         box = label.group(1) if label else Path(image.group(1)).name if image else "-"
         alt_text = re.search(r'image\([^)]*alt: "([^"]*)"', fixed)
         alt = f'alt="{alt_text.group(1)}"' if alt_text else "no-alt"
+        # The target of an external link around the image.
+        href = re.search(r'#link\("([^"]*)"\)\[#box\(image\(', fixed)
+        if href:
+            alt += f" link={href.group(1)}"
         blocks = [typ_block_kind(b.strip()) for b in re.split(r"\n\s*\n", body) if b.strip()]
         # A narrative citation is a #cite( call, and a bracketed one is @key.
         cites = len(re.findall(r"#cite\(|(?<![\w.@])@[\w:-]+", body))
@@ -1308,6 +1326,8 @@ def typ_summary(path):
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 WP = "{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}"
 PIC = "{http://schemas.openxmlformats.org/drawingml/2006/picture}"
+R = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
+RELS = "{http://schemas.openxmlformats.org/package/2006/relationships}"
 EMU_PER_TWIP = 635
 # A citation as citeproc writes it in the text: "Smith and Doe (2020)".
 AUTHOR_YEAR = re.compile(r"[A-Z][\w-]+(?: and [A-Z][\w-]+| et al\.)? \(\d{4}\)")
@@ -1323,11 +1343,14 @@ def docx_frame(p):
     return None
 
 
-def docx_frames(body):
+def docx_frames(body, targets, image_styles=False):
     """Each frame in the body: consecutive top-level paragraphs with the same
     w:framePr. Each frame records its side, width, gap, and anchor, the
     bookmark open before it ("-" if none), each image's file name, whether
-    it fills the frame width, and its alt text, whether each caption
+    it fills the frame width, its alt text, the target of a link around it
+    (from `targets`, relationship id to target), and with `image_styles` the last
+    w:pStyle of its paragraph, the style wrapped-docx.lua expects Word to
+    apply, whether each caption
     paragraph has the ImageCaption style, and the kind of each block after
     it up to and including the paragraph that holds the clearing break ("p"
     for a paragraph). It also records the anchors of the links in those
@@ -1370,7 +1393,14 @@ def docx_frames(body):
                 name = Path(p.find(f".//{PIC}cNvPr").get("descr") or "-").name
                 fills = abs(int(extent.get("cx")) - width * EMU_PER_TWIP) <= EMU_PER_TWIP
                 alt = p.find(f".//{WP}docPr").get("descr")
-                parts.append(f"image {name} fills={'yes' if fills else 'no'} alt={alt!r}")
+                part = f"image {name} fills={'yes' if fills else 'no'} alt={alt!r}"
+                for h in p.iter(f"{W}hyperlink"):
+                    if h.find(f".//{WP}extent") is not None and h.get(f"{R}id") in targets:
+                        part += f" link={targets[h.get(f'{R}id')]}"
+                if image_styles:
+                    names = [s.get(f"{W}val") for s in p.iter(f"{W}pStyle")]
+                    part += f" style={names[-1] if names else '-'}"
+                parts.append(part)
             else:
                 styles = [s.get(f"{W}val") for s in p.iter(f"{W}pStyle")]
                 parts.append(f"caption style={'ImageCaption' if 'ImageCaption' in styles else '-'}")
@@ -1405,16 +1435,22 @@ def docx_frames(body):
 # a frame.
 DOCX_UNFRAMED_ALT = {"docx-alt"}
 
+# Fixtures whose docx snapshot also records the paragraph style of each
+# framed image.
+DOCX_STYLES = {"docx-alt"}
+
 
 def docx_summary(path):
     # The width Word shows for each image, in EMU, in document order, then
     # each frame.
     with zipfile.ZipFile(path) as docx:
         xml = docx.read("word/document.xml").decode("utf-8")
+        rels = ET.fromstring(docx.read("word/_rels/document.xml.rels"))
+    targets = {r.get("Id"): r.get("Target") for r in rels.iter(f"{RELS}Relationship")}
     lines = [f"image: cx={cx}" for cx in re.findall(r'<wp:extent cx="(\d+)"', xml)]
     body = ET.fromstring(xml).find(f"{W}body")
     lines.append("# frames")
-    frames, framed = docx_frames(body)
+    frames, framed = docx_frames(body, targets, path.stem in DOCX_STYLES)
     lines += frames
     others = sum(1 for p in body.iter(f"{W}p") if docx_frame(p) is not None) - framed
     if others:
