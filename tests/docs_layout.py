@@ -19,27 +19,27 @@ run the HTML check instead. For each wrapped figure, the figure's page must have
 A line crosses the span of a right-side figure when its right edge is right
 of the figure's left edge, and of a left-side figure when its left edge is
 left of the figure's right edge. The figure's bottom is the lower of its
-image and its last caption line. The caption is the nearest text under the
-image with its middle inside the image's span, if that text opens with
-"Figure" or is not in the body font, and the lines that follow it in its
-font.
+image and its last caption line. The caption is the first line of text
+under the image that overlaps the image's span, if it opens with "Figure"
+or is not in the body font, and the lines that follow it inside its span
+with text in its font (`caption()`).
 
 The PDF checks find paragraphs by line spacing, not by their words, since
 pdftohtml reads a LibreOffice PDF's text with letters lost and added. A
 line in the PDF's most common font, counted by characters, is body text. A line with none of it
 is a heading (larger) or code (not larger), and either ends a paragraph. A
 paragraph also ends where the gap from one line's top to the next passes
-the page's line pitch by more than 2 px, and in LaTeX and Typst where the
-next line starts more than 2 px right of the line before it, as an
-indented first line does. A lost letter can move a line of a LibreOffice
-PDF right, so the Word check does not read indents.
+the page's line pitch by more than 2 px, and in LaTeX and Typst before a
+line indented from its neighbors, as a paragraph's first line is
+(`blocks()`). A lost letter can move a line of a LibreOffice PDF right, so
+the Word check does not read indents.
 
 `python3 tests/docs_layout.py --html` runs the HTML check instead. It
 serves the site with tests/layout.js at `/layout.js`, opens each page in
 CASES in headless Chromium at 1280x900, runs `straddle()`, and exits with
 status 1 if a figure fails or a page is missing. In HTML, the paragraph
-before the figure must also be the last block before it, other than the
-code of the figure's own code cell. It needs Playwright for
+before the figure must also be the last visible block before it, other
+than the blocks of the figure's own code cell. It needs Playwright for
 Python and its Chromium (`pip install playwright`, then
 `python3 -m playwright install chromium`). `--js` prints the `straddle()`
 calls to run by hand in a browser console instead.
@@ -196,13 +196,20 @@ def blocks(page_lines, body, sizes, indents):
     TOL below the last line's top. With `--debug` on the docs pages on
     2026-10-29, lines of one paragraph sat within 1 px of the pitch, and
     paragraphs 8 px or more past it. With `indents`, a paragraph also ends
-    where the next line starts more than TOL right of the last line, as the
-    first line of an indented paragraph does.
+    before a line that starts right of the line before it or the line after
+    it by an indent: more than a quarter of the pitch, past a letter set
+    slightly into the margin (124 against 125 px on image-figure's LaTeX
+    PDF), and no more than two pitches, short of the step between a line
+    beside a left-side figure and a line below it.
     """
     tops = [l["top"] for l in page_lines]
     pitch = statistics.median(b - a for a, b in zip(tops, tops[1:]) if b > a)
+
+    def indented(line, other):
+        return other is not None and pitch / 4 < line["left"] - other["left"] <= 2 * pitch
+
     out = []
-    for line in page_lines:
+    for n, line in enumerate(page_lines):
         if body in line["fonts"]:
             kind = "para"
         elif max(sizes[f] for f in line["fonts"]) > sizes[body]:
@@ -211,8 +218,9 @@ def blocks(page_lines, body, sizes, indents):
             kind = "code"
         last = out[-1] if out else None
         prev = last["lines"][-1] if last else None
+        nxt = page_lines[n + 1] if n + 1 < len(page_lines) else None
         if (last and last["kind"] == kind and line["top"] - prev["top"] <= pitch + TOL
-                and not (indents and kind == "para" and line["left"] > prev["left"] + TOL)):
+                and not (indents and kind == "para" and (indented(line, prev) or indented(line, nxt)))):
             last["lines"].append(line)
         else:
             out.append({"kind": kind, "lines": [line]})
@@ -228,36 +236,40 @@ def crosses(line, fig):
 def caption(on_page, image, body):
     """The text elements of the image's caption, top to bottom.
 
-    The caption's first element is the nearest text under the image whose
-    middle is inside the image's span, if it opens with "Figure" or is not
-    in the body font. Each later line joins in the first element's font,
-    no more than 1.5 of its own heights below the line before. An element
-    that starts within half a height of the text on its left continues a
-    line of body text and is never caption.
+    Text beside a figure stops short of the image's span, so the text under
+    the image that overlaps its span, grouped into lines, starts with the
+    caption if there is one. The first line is caption if its first element
+    opens with "Figure" or is not in the body font. Each later line is
+    caption while it starts no more than 1.5 heights of the line before
+    below that line's top, lies inside the first line's span, and holds an
+    element in the first element's font.
     """
-    def inside(t):
-        return image["left"] <= (t["left"] + t["right"]) / 2 <= image["right"]
-
-    def continues(t):
-        middle = (t["top"] + t["bottom"]) / 2
-        return any(o is not t and o not in out and o["top"] <= middle <= o["bottom"]
-                   and -TOL <= t["left"] - o["right"] <= t["height"] / 2 for o in on_page)
-
     # A text box can reach a few px into the box of the line above it.
-    out = []
-    under = sorted((t for t in on_page if t["top"] >= image["bottom"] - 6 and inside(t)),
+    under = sorted((t for t in on_page if t["top"] >= image["bottom"] - 6
+                    and t["left"] < image["right"] and t["right"] > image["left"]),
                    key=lambda t: (t["top"], t["left"]))
-    if not under or continues(under[0]) or not (
-            under[0]["text"].startswith("Figure") or under[0]["font"] != body):
+    rows = []
+    for t in under:
+        middle = (t["top"] + t["bottom"]) / 2
+        if rows and rows[-1][0]["top"] <= middle <= rows[-1][0]["bottom"]:
+            rows[-1].append(t)
+        else:
+            rows.append([t])
+    if not rows:
         return []
-    out = [under[0]]
-    for t in under[1:]:
-        last = out[-1]
-        if t["top"] - last["top"] > 1.5 * last["height"]:
+    first = min(rows[0], key=lambda t: t["left"])
+    if not (first["text"].startswith("Figure") or first["font"] != body):
+        return []
+    left = min(t["left"] for t in rows[0])
+    right = max(t["right"] for t in rows[0])
+    out = list(rows[0])
+    for last, row in zip(rows, rows[1:]):
+        if (row[0]["top"] - last[0]["top"] > 1.5 * last[0]["height"]
+                or min(t["left"] for t in row) < left - TOL
+                or max(t["right"] for t in row) > right + TOL
+                or not any(t["font"] == first["font"] for t in row)):
             break
-        same_line = t["top"] <= (last["top"] + last["bottom"]) / 2
-        if (same_line or t["font"] == out[0]["font"]) and not continues(t):
-            out.append(t)
+        out += row
     return out
 
 

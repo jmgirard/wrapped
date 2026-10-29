@@ -180,10 +180,10 @@ function paragraphLines(p) {
   return lines.sort((a, b) => a.top - b.top);
 }
 
-// The blocks that sit after `above` and before the figure `el` in the
-// document, outside the figure's own code cell, whose code comes before
-// its figure.
-const BLOCKS = "p, h1, h2, h3, h4, h5, h6, pre, ul, ol, dl, blockquote, table, hr";
+// The visible blocks that sit after `above` and before the figure `el` in
+// the document. Blocks of the figure's own code cell, such as its code,
+// and margin content are left out.
+const BLOCKS = "p, h1, h2, h3, h4, h5, h6, pre, ul, ol, dl, blockquote, table, hr, figure, .callout";
 function between(above, el) {
   const cell = el.closest(".cell");
   return [...document.querySelectorAll(`main :is(${BLOCKS})`)].filter(
@@ -193,7 +193,8 @@ function between(above, el) {
       !above.contains(b) &&
       !b.contains(el) &&
       !cell?.contains(b) &&
-      getComputedStyle(b).display !== "none"
+      !b.closest(".column-margin") &&
+      b.getClientRects().length > 0
   );
 }
 
@@ -201,7 +202,8 @@ function between(above, el) {
 // prints the `cases` for each page (`--js`). Each case lists words that
 // appear in the paragraph before a wrapped figure (`above`) and in the
 // paragraph that runs beside and below it (`straddle`), in figure order.
-// The paragraph above must be the last block before the figure.
+// The paragraph above must come before the figure, as its last visible
+// block (`between()`).
 export function straddle(cases) {
   const figs = wrapped();
   const paras = [...document.querySelectorAll("main p")];
@@ -218,7 +220,8 @@ export function straddle(cases) {
     if (ai < 0 || si < 0) return { figure: el.id, ok: false, problems: ["paragraph not found"] };
     pos = si + 1;
     const extra = between(paras[ai], el);
-    if (extra.length) problems.push(`a ${extra[0].tagName.toLowerCase()} sits between the paragraph above and the figure`);
+    if (!(paras[ai].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)) problems.push("paragraph above comes after the figure");
+    else if (extra.length) problems.push(`a ${extra[0].tagName.toLowerCase()} sits between the paragraph above and the figure`);
     const above = paragraphLines(paras[ai]);
     const para = paragraphLines(paras[si]);
     if (above.length < 2) problems.push(`paragraph above has ${above.length} line`);
