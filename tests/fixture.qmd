@@ -147,6 +147,22 @@ The image above does not wrap, and the render prints a warning for it.
 
 The float above keeps its normal figure, and the linked image wraps this paragraph. See @fig-before-link.
 
+## A wrap class on a link
+
+[![](link-class.png){width="20%"}](https://example.org/link-class){.wrap-left}
+
+The image above does not wrap, and the render prints a warning for its link.
+
+## A wrap class on a link and its image
+
+[![](link-class-both.png){.wrap-right width="20%"}](https://example.org/link-class-both){.wrap-left}
+
+The image wraps on the right by its own class, and the render prints a warning for its link. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A wrap class on a text link
+
+See [the example page](https://example.org/link-class-text){.wrap-right} for more. The render prints a warning for the link.
+
 ## A comment after the figure
 
 ![A figure with a comment after it.](plot.png){#fig-comment .wrap-right width="30%"}

@@ -1,13 +1,13 @@
 # M032: Warn for a wrap class on a link
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — adds a render warning that users see
-- **Branch/PR:** —
+- **Branch/PR:** m032-link-class-warning
 
 ## Goal
 
@@ -51,3 +51,5 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a link that carries a w
 - 2026-10-29: plan gate chose to leave the class on the link over stripping it as `unplaced_div` does, because stripping changes HTML output with no layout effect (wrapped.css selects `.quarto-float` and `.wrapped-image` only); falsified by a stylesheet, Quarto's or the extension's, that selects a wrap class on an `a` element.
 - 2026-10-29: criteria audit (full, fresh Opus reader): 6 findings. Fixed 4: AC1 now needs three distinct targets other than `https://example.com`, since equal warnings merge; the message's advice now fits a text link ("A wrap class goes on an image or a figure."); AC2 now names what each summary records (link targets and sides in LaTeX, Typst, Word; `style=` in HTML); the captioned-image case is named in Out as the same code path. No change: AC3 matches `wraps()`, and no rule or D-entry blocks any criterion.
 - 2026-10-29: new candidate row "Warn for a wrap class on a span" for elements the last pass does not read.
+- 2026-10-29: implement started on m032-link-class-warning.
+- 2026-10-29: checkpoint (T1 to T3 written, unticked until `python3 tests/verify.py` finishes): three fixture cases; before `unplaced_link`, the four one-fixture renders printed no link warning; after it, the four snapshots hold the three warnings, only link-class-both wraps (right), link-class keeps `style=width:20.0%` in HTML; `quarto render docs` exit 0.
