@@ -347,6 +347,7 @@ Figure&nbsp;1: Mean ratings by condition.
 <ul>
 <li>A captioned image with no <code>#fig-</code> id wraps too, unless a place on this page applies to it, such as a caption in the margin. In HTML and Word it has no figure number. In PDF through LaTeX and Typst, Quarto numbers it.</li>
 <li>An image beside other content in its paragraph, or beside other content in its link, does not wrap. In HTML, LaTeX, Typst, and Word the render prints a warning for it. An image that is the only content of a link, with the link alone in its paragraph, wraps.</li>
+<li>A wrap class on a link, as in <code>[![](logo.png)](https://example.com){.wrap-right}</code>, does not wrap. In HTML, LaTeX, Typst, and Word the render prints a warning for it. In Word with columns, or LaTeX with <code>classoption: twocolumn</code>, it prints the one columns warning instead. Put the wrap class on the image inside the link, with the link alone in its paragraph.</li>
 <li>In HTML, LaTeX, and Typst the sides are physical. In a right-to-left document, <code>.wrap-right</code> still puts the figure on the right. Right-to-left Word documents are not tested.</li>
 <li>A long caption wraps inside the figure box.</li>
 <li>If a page has margin content, such as a <code>.column-margin</code> note, a figure in the body of the page still wraps.</li>
