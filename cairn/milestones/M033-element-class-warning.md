@@ -62,6 +62,7 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a span, heading, inline
 - 2026-10-29: `python3 tests/verify.py` (no update) exit 0, all 105 renders pass, at 21ff00b.
 - 2026-10-29: claim audit: 32 claims read, 1 corrected — _extensions/wrapped/wrapped.lua. `unplaced_table` removed every trailing Space and SoftBreak, but Quarto's `stripTrailingSpace` removes one Space, so it now removes one Space and the comment says it reads the block's classes the same way. Kept the hint "A wrap class goes on an image or a figure.": it matches the shipped link warning. The reader also found `preprocessTable` has no callers in Quarto 1.10.19; the call that applies the classes is `table_classes()` in pre-combined-figures, which also reads the caption's last block.
 - 2026-10-29: `python3 tests/verify.py` exit 0, all 105 renders pass, at 0d19458; status set to review.
+- 2026-10-29: step-7 approval: m033-element-class-warning approved for merge
 
 ## Review
 
