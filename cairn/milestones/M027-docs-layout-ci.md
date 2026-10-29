@@ -105,6 +105,7 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
 - 2026-10-29: implement complete, status review. The docs workflow has not run on the branch yet. Its first run comes with the PR at review.
 - 2026-10-29: PROFILE.md reached 123 lines (cap 120) after T4. The new gate bullet was shortened and two wrapped lines in release-walk were joined, giving 119 lines. Validate passes.
 - 2026-10-29: T2 departs from its task text: the site and `tests/layout.js` are not copied into one temporary folder. The HTTP handler maps `/layout.js` to `tests/layout.js` and serves the rest from the site folder (M027 review, diff-bug #9).
+- 2026-10-29: step-7 approval: m027-docs-layout-ci approved for merge
 - 2026-10-29: lessons used: 2026-10-28 (M020) browser viewport, 2026-10-28 (M023) Typst output-file, 2026-10-28 (M026) LibreOffice text and frozen pages, 2026-10-26 (M007) pdftohtml image files.
 
 ## Decisions
