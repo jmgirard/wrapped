@@ -102,6 +102,7 @@ The docs layout checks give the right result on three planted page faults that t
 - 2026-10-29: T4: plant runs, new script then M027 script: plant 1 LaTeX `FAIL: no paragraph runs from beside the figure to below it`, then `FAIL: no paragraph above the figure on its page`; plant 2 `--debug` box bottom 867 and `ok`, then bottom 781 and `ok` (caption 845 to 867); plant 3 `--html` `FAIL: a p sits between the paragraph above and the figure` with exit 1, then `ok` with exit 0.
 - 2026-10-29: T4: `python3 tests/verify.py` passes all 103 renders; after `quarto render docs` at 2a78a35, `tests/docs_layout.py` prints `ok` for all 24 LaTeX, Typst, and Word figures and `--html` for all 9 figures, both exit 0. Docstrings of both files and the `straddle()` comment name the new rules.
 - 2026-10-29: claim audit: not owed — internal tier.
+- 2026-10-29: step-7 approval: m028-docs-layout-gaps approved for merge
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
