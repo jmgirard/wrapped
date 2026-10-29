@@ -1,13 +1,13 @@
 # M033: Warn for a wrap class on a span
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — adds render warnings that users see
-- **Branch/PR:** —
+- **Branch/PR:** m033-element-class-warning
 
 ## Goal
 
@@ -37,7 +37,7 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a span, heading, inline
 
 ## Tasks
 
-- [ ] T1: Add cases (a) to (h) to `tests/fixture.qmd` after "A wrap class on a text link" (about line 162), each with its own text and, for (d), its own image copy; a span case to `tests/twocolumn.qmd` and `tests/docx-columns.qmd` beside their link cases; and `tests/docx-columns-span.qmd` with its entry in `tests/verify.py`'s render list. Render `fixture` in the four formats with the one-fixture command, confirm that none of the new cases prints a warning before T2, and confirm with a dump filter that the Typst render keeps the cases' classes and the table's caption block as in HTML; narrow AC1 by a gated amendment if it does not.
+- [x] T1: Add cases (a) to (h) to `tests/fixture.qmd` after "A wrap class on a text link" (about line 162), each with its own text and, for (d), its own image copy; a span case to `tests/twocolumn.qmd` and `tests/docx-columns.qmd` beside their link cases; and `tests/docx-columns-span.qmd` with its entry in `tests/verify.py`'s render list. Render `fixture` in the four formats with the one-fixture command, confirm that none of the new cases prints a warning before T2, and confirm with a dump filter that the Typst render keeps the cases' classes and the table's caption block as in HTML; narrow AC1 by a gated amendment if it does not.
 - [ ] T2: Add the five handlers to the last pass of `wrapped.lua` with one shared helper for the message and `<where>`, comments in the style of `unplaced_link`'s, and register them in the returned filter list. Update the `found_wrap` comment. Write the `fixture`, `twocolumn`, `docx-columns`, and `docx-columns-span` snapshots, read each diff against AC1 to AC3, and run `python3 tests/verify.py`.
 - [ ] T3: Add the rule to the "Other notes" list of `docs/normal-layout.qmd` (about line 150, after the link note) and name the new elements in step 6 of DESIGN.md's architecture. Run `quarto render docs`.
 
@@ -53,3 +53,5 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a span, heading, inline
 - 2026-10-29: plan gate chose to keep the class on each element over stripping it as `unplaced_div` does, at the user's choice; falsified by a stylesheet that selects a wrap class on a span, heading, code, or table.
 - 2026-10-29: plan gate chose to read the caption block with Quarto's own rule over a pattern match on the caption text, so the filter agrees with what Quarto applies; falsified by a Quarto version whose caption parser differs.
 - 2026-10-29: criteria audit (full, fresh Opus reader): 11 findings. Fixed 9: exact `"<40 characters>..."` form; trimmed text, so a table caption has no trailing space; a table is named by caption text only, never by an id from its block; case (d) needs empty alt text, since an image's text is its alt; case (c) uses a precomposed `é` after 39 ASCII characters; cases (a), (e), (g) use `.wrap-right`; new fixture `tests/docx-columns-span.qmd` tests `found_wrap` with no wrapped figure; AC1 states the render's warnings with the snapshot as evidence, and AC2 names expected non-warning additions; T1 checks the Typst AST; AC4 adds the columns sentence. Answered 2 with no change: elements in callouts, groups, captions, and a code block with an id run the same handlers and helper (Out names them); AC3 and AC5 had no finding.
+- 2026-10-29: implement started on branch m033-element-class-warning.
+- 2026-10-29: T1: cases (a) to (h) in `tests/fixture.qmd`, span cases in `twocolumn.qmd` and `docx-columns.qmd`, new `tests/docx-columns-span.qmd` in the render list, image copy `tests/span-class-image.png`. Before the handlers, no new case prints a warning in the four `fixture` formats, `twocolumn` (pdf), or `docx-columns`, and `docx-columns-span` prints none, not even the columns warning; the only summary change is the HTML image line for (d). A Typst dump (`fig-format: png`) shows the same Span, Header, Code, CodeBlock classes and table caption text as HTML.

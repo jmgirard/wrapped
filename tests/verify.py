@@ -92,6 +92,7 @@ RENDERS = [
     ("docx-reference", "docx", True),
     ("docx-options", "docx", True),
     ("docx-columns", "docx", True),
+    ("docx-columns-span", "docx", True),
     ("docx-gap", "docx", True),
     ("docx-gap-meta", "docx", True),
     ("docx-gap-meta-wide", "docx", True),

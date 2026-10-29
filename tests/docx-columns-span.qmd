@@ -1,0 +1,14 @@
+---
+title: "wrapped fixture: a wrap class on a span alone in Word columns"
+filters:
+  - wrapped
+format:
+  docx:
+    reference-doc: reference-columns.docx
+---
+
+The reference doc sets two columns, and no figure here has a wrap class.
+Run `python3 tests/verify.py` first, which writes the reference docs.
+
+This sentence holds [the only wrap class]{.wrap-left} in the document, so
+the render prints the one Word columns warning and no other warning.
