@@ -229,3 +229,14 @@ Mac and breaks lines in other places. D-005 still limits LibreOffice to
 checks on the Mac. Playwright is a CI need and an option of
 `tests/docs_layout.py` only. The test command in `tests/verify.py` does not
 need it.
+
+### D-017: In Word, the filter sets fig-alt as alt text only on figures it frames
+
+2026-10-29, M029. Quarto 1.10.19 drops `fig-alt` from the Word alt text of
+every captioned figure, wrapped or not. The user chose at the M029 plan's
+question set to fix it for wrapped figures only, so a document that does
+not use wrapping renders as Quarto renders it. A wrapped figure that keeps
+a normal figure in Word, with a warning, is a normal figure under the
+DESIGN.md goals, so it also keeps Quarto's alt text. Fixing every captioned
+figure in Word was rejected because the filter would then change figures
+that it does not wrap.
