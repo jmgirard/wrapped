@@ -523,7 +523,7 @@
     "href": "formats/word.html",
     "title": "Word",
     "section": "",
-    "text": "In Word output, the extension puts each wrapped figure in a Word frame. The image and its caption sit in the frame on the figure’s side, and the paragraphs after the figure flow beside it. Citations and @fig- links in the text beside the figure work. An uncaptioned image keeps its fig-alt text as its alt text.",
+    "text": "In Word output, the extension puts each wrapped figure in a Word frame. The image and its caption sit in the frame on the figure’s side, and the paragraphs after the figure flow beside it. Citations and @fig- links in the text beside the figure work. A wrapped figure in a frame, captioned or not, has its fig-alt text as its alt text. A figure with no wrap class, or a wrapped figure that keeps its normal layout in Word, keeps the alt text that Quarto gives it.",
     "crumbs": [
       "Get started",
       "Formats",
