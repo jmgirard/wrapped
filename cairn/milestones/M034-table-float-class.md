@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M034: Warn for wrap classes on table floats
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — the filter's warnings and HTML output change for users' documents
-- **Branch/PR:** —
+- **Branch/PR:** m034-table-float-class
 
 ## Goal
 
@@ -41,7 +41,7 @@ A `#tbl-` float whose wrap class is in the attribute block at its caption's end 
 
 ## Tasks
 
-- [ ] T1: Add four cases to `tests/fixture.qmd`, each with its own table and a paragraph after it: the `#tbl-` div with `: Cap {.wrap-left .striped}`, a knitr cell with `#| tbl-cap: "Cap {.wrap-right}"`, a knitr cell with `#| classes: wrap-right` and `#| tbl-cap: "Cap {.wrap-left}"`, and the `#tbl-` div with `: Cap {.striped}`. Render HTML before the fix and record which print no warning and which float with a wrap class.
+- [x] T1: Add four cases to `tests/fixture.qmd`, each with its own table and a paragraph after it: the `#tbl-` div with `: Cap {.wrap-left .striped}`, a knitr cell with `#| tbl-cap: "Cap {.wrap-right}"`, a knitr cell with `#| classes: wrap-right` and `#| tbl-cap: "Cap {.wrap-left}"`, and the `#tbl-` div with `: Cap {.striped}`. Render HTML before the fix and record which print no warning and which float with a wrap class.
 - [ ] T2: Factor the caption-block parse out of `unplaced_table` (`wrapped.lua:1998`) into a helper that returns the block's attributes and where it starts. In `float_target` (`wrapped.lua:1352`), for a table float, read the block from `float.caption_long`, take its wrap class for the warning when the float has none of its own, and rewrite the block without wrap classes on every table float, removing it when nothing is left.
 - [ ] T3: Update the four format snapshots of `tests/fixture.qmd` with `--update` and read the diff. The HTML snapshot records only wrap classes, so add a check to `tests/verify.py` that the AC2 and AC3 tables' `<table>` elements carry `table-striped` where named and that their captions hold no `{`. Plant a fault (skip the rewrite) and see the checks fail. Run `python3 tests/verify.py`.
 - [ ] T4: Edit the Tables section of `docs/normal-layout.qmd` and step 6 of `cairn/DESIGN.md`. Run `quarto render docs` and `python3 tests/docs_layout.py`.
@@ -57,3 +57,4 @@ A `#tbl-` float whose wrap class is in the attribute block at its caption's end 
 - 2026-10-29: probe (scratch render, Quarto 1.10.19): at pre-quarto the block sits in `float.caption_long` for both forms (`Cap {.wrap-left .striped}`, `Knitr cap {.wrap-right}`) with no class on the float; the HTML float divs then carry `wrap-left striped` and `cell wrap-right`; no warning prints.
 - 2026-10-29: plan gate chose rewriting the caption block in the filter over narrowing the `.quarto-float.wrap-*` CSS selectors, because Quarto gives a table float the same `quarto-float quarto-figure` classes as a figure float, so the CSS cannot tell them apart without a new class on every wrapped float; falsified by a Quarto version that applies the block before pre-quarto filters or no longer reads it from the float caption.
 - 2026-10-29: criteria audit (full, fresh Opus reader): 8 items, 6 findings, all fixed. AC1 named its two forms instead of every table float, with Jupyter, subtable panels, and a `#tbl-` div around a code cell moved to Out. AC2 gained a cell with both `classes:` and a caption-block class, since the rewrite must run when the float has its own class. AC2 and AC3 read `table-striped` on the `<table>` instead of `striped` on the float div. AC2 and AC3 are limited to HTML. AC4 says knitr cell. T3 names the `tests/verify.py` check, since the HTML snapshot records only wrap classes. AC3, AC5, and reachability: no finding.
+- 2026-10-29: T1: four cases added to `tests/fixture.qmd` (`tbl-caption-block`, `tbl-cell-block`, `tbl-cell-both`, `tbl-striped`). HTML render before the fix: the first two print no warning; the first three float divs carry `wrap-left`, `wrap-right`, `wrap-left`, and their `<table>` elements carry the same class; `tbl-striped` has none and no warning.

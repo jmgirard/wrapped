@@ -200,6 +200,49 @@ The render prints a warning for the code block above, named by its first line.
 
 The table keeps a normal layout, and the render prints a warning for it.
 
+## A wrap class in a table float's caption
+
+::: {#tbl-caption-block}
+
+| Name | Value |
+|------|-------|
+| b    | 2     |
+
+: A table float with a wrap class in its caption {.wrap-left .striped}
+
+:::
+
+The table keeps a normal layout and its striped class, and the render prints a warning for it.
+
+```{r}
+#| label: tbl-cell-block
+#| tbl-cap: "A table from a cell with a wrap class in its caption {.wrap-right}"
+knitr::kable(head(cars, 2))
+```
+
+The table keeps a normal layout, and the render prints a warning for it.
+
+```{r}
+#| label: tbl-cell-both
+#| tbl-cap: "A table from a cell with wrap classes in two places {.wrap-left}"
+#| classes: wrap-right
+knitr::kable(head(cars, 2))
+```
+
+The table keeps a normal layout, and the render prints one warning for it.
+
+::: {#tbl-striped}
+
+| Name | Value |
+|------|-------|
+| c    | 3     |
+
+: A table float with a striped class in its caption {.striped}
+
+:::
+
+The table keeps its striped class, and the render prints no warning for it.
+
 ## A comment after the figure
 
 ![A figure with a comment after it.](plot.png){#fig-comment .wrap-right width="30%"}
