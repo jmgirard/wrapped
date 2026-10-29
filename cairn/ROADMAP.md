@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-29 (M032 review: "Warn for a wrap class on a link" graduated; M029 row pruned; one lesson captured, one evicted by rank; validate green)_
+_Last hygiene check: 2026-10-29 (M033 review: "Warn for a wrap class on a span" graduated; M030 row pruned; one lesson captured, one evicted by rank; validate green)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-29 (M032 review: "Warn for a wrap class on a link" 
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M033 | Warn for a wrap class on a span | review | — | normal | milestones/M033-element-class-warning.md |
+| M033 | Warn for a wrap class on a span | done | — | normal | milestones/archive/M033-element-class-warning.md |
 | M032 | Warn for a wrap class on a link | done | — | normal | milestones/archive/M032-link-class-warning.md |
 | M031 | Wrap images inside links in all formats | done | — | normal | milestones/archive/M031-linked-images.md |
-| M030 | Fix the Word alt text edge cases | done | — | normal | milestones/archive/M030-word-alt-edges.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -49,7 +48,6 @@ _Last hygiene check: 2026-10-29 (M032 review: "Warn for a wrap class on a link" 
 - Pin the docs CI Python packages: the docs workflow pins `playwright==1.64.0`, but pip resolves its dependencies (greenlet, pyee) fresh on each run with no hashes, so a new release of one can change or break a run on a pull request that changed nothing (M027 review, diff-bug #3) — added 2026-10-29 — milestones/archive/M027-docs-layout-ci.md
 - Harden and test the docs layout checks: `caption()` in `tests/docs_layout.py` takes a short body line within 1.5 heights under a same-font caption when the line lies inside the caption's first line, as with a two-line caption at a left image's edge ("end." in a div-figure LaTeX simulation). The three plants that prove M028's rules live only in a scratch copy of the site, so a regression passes `tests/verify.py` (M028 review, diff-bug #5, prior-review #5) — added 2026-10-29 — milestones/archive/M028-docs-layout-gaps.md
 - Keep caption style for caption images: in Word, `frame_para` gives the frame's image style to any framed paragraph where `has_image` finds an image, so a caption paragraph that holds an image (an icon, linked or not) takes `Compact` instead of `ImageCaption`. The `fig-two-icon` frame line in `tests/_snapshots/docx-alt.docx.txt` shows it, with no `caption style=` part; it predates M031, which extends it to a linked image (M031 review, diff-bug #3, blame-history #4, prior-review #3) — added 2026-10-29 — milestones/archive/M031-linked-images.md
-- Warn for a wrap class on a span: a wrap class on a span, `[text]{.wrap-left}`, or on a heading, inline code, or another element with attributes wraps nothing and prints no warning, since the filter's last pass reads images, divs, and links only (M032 plan) — added 2026-10-29 — milestones/archive/M032-link-class-warning.md — started M033
 - Warn for wrap classes on table floats: a `#tbl-` float whose wrap class is only in an inner caption block, as in a `::: {#tbl-x}` div around a table captioned `: Cap {.wrap-left}`, or a knitr cell with `#| tbl-cap: "Cap {.wrap-left}"`, prints no warning. Quarto's `table_classes()` later adds the class to the float, so in HTML, once wrapped.css loads for another figure, the table floats at 40%. `float_target` cannot see the class and the inner table's caption has moved to the float, so M033's table check misses it (M033 review, diff-bug #1) — added 2026-10-29 — milestones/archive/M033-element-class-warning.md
 - [low] Check wraps in dashboard sidebars: M022 checks wrapped figures in dashboard cards only. Sidebars, tabsets (`{.tabset}` on a heading), value boxes, and card toolbars have no render; a code cell in a `.sidebar`, `.toolbar`, or `.valuebox` div gets M022's "is outside a card in a dashboard" warning, and a markdown figure there is unchecked (M022 criteria audit). Also unchecked in a dashboard: margin and page-wide classes, which still name a place there (`has_page_layout`), on a figure or on a `.card` div; a Jupyter markdown cell, which the cell rule skips; and a Jupyter `output: asis` cell, which Quarto does not make a card but the rule treats as outside a card (M022 review, blame-history #3, prior-review #1, #3, #4, diff-bug #3) — added 2026-10-28 — milestones/archive/M022-dashboard-wraps.md
 - [low] Use the HTML stylesheet for EPUB: EPUB is HTML-based, so the W1 stylesheet can apply there. Version 1 keeps a normal figure in EPUB (W5) — added 2026-10-24 — references/wrap-mechanisms.md
