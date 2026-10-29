@@ -214,3 +214,18 @@ to the height count was rejected. The skip compares positions on the page
 where the wrap started, so it adds nothing after a page break or inside a
 box such as a callout. The text inside the paragraphs past the count still
 runs at full width, as wrapfig does.
+
+### D-016: The docs workflow checks page layout with poppler and Playwright (extends D-008, D-014)
+
+2026-10-29, M027. The user chose at the M027 plan's question set to run the
+docs layout checks in `.github/workflows/docs.yml`. The render job installs
+`poppler-utils` from Ubuntu's packages, as `verify.yml` does under D-008,
+and Playwright for Python with its Chromium in a virtual environment. The
+publish job waits for the render job, so a page that fails a check is not
+published. Playwright was chosen over a script that drives the runner's own
+Chrome because a maintained driver needs less custom code. The Word check
+stays out of CI, because LibreOffice on Ubuntu uses other fonts than the
+Mac and breaks lines in other places. D-005 still limits LibreOffice to
+checks on the Mac. Playwright is a CI need and an option of
+`tests/docs_layout.py` only. The test command in `tests/verify.py` does not
+need it.

@@ -4,10 +4,18 @@
 # results stale, and the render then fails. Render the site locally with R
 # (quarto render docs) and commit the changed docs/_freeze/.
 #
+# The render job runs on every event. After the render, it checks that each
+# example page in CASES of tests/docs_layout.py shows text above, beside,
+# and below its wrapped figure in the PDF through LaTeX, the PDF through
+# Typst (poppler), and HTML (Playwright's Chromium). The Word check is not
+# run here, because LibreOffice on Ubuntu breaks lines in other places than
+# on the Mac. Run `python3 tests/docs_layout.py` there for Word.
+#
 # On main of jmgirard/wrapped (a push or a manual run), the publish job
-# renders the site and pushes it to the gh-pages branch, which GitHub Pages
-# serves at https://jmgirard.github.io/wrapped/. Everywhere else, pull
-# requests and forks included, the render job only renders.
+# runs after the render job passes. It renders the site again and pushes it
+# to the gh-pages branch, which GitHub Pages serves at
+# https://jmgirard.github.io/wrapped/. Everywhere else, pull requests and
+# forks included, only the render job runs.
 name: docs
 
 on:
@@ -15,12 +23,16 @@ on:
     paths:
       - "docs/**"
       - "_extensions/**"
+      - "tests/docs_layout.py"
+      - "tests/layout.js"
       - ".github/workflows/docs.yml"
   push:
     branches: [main]
     paths:
       - "docs/**"
       - "_extensions/**"
+      - "tests/docs_layout.py"
+      - "tests/layout.js"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
@@ -36,9 +48,6 @@ concurrency:
 
 jobs:
   render:
-    if: >-
-      github.event_name == 'pull_request' || github.ref != 'refs/heads/main' ||
-      github.repository != 'jmgirard/wrapped'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -52,7 +61,25 @@ jobs:
       - name: Render the site
         run: quarto render docs
 
+      - name: Install poppler and Playwright
+        id: install
+        run: |
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends -o Acquire::Retries=3 poppler-utils
+          python3 -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install playwright==1.64.0
+          "$RUNNER_TEMP/venv/bin/python" -m playwright install chromium
+
+      - name: Check the PDF layout (LaTeX and Typst)
+        run: python3 tests/docs_layout.py --no-word
+
+      # Runs after a failed PDF check too, so one run shows both results.
+      - name: Check the HTML layout
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: '"$RUNNER_TEMP/venv/bin/python" tests/docs_layout.py --html'
+
   publish:
+    needs: render
     if: >-
       github.event_name != 'pull_request' && github.ref == 'refs/heads/main' &&
       github.repository == 'jmgirard/wrapped'
