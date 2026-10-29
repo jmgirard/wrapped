@@ -286,7 +286,10 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    and for a wrap class on a link, span, heading, inline code, code block,
    or table with no `#tbl-` id, which it never places. It reads a table's
    class from the attribute block at its caption's end, as Quarto does
-   after the filter runs (corrected M032, M033).
+   after the filter runs (corrected M032, M033). On a `#tbl-` float it
+   reads that block too, warns for a wrap class there, and writes the block
+   again without its wrap classes, since Quarto would add them to the float
+   (corrected M034).
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
    wraps. In LaTeX it adds wrapfig and `wrapped.tex`, which defines
    `wrappedfigure` over wrapfig's floating placements and `\wrappedstop`,

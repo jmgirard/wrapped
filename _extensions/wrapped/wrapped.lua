@@ -1340,6 +1340,58 @@ local function cell_div(div)
   return div
 end
 
+-- Reads the attribute block at the end of a caption, as in
+-- `A table {.wrap-left}`, the way Quarto reads it after this filter runs
+-- (parseTableCaption in Quarto's filters/main.lua). Returns the block's
+-- attributes, the inlines before it, and whether its text opens with "{#",
+-- without which Quarto drops the id; nil when the caption has no block.
+local function caption_block(content)
+  local inlines = pandoc.Inlines({ table.unpack(content) })
+  if #inlines > 0 and inlines[#inlines].t == "Space" then inlines:remove(#inlines) end
+  local final = inlines[#inlines]
+  if not final or final.t ~= "Str" or not final.text:match("}%s*$") then return nil end
+  local first
+  for i, inline in ipairs(inlines) do
+    if inline.t == "Str" and inline.text:sub(1, 1) == "{" then
+      first = i
+      break
+    end
+  end
+  if not first then return nil end
+  local block = pandoc.utils.stringify(pandoc.Inlines({ table.unpack(inlines, first) }))
+  block = block:match("^%s*(.-)%s*$"):gsub("“", "'"):gsub("”", "'")
+  local header = pandoc.read("## " .. block).blocks[1]
+  if not header or not header.attr then return nil end
+  return header.attr, pandoc.Inlines({ table.unpack(inlines, 1, first - 1) }), block:sub(1, 2) == "{#"
+end
+
+-- Quarto adds the classes of the block at a table float's caption end to
+-- the float and its table after this filter runs (table_classes in
+-- Quarto's filters/main.lua), so a wrap class there would float the table
+-- in HTML. This writes the block again without its wrap classes, or drops
+-- it when nothing is left, and returns the first wrap class it held.
+local function drop_caption_wrap(float)
+  local caption = float.caption_long
+  if not caption or not caption.content then return nil end
+  local attr, before, keep_id = caption_block(caption.content)
+  local class = attr and wrap_class(attr.classes)
+  if not class then return nil end
+  strip_wrap(attr.classes)
+  local parts = {}
+  if keep_id and attr.identifier ~= "" then parts[#parts + 1] = "#" .. attr.identifier end
+  for _, c in ipairs(attr.classes) do parts[#parts + 1] = "." .. c end
+  for k, v in pairs(attr.attributes) do
+    local quoted = v:gsub("\\", "\\\\"):gsub('"', '\\"')
+    parts[#parts + 1] = string.format('%s="%s"', k, quoted)
+  end
+  if #parts > 0 then
+    if #before > 0 then before:insert(pandoc.Space()) end
+    before:insert(pandoc.Str("{" .. table.concat(parts, " ") .. "}"))
+  end
+  caption.content = before
+  return class
+end
+
 -- Gives a float that does not wrap its normal layout: its images lose
 -- their wrap classes, and the float loses its wrap options.
 local function keep_normal(float)
@@ -1358,7 +1410,8 @@ local function float_target(float)
     carried, token, cell = carry.class, carry.token, carry
   end
   local img_class, img_width, img_gap, img_lines = image_wrap(float.content)
-  local class = wrap_class(float.classes) or carried or img_class
+  local caption_class = float.type == "Table" and drop_caption_wrap(float) or nil
+  local class = wrap_class(float.classes) or carried or img_class or caption_class
   if not class then return nil end
   if float.type == "Figure" then found_wrap = true end
   strip_wrap(float.classes)
@@ -1991,32 +2044,15 @@ local function unplaced_code_block(block)
 end
 
 -- A table's classes come from an attribute block at the end of its caption,
--- as in `: A table {.wrap-left}`, which Quarto reads after this filter runs
--- (parseTableCaption in Quarto's filters/main.lua). This reads the block's
--- classes the same way. A table with a tbl- id is a float, and the float pass
--- warns for it.
+-- as in `: A table {.wrap-left}` (caption_block). A table with a tbl- id is
+-- a float, and the float pass warns for it.
 local function unplaced_table(tbl)
   local long = tbl.caption.long
   local last = long and long[#long]
-  if not last or not last.content or #last.content == 0 then return nil end
-  local inlines = pandoc.Inlines(last.content)
-  if #inlines > 0 and inlines[#inlines].t == "Space" then inlines:remove(#inlines) end
-  local final = inlines[#inlines]
-  if not final or final.t ~= "Str" or not final.text:match("}%s*$") then return nil end
-  local first
-  for i, inline in ipairs(inlines) do
-    if inline.t == "Str" and inline.text:sub(1, 1) == "{" then
-      first = i
-      break
-    end
-  end
-  if not first then return nil end
-  local block = pandoc.utils.stringify(pandoc.Inlines({ table.unpack(inlines, first) }))
-  block = block:match("^%s*(.-)%s*$"):gsub("“", "'"):gsub("”", "'")
-  local header = pandoc.read("## " .. block).blocks[1]
-  if not header or not header.attr then return nil end
-  local before = pandoc.Inlines({ table.unpack(inlines, 1, first - 1) })
-  warn_unplaced("table", header.classes, nil, pandoc.utils.stringify(before))
+  if not last or not last.content then return nil end
+  local attr, before = caption_block(last.content)
+  if not attr then return nil end
+  warn_unplaced("table", attr.classes, nil, pandoc.utils.stringify(before))
   return nil
 end
 

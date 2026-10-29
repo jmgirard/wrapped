@@ -61,6 +61,7 @@ multicols in the kept .tex.
 """
 
 import difflib
+import html
 import os
 import re
 import shutil
@@ -351,6 +352,28 @@ def margin_summary(fixture):
             lines.append(f"{i}: same as without the extension: {with_ext}")
         else:
             lines.append(f'{i}: with the extension "{with_ext}", without "{without}"')
+    return lines
+
+
+# Table floats whose caption ends in an attribute block. The HTML figures
+# list shows only wrap classes, so this records the classes that reach each
+# float's table and the caption text left after Quarto reads the block.
+TABLE_IDS = {"fixture": ["tbl-caption-block", "tbl-cell-block", "tbl-cell-both", "tbl-striped"]}
+
+
+def table_summary(path, ids):
+    source = path.read_text(encoding="utf-8")
+    lines = []
+    for i in ids:
+        start = source.find(f'<div id="{i}"')
+        if start < 0:
+            lines.append(f"{i}: (missing)")
+            continue
+        table = re.compile(r'<table class="([^"]*)"').search(source, start)
+        caption = re.compile(r"<figcaption[^>]*>(.*?)</figcaption>", re.S).search(source, start)
+        classes = " ".join(c for c in table.group(1).split() if c in ("table-striped",) + WRAP_CLASSES) if table else "(no table)"
+        text = " ".join(html.unescape(re.sub(r"<[^>]+>", "", caption.group(1))).split()) if caption else "(no caption)"
+        lines.append(f"{i}: table={classes or '-'} caption={text}")
     return lines
 
 
@@ -1496,6 +1519,8 @@ def summary(fixture, fmt, log):
         parts.append(html_summary(TESTS / f"{fixture}.html"))
         if fixture in MARGIN_IDS:
             parts += ["# margin containers"] + margin_summary(fixture)
+        if fixture in TABLE_IDS:
+            parts += ["# tables"] + table_summary(TESTS / f"{fixture}.html", TABLE_IDS[fixture])
     elif fmt == "pdf":
         parts += ["# tex", tex_summary(TESTS / f"{fixture}.tex")]
     elif fmt == "typst":
