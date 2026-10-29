@@ -30,6 +30,16 @@ local function has_image(block)
   return false
 end
 
+-- Pandoc writes an image's description as its Word alt text. Quarto keeps a
+-- figure's fig-alt on its image, as `alt` on the image of a float and as
+-- `fig-alt` on a captioned image with no #fig- id, but leaves the
+-- description empty or the caption. So a framed image takes that text.
+local function alt_image(img)
+  local alt = img.attributes.alt or img.attributes["fig-alt"]
+  if alt and alt ~= "" then img.caption = pandoc.Inlines(alt) end
+  return img
+end
+
 -- Puts the frame on a paragraph. Pandoc writes the paragraph's own w:pPr
 -- first, and a caption from Quarto starts with a raw w:pPr of its own, so
 -- the frame follows that one. Word reads the frame from either position,
@@ -45,7 +55,7 @@ local function frame_para(block, frame, image_style)
   end
   local style = has_image(block) and image_style or nil
   block.content:insert(at, pandoc.RawInline("openxml", frame_pr(frame, style)))
-  return block
+  return block:walk({ Image = alt_image })
 end
 
 -- A Figure (a captioned image with no #fig- id) has no place for a raw

@@ -59,3 +59,5 @@ In Word output, each captioned figure that the extension puts in a Word frame ha
 - 2026-10-29: T1 done: `tests/docx-alt.qmd` and the `DOCX_UNFRAMED_ALT` section of `docx_summary`; on the unchanged filter the markdown, div, inner-image, and cell floats show `alt=''` and the two captioned images show their captions; the full `verify` run waits for T2, which writes the fixture's snapshot.
 - 2026-10-29: T1 AC2 dump: the framed knitr cell with no `fig-alt` has no `alt` attribute at post-render, so its `descr` stays empty.
 - 2026-10-29: T1 AC3 baseline (render with `filters:` removed): the plain float `''`, the plain captioned image 'A captioned image with no wrap class.', the callout float `''`.
+- 2026-10-29: T2 implementation choice: `alt_image` runs in `frame_para`, because `frame_blocks`'s topdown walk stops at each paragraph and never reaches its images; it reads `alt` before `fig-alt`, since a div float holds only `alt`.
+- 2026-10-29: checkpoint: T2 code and snapshot and T3's `docs/formats/word.qmd` sentence written; `quarto render docs` exited 0; the full `python3 tests/verify.py` run is in progress, so T2 and T3 stay unticked.
