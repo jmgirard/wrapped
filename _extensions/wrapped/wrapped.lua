@@ -51,7 +51,7 @@ local two_column = false
 -- Set in the first pass: meta_fig_column_set when the document sets
 -- fig-column, and meta_column_set when it sets fig-column or column.
 local meta_fig_column_set, meta_column_set = false, false
--- found_wrap: a figure or image carries a wrap class, so a format that
+-- found_wrap: a figure, image, div, or link carries a wrap class, so a format that
 -- cannot wrap prints its one warning. placed: a figure or image wraps, so
 -- the document needs the stylesheet, the LaTeX environment, or wrap-it.
 local found_wrap = false
