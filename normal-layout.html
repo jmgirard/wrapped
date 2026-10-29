@@ -346,7 +346,7 @@ Figure&nbsp;1: Mean ratings by condition.
 <h2 class="anchored" data-anchor-id="other-notes">Other notes</h2>
 <ul>
 <li>A captioned image with no <code>#fig-</code> id wraps too, unless a place on this page applies to it, such as a caption in the margin. In HTML and Word it has no figure number. In PDF through LaTeX and Typst, Quarto numbers it.</li>
-<li>An image inside a link, or beside other content in its paragraph, does not wrap. In HTML, LaTeX, Typst, and Word the render prints a warning for it.</li>
+<li>An image beside other content in its paragraph, or beside other content in its link, does not wrap. In HTML, LaTeX, Typst, and Word the render prints a warning for it. An image that is the only content of a link, with the link alone in its paragraph, wraps.</li>
 <li>In HTML, LaTeX, and Typst the sides are physical. In a right-to-left document, <code>.wrap-right</code> still puts the figure on the right. Right-to-left Word documents are not tested.</li>
 <li>A long caption wraps inside the figure box.</li>
 <li>If a page has margin content, such as a <code>.column-margin</code> note, a figure in the body of the page still wraps.</li>
