@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-28 (M026 review: M023 row pruned; two rows added; one lesson captured, M006's evicted by rank; validate green)_
+_Last hygiene check: 2026-10-29 (M027 review: M024 row pruned; CI row narrowed to M028's part; one row added; one lesson captured, M010's smart-punctuation lesson evicted by rank; validate green)_
 
 ## Milestones
 
@@ -9,11 +9,10 @@ _Last hygiene check: 2026-10-28 (M026 review: M023 row pruned; two rows added; o
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M027 | Run the docs layout checks in CI | review | — | normal | milestones/M027-docs-layout-ci.md |
 | M028 | Close gaps in the docs layout checks | planned | M027 | normal | milestones/M028-docs-layout-gaps.md |
-| M024 | Publish the site and shorten the README | done | M023 | normal | milestones/archive/M024-publish-docs.md |
 | M025 | Stop text overlap with small wrap-lines | done | — | normal | milestones/archive/M025-small-wrap-lines.md |
 | M026 | Show text wrapping past the figure in examples | done | — | normal | milestones/archive/M026-wrap-showcase.md |
+| M027 | Run the docs layout checks in CI | done | — | normal | milestones/archive/M027-docs-layout-ci.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -48,7 +47,7 @@ _Last hygiene check: 2026-10-28 (M026 review: M023 row pruned; two rows added; o
 - List margin figures in the summaries: `typ_summary` in `tests/verify.py` splits the `.typ` at each `#figure(` and takes the first label in a chunk, but a margin figure is `#notefigure(`, so a body figure with no id followed by a margin cell figure took that cell's label (`figure: fig-meta-margin-two-1`) and the margin figure got no line. M018 moved its margin-meta cell above the no-id image to keep the line (M018 implement). `tex_summary` lists only `figure` and `wrappedfigure` environments, so a LaTeX margin figure gets no line either, and a check that such a figure keeps its normal layout rests on a missing line (M018 review, diff-bug #2, prior-review #3) — added 2026-10-28 — milestones/archive/M018-cell-warn-once.md
 - Name column widths in Typst comments: the Typst code comments in `wrapped.lua` (`typst_open`, `TYPST_HEADER`) say a percent is a share of the text width and that `layout` gives the text width; with `columns:` set both are the column width (README since M019). M019 kept `_extensions/wrapped/` unchanged (M019 review, ripple #4) — added 2026-10-28 — milestones/archive/M019-typst-columns.md
 - Correct the cancel comment in verify.yml: `.github/workflows/verify.yml` says "Runs on main are never cancelled", but with `cancel-in-progress: false` a newer queued run still replaces an older queued one, so a middle push in quick succession gets no check. M023 fixed the same comment in `docs.yml` (M023 review pass 2, diff-bug #1) — added 2026-10-28 — milestones/M023-docs-site.md
-- Run the docs layout checks in CI: `tests/docs_layout.py` and `straddle()` in `tests/layout.js` check that each example page's text runs above, beside, and under its figure, but only by hand after `quarto render docs`, so a prose, font, or Quarto change that breaks the page fit goes unseen. The PDF reader splits paragraphs at 1.25 line pitches and absorbs a caption only within 40 px below and 30 px beside its image; `straddle()` merges rects within 3 px and does not check that the paragraph above is the last block (M026 review, diff-bug #3, #4, #6, blame-history #2, ripple #3) — added 2026-10-28 — milestones/archive/M026-wrap-showcase.md — started M027
+- Run the docs layout checks in CI: since M027 the docs workflow runs the LaTeX, Typst, and HTML checks, and Word stays by hand. Left: the PDF reader splits paragraphs at 1.25 line pitches and absorbs a caption only within 40 px below and 30 px beside its image, and `straddle()` does not check that the paragraph above is the last block (M026 review, diff-bug #3, #4, #6) — added 2026-10-28, narrowed 2026-10-29 by M027 — milestones/archive/M026-wrap-showcase.md — started M028
 - Say LaTeX narrows lines past figures: wrapfig keeps one or two lines narrow past a wrapped figure's bottom (image-figure's PDF: figure bottom at y=814, narrow lines at y=816 and 836), and the Limits section of `docs/formats/latex.qmd` does not say so (M026 review, diff-bug #2) — added 2026-10-28 — milestones/archive/M026-wrap-showcase.md
 - Pin the docs CI Python packages: the docs workflow pins `playwright==1.64.0`, but pip resolves its dependencies (greenlet, pyee) fresh on each run with no hashes, so a new release of one can change or break a run on a pull request that changed nothing (M027 review, diff-bug #3) — added 2026-10-29 — milestones/archive/M027-docs-layout-ci.md
 - [low] Check wraps in dashboard sidebars: M022 checks wrapped figures in dashboard cards only. Sidebars, tabsets (`{.tabset}` on a heading), value boxes, and card toolbars have no render; a code cell in a `.sidebar`, `.toolbar`, or `.valuebox` div gets M022's "is outside a card in a dashboard" warning, and a markdown figure there is unchecked (M022 criteria audit). Also unchecked in a dashboard: margin and page-wide classes, which still name a place there (`has_page_layout`), on a figure or on a `.card` div; a Jupyter markdown cell, which the cell rule skips; and a Jupyter `output: asis` cell, which Quarto does not make a card but the rule treats as outside a card (M022 review, blame-history #3, prior-review #1, #3, #4, diff-bug #3) — added 2026-10-28 — milestones/archive/M022-dashboard-wraps.md
