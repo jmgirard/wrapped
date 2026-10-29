@@ -94,6 +94,7 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
 - 2026-10-29: split: M027 puts the checks in CI, and M028 (planned now, depends on M027) fixes the weak spots, since both together pass about 9 criteria. Checker-regress shape not hit: the checkers read the published docs site, not repo-internal files.
 - 2026-10-29: inbox sweep: no open issues or PRs.
 - 2026-10-29: criteria audit (reduced mode), first pass on the pre-split draft: AC3 claimed every problem kind and every missing page from one plant of each, narrowed to the two named plants; Goal narrowed to pages listed in `CASES`; `--html` made an option so the plain run needs no Playwright. No finding on the other criteria. A second pass on M027 and M028 as written was still running at the plan commit, and its dispositions follow in a later commit.
+- 2026-10-29: criteria audit (reduced mode), second pass on M027 as written: no finding on AC1 to AC6.
 - 2026-10-29: lessons used: 2026-10-28 (M020) browser viewport, 2026-10-28 (M023) Typst output-file, 2026-10-28 (M026) LibreOffice text and frozen pages, 2026-10-26 (M007) pdftohtml image files.
 
 ## Decisions

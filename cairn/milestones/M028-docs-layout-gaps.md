@@ -16,7 +16,7 @@
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
 
-The docs layout checks fail on three planted page faults that pass them at M027.
+The docs layout checks give the right result on three planted page faults that they misread at M027.
 
 ## Scope
 <!-- owner: plan · create/amend-via-gate -->
@@ -37,9 +37,9 @@ The docs layout checks fail on three planted page faults that pass them at M027.
      coverage-complete counts AC checkboxes positionally (M107); departures:
      a "Deviations from RR<NN>" table ends this section. -->
 
-- [ ] AC1: Plant 1 is a scratch copy of `docs/` in which `examples/image-figure.qmd` sets `indent: true` for LaTeX and its straddle paragraph is split in two at the first line below the figure. On its LaTeX PDF, `python3 tests/docs_layout.py --site <copy>` prints a `FAIL` line for `examples/image-figure latex figure 1` with "no paragraph runs from beside the figure to below it". The script at M027's merge commit prints `ok` there. Evidence: both runs.
-- [ ] AC2: Plant 2 is a scratch copy of `docs/` in which the LaTeX caption of `examples/image-figure.qmd` sits 60 px or more below its image. On its LaTeX PDF, `--debug` lists no caption line among the page's blocks, and the figure's line prints `ok`. The script at M027's merge commit lists a caption line there. Evidence: both runs.
-- [ ] AC3: Plant 3 is a site copy in which a one-line paragraph is put between the paragraph above and the figure in `examples/image-figure.html`. `--html` prints a `FAIL` line for `examples/image-figure` and exits with status 1. The script at M027's merge commit prints `ok` there. Evidence: both runs.
+- [ ] AC1: Plant 1 is a scratch copy of `docs/` in which `examples/image-figure.qmd` sets `indent: true` for LaTeX and its straddle paragraph is split in two at the first line below the figure. On its LaTeX PDF, `python3 tests/docs_layout.py --site <copy>/_site` prints a `FAIL` line for `examples/image-figure latex figure 1` with "no paragraph runs from beside the figure to below it". Evidence: this run, and the same command with the script at M027's merge commit, which prints `ok`.
+- [ ] AC2: Plant 2 is a scratch copy of `docs/` in which the LaTeX caption of `examples/image-figure.qmd` sits 60 px or more below its image. On its LaTeX PDF, with `--site <copy>/_site --debug`, the figure box that the script prints has a `bottom` at or below the caption's last line, and the figure's line prints `ok`. Evidence: this run, and the same command with the script at M027's merge commit, whose figure box ends above the caption.
+- [ ] AC3: Plant 3 is a site copy in which a one-line paragraph is put between the paragraph above and the figure in `examples/image-figure.html`. `--html` prints a `FAIL` line for `examples/image-figure` and exits with status 1. Evidence: this run, and the same command with the script at M027's merge commit, which prints `ok`.
 - [ ] AC4: On the Mac, after `quarto render docs` at the review head, `python3 tests/docs_layout.py` prints an `ok` line for each figure of each page in `CASES` outside `HTML_ONLY` for `latex`, `typst`, and `word`, and `--html` prints an `ok` line for each figure of each page in `CASES`. Evidence: two local runs.
 - [ ] AC5: The docs workflow's render job passes on this milestone's pull request. Evidence: the PR run.
 
@@ -84,6 +84,7 @@ The docs layout checks fail on three planted page faults that pass them at M027.
 - 2026-10-29: idea vet: no concern for this part. The user chose at the question set to fix the weak spots; the question listed the paragraph split, the caption reach, and the straddle() order.
 - 2026-10-29: question set: fix the weak spots of the checkers — yes.
 - 2026-10-29: plan chose planted page faults as the proof of each fix, over a unit test file for the readers, because the readers' input is a rendered PDF or page and M026 also proved its checks by plants; falsified by a fault that no page plant can reach.
+- 2026-10-29: criteria audit (reduced mode): AC1, AC2, and AC3 each bound a property of the M027 script, which is the control, so that clause moved to Evidence; AC2's "no caption line among the blocks" read the debug printout, narrowed to the figure box's bottom; the Goal said all three plants fail, but AC2 expects `ok`, so the Goal now says the checks give the right result; `--site` takes the copy's `_site` folder. No finding on AC4 or AC5.
 - 2026-10-29: lessons used: 2026-10-28 (M026) LibreOffice text and frozen pages, 2026-10-28 (M025) pdftohtml splits sentences, 2026-10-26 (M007) pdftohtml image files, 2026-10-28 (M020) browser viewport.
 
 ## Decisions
