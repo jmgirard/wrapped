@@ -85,6 +85,7 @@ The docs layout checks give the right result on three planted page faults that t
 - 2026-10-29: question set: fix the weak spots of the checkers — yes.
 - 2026-10-29: plan chose planted page faults as the proof of each fix, over a unit test file for the readers, because the readers' input is a rendered PDF or page and M026 also proved its checks by plants; falsified by a fault that no page plant can reach.
 - 2026-10-29: criteria audit (reduced mode): AC1, AC2, and AC3 each bound a property of the M027 script, which is the control, so that clause moved to Evidence; AC2's "no caption line among the blocks" read the debug printout, narrowed to the figure box's bottom; the Goal said all three plants fail, but AC2 expects `ok`, so the Goal now says the checks give the right result; `--site` takes the copy's `_site` folder. No finding on AC4 or AC5.
+- 2026-10-29: M027 review moved the `paragraphLines()` middle-inside-box join into M027 to fix its red HTML check in CI, so that part of Scope In and T3 is done at M027's merge; the rest of T3 (the block between the paragraph above and the figure) stays here.
 - 2026-10-29: lessons used: 2026-10-28 (M026) LibreOffice text and frozen pages, 2026-10-28 (M025) pdftohtml splits sentences, 2026-10-26 (M007) pdftohtml image files, 2026-10-28 (M020) browser viewport.
 
 ## Decisions

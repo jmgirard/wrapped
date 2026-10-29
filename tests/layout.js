@@ -4,9 +4,10 @@
 // report() returns one entry per wrapped figure, per wrap group that has a
 // block after it, and per image inside a wrapped float, each with `ok` and
 // the measured values.
-// For the docs site's example pages, serve docs/_site/ with this file in it
-// and run the `straddle()` calls that `python3 tests/docs_layout.py --js`
-// prints.
+// For the docs site's example pages, `python3 tests/docs_layout.py --html`
+// runs `straddle()` on each page in headless Chromium. To run it by hand,
+// serve docs/_site/ with this file in it and run the `straddle()` calls
+// that `python3 tests/docs_layout.py --js` prints.
 
 const TOL = 1; // px
 
@@ -155,14 +156,19 @@ export function report() {
   };
 }
 
-// The line boxes of a paragraph, from its text's client rects merged by top.
+// The line boxes of a paragraph, from its text's client rects. Inline code
+// can sit a few px lower than the text around it, so a rect joins a line
+// when its middle is inside the line's box, as `lines()` in
+// tests/docs_layout.py does for PDFs.
 function paragraphLines(p) {
   const range = document.createRange();
   range.selectNodeContents(p);
   const lines = [];
-  for (const r of range.getClientRects()) {
+  const rects = [...range.getClientRects()].sort((a, b) => a.top - b.top || b.height - a.height);
+  for (const r of rects) {
     if (!r.width) continue;
-    const line = lines.find((l) => Math.abs(l.top - r.top) <= 3);
+    const middle = (r.top + r.bottom) / 2;
+    const line = lines.find((l) => l.top <= middle && middle <= l.bottom);
     if (line) {
       line.left = Math.min(line.left, r.left);
       line.right = Math.max(line.right, r.right);

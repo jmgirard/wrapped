@@ -30,13 +30,13 @@ exits with status 1 on a failed render, difference, layout case, or log
 check. It needs Quarto, R with knitr, TinyTeX, and poppler. After an
 intended output change, run it with `--update` and review the snapshot
 diff. Other layout is not in this command. Measure HTML layout in a browser with `tests/layout.js`, as its header says (corrected M007).
-For the docs example pages, run `python3 tests/docs_layout.py` after `quarto render docs` (needs `soffice` and poppler). Its `--js` option prints the browser calls (corrected M026).
+For the docs example pages, run `python3 tests/docs_layout.py` after `quarto render docs` (needs `soffice` and poppler). It checks the LaTeX, Typst, and Word PDFs. Its `--html` option runs the HTML check in Playwright's Chromium, and `--js` prints the browser calls to run by hand (corrected M026, M027).
 
 CI runs it on Ubuntu (D-008, D-009). `.github/workflows/verify.yml` uses Quarto's
 release channel on pull requests, pushes to `main` outside `cairn/`, and by
 hand. `verify-prerelease.yml` uses the pre-release channel weekly and by hand
 and blocks no merge. The same snapshots must pass on macOS and in CI.
-`docs.yml` renders `docs/` with no R and is not this command (corrected M023).
+`docs.yml` renders `docs/` with no R and is not this command (corrected M023). Its render job then runs `tests/docs_layout.py --no-word` and `--html`, and the publish job waits for it. The Word check runs only by hand on the Mac (D-016, corrected M027).
 
 ## consistency-gate
 Toolchain tests that `/milestone-review` runs *in addition to* the universal
@@ -44,6 +44,8 @@ cairn-file tests (`cairn_validate`, coverage completeness, `cairn_impact`):
 - Every version marker that `release-walk` names holds the same version.
 - The verify command passes on the review head: every fixture renders with
   no errors, every snapshot matches, and every layout and log check passes.
+- A diff that touches `docs/`, `_extensions/`, or the docs checkers passes the
+  docs workflow on the PR and `tests/docs_layout.py` on the Mac (added M027).
 - The changelog slot says "none", so the gate reads no changelog entry.
 
 ## test-doctrine
@@ -64,8 +66,7 @@ The release procedure `/cairn-release` follows. The version marker is
 `add_html_dependency` call carries no version, so it is not a marker. A later
 change can add the version to another file. If it does, that change names the
 file here. Every named marker holds the same version. The version rises at release (CLAUDE.md), so the
-release-time arm is the usual path.
-Before step 1 of `/cairn-release`,
+release-time arm is the usual path. Before step 1 of `/cairn-release`,
 run `git fetch --tags <base>` and read the remote default branch's tip:
 `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/cairn_versions.py" _extensions/wrapped/_extension.yml --at <base>/<default-branch>`.
 If `CLAUDE_PLUGIN_ROOT` is unset, use the cairn plugin's install directory.
@@ -92,8 +93,7 @@ commits (`start`), and whether a `v<version>` tag exists.
 - **Release notes.** With changelog "none", the notes are the commit subjects
   on the default branch since the previous `v*` tag:
   `git log --first-parent --format='- %s' <previous tag>..<tagged commit>`.
-  The previous tag is
-  `git describe --first-parent --tags --abbrev=0 --match 'v*' <tagged commit>^`.
+  The previous tag is `git describe --first-parent --tags --abbrev=0 --match 'v*' <tagged commit>^`.
   For a first release, with no previous `v*` tag, drop `<previous tag>..`.
   Where the `origin` remote is GitHub and `gh` is available, the handoff
   provides a `gh release create` command with these notes. cairn never runs
