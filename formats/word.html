@@ -271,7 +271,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>In Word output, the extension puts each wrapped figure in a Word frame. The image and its caption sit in the frame on the figure’s side, and the paragraphs after the figure flow beside it. Citations and <code>@fig-</code> links in the text beside the figure work. A wrapped figure in a frame, captioned or not, has its <code>fig-alt</code> text as its alt text. A figure with no wrap class, or a wrapped figure that keeps its normal layout in Word, keeps the alt text that Quarto gives it.</p>
+<p>In Word output, the extension puts each wrapped figure in a Word frame. The image and its caption sit in the frame on the figure’s side, and the paragraphs after the figure flow beside it. Citations and <code>@fig-</code> links in the text beside the figure work. A framed figure with one image, captioned or not, has its <code>fig-alt</code> text as its alt text, in place of the text in the image’s square brackets. In a framed div float with more than one image, the float’s <code>fig-alt</code> text is the alt text of its first image unless that image has its own <code>fig-alt</code>, and of no other image. An image with its own <code>fig-alt</code> has that text. Each later image without its own <code>fig-alt</code> has the text in its square brackets as its alt text, so a later image written <code>![](x.png)</code> has empty alt text. A figure with no wrap class, or a wrapped figure that keeps its normal layout in Word, keeps the alt text that Quarto gives it.</p>
 <section id="width-and-gap" class="level2">
 <h2 class="anchored" data-anchor-id="width-and-gap">Width and gap</h2>
 <p>The <code>width</code> and <code>wrap-gap</code> values change to Word lengths:</p>
