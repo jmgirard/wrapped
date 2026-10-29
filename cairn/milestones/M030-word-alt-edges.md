@@ -1,13 +1,13 @@
 # M030: Fix the Word alt text edge cases
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes the alt text in users' Word documents
-- **Branch/PR:** —
+- **Branch/PR:** m030-word-alt-edges
 
 ## Goal
 
@@ -43,7 +43,7 @@ In Word output, a framed div float that holds more than one image gives its `fig
 
 ## Tasks
 
-- [ ] T1: In `tests/docx-alt.qmd`, add each case of AC1, AC2, and AC3 as a wrapped figure followed by a paragraph, with unique `fig-alt` texts and each image in a paragraph of its own (`docx_summary` reads one image per paragraph). Render the one fixture on the unchanged filter (the one-fixture command in `cairn/LESSONS.md`, 2026-10-27 M012). Confirm that each two-image float's frame line shows two `image` parts, and confirm the faults: both AC1 images and the second image of AC2's first float show the float's text, and the AC3 lines show one space.
+- [x] T1: In `tests/docx-alt.qmd`, add each case of AC1, AC2, and AC3 as a wrapped figure followed by a paragraph, with unique `fig-alt` texts and each image in a paragraph of its own (`docx_summary` reads one image per paragraph). Render the one fixture on the unchanged filter (the one-fixture command in `cairn/LESSONS.md`, 2026-10-27 M012). Confirm that each two-image float's frame line shows two `image` parts, and confirm the faults: both AC1 images and the second image of AC2's first float show the float's text, and the AC3 lines show one space.
 - [ ] T2: In `wrapped-docx.lua`, make `alt_image` set the caption to one `pandoc.Str` of the text (no inlines for an empty text), and pass it whether the image is the frame's first, so `alt` applies to the first image only. The flag is set once per frame in `frame_first`, for the figure-table path and the `.wrapped-image` path. Update the comments above `alt_image` and in the file header. In `wrapped.lua`, remove the `fig-alt` copy from `wrapped_image_docx` (about line 1553) and the sentence about it in its comment. Write the snapshot from the fixed render and read that the AC1 to AC4 lines match. Run `python3 tests/verify.py`.
 - [ ] T3: Add the multi-image rule to the alt-text sentences at `docs/formats/word.qmd:8`, from the T2 render, and to the `wrapped-docx.lua` paragraph of `cairn/DESIGN.md` (about line 303). Run `quarto render docs`.
 
@@ -58,6 +58,8 @@ In Word output, a framed div float that holds more than one image gives its `fig
 - 2026-10-29: plan gate chose a first-image flag per frame in the post-render pass over marking the first image in the pre-quarto pass, because at post-render every image of a float still holds Quarto's `alt` copy and the frame's walk sees the images in document order; falsified by a framed figure whose first image in `word/document.xml` is not the first image `frame_blocks` walks.
 - 2026-10-29: checkpoint: plan committed while the full criteria audit (fresh Opus reader) runs; its findings and dispositions follow in a later line.
 - 2026-10-29: criteria audit (full, fresh Opus reader): 10 findings. Fixed: #1 T1 puts each image in its own paragraph and checks two `image` parts; #3 AC2 adds a later image with its own `fig-alt`; #6 AC6 says the float's text skips a first image with its own `fig-alt`, and names framed figures only; #7 AC6 and the Goal narrowed to div floats; #8 AC5 reworded as a property of the branch. Answered by a scratch render (2026-10-29, filter plus post-render dump): #2 a second image's description reaches post-render as an image paragraph and is framed, so AC2 stands; #4 a markdown float's `alt` keeps two spaces at post-render; #5 an uncaptioned image keeps `fig-alt` at post-render. #9 the DESIGN.md and code comment edits stay task items, read at the review gate. #10 no action (discrimination confirmed).
+- 2026-10-29: implement: branch m030-word-alt-edges cut from origin/main at af54cb1; status in-progress.
+- 2026-10-29: T1 done: five cases added to `tests/docx-alt.qmd` (fig-two, fig-two-first, fig-two-second, fig-spaced, a spaced uncaptioned image); the unchanged filter gives both fig-two images and fig-two-first's second image the float's text, and both spaced texts one space. Each two-image frame line shows two `image` parts. fig-two-first's second image, a lone captioned image, becomes a Pandoc Figure, so its description also shows as a caption paragraph, as on main. Snapshot not yet written, so `tests/verify.py` fails on this commit.
 
 ## Decisions
 
