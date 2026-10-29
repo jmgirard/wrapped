@@ -25,11 +25,11 @@ A `#tbl-` float whose wrap class is in the attribute block at its caption's end 
 
 ## Acceptance criteria
 
-- [ ] AC1: In HTML, PDF through LaTeX, PDF through Typst, and Word, a `::: {#tbl-…}` div around a table captioned `: Cap {.wrap-left .striped}`, and a knitr cell with `#| tbl-cap: "Cap {.wrap-right}"`, each print one warning, "wrapped: the table #<id> is not a figure, so it does not wrap.", the warning that a `#tbl-` float with the class on its div prints. Shown by their warning lines in the four format snapshots of `tests/fixture.qmd`.
-- [ ] AC2: In HTML, the float divs of both AC1 tables, and of a knitr cell with `#| classes: wrap-right` and `#| tbl-cap: "Cap {.wrap-left}"`, carry no `wrap-left` or `wrap-right` class, and no caption of the three shows the attribute block's text. The first AC1 table's `<table>` carries `table-striped`. The third table prints one warning, as in AC1.
-- [ ] AC3: In HTML, a `::: {#tbl-…}` div around a table captioned `: Cap {.striped}` prints no warning, and its `<table>` carries `table-striped`.
-- [ ] AC4: The Tables section of `docs/normal-layout.qmd` says that a wrap class in a table float's caption block, as in `: A table {.wrap-left}` in a `#tbl-` div or in a knitr cell's `tbl-cap`, prints the same warning and that the table keeps its normal layout, in agreement with the page's list item on tables with no `#tbl-` id. Step 6 of DESIGN.md's filter steps says the filter reads that block on a table float and removes its wrap classes. `quarto render docs` exits 0.
-- [ ] AC5: `python3 tests/verify.py` passes on the review head.
+- [x] AC1: In HTML, PDF through LaTeX, PDF through Typst, and Word, a `::: {#tbl-…}` div around a table captioned `: Cap {.wrap-left .striped}`, and a knitr cell with `#| tbl-cap: "Cap {.wrap-right}"`, each print one warning, "wrapped: the table #<id> is not a figure, so it does not wrap.", the warning that a `#tbl-` float with the class on its div prints. Shown by their warning lines in the four format snapshots of `tests/fixture.qmd`.
+- [x] AC2: In HTML, the float divs of both AC1 tables, and of a knitr cell with `#| classes: wrap-right` and `#| tbl-cap: "Cap {.wrap-left}"`, carry no `wrap-left` or `wrap-right` class, and no caption of the three shows the attribute block's text. The first AC1 table's `<table>` carries `table-striped`. The third table prints one warning, as in AC1.
+- [x] AC3: In HTML, a `::: {#tbl-…}` div around a table captioned `: Cap {.striped}` prints no warning, and its `<table>` carries `table-striped`.
+- [x] AC4: The Tables section of `docs/normal-layout.qmd` says that a wrap class in a table float's caption block, as in `: A table {.wrap-left}` in a `#tbl-` div or in a knitr cell's `tbl-cap`, prints the same warning and that the table keeps its normal layout, in agreement with the page's list item on tables with no `#tbl-` id. Step 6 of DESIGN.md's filter steps says the filter reads that block on a table float and removes its wrap classes. `quarto render docs` exits 0.
+- [x] AC5: `python3 tests/verify.py` passes on the review head.
 
 ## Coverage
 
@@ -71,18 +71,28 @@ Pass 1, 2026-10-29. Main had not moved since the branch was cut. Copilot round o
 
 spawned: diff-bug, blame-history, prior-review, ripple
 
-- diff-bug #1: `drop_caption_wrap` keeps the Space before the block and adds another, so LaTeX and Word captions end in a space (`\caption{A table float with a wrap class in its caption␤}` in the fixture), and a block with an id or attribute left gets two spaces before it — fix now.
-- diff-bug #2: `table_summary` whitespace-normalizes captions, so it cannot see finding #1, and searches past the float's end — fix now (bounded at the float's `</figure>`; new `tex_table_summary` marks a LaTeX caption that ends in white space).
-- diff-bug #3: the `table-striped` field for the two knitr tables records knitr's default, not the filter — fix now (`TABLE_IDS` records `table-striped` only where the caption block sets `.striped`).
-- diff-bug #4: the `tests/verify.py` docstring does not name `TABLE_IDS` or the `# tables` parts — fix now.
-- diff-bug #5: the docs sentence reads as if `tbl-cap` takes the `: ` form — fix now (names `#| tbl-cap: "A table {.wrap-left}"`).
+Evidence at 3bf323c (after the fix-now commits), from `python3 tests/verify.py` (all 105 renders pass, exit 0) and the committed `tests/_snapshots/fixture.*.txt`:
+
+- AC1: each of `fixture.html.txt`, `fixture.pdf.txt`, `fixture.typst.txt`, and `fixture.docx.txt` holds `1x wrapped: the table #tbl-caption-block is not a figure, so it does not wrap.` and the same line for `#tbl-cell-block`, the text the existing `#tbl-cars` line has.
+- AC2: `fixture.html.txt` figures list reads `tbl-caption-block: - style=-`, `tbl-cell-block: - style=-`, `tbl-cell-both: - style=-` (no wrap class on the float divs); its `# tables` part reads `table=table-striped` for `tbl-caption-block` and `table=-` for the two cells (no wrap class on any `<table>`), and the three captions read `Table 2: A table float with a wrap class in its caption`, `Table 3: … in its caption`, `Table 4: … in two places`, with no block text. `#tbl-cell-both` has one warning line (`1x`) in all four snapshots.
+- AC3: `fixture.html.txt` has no warning line naming `tbl-striped`, and its `# tables` part reads `tbl-striped: table=table-striped`.
+- AC4: `docs/normal-layout.qmd` Tables section (read at 3bf323c) says a wrap class in a table float's caption block, `: A table {.wrap-left}` in a `#tbl-` div or `#| tbl-cap: "A table {.wrap-left}"` in a knitr cell, prints the same warning and keeps the normal layout; its list item on tables with no `#tbl-` id also says they warn and do not wrap. DESIGN.md step 6 says the filter reads that block on a `#tbl-` float, warns, and writes it again without wrap classes. `quarto render docs` exit 0 at 3bf323c.
+- AC5: `python3 tests/verify.py` at 3bf323c: "all 105 renders pass", exit 0.
+- Consistency gate: `cairn_validate.py` all checks passed; no principle changed, so no `cairn_impact` run; the one version marker, `_extension.yml` `version: 0.2.0`, is unchanged; verify passes (AC5); the diff touches `docs/` and `_extensions/`, so `python3 tests/docs_layout.py` ran at 3bf323c: 24 `ok`, none failed (`--html` not run on the Mac; the docs workflow on the PR runs it); changelog slot "none".
+- snapshot: no `_snaps` or `__snapshots__` path in the diff; `tests/_snapshots/fixture.{html,pdf,typst,docx}.txt` changed, each by the cases and checks AC1 to AC3 call for (read in full).
+
+- diff-bug #1: `drop_caption_wrap` keeps the Space before the block and adds another, so LaTeX and Word captions end in a space (`\caption{A table float with a wrap class in its caption␤}` in the fixture), and a block with an id or attribute left gets two spaces before it — fix now, fixed c184f34.
+- diff-bug #2: `table_summary` whitespace-normalizes captions, so it cannot see finding #1, and searches past the float's end — fix now, fixed c184f34 (bounded at the float's `</figure>`; new `tex_table_summary` marks a LaTeX caption that ends in white space).
+- diff-bug #3: the `table-striped` field for the two knitr tables records knitr's default, not the filter — fix now, fixed c184f34 (`TABLE_IDS` records `table-striped` only where the caption block sets `.striped`).
+- diff-bug #4: the `tests/verify.py` docstring does not name `TABLE_IDS` or the `# tables` parts — fix now, fixed c184f34.
+- diff-bug #5: the docs sentence reads as if `tbl-cap` takes the `: ` form — fix now, fixed c184f34 (names `#| tbl-cap: "A table {.wrap-left}"`).
 - diff-bug #6: subtable panels now warn and lose the class too, with no fixture — reject, planned change: Scope Out names subtable panels as untested.
 - blame-history #1: the fix rests on Quarto 1.10.19's order (block read from the float caption after pre-quarto filters), and older supported versions are untested — follow-up, absorbed into "Test the minimum Quarto version in CI".
 - blame-history #2: removing the class reverses M033's keep-the-class choice with no D-entry — reject, planned change: the user chose removal at the question set (work log), and M033's choice covered elements that no style reads, while `wrapped.css` selects `.quarto-float.wrap-*`, M033's own falsifying condition.
 - blame-history #3: a `#tbl-` float with a wrap class does not set `found_wrap`, so a format that does not wrap prints no format warning — follow-up, new row "Count table floats in the format warning" (predates M034).
 - blame-history #4: `pairs(attr.attributes)` may reorder attributes — reject, false: `pandoc lua` iterated `z a m b y` in source order on three runs.
-- blame-history #5: `table_summary` searches with no end bound — fix now (same fix as diff-bug #2).
+- blame-history #5: `table_summary` searches with no end bound — fix now, fixed c184f34 (same fix as diff-bug #2).
 - prior-review #1: the 43 new fixture lines may worsen the known overfull LaTeX page 4 — reject, false: LaTeX renders of main's and the branch's fixture both end page 4's content at 1238 px on a 1188 px page (pdftohtml), the existing row "Fix the overfull LaTeX fixture page".
 - prior-review #2: `cairn/references/wrap-mechanisms.md` row E5 not updated — reject, false: E5 reads "`#tbl-` float with a wrap class | Normal table. One warning.", which holds for the caption-block form.
 - ripple #1: the candidate row "Warn for wrap classes on table floats" goes stale at merge — reject, planned change: post-merge hygiene graduates it.
-- ripple #2: the `tests/verify.py` docstring omits the `# tables` part — fix now (same fix as diff-bug #4).
+- ripple #2: the `tests/verify.py` docstring omits the `# tables` part — fix now, fixed c184f34 (same fix as diff-bug #4).
