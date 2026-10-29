@@ -52,9 +52,9 @@ local two_column = false
 -- fig-column, and meta_column_set when it sets fig-column or column.
 local meta_fig_column_set, meta_column_set = false, false
 -- found_wrap: a figure, image, div, link, span, heading, code, or table
--- carries a wrap class, so a format that cannot wrap prints its one
--- warning. placed: a figure or image wraps, so
--- the document needs the stylesheet, the LaTeX environment, or wrap-it.
+-- with no tbl- id carries a wrap class, so a format that cannot wrap
+-- prints its one warning. placed: a figure or image wraps, so the
+-- document needs the stylesheet, the LaTeX environment, or wrap-it.
 local found_wrap = false
 local placed = false
 

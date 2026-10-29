@@ -1508,8 +1508,8 @@ def summary(fixture, fmt, log):
 def main():
     update = "--update" in sys.argv[1:]
     SNAPSHOTS.mkdir(exist_ok=True)
-    # docx-reference.qmd and docx-columns.qmd read these reference docs,
-    # which are not committed.
+    # docx-reference.qmd, docx-columns.qmd, and docx-columns-span.qmd read
+    # these reference docs, which are not committed.
     reference_narrow.main()
     failed = []
     for fixture, fmt, compare in RENDERS:

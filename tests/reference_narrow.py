@@ -14,7 +14,8 @@ Word then shows a Letter page with 1 in margins (9360 twips of text).
 - tests/reference-gutter.docx, for docx-options.qmd: a Letter page (12240
   twips wide) with 1440 twip margins and a 720 twip gutter, so its text
   width is 8640 twips.
-- tests/reference-columns.docx, for docx-columns.qmd: two columns.
+- tests/reference-columns.docx, for docx-columns.qmd and
+  docx-columns-span.qmd: two columns.
 """
 
 import re
