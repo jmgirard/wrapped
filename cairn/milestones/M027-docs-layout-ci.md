@@ -133,35 +133,35 @@ Consistency gate at 601c632: `cairn_validate.py` all checks passed. Version mark
 
 spawned: diff-bug, blame-history, prior-review, ripple
 
-- diff-bug #1: `playwright install chromium` without `--with-deps` may lack system libraries in CI — fix now
-- diff-bug #2: the 20-minute render timeout now also holds apt-get and a Chromium download — fix now (45 minutes, as verify.yml)
+- diff-bug #1: `playwright install chromium` without `--with-deps` may lack system libraries in CI — fix now, fixed 51d83d5
+- diff-bug #2: the 20-minute render timeout now also holds apt-get and a Chromium download — fix now, fixed 51d83d5 (45 minutes, as verify.yml)
 - diff-bug #3: Playwright's own dependencies (greenlet, pyee) are not pinned — follow-up, new row "Pin the docs CI Python packages"
 - diff-bug #4: publish renders again instead of publishing the checked site — reject, planned change (plan work-log line: gate publish with `needs: render` so the job with write access gains no steps)
-- diff-bug #5: an exception in `tab.evaluate` ends the run with a traceback and no `FAIL` line — fix now
-- diff-bug #6: `--site --html` takes `--html` as the folder — fix now
-- diff-bug #7: `--site=DIR` and misspelled options are ignored, so `--site=DIR` checks the default site — fix now (unknown arguments stop the run)
-- diff-bug #8: the docs.yml header says "each example page", but CASES holds `index`, checked in HTML only — fix now
-- diff-bug #9: T2 said one temporary folder, the code maps `/layout.js` in the handler; not in the work log — fix now (work-log line)
-- diff-bug #10: the check runs at `load` without `document.fonts.ready` — fix now
+- diff-bug #5: an exception in `tab.evaluate` ends the run with a traceback and no `FAIL` line — fix now, fixed 51d83d5
+- diff-bug #6: `--site --html` takes `--html` as the folder — fix now, fixed 51d83d5
+- diff-bug #7: `--site=DIR` and misspelled options are ignored, so `--site=DIR` checks the default site — fix now, fixed 51d83d5 (unknown arguments stop the run)
+- diff-bug #8: the docs.yml header says "each example page", but CASES holds `index`, checked in HTML only — fix now, fixed 51d83d5
+- diff-bug #9: T2 said one temporary folder, the code maps `/layout.js` in the handler; not in the work log — fix now, fixed 51d83d5 (work-log line)
+- diff-bug #10: the check runs at `load` without `document.fonts.ready` — fix now, fixed 51d83d5
 - diff-bug #11: the PDF step uses system `python3`, the HTML step the venv — reject, style
-- diff-bug #12: DESIGN.md's Distribution paragraph does not name the checks — fix now
+- diff-bug #12: DESIGN.md's Distribution paragraph does not name the checks — fix now, fixed 51d83d5
 - diff-bug #13: the gate bullet makes the Mac Word run owed for every `_extensions/` change — reject, planned change (T4)
-- blame-history #1: main now renders twice, and no decision records the reversal of M024's split — fix now (milestone Decisions entry)
+- blame-history #1: main now renders twice, and no decision records the reversal of M024's split — fix now, fixed 51d83d5 (milestone Decisions entry)
 - blame-history #2: a slow Ubuntu mirror can now delay the main publish — follow-up, absorbed into "Cut the Ubuntu mirror from CI setup"
-- blame-history #3: D-014 and DESIGN.md say pull requests only render — DESIGN.md fix now; D-014 reject, false: D-014 is history, and D-016 extends it and states the checks
-- blame-history #4: no `--with-deps` — fix now (same fix as diff-bug #1)
+- blame-history #3: D-014 and DESIGN.md say pull requests only render — DESIGN.md fix now, fixed 51d83d5; D-014 reject, false: D-014 is history, and D-016 extends it and states the checks
+- blame-history #4: no `--with-deps` — fix now, fixed 51d83d5 (same fix as diff-bug #1)
 - blame-history #5: `option()` exits at import time — reject, false: `git grep docs_layout` finds no importer
-- prior-review #1: DESIGN.md docs.yml paragraph stale, as in M024 diff-bug #4 — fix now
+- prior-review #1: DESIGN.md docs.yml paragraph stale, as in M024 diff-bug #4 — fix now, fixed 51d83d5
 - prior-review #2: the 1.25-pitch paragraph split now gates CI — follow-up, M028 (planned)
 - prior-review #3: caption reach and `straddle()` order now gate CI — follow-up, M028 (planned)
 - prior-review #4: CI's floating Quarto and TinyTeX can shift page fit — reject, planned change (D-008 release channel)
 - prior-review #5: render and publish conditions no longer exclude each other — reject, planned change (AC4)
-- ripple #1: DESIGN.md lines 148-151, trigger list and ref split — fix now
-- ripple #2: DESIGN.md path list lacks the two test files — fix now
+- ripple #1: DESIGN.md lines 148-151, trigger list and ref split — fix now, fixed 51d83d5
+- ripple #2: DESIGN.md path list lacks the two test files — fix now, fixed 51d83d5
 - ripple #3: the candidate row still says "only by hand" — reject, planned change: hygiene graduates the row at merge
-- ripple #4: DESIGN.md line 38 omits the check before publish — fix now
-- ripple #5: the docstring's first paragraph names no options — fix now
-- ripple #6: `tests/layout.js` header names no `--html` — fix now
+- ripple #4: DESIGN.md line 38 omits the check before publish — fix now, fixed 51d83d5
+- ripple #5: the docstring's first paragraph names no options — fix now, fixed 51d83d5
+- ripple #6: `tests/layout.js` header names no `--html` — fix now, fixed 51d83d5
 - ripple #7: CLAUDE.md "main must render" names no layout gate — reject, false: the rule is about rendering and still holds
 - ripple #8: PROFILE.md "(needs `soffice` and poppler)" — reject, false: the same sentence names `--html` and Playwright
 
