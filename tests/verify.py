@@ -36,7 +36,10 @@ is a book project: its snapshot holds the HTML parts of each page under _book/,
 and the href of each cross-reference link. For a fixture in MARGIN_IDS, the
 script also renders a copy with no filters and records whether the nearest
 column-margin div around each named figure has the same classes in both
-renders. The script exits with status 1 on a failed render, a snapshot
+renders. For a fixture in TABLE_IDS, the HTML snapshot also holds the
+wrap classes on each named table float's table, table-striped where its
+caption block sets .striped, and its caption text, and the PDF snapshot
+holds each one's LaTeX caption and whether it ends in white space. The script exits with status 1 on a failed render, a snapshot
 difference, or a failed layout case or log check.
 
 Some fixtures exist only for the browser checks in tests/layout.js, which
@@ -61,6 +64,7 @@ multicols in the kept .tex.
 """
 
 import difflib
+import html
 import os
 import re
 import shutil
@@ -351,6 +355,53 @@ def margin_summary(fixture):
             lines.append(f"{i}: same as without the extension: {with_ext}")
         else:
             lines.append(f'{i}: with the extension "{with_ext}", without "{without}"')
+    return lines
+
+
+# Table floats whose caption ends in an attribute block, each with whether
+# that block sets .striped. knitr's tables are striped in any case, so
+# table-striped is recorded only where the block sets it.
+TABLE_IDS = {"fixture": {"tbl-caption-block": True, "tbl-cell-block": False, "tbl-cell-both": False, "tbl-striped": True}}
+
+
+def table_summary(path, ids):
+    """The wrap classes that reach each named float's table, table-striped
+    where the caption block sets .striped, and the caption text left after
+    Quarto reads the block."""
+    source = path.read_text(encoding="utf-8")
+    lines = []
+    for i, striped in ids.items():
+        start = source.find(f'<div id="{i}"')
+        end = source.find("</figure>", start)
+        if start < 0 or end < 0:
+            lines.append(f"{i}: (missing)")
+            continue
+        table = re.compile(r'<table class="([^"]*)"').search(source, start, end)
+        caption = re.compile(r"<figcaption[^>]*>(.*?)</figcaption>", re.S).search(source, start, end)
+        keep = WRAP_CLASSES + (("table-striped",) if striped else ())
+        classes = " ".join(c for c in table.group(1).split() if c in keep) if table else "(no table)"
+        text = " ".join(html.unescape(re.sub(r"<[^>]+>", "", caption.group(1))).split()) if caption else "(no caption)"
+        lines.append(f"{i}: table={classes or '-'} caption={text}")
+    return lines
+
+
+def tex_table_summary(path, ids):
+    """Each named table's LaTeX caption, with a mark when it ends in white
+    space, which the HTML caption does not show."""
+    tex = path.read_text(encoding="utf-8")
+    lines = []
+    label = r"\\label\{%s\}"
+    caption = r"\\caption\{%s((?:[^{}]|\{[^{}]*\})*)\}%s"
+    for i in ids:
+        own = label % re.escape(i)
+        # A markdown table puts its label after the caption, and knitr's
+        # inside it.
+        m = re.search(caption % ("", own), tex) or re.search(caption % (own, ""), tex)
+        if not m:
+            lines.append(f"{i}: (missing)")
+            continue
+        mark = " (ends in white space)" if m.group(1)[-1:].isspace() else ""
+        lines.append(f"{i}: caption={' '.join(m.group(1).split())}{mark}")
     return lines
 
 
@@ -1496,8 +1547,12 @@ def summary(fixture, fmt, log):
         parts.append(html_summary(TESTS / f"{fixture}.html"))
         if fixture in MARGIN_IDS:
             parts += ["# margin containers"] + margin_summary(fixture)
+        if fixture in TABLE_IDS:
+            parts += ["# tables"] + table_summary(TESTS / f"{fixture}.html", TABLE_IDS[fixture])
     elif fmt == "pdf":
         parts += ["# tex", tex_summary(TESTS / f"{fixture}.tex")]
+        if fixture in TABLE_IDS:
+            parts += ["# tables"] + tex_table_summary(TESTS / f"{fixture}.tex", TABLE_IDS[fixture])
     elif fmt == "typst":
         parts += ["# typ", typ_summary(TESTS / f"{fixture}.typ")]
     elif fmt == "docx":

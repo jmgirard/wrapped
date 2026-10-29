@@ -16,7 +16,10 @@
 1x wrapped: the span #span-class-id is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the span with no text is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the table "A table with a wrap class" is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
+1x wrapped: the table #tbl-caption-block is not a figure, so it does not wrap.
 1x wrapped: the table #tbl-cars is not a figure, so it does not wrap.
+1x wrapped: the table #tbl-cell-block is not a figure, so it does not wrap.
+1x wrapped: the table #tbl-cell-both is not a figure, so it does not wrap.
 1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
 1x wrapped: width "clamp(150px, 30%, 400px)" on #fig-clamp is not a length that Typst can use, so it is 40%.
 1x wrapped: width "wide" on #logo is not a length or a percent, so it is 40%.
@@ -34,6 +37,10 @@ figure: fig-after-table image-width=yes
 figure: fig-unwrapped-cell image-width=yes
 figure: - image-width=yes
 figure: fig-before-link image-width=yes
+figure: tbl-caption-block image-width=no
+figure: tbl-cell-block image-width=no
+figure: tbl-cell-both image-width=no
+figure: tbl-striped image-width=no
 figure: fig-comment image-width=yes
 figure: fig-bad-width image-width=yes
 figure: fig-styled image-width=yes

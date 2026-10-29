@@ -16,7 +16,10 @@
 1x wrapped: the span #span-class-id is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the span with no text is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the table "A table with a wrap class" is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
+1x wrapped: the table #tbl-caption-block is not a figure, so it does not wrap.
 1x wrapped: the table #tbl-cars is not a figure, so it does not wrap.
+1x wrapped: the table #tbl-cell-block is not a figure, so it does not wrap.
+1x wrapped: the table #tbl-cell-both is not a figure, so it does not wrap.
 1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
 1x wrapped: width "clamp(150px, 30%, 400px)" on #fig-clamp is not a length that LaTeX can use, so it is 40%.
 1x wrapped: width "wide" on #logo is not a length or a percent, so it is 40%.
@@ -64,3 +67,8 @@ wrappedfigure: fig-break [side=left,width=0.4\linewidth,gap=1em] image=[width=1\
 wrappedstop
 wrappedfigure: fig-break-lines [side=right,width=0.4\linewidth,gap=1em,lines=12] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+# tables
+tbl-caption-block: caption=A table float with a wrap class in its caption
+tbl-cell-block: caption=A table from a cell with a wrap class in its caption
+tbl-cell-both: caption=A table from a cell with wrap classes in two places
+tbl-striped: caption=A table float with a striped class in its caption
