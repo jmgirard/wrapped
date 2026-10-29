@@ -1,6 +1,6 @@
 # M030: Fix the Word alt text edge cases
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -62,6 +62,8 @@ In Word output, a framed div float that holds more than one image gives its `fig
 - 2026-10-29: T1 done: five cases added to `tests/docx-alt.qmd` (fig-two, fig-two-first, fig-two-second, fig-spaced, a spaced uncaptioned image); the unchanged filter gives both fig-two images and fig-two-first's second image the float's text, and both spaced texts one space. Each two-image frame line shows two `image` parts. fig-two-first's second image, a lone captioned image, becomes a Pandoc Figure, so its description also shows as a caption paragraph, as on main. Snapshot not yet written, so `tests/verify.py` fails on this commit.
 - 2026-10-29: checkpoint: T2 code and snapshot written (`alt_image` takes a per-frame `first` flag through `frame_blocks`' new `state` table, and sets one `pandoc.Str`; `wrapped_image_docx` copy removed); the one-fixture render matches AC1 to AC4. T3's doc and DESIGN.md sentences written. The full `tests/verify.py` run and `quarto render docs` are still running or not yet run, so T2 and T3 stay unticked.
 - 2026-10-29: T2 and T3 done: `python3 tests/verify.py` all 104 renders pass (exit 0), with only `tests/_snapshots/docx-alt.docx.txt` changed; `quarto render docs` exit 0. Claim audit (fresh Opus reader) running.
+- 2026-10-29: claim audit: 11 claims read, 2 corrected — `_extensions/wrapped/wrapped-docx.lua` (the `state.seen` comment said it was set once the first image had alt text; it is set when the walk reaches it), `docs/formats/word.qmd` ("another image keeps its description" left "description" undefined; the re-read found the first rewrite read as a general rule that a fig-two first image breaks, so the sentence now names each later image without its own `fig-alt`). `quarto render docs` exit 0 after the fix.
+- 2026-10-29: implement complete; status review.
 
 ## Decisions
 
