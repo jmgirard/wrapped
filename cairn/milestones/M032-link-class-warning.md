@@ -1,6 +1,6 @@
 # M032: Warn for a wrap class on a link
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -54,3 +54,5 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a link that carries a w
 - 2026-10-29: implement started on m032-link-class-warning.
 - 2026-10-29: checkpoint (T1 to T3 written, unticked until `python3 tests/verify.py` finishes): three fixture cases; before `unplaced_link`, the four one-fixture renders printed no link warning; after it, the four snapshots hold the three warnings, only link-class-both wraps (right), link-class keeps `style=width:20.0%` in HTML; `quarto render docs` exit 0.
 - 2026-10-29: T1 to T3 done: `python3 tests/verify.py` all 104 renders pass, exit 0, on the code of 36223be. Claim audit running.
+- 2026-10-29: claim audit: 15 claims read, 2 corrected — docs/normal-layout.qmd (the warning is replaced by the one columns warning in Word with columns and LaTeX with `classoption: twocolumn`; the image wraps only with the link alone in its paragraph). Kept the warning's "A wrap class goes on an image or a figure." though it leaves out code cells, since AC1 fixes that text and a cell's class lands on its figure. `quarto render docs` exit 0 after the fix.
+- 2026-10-29: implement complete; status review.

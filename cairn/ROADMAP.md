@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-29 (M032 plan: "Warn for a wrap class on a link" st
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M032 | Warn for a wrap class on a link | in-progress | — | normal | milestones/M032-link-class-warning.md |
+| M032 | Warn for a wrap class on a link | review | — | normal | milestones/M032-link-class-warning.md |
 | M031 | Wrap images inside links in all formats | done | — | normal | milestones/archive/M031-linked-images.md |
 | M030 | Fix the Word alt text edge cases | done | — | normal | milestones/archive/M030-word-alt-edges.md |
 | M029 | Carry fig-alt to Word alt text | done | — | normal | milestones/archive/M029-word-alt-text.md |
