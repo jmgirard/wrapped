@@ -1,13 +1,21 @@
 # warnings
 1x wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.
+1x wrapped: the code block "wrap_class_block = 1" is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the div #note is not a figure, so it does not wrap.
+1x wrapped: the heading #a-heading-with-a-wrap-class is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the image link-beside.png is not a figure or the only content of its paragraph, so it does not wrap.
 1x wrapped: the image link-text.png is not a figure or the only content of its paragraph, so it does not wrap.
 1x wrapped: the image link-two-a.png is not a figure or the only content of its paragraph, so it does not wrap.
 1x wrapped: the image link-two-b.png is not a figure or the only content of its paragraph, so it does not wrap.
+1x wrapped: the inline code "span_class_code()" is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the link to https://example.org/link-class is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the link to https://example.org/link-class-both is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the link to https://example.org/link-class-text is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
+1x wrapped: the span "This span runs on past forty charactersé..." is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
+1x wrapped: the span "a span with a wrap class" is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
+1x wrapped: the span #span-class-id is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
+1x wrapped: the span with no text is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
+1x wrapped: the table "A table with a wrap class" is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the table #tbl-cars is not a figure, so it does not wrap.
 1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
 1x wrapped: width "wide" on #logo is not a length or a percent, so it is 40%.
@@ -59,6 +67,7 @@ plot.png: wrap=- style=width:20.0% width=-
 link-after.png: wrap=- style=- width=- link=https://example.com
 link-class.png: wrap=- style=width:20.0% width=- link=https://example.org/link-class
 link-class-both.png: wrap=- style=- width=- link=https://example.org/link-class-both
+span-class-image.png: wrap=- style=width:20.0% width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-
 plot.png: wrap=- style=- width=-

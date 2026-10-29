@@ -163,6 +163,43 @@ The image wraps on the right by its own class, and the render prints a warning f
 
 See [the example page](https://example.org/link-class-text){.wrap-right} for more. The render prints a warning for the link.
 
+## A wrap class on a span
+
+This sentence holds [a span with a wrap class]{.wrap-right} in its text. The render prints a warning for the span.
+
+This sentence holds [a span with an id]{#span-class-id .wrap-left} in its text. The warning names the span by its id.
+
+This sentence holds [This span runs on past forty charactersé and goes on]{.wrap-left}. The warning cuts its text after 40 characters.
+
+[![](span-class-image.png){width="20%"}]{.wrap-left}
+
+The span above holds only an image with no alt text, so the warning names it with no text.
+
+## A heading with a wrap class {.wrap-right}
+
+The render prints a warning for the heading above, named by its id.
+
+## A wrap class on code
+
+Call `span_class_code()`{.wrap-left} to see a warning for inline code.
+
+```{.python .wrap-right}
+wrap_class_block = 1
+second_line = 2
+```
+
+The render prints a warning for the code block above, named by its first line.
+
+## A wrap class on a table
+
+| Name | Value |
+|------|-------|
+| a    | 1     |
+
+: A table with a wrap class {.wrap-left}
+
+The table keeps a normal layout, and the render prints a warning for it.
+
 ## A comment after the figure
 
 ![A figure with a comment after it.](plot.png){#fig-comment .wrap-right width="30%"}

@@ -283,7 +283,10 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    `checked_length`, so it runs in every format, but only HTML takes a
    function gap; elsewhere such a gap warns in any case (corrected M012).
 6. It warns for a wrap class on an image or a div that it cannot place,
-   and for a wrap class on a link, which it never places (corrected M032).
+   and for a wrap class on a link, span, heading, inline code, code block,
+   or table with no `#tbl-` id, which it never places. It reads a table's
+   class from the attribute block at its caption's end, as Quarto does
+   after the filter runs (corrected M032, M033).
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
    wraps. In LaTeX it adds wrapfig and `wrapped.tex`, which defines
    `wrappedfigure` over wrapfig's floating placements and `\wrappedstop`,

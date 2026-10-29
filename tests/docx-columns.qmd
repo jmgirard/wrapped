@@ -16,3 +16,5 @@ or `python3 tests/verify.py`, which writes the reference docs.
 The paragraph after the figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 See [the example page](https://example.org/docx-columns-link){.wrap-left}. The link with a wrap class prints no warning of its own here, only the one warning above.
+
+This sentence holds [a span in Word columns]{.wrap-right}, which prints no warning of its own here either.
