@@ -27,6 +27,9 @@ is a heading (larger) or code (not larger), and either ends a paragraph.
 
 `python3 tests/docs_layout.py --js` prints the call that runs the HTML check
 in a browser with `straddle()` from tests/layout.js.
+
+Options: `--site DIR` reads a rendered site in DIR in place of docs/_site/.
+`--no-word` skips the Word PDFs, so the run needs no `soffice`.
 """
 
 import json
@@ -39,7 +42,20 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "docs" / "_site"
+
+
+def option(name):
+    """The value after `name` in the command line, or None."""
+    if name in sys.argv:
+        i = sys.argv.index(name) + 1
+        if i < len(sys.argv):
+            return sys.argv[i]
+        sys.exit(f"{name} needs a value")
+    return None
+
+
+SITE = Path(option("--site") or ROOT / "docs" / "_site").resolve()
+WORD = "--no-word" not in sys.argv
 
 # Per page, one entry per wrapped figure in page order. The PDF checks read
 # `side` only. For the HTML check, `above` and `straddle` name words of the
@@ -80,18 +96,20 @@ TOL = 2  # px, in pdftohtml's 1.5 px per pt
 
 
 def pdf_paths(page, tmp):
-    """The three PDFs of a page: LaTeX, Typst, and Word through LibreOffice."""
+    """The PDFs of a page: LaTeX, Typst, and Word through LibreOffice."""
     base = SITE / page
-    docx = base.with_suffix(".docx")
-    subprocess.run(
-        ["soffice", "--headless", "--convert-to", "pdf", "--outdir", str(tmp), str(docx)],
-        check=True, capture_output=True,
-    )
-    return {
+    paths = {
         "latex": base.with_suffix(".pdf"),
         "typst": base.parent / f"{base.name}-typst.pdf",
-        "word": Path(tmp) / f"{base.name}.pdf",
     }
+    if WORD:
+        docx = base.with_suffix(".docx")
+        subprocess.run(
+            ["soffice", "--headless", "--convert-to", "pdf", "--outdir", str(tmp), str(docx)],
+            check=True, capture_output=True,
+        )
+        paths["word"] = Path(tmp) / f"{base.name}.pdf"
+    return paths
 
 
 def read_pdf(pdf, tmp):

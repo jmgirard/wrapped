@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M027: Run the docs layout checks in CI
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** internal — a CI check over the docs site that no user of the extension relies on   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m027-docs-layout-ci   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -63,7 +63,7 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
      cites; an insertion, removal, or reorder renumbers the labels and the
      Coverage lines together. -->
 
-- [ ] T1: Add `--site DIR` and `--no-word` to `tests/docs_layout.py` (`SITE` at line 43, `pdf_paths` at line 82). Update the docstring. Run the plain command on the Mac to show the PDF output is unchanged.
+- [x] T1: Add `--site DIR` and `--no-word` to `tests/docs_layout.py` (`SITE` at line 43, `pdf_paths` at line 82). Update the docstring. Run the plain command on the Mac to show the PDF output is unchanged.
 - [ ] T2: Add `--html` to `tests/docs_layout.py`. Serve the site folder and `tests/layout.js` from one temporary folder, open each page with Playwright at 1280x900, run the `straddle()` call that `--js` prints, and print one line per figure in the PDF lines' form. Exit with status 1 on any `ok: false`, on a missing page, or when Playwright is missing (a plain message). Install Playwright locally to run it.
 - [ ] T3: Edit `.github/workflows/docs.yml`: install `poppler-utils` with the retry options of `verify.yml`, install a pinned Playwright and its Chromium, and add the two check steps after the render step. Drop the render job's `if` and give the publish job `needs: render`. Add the two test files to both `paths` filters. Rewrite the header comment to say what the render job checks and that Word is checked by hand. Write D-016 for the new CI tools.
 - [ ] T4: Update the verify and consistency-gate slots of `cairn/PROFILE.md` to name the CI check and the by-hand Word check. Run `python3 tests/verify.py`.
@@ -95,6 +95,8 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
 - 2026-10-29: inbox sweep: no open issues or PRs.
 - 2026-10-29: criteria audit (reduced mode), first pass on the pre-split draft: AC3 claimed every problem kind and every missing page from one plant of each, narrowed to the two named plants; Goal narrowed to pages listed in `CASES`; `--html` made an option so the plain run needs no Playwright. No finding on the other criteria. A second pass on M027 and M028 as written was still running at the plan commit, and its dispositions follow in a later commit.
 - 2026-10-29: criteria audit (reduced mode), second pass on M027 as written: no finding on AC1 to AC6.
+- 2026-10-29: implement started on branch m027-docs-layout-ci; the status edit went through sed, not the Edit tool.
+- 2026-10-29: T1 done: `--site DIR` and `--no-word` in `tests/docs_layout.py`. After `quarto render docs`, the plain run printed 24 `ok` lines and `--no-word` 16. A missing PDF still ends in pdftohtml's traceback with a nonzero exit, as before.
 - 2026-10-29: lessons used: 2026-10-28 (M020) browser viewport, 2026-10-28 (M023) Typst output-file, 2026-10-28 (M026) LibreOffice text and frozen pages, 2026-10-26 (M007) pdftohtml image files.
 
 ## Decisions
