@@ -71,6 +71,7 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a wrapped image that is
 - 2026-10-29: status review; the last full `tests/verify.py` (all 104 pass) ran before the claim-audit edits, which change only comments in `tests/verify.py` and docs prose.
 - 2026-10-29: correction of the T1–T5 line: a change to `link.content[1]` does write back in this Pandoc (`quarto pandoc lua` check at review, diff-bug #7); `placed_image` is kept as the one place that builds the box's inline.
 - 2026-10-29: review fix-now edits: link patterns anchored to the image in `tex_summary` and `typ_summary`, `tests/verify.py` docstrings, the `normal-layout.qmd` link sentence, and the DESIGN.md next-block paragraph.
+- 2026-10-29: step-7 approval: m031-linked-images approved for merge
 
 ## Decisions
 
