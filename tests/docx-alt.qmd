@@ -47,7 +47,7 @@ plot(1:10)
 
 The paragraph beside the cell figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-## Framed figures with no fig-alt
+## Framed figures with no fig-alt, and an uncaptioned image
 
 ![A markdown float with no alt.](plot.png){#fig-md-none .wrap-right width="30%"}
 
