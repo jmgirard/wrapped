@@ -35,9 +35,9 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a link that carries a w
 
 ## Tasks
 
-- [ ] T1: Add three cases to `tests/fixture.qmd` after "A float before a linked image" (about line 142), each with its own image copy (`tests/link-class*.png`) and its own target (`https://example.org/…`): an image with a width and no wrap class in a link with `.wrap-left`, an image with `.wrap-right` in a link with `.wrap-left`, and a text link with `.wrap-right` in a sentence. Render `fixture` in the four formats with the one-fixture command and confirm that no link warning prints before T2.
-- [ ] T2: Add the Link handler to the last pass of `wrapped.lua`, with a comment in the style of `unplaced_div`'s, and register it in the returned filter list. Write the four `fixture` snapshots, read each diff against AC1 and AC2, and run `python3 tests/verify.py`.
-- [ ] T3: Add the link rule to the "Other notes" list of `docs/normal-layout.qmd` (about line 146) and name links in step 6 of DESIGN.md's architecture. Run `quarto render docs`.
+- [x] T1: Add three cases to `tests/fixture.qmd` after "A float before a linked image" (about line 142), each with its own image copy (`tests/link-class*.png`) and its own target (`https://example.org/…`): an image with a width and no wrap class in a link with `.wrap-left`, an image with `.wrap-right` in a link with `.wrap-left`, and a text link with `.wrap-right` in a sentence. Render `fixture` in the four formats with the one-fixture command and confirm that no link warning prints before T2.
+- [x] T2: Add the Link handler to the last pass of `wrapped.lua`, with a comment in the style of `unplaced_div`'s, and register it in the returned filter list. Write the four `fixture` snapshots, read each diff against AC1 and AC2, and run `python3 tests/verify.py`.
+- [x] T3: Add the link rule to the "Other notes" list of `docs/normal-layout.qmd` (about line 146) and name links in step 6 of DESIGN.md's architecture. Run `quarto render docs`.
 
 ## Work log
 
@@ -53,3 +53,4 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a link that carries a w
 - 2026-10-29: new candidate row "Warn for a wrap class on a span" for elements the last pass does not read.
 - 2026-10-29: implement started on m032-link-class-warning.
 - 2026-10-29: checkpoint (T1 to T3 written, unticked until `python3 tests/verify.py` finishes): three fixture cases; before `unplaced_link`, the four one-fixture renders printed no link warning; after it, the four snapshots hold the three warnings, only link-class-both wraps (right), link-class keeps `style=width:20.0%` in HTML; `quarto render docs` exit 0.
+- 2026-10-29: T1 to T3 done: `python3 tests/verify.py` all 104 renders pass, exit 0, on the code of 36223be. Claim audit running.
