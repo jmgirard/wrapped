@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M028: Close gaps in the docs layout checks
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** M027   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** internal — checks over the docs site that no user of the extension relies on   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m028-docs-layout-gaps   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -61,9 +61,9 @@ The docs layout checks give the right result on three planted page faults that t
      cites; an insertion, removal, or reorder renumbers the labels and the
      Coverage lines together. -->
 
-- [ ] T1: Build plant 1 and see it pass the M027 script. Change `blocks()` in `tests/docs_layout.py` so that a paragraph also ends where the next line starts with an indent or where the gap passes the page's line pitch by more than a small tolerance. Choose the rule from the measured gaps of the docs pages in all three PDFs.
-- [ ] T2: Build plant 2 and see the caption line in `--debug`. Change the caption rule in `check()` so that a caption is found by its place under the image and its font or lead word, not by the 40 px and 30 px limits.
-- [ ] T3: Build plant 3 and see it pass. In `straddle()` in `tests/layout.js`, fail when any block (paragraph, heading, code block, or list) sits between the paragraph above and the figure. Change `paragraphLines()` to the middle-inside-box join.
+- [x] T1: Build plant 1 and see it pass the M027 script. Change `blocks()` in `tests/docs_layout.py` so that a paragraph also ends where the next line starts with an indent or where the gap passes the page's line pitch by more than a small tolerance. Choose the rule from the measured gaps of the docs pages in all three PDFs.
+- [x] T2: Build plant 2 and see the caption line in `--debug`. Change the caption rule in `check()` so that a caption is found by its place under the image and its font or lead word, not by the 40 px and 30 px limits.
+- [x] T3: Build plant 3 and see it pass. In `straddle()` in `tests/layout.js`, fail when any block (paragraph, heading, code block, or list) sits between the paragraph above and the figure. Change `paragraphLines()` to the middle-inside-box join.
 - [ ] T4: Run the three plants against the M027 script and the new one, and record which line each run prints. Run AC4's local checks. Update the docstrings of both files and the header of `tests/layout.js` where the rules changed. Run `python3 tests/verify.py`.
 
 ## Work log
@@ -87,6 +87,16 @@ The docs layout checks give the right result on three planted page faults that t
 - 2026-10-29: criteria audit (reduced mode): AC1, AC2, and AC3 each bound a property of the M027 script, which is the control, so that clause moved to Evidence; AC2's "no caption line among the blocks" read the debug printout, narrowed to the figure box's bottom; the Goal said all three plants fail, but AC2 expects `ok`, so the Goal now says the checks give the right result; `--site` takes the copy's `_site` folder. No finding on AC4 or AC5.
 - 2026-10-29: M027 review moved the `paragraphLines()` middle-inside-box join into M027 to fix its red HTML check in CI, so that part of Scope In and T3 is done at M027's merge; the rest of T3 (the block between the paragraph above and the figure) stays here.
 - 2026-10-29: lessons used: 2026-10-28 (M026) LibreOffice text and frozen pages, 2026-10-28 (M025) pdftohtml splits sentences, 2026-10-26 (M007) pdftohtml image files, 2026-10-28 (M020) browser viewport.
+- 2026-10-29: implement started on branch m028-docs-layout-gaps, cut from main at ee47ef1. Plants live in the session scratchpad; the M027 scripts for the controls are `git show 45f7705:tests/docs_layout.py` and `:tests/layout.js`.
+- 2026-10-29: Playwright for Python was not on the Mac, so `--html` runs use 1.64.0 (the docs workflow's pin, D-016) in a scratch venv outside the repo; no repo dependency change.
+- 2026-10-29: T1: with `indent: true`, LaTeX indents a first line 17 px and adds no paragraph gap, so the M027 script reads the paragraph above and both halves as one block and prints `FAIL: no paragraph above the figure on its page`, not `ok`; AC1's control clause needs an amendment.
+- 2026-10-29: T1: chose the split rule from `--debug` on the docs pages: lines of one paragraph sit within 1 px of the pitch in all three PDFs, paragraphs 8 px or more past it, so a block ends past pitch + TOL (2 px); a 3 pt parskip page (gap pitch + 4 px) would merge at pitch + 4.
+- 2026-10-29: T1: chose to read indents in LaTeX and Typst only: LibreOffice PDFs lose letters at a line's start ("roups"), which moved Word lines right by 9 to 17 px on div-figure and width-gap, as large as LaTeX's indent.
+- 2026-10-29: T1: new script on plant 1 prints only "no paragraph runs from beside the figure to below it"; the indented page without the split and the 3 pt parskip page print `ok`; the real site prints `ok` for all 24 PDF figures with the same blocks as M027.
+- 2026-10-29: T2: plant 2 sets `\abovecaptionskip` to 45pt, so the caption sits 64 px under the image; M027's box ends at 781, above the caption (845 to 867). New `caption()`: the nearest text under the image with its middle in the image's span, opening with "Figure" or in a non-body font, then lines in its font within 1.5 heights, never an element that continues body text on its left. Plant 2's box ends at 867, `ok`.
+- 2026-10-29: T2: the old 40 px reach took the body text ", as it does for any figure in Quarto." into plant 1's figure box (bottom 828), which made plant 1 read `ok`; on the real site the new rule shrinks two Word boxes that held body text (image-figure 676 to 617, uncaptioned-image 518 to 486), all `ok`.
+- 2026-10-29: T3: plant 3 puts `<p>A planted line.</p>` before the figure in a copy of `_site`; M027 `--html` prints `ok` and exits 0. `straddle()` now fails when a p, heading, pre, list, dl, blockquote, table, or hr sits between the paragraph above and the figure, outside the figure's own `.cell`; plant 3 prints `FAIL: a p sits between the paragraph above and the figure` and exits 1, and the real site prints `ok` for all 9 figures, code-cell included.
+- 2026-10-29: re-audit: AC1 (reduced) — bounded-promise and instrument: the Evidence clause's "reads the page's paragraphs as one block" stated the control's mechanism, wider than the run shows, so it dropped to what the run prints; proportionality: nothing.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

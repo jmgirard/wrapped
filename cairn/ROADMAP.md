@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-29 (M027 review: M024 row pruned; CI row narrowed t
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M028 | Close gaps in the docs layout checks | planned | M027 | normal | milestones/M028-docs-layout-gaps.md |
+| M028 | Close gaps in the docs layout checks | in-progress | M027 | normal | milestones/M028-docs-layout-gaps.md |
 | M025 | Stop text overlap with small wrap-lines | done | — | normal | milestones/archive/M025-small-wrap-lines.md |
 | M026 | Show text wrapping past the figure in examples | done | — | normal | milestones/archive/M026-wrap-showcase.md |
 | M027 | Run the docs layout checks in CI | done | — | normal | milestones/archive/M027-docs-layout-ci.md |

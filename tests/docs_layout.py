@@ -19,17 +19,27 @@ run the HTML check instead. For each wrapped figure, the figure's page must have
 A line crosses the span of a right-side figure when its right edge is right
 of the figure's left edge, and of a left-side figure when its left edge is
 left of the figure's right edge. The figure's bottom is the lower of its
-image and its last caption line.
+image and its last caption line. The caption is the nearest text under the
+image with its middle inside the image's span, if that text opens with
+"Figure" or is not in the body font, and the lines that follow it in its
+font.
 
 The PDF checks find paragraphs by line spacing, not by their words, since
 pdftohtml reads a LibreOffice PDF's text with letters lost and added. A
 line in the PDF's most common font, counted by characters, is body text. A line with none of it
-is a heading (larger) or code (not larger), and either ends a paragraph.
+is a heading (larger) or code (not larger), and either ends a paragraph. A
+paragraph also ends where the gap from one line's top to the next passes
+the page's line pitch by more than 2 px, and in LaTeX and Typst where the
+next line starts more than 2 px right of the line before it, as an
+indented first line does. A lost letter can move a line of a LibreOffice
+PDF right, so the Word check does not read indents.
 
 `python3 tests/docs_layout.py --html` runs the HTML check instead. It
 serves the site with tests/layout.js at `/layout.js`, opens each page in
 CASES in headless Chromium at 1280x900, runs `straddle()`, and exits with
-status 1 if a figure fails or a page is missing. It needs Playwright for
+status 1 if a figure fails or a page is missing. In HTML, the paragraph
+before the figure must also be the last block before it, other than the
+code of the figure's own code cell. It needs Playwright for
 Python and its Chromium (`pip install playwright`, then
 `python3 -m playwright install chromium`). `--js` prints the `straddle()`
 calls to run by hand in a browser console instead.
@@ -149,7 +159,8 @@ def read_pdf(pdf, tmp):
                 images.append(box)
             elif "".join(el.itertext()).strip():
                 box["font"] = el.get("font")
-                box["chars"] = len("".join(el.itertext()))
+                box["text"] = "".join(el.itertext())
+                box["chars"] = len(box["text"])
                 texts.append(box)
     images.sort(key=lambda b: (b["page"], b["top"]))
     return texts, images, sizes
@@ -178,8 +189,16 @@ def lines(elements):
     return sorted(out, key=lambda l: (l["page"], l["top"]))
 
 
-def blocks(page_lines, body, sizes):
-    """Split a page's lines into paragraphs, headings, and code by spacing."""
+def blocks(page_lines, body, sizes, indents):
+    """Split a page's lines into paragraphs, headings, and code by spacing.
+
+    A block ends where the next line's top is more than the line pitch plus
+    TOL below the last line's top. With `--debug` on the docs pages on
+    2026-10-29, lines of one paragraph sat within 1 px of the pitch, and
+    paragraphs 8 px or more past it. With `indents`, a paragraph also ends
+    where the next line starts more than TOL right of the last line, as the
+    first line of an indented paragraph does.
+    """
     tops = [l["top"] for l in page_lines]
     pitch = statistics.median(b - a for a, b in zip(tops, tops[1:]) if b > a)
     out = []
@@ -191,7 +210,9 @@ def blocks(page_lines, body, sizes):
         else:
             kind = "code"
         last = out[-1] if out else None
-        if last and last["kind"] == kind and line["top"] - last["lines"][-1]["top"] <= 1.25 * pitch:
+        prev = last["lines"][-1] if last else None
+        if (last and last["kind"] == kind and line["top"] - prev["top"] <= pitch + TOL
+                and not (indents and kind == "para" and line["left"] > prev["left"] + TOL)):
             last["lines"].append(line)
         else:
             out.append({"kind": kind, "lines": [line]})
@@ -204,22 +225,54 @@ def crosses(line, fig):
     return line["left"] < fig["right"] - TOL
 
 
-def check(texts, image, side, body, sizes):
+def caption(on_page, image, body):
+    """The text elements of the image's caption, top to bottom.
+
+    The caption's first element is the nearest text under the image whose
+    middle is inside the image's span, if it opens with "Figure" or is not
+    in the body font. Each later line joins in the first element's font,
+    no more than 1.5 of its own heights below the line before. An element
+    that starts within half a height of the text on its left continues a
+    line of body text and is never caption.
+    """
+    def inside(t):
+        return image["left"] <= (t["left"] + t["right"]) / 2 <= image["right"]
+
+    def continues(t):
+        middle = (t["top"] + t["bottom"]) / 2
+        return any(o is not t and o not in out and o["top"] <= middle <= o["bottom"]
+                   and -TOL <= t["left"] - o["right"] <= t["height"] / 2 for o in on_page)
+
+    # A text box can reach a few px into the box of the line above it.
+    out = []
+    under = sorted((t for t in on_page if t["top"] >= image["bottom"] - 6 and inside(t)),
+                   key=lambda t: (t["top"], t["left"]))
+    if not under or continues(under[0]) or not (
+            under[0]["text"].startswith("Figure") or under[0]["font"] != body):
+        return []
+    out = [under[0]]
+    for t in under[1:]:
+        last = out[-1]
+        if t["top"] - last["top"] > 1.5 * last["height"]:
+            break
+        same_line = t["top"] <= (last["top"] + last["bottom"]) / 2
+        if (same_line or t["font"] == out[0]["font"]) and not continues(t):
+            out.append(t)
+    return out
+
+
+def check(texts, image, side, body, sizes, indents):
     """The problems found for one figure."""
     fig = dict(image, side=side)
     on_page = [t for t in texts if t["page"] == fig["page"]]
-    # Caption lines sit inside the image's span, just below it. A text box
-    # can reach a few px into the next line's box.
-    for t in sorted(on_page, key=lambda t: t["top"]):
-        if (t["left"] >= image["left"] - 30 and t["right"] <= image["right"] + 30
-                and -6 <= t["top"] - fig["bottom"] <= 40):
-            fig["bottom"] = t["bottom"]
-            fig["left"] = min(fig["left"], t["left"])
-            fig["right"] = max(fig["right"], t["right"])
+    for t in caption(on_page, image, body):
+        fig["bottom"] = max(fig["bottom"], t["bottom"])
+        fig["left"] = min(fig["left"], t["left"])
+        fig["right"] = max(fig["right"], t["right"])
     outside = [t for t in on_page if not (
         t["left"] >= fig["left"] - TOL and t["right"] <= fig["right"] + TOL
         and t["top"] >= fig["top"] - TOL and t["bottom"] <= fig["bottom"] + TOL)]
-    page_blocks, pitch = blocks(lines(outside), body, sizes)
+    page_blocks, pitch = blocks(lines(outside), body, sizes, indents)
     if "--debug" in sys.argv:
         print(" figure", {k: fig[k] for k in ("page", "top", "bottom", "left", "right")}, "pitch", pitch)
         for b in page_blocks:
@@ -331,7 +384,9 @@ def main():
                     if len(images) != len(cases):
                         problems = [f"{len(images)} images for {len(cases)} figures"]
                     else:
-                        problems = check(texts, images[n], case["side"], body, sizes)
+                        # LibreOffice PDFs lose letters at line starts, which
+                        # moves a line right as an indent would.
+                        problems = check(texts, images[n], case["side"], body, sizes, fmt != "word")
                     status = "ok" if not problems else "FAIL: " + "; ".join(problems)
                     failed += bool(problems)
                     print(f"{page} {fmt} figure {n + 1}: {status}")
