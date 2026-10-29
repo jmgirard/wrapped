@@ -39,9 +39,9 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
 
 - [ ] AC1: The docs workflow runs on this milestone's pull request. Its render job runs `python3 tests/docs_layout.py --no-word` on the site that it rendered. The step's log prints an `ok` line for each figure of each page in `CASES` outside `HTML_ONLY`, for `latex` and for `typst`, and no `FAIL` line. Evidence: the log of the PR run.
 - [ ] AC2: In the same run, `python3 tests/docs_layout.py --html` prints an `ok` line for each figure of each page in `CASES`, `index` included, and no `FAIL` line. Evidence: the log of the PR run.
-- [ ] AC3: In a site copy where the straddle paragraph of `examples/image-figure.html` is cut to one sentence, `--html` prints a `FAIL` line that names `examples/image-figure` and exits with status 1. In a site copy with no `examples/div-figure.html`, it prints a `FAIL` line that names `examples/div-figure` and exits with status 1. Evidence: two local runs with `--site`.
-- [ ] AC4: In `docs.yml` at the review head, the publish job has `needs: render`. The `if` of the render job admits a push to `main` and a manual run on `main` of jmgirard/wrapped. Evidence: a read of the file.
-- [ ] AC5: On the Mac, after `quarto render docs`, `python3 tests/docs_layout.py` with no option prints an `ok` line for each figure of each page in `CASES` outside `HTML_ONLY`, for `latex`, `typst`, and `word`. Evidence: one local run at the review head.
+- [x] AC3: In a site copy where the straddle paragraph of `examples/image-figure.html` is cut to one sentence, `--html` prints a `FAIL` line that names `examples/image-figure` and exits with status 1. In a site copy with no `examples/div-figure.html`, it prints a `FAIL` line that names `examples/div-figure` and exits with status 1. Evidence: two local runs with `--site`.
+- [x] AC4: In `docs.yml` at the review head, the publish job has `needs: render`. The `if` of the render job admits a push to `main` and a manual run on `main` of jmgirard/wrapped. Evidence: a read of the file.
+- [x] AC5: On the Mac, after `quarto render docs`, `python3 tests/docs_layout.py` with no option prints an `ok` line for each figure of each page in `CASES` outside `HTML_ONLY`, for `latex`, `typst`, and `word`. Evidence: one local run at the review head.
 - [ ] AC6: `python3 tests/verify.py` passes at the review head.
 
 ## Coverage
@@ -118,3 +118,9 @@ The docs workflow fails when a page listed in `CASES` of `tests/docs_layout.py` 
      results, review findings + triage. EXEMPT from the 150-line cap (M55),
      as are the work log (D-046) and the decisions section (D-074); evidence
      never scrambles plan-owned content. -->
+
+Evidence at 5b27b23, 2026-10-29, after `quarto render docs` on this branch.
+
+- AC3: plant 1 (site copy, image-figure straddle paragraph cut to its first sentence): `--html --site` printed `examples/image-figure html figure 1: FAIL: no later line below the figure that crosses it`, exit 1. Plant 2 (site copy with no `examples/div-figure.html`): printed `examples/div-figure html: FAIL: page missing`, exit 1. The other 8 lines were `ok` in each run.
+- AC4: `.github/workflows/docs.yml` line 82 has `needs: render` under `publish:` (line 81). The `render:` job (line 50) has no `if`, so it runs on a push to `main` and a manual run on `main`.
+- AC5: `python3 tests/docs_layout.py` with no option printed 24 `ok` lines (8 figures for each of latex, typst, word) and exit 0.
