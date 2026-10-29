@@ -367,7 +367,8 @@ def tex_summary(path):
         kind, options, body = m.groups()
         label = re.search(r"\\label\{([^}]*)\}", body)
         image = re.search(r"\\includegraphics(?:\[([^\]]*)\])?", body)
-        # A linked image records the link's target.
+        # The target of the first link in the figure, such as a link around
+        # its image.
         href = re.search(r"\\href\{([^}]*)\}\{", body)
         lines.append(
             f"{kind}: {label.group(1) if label else '-'} [{options or '-'}] "
@@ -1305,7 +1306,8 @@ def typ_summary(path):
         box = label.group(1) if label else Path(image.group(1)).name if image else "-"
         alt_text = re.search(r'image\([^)]*alt: "([^"]*)"', fixed)
         alt = f'alt="{alt_text.group(1)}"' if alt_text else "no-alt"
-        # A linked image records the link's target.
+        # The target of the first link in the box, such as a link around its
+        # image.
         href = re.search(r'#link\("([^"]*)"\)', fixed)
         if href:
             alt += f" link={href.group(1)}"
@@ -1345,7 +1347,8 @@ def docx_frames(body, targets, image_styles=False):
     bookmark open before it ("-" if none), each image's file name, whether
     it fills the frame width, its alt text, the target of a link around it
     (from `targets`, relationship id to target), and with `image_styles` the last
-    w:pStyle of its paragraph, the style Word applies, whether each caption
+    w:pStyle of its paragraph, the style wrapped-docx.lua expects Word to
+    apply, whether each caption
     paragraph has the ImageCaption style, and the kind of each block after
     it up to and including the paragraph that holds the clearing break ("p"
     for a paragraph). It also records the anchors of the links in those

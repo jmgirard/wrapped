@@ -66,6 +66,7 @@ In HTML, PDF through LaTeX, PDF through Typst, and Word, a wrapped image that is
 - 2026-10-29: implement started on branch m031-linked-images.
 - 2026-10-29: checkpoint: T1–T4 edits made (fixture and docx-alt cases, seven image copies, link and style summary fields, `lone_wrapped_image` with `only_inline` and `placed_image`, `has_image` in links, docs and DESIGN.md); one-fixture renders match AC1–AC5 and snapshots are written; `quarto render docs` exit 0; full `tests/verify.py` still running, so no task is checked yet.
 - 2026-10-29: T1–T5 done. T1 confirmed the faults on the unchanged filter: all seven linked images warned and none wrapped, and the two linked captioned figures in Word had `FirstParagraph` and `BodyText` against `Compact` and `CaptionedFigure` unlinked. T1 fix: the caption branch of `docx_frames` reused the name `styles`, so the flag became `image_styles`. Implementation choice: `lone_wrapped_image` returns the image and its link, and `placed_image` rebuilds the link's content from the cleaned image, since a Lua copy of `link.content[1]` does not write back. `python3 tests/verify.py` all 104 renders pass; only the five `fixture` and `docx-alt` snapshots changed.
+- 2026-10-29: checkpoint: claim audit returned 3 corrections, applied (docs need the link alone in its paragraph, also in DESIGN.md; the Word style docstring says what wrapped-docx.lua expects; the LaTeX and Typst link comments say first link in the box); `quarto render docs` exit 0; the reader's re-read of the three is running.
 
 ## Decisions
 
