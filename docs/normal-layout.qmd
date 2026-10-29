@@ -153,6 +153,11 @@ prints the same warning there, and the figure wraps in the other formats.
   `classoption: twocolumn`, it prints the one columns warning instead.
   Put the wrap class on the image inside the link, with the link alone in
   its paragraph.
+- A wrap class on a span, a heading, inline code, a code block, or a table
+  with no `#tbl-` id, as in `[text]{.wrap-left}` or
+  `: A table {.wrap-right}`, does not wrap. In HTML, LaTeX, Typst, and Word
+  the render prints a warning for it. In Word with columns, or LaTeX with
+  `classoption: twocolumn`, it prints the one columns warning instead.
 - In HTML, LaTeX, and Typst the sides are physical. In a right-to-left
   document, `.wrap-right` still puts the figure on the right. Right-to-left
   Word documents are not tested.

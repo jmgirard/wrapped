@@ -51,8 +51,9 @@ local two_column = false
 -- Set in the first pass: meta_fig_column_set when the document sets
 -- fig-column, and meta_column_set when it sets fig-column or column.
 local meta_fig_column_set, meta_column_set = false, false
--- found_wrap: a figure, image, div, or link carries a wrap class, so a format that
--- cannot wrap prints its one warning. placed: a figure or image wraps, so
+-- found_wrap: a figure, image, div, link, span, heading, code, or table
+-- carries a wrap class, so a format that cannot wrap prints its one
+-- warning. placed: a figure or image wraps, so
 -- the document needs the stylesheet, the LaTeX environment, or wrap-it.
 local found_wrap = false
 local placed = false
@@ -1947,6 +1948,79 @@ local function unplaced_link(link)
   return nil
 end
 
+-- Names an element in a warning: `#<id>` when it has one, else the first
+-- line of its text in quotes, cut after 40 characters, else "with no text".
+local function warning_name(id, text)
+  if id ~= nil and id ~= "" then return "#" .. id end
+  text = text:match("^[^\n]*"):match("^%s*(.-)%s*$")
+  if text == "" then return "with no text" end
+  local count = utf8.len(text)
+  if count and count > 40 then
+    return '"' .. text:sub(1, utf8.offset(text, 41) - 1) .. '..."'
+  end
+  return '"' .. text .. '"'
+end
+
+-- A span, heading, inline code, code block, or table with a wrap class
+-- wraps nothing, with a warning in a format that wraps. It keeps its class,
+-- which no style reads.
+local function warn_unplaced(kind, classes, id, text)
+  if not wrap_class(classes) then return end
+  found_wrap = true
+  if wraps() then
+    quarto.log.warning(string.format(
+      "wrapped: the %s %s is not a figure, so it does not wrap. A wrap class goes on an image or a figure.",
+      kind, warning_name(id, text)))
+  end
+end
+
+local function unplaced_span(span)
+  warn_unplaced("span", span.classes, span.identifier, pandoc.utils.stringify(span))
+end
+
+local function unplaced_header(header)
+  warn_unplaced("heading", header.classes, header.identifier, pandoc.utils.stringify(header))
+end
+
+local function unplaced_code(code)
+  warn_unplaced("inline code", code.classes, code.identifier, code.text)
+end
+
+local function unplaced_code_block(block)
+  warn_unplaced("code block", block.classes, block.identifier, block.text)
+end
+
+-- A table's classes come from an attribute block at the end of its caption,
+-- as in `: A table {.wrap-left}`, which Quarto reads after this filter runs
+-- (parseTableCaption in Quarto's filters/main.lua). This reads the block the
+-- same way. A table with a tbl- id is a float, and the float pass warns for it.
+local function unplaced_table(tbl)
+  local long = tbl.caption.long
+  local last = long and long[#long]
+  if not last or not last.content or #last.content == 0 then return nil end
+  local inlines = pandoc.Inlines(last.content)
+  while #inlines > 0 and (inlines[#inlines].t == "Space" or inlines[#inlines].t == "SoftBreak") do
+    inlines:remove(#inlines)
+  end
+  local final = inlines[#inlines]
+  if not final or final.t ~= "Str" or not final.text:match("}%s*$") then return nil end
+  local first
+  for i, inline in ipairs(inlines) do
+    if inline.t == "Str" and inline.text:sub(1, 1) == "{" then
+      first = i
+      break
+    end
+  end
+  if not first then return nil end
+  local block = pandoc.utils.stringify(pandoc.Inlines({ table.unpack(inlines, first) }))
+  block = block:match("^%s*(.-)%s*$"):gsub("“", "'"):gsub("”", "'")
+  local header = pandoc.read("## " .. block).blocks[1]
+  if not header or not header.attr then return nil end
+  local before = pandoc.Inlines({ table.unpack(inlines, 1, first - 1) })
+  warn_unplaced("table", header.classes, nil, pandoc.utils.stringify(before))
+  return nil
+end
+
 local function add_html_assets()
   -- No version here: `_extension.yml` holds the one version marker.
   quarto.doc.add_html_dependency({
@@ -2012,6 +2086,15 @@ return {
     Figure = figure_block,
   },
   { Blocks = group_blocks },
-  { Image = unplaced_image, Div = unplaced_div, Link = unplaced_link },
+  {
+    Image = unplaced_image,
+    Div = unplaced_div,
+    Link = unplaced_link,
+    Span = unplaced_span,
+    Header = unplaced_header,
+    Code = unplaced_code,
+    CodeBlock = unplaced_code_block,
+    Table = unplaced_table,
+  },
   { Pandoc = finish },
 }
