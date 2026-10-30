@@ -21,7 +21,8 @@ install it with `quarto add jmgirard/wrapped`.
 - In a format or context that cannot wrap, keep a normal figure and warn
   once: once for each render in a format, once for each figure in a
   context, and once for a code cell that makes more than one figure, in a
-  context or not (corrected M003, M014, M018).
+  context or not (corrected M003, M014, M018). In LaTeX and Word, also
+  once for each wrapped table float (D-021, corrected M038).
 
 **Non-goals for version 1.**
 

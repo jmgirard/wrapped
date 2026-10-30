@@ -95,3 +95,34 @@ plot(1:10)
 ```
 
 The paragraph after the figure with two column options.
+
+## A figure cell with column: page and tbl-column
+
+The tbl-column class places no figure, so `column: page` sets this figure
+page-wide.
+
+```{r}
+#| label: fig-page-tbl-margin
+#| fig-cap: "A figure from a cell with column: page and tbl-column: margin."
+#| column: page
+#| tbl-column: margin
+#| classes: wrap-left
+plot(1:10)
+```
+
+The paragraph after the page-wide figure.
+
+## A figure with its own class in a cell with none
+
+```{r}
+#| echo: false
+#| output: asis
+cat("![A figure written by a cell.](plot.png){#fig-asis .wrap-right width=\"30%\"}\n")
+```
+
+```{r}
+#| echo: true
+1 + 1
+```
+
+The paragraph after the second cell.
