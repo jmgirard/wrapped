@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M037: Say LaTeX narrows lines past figures
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — a docs-site page that users read
-- **Branch/PR:** —
+- **Branch/PR:** m037-latex-narrow-past
 
 ## Goal
 
