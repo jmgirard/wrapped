@@ -51,7 +51,7 @@ warning elsewhere, the site, and DESIGN.md.
 ## Acceptance criteria
 <!-- owner: plan · create/amend-via-gate; review reads, never reinterprets. -->
 
-- [ ] AC1: A new fixture `tests/tables.qmd` holds a wrapped table float in
+- [x] AC1: A new fixture `tests/tables.qmd` holds a wrapped table float in
       five forms. Form 1 is a `#tbl-` div with the class, `width`, and
       `wrap-gap`. Form 2 is a `: Cap {.wrap-left}` caption block inside a
       `#tbl-` div. Form 3 is a pipe table whose caption block is
@@ -65,14 +65,14 @@ warning elsewhere, the site, and DESIGN.md.
       `tests/layout.js` shows each float on its side at its width. The
       first paragraph's first line lies beside the float at the float's
       gap. The table's box lies inside the float's box.
-- [ ] AC2: In PDF through Typst, each float of AC1 is in a `wrap-content`
+- [x] AC2: In PDF through Typst, each float of AC1 is in a `wrap-content`
       call with the paragraphs after it in the `.typ` file. The PDF is read
       as `pdftohtml -xml` text boxes. The first line of the paragraph after
       each table starts above the bottom of the table's last row. For a
       `.wrap-right` table, that line ends left of every text box of the
       table and its caption. For a `.wrap-left` table, it starts right of
       every such box.
-- [ ] AC3: `tests/tables.qmd` shows five figure rules that hold for a table
+- [x] AC3: `tests/tables.qmd` shows five figure rules that hold for a table
       float. (a) A wrapped table float whose next block is not a paragraph
       keeps its normal layout with no warning, in HTML and Typst. (b) A
       wrapped table float in a callout keeps its normal layout with one
@@ -84,14 +84,14 @@ warning elsewhere, the site, and DESIGN.md.
       that its caption is in the margin. (e) A wrapped code cell table with
       `#| tbl-column: margin` keeps its normal layout with one warning that
       it is in the margin, in HTML and Typst.
-- [ ] AC4: In PDF through LaTeX and in Word, each float of AC1 keeps its
+- [x] AC4: In PDF through LaTeX and in Word, each float of AC1 keeps its
       normal layout. The `.tex` file has no `wrappedfigure` around it, and
       the docx has no `w:framePr` on its paragraphs. The render prints one
       warning for each of the five floats. The warning names the table by
       its id and says that a table wraps only in HTML and Typst.
-- [ ] AC5: In EPUB, a render of `tests/tables.qmd` prints the one format
+- [x] AC5: In EPUB, a render of `tests/tables.qmd` prints the one format
       warning that a format which cannot wrap prints, and no table warning.
-- [ ] AC6: The site states that a `#tbl-` table float wraps in HTML and
+- [x] AC6: The site states that a `#tbl-` table float wraps in HTML and
       Typst and keeps its normal layout with a warning in LaTeX and Word,
       wherever it says which elements take a wrap class. The pages are
       `docs/normal-layout.qmd` (Tables), `docs/reference.qmd`,
@@ -160,12 +160,6 @@ warning elsewhere, the site, and DESIGN.md.
 - 2026-10-30: plan gate chose HTML and Typst first over planning Word and LaTeX now because neither format's mechanism is probed; falsified by a probe showing that Word floating tables or a LaTeX `tabular` rewrite need no new mechanism.
 - 2026-10-30: plan gate chose `#tbl-` floats only over also wrapping unlabeled tables because an unlabeled table needs a new box form; falsified by users who wrap unlabeled tables more than labeled ones.
 - 2026-10-30: decided: document Typst spill rather than shrink tables, since the filter cannot measure table content before Typst lays it out; falsified by a Typst setting that fits any table to its box.
-
-## Decisions
-<!-- owner: implement / review · append-only; milestone-local. -->
-
-## Review
-<!-- owner: review · exclusive -->
 - 2026-10-30: checkpoint (in progress): filter, CSS, tests/tables.qmd, the two tables-cap-margin fixtures, verify.py table cases, layout.js table check, docs, and DESIGN.md written; full verify and snapshots pending; no task checked off yet.
 - 2026-10-30: substantive amendment: Scope Out's wide-table item and AC6's last clause changed from "spills into the text in Typst" to the observed behavior (Typst narrows columns and hyphenates, HTML scrolls in the box); a probe of an auto-width and a relative-width table showed no spill. The deliverable the user sees is unchanged, so no stop.
 - re-audit: AC6 (full) — 2 findings: the wide-table behavior was documented but untested (fixed in T1: a Typst beside case for tbl-wide, and layout.js's tableInside reads the scroll container); reference.qmd, formats/html.qmd, and formats/typst.qmd stated only part of the four-format rule (fixed by adding the missing clauses, AC6 wording kept).
@@ -185,3 +179,21 @@ warning elsewhere, the site, and DESIGN.md.
 - 2026-10-30: the user chose AC7's final wording with the CI clause at the second-re-audit stop (option "Final wording + CI").
 - amendment return: AC7 — "`python3 tests/verify.py` passes every render, on this Mac and on each Quarto version that `verify.yml` runs on the PR. Existing figure and other non-table snapshot lines are unchanged: in each `tests/_snapshots/` file that exists on `main`, every line that `git diff main...HEAD -- tests/_snapshots` adds or removes names a table float by its `tbl-` id, with or without `#`, or is a `# groups` line `cell, …` whose cell, counted in source order in its fixture, has a `tbl-` label."
 - 2026-10-30: amendment done; status back to review. The full suite on the review head passed (all 117 renders) before the amendment, and no code changed since.
+- 2026-10-30: review moved the 19 work-log lines that implement had appended below the `## Review` heading back into the Work log; their text is unchanged.
+
+## Decisions
+<!-- owner: implement / review · append-only; milestone-local. -->
+
+## Review
+<!-- owner: review · exclusive -->
+
+Evidence at 733a1be (no code change since 293d595; `main` at 2029477, the branch's base).
+
+- AC1: browser pane at 1280 x 900 on tests/tables.html, `layout.js` `report()`: tbl-div (right, 45%, 2em), tbl-block (left, 35%, 1.5em), tbl-pipe (right, 30%, 1em), tbl-cell (right, 35%, 1.5em), tbl-cell-block (left, 35%, 1.5em) each `ok` with float, beside, tableInside, width, gap, and captionInside true; tables.html snapshot shows each in a group with its paragraphs (`tbl-div, p, p`, `tbl-block, p`, `tbl-pipe, p`, `cell, p` twice).
+- AC2: `python3 tests/verify.py` on the review head: `ok layout tables` for div, caption block in a div, pipe table, cell class, and cell caption block (side tests on caption and row boxes); tables.typst snapshot lists a `wrap-content` call with `p` blocks for each of the five.
+- AC3: tables.{html,typst} snapshots: (a) tbl-no-text `- style=-`, no group, no warning; (b) one "the table #tbl-callout is in a callout" warning in each; (c) tbl-div's group is `p, p`, ending at the next heading, in both; (d) tables-cap-margin.html and tables-cap-margin-meta.html each print one "has its caption in the margin" warning and keep the table unwrapped; (e) one "the table #tbl-margin is in the margin" warning in each.
+- AC4: tables.tex has 0 `wrappedfigure` in the body and 10 `longtable`s; tables.docx has 0 `w:framePr`; tables.pdf and tables.docx snapshots print one "does not wrap in LaTeX/Word. A table wraps only in HTML and Typst." warning for each of tbl-div, tbl-block, tbl-pipe, tbl-cell, tbl-cell-block.
+- AC5: tables.epub snapshot: the one line "epub output does not wrap figures yet…" and no table warning.
+- AC6: read normal-layout.qmd (Tables), reference.qmd, get-started.qmd (Wrap a table: example, the forms that carry width and gap), formats/html.qmd and typst.qmd (both halves of the rule and the wide-table behavior), formats/latex.qmd and word.qmd (their own format's limit; neither lists which elements take a wrap class), README.md (both halves); `quarto render docs` exit 0 at 293d595 code.
+- AC7 (local half): all 117 renders pass on this Mac; `git diff main...HEAD -- tests/_snapshots` changes 8 files that exist on main, and each of their 44 changed lines names tbl-caption-block, tbl-cell-block, tbl-cell-both, tbl-cars, or tbl-wrapped, or is one of the two `cell, p` groups of the `tbl-cell-block` and `tbl-cell-both` cells (tests/fixture.qmd:218, :226). CI half pending: the PR's verify runs on Quarto 1.9.36 and the release channel.
+- gate: `cairn_validate.py` all checks passed; no principle changed, so no `cairn_impact` run; one version marker (`_extension.yml` 0.2.0), unchanged on the branch; verify passes on the review head (AC7); `tests/docs_layout.py --no-word` all ok on the Mac (the Word check is hand-run and was not run; no example page changed); the docs workflow runs on the PR; changelog slot "none".
