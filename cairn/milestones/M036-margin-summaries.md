@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M036: List margin figures in the test summaries
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -57,3 +57,5 @@ The LaTeX and Typst summaries in `tests/verify.py` give each margin figure its o
 - 2026-10-30: T3 done: new fixture `tests/margin-after-image.qmd` (Typst only) with a captioned image with no id, then `fig-after-image-margin` with `.column-margin`; added to `RENDERS` after column-order-margin. Its render holds one `#figure(` and one `#notefigure(` call at line start, and the old `typ_summary` printed `figure: fig-after-image-margin` and no other figure line.
 - 2026-10-30: T2 done: `typ_summary` splits at `#figure(` and `#notefigure(` at line start with a captured kind and writes a line named for it. Choice: a margin figure's content for `image-width` ends before its `\n, caption: ` line, since its `kind:` sits on the call's first line. On the kept renders the new fixture reads `figure: -` then `notefigure: fig-after-image-margin`; margin-meta lists six `notefigure:` lines before its `figure: -`.
 - 2026-10-30: T4 done: `--update` changed 12 snapshots by 43 added lines, all `marginfigure:` or `notefigure:`, with no `figure:` line changed, and wrote `margin-after-image.typst.txt` (`figure: -`, then `notefigure: fig-after-image-margin`). A scratch count script (not committed) read the 56 pdf and typst renders of `RENDERS`: 13 hold margin figures, and each summary's margin lines match the regex count and the labels read from the file in order; against main's `verify.py` it reports 13 of 13 mismatched. `python3 tests/verify.py`: all 106 renders pass.
+- 2026-10-30: claim audit: not owed — internal tier
+- 2026-10-30: status review; all four tasks checked, `python3 tests/verify.py` green on 6c2cfec.
