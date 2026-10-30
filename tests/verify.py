@@ -14,8 +14,8 @@ of every image and the target of a link around it, and the members of every .wra
 are sorted, so their order does not count. For PDF it also holds the kind,
 label, and options of each figure environment and the options of its
 \includegraphics and the target of an external link around it, with
-each \wrappedstop in its place, and for Typst the label of each #figure( call and
-whether its image keeps a width. For Typst it also holds each
+each \wrappedstop in its place, and for Typst the label of each #figure( and
+#notefigure( call and whether its image keeps a width. For Typst it also holds each
 wrap-content call's options, the figure label or image in its box and its
 alt text and the target of an external link around that image, the kind
 of each block beside the box ("p" for a paragraph), the
@@ -1349,7 +1349,7 @@ def typ_summary(path):
     lines = []
     for kind, chunk in zip(parts[::2], parts[1::2]):
         label = re.search(r"^[ \t]*<((?:fig|tbl)-[\w-]+)>", chunk, re.M)
-        content = chunk.split("\nkind: " if kind == "figure" else "\n, caption: ", 1)[0]
+        content = re.split(r"\n[ \t]*kind: " if kind == "figure" else r"\n[ \t]*, caption: ", chunk, maxsplit=1)[0]
         width = re.search(r"image\([^)]*width:", content) is not None
         lines.append(f"{kind}: {label.group(1) if label else '-'} image-width={'yes' if width else 'no'}")
     # The filter writes each wrap-content call as raw lines around the box

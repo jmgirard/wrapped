@@ -84,3 +84,4 @@ The LaTeX and Typst summaries in `tests/verify.py` give each margin figure its o
 - ripple #4: `TYPST_BLOCKS` lacks `#notefigure`, so one beside a wrap box would count as "p" — reject (false): a margin figure is a block that is not a paragraph, so it ends the wrap group (`group_blocks`, `_extensions/wrapped/wrapped.lua`) and never sits in a wrap body.
 - ripple #5: `cairn/references/wrap-mechanisms.md` W3 row names only `#figure(...)<id>` — reject (false): the row is about wrapped figures, which are body figures.
 - ripple #6: candidate row "Wrap no-id margin images in PDF" cites `contexts` snapshots, which now also hold margin lines — reject (false): the reviewer found no conflict, and the cited no-id image lines are unchanged.
+- 2026-10-30: review fix-now in progress: docstring, indented content boundaries, and a width case in the AC2 fixture committed; the snapshot update for them is running and lands in the next commit.

@@ -23,3 +23,9 @@ The paragraph after the captioned image with no id. Lorem ipsum dolor sit amet, 
 ![A margin figure after the captioned image.](plot.png){#fig-after-image-margin .column-margin}
 
 The paragraph after the margin figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A margin figure with a width
+
+![A margin figure that keeps its width.](plot.png){#fig-after-image-margin-width .column-margin width="50%"}
+
+The paragraph after the margin figure with a width. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
