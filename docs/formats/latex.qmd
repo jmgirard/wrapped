@@ -47,7 +47,10 @@ width.
 wrapfig has limits, and the extension keeps some of them:
 
 - wrapfig narrows a number of lines that it counts from the height of the
-  figure. At the block that stops the wrap, the extension skips the lines
+  figure. The count can run past the bottom of the figure and its caption.
+  In the LaTeX PDFs of this site's example pages, a paragraph that runs on
+  below a figure keeps one or two narrow lines under it. At the block that
+  stops the wrap, the extension skips the lines
   that the figure still needs. After a `wrap-lines` value smaller than the
   figure needs, it skips to below the figure in body text, on the figure's
   page. If the text beside the figure is shorter than the figure, the
