@@ -25,25 +25,25 @@ CI runs `tests/verify.py` on the Quarto version that `quarto-required` names, so
 
 ## Acceptance criteria
 
-- [ ] AC1: `quarto-required` in `_extensions/wrapped/_extension.yml` reads `">=F"`, where F is a release of the Scope list on which `python3 tests/verify.py` exits 0 on this Mac. When F is not 1.9.36, the release before F in that list exits 1 under the same command with a FAIL line that the command does not print under Quarto 1.10.19.
-- [ ] AC2: `.github/workflows/verify.yml` runs `python3 tests/verify.py` under Quarto's release channel and under Quarto F (quarto-actions/setup `version:`), on the triggers it has on `main` today, and both runs pass on the PR head.
-- [ ] AC3: `README.md`, `docs/index.qmd`, and `docs/get-started.qmd` each say that the extension asks for Quarto F or later and is tested with Quarto F and Quarto's current release. DESIGN.md's Quarto version paragraph names F and the CI run on it. `quarto render docs` exits 0.
+- [ ] AC1: `quarto-required` in `_extensions/wrapped/_extension.yml` reads `">=F"`, where F is a release of the Scope list on which `python3 tests/verify.py` exits 0 on this Mac and in the PR's CI run under F. Each release of that list below F exits 1 under the same command on this Mac or in CI, with a FAIL line or a Python traceback that the command does not print under Quarto 1.10.19.
+- [ ] AC2: `.github/workflows/verify.yml` runs `python3 tests/verify.py` under Quarto's release channel and under Quarto F (quarto-actions/setup `version:`), on the triggers it has on `main` today, and both runs pass on the PR head. If the CI run fails under a release that passed on this Mac, F rises to the next release of the list, and AC1 and AC3 read that F.
+- [ ] AC3: `README.md`, `docs/index.qmd`, and `docs/get-started.qmd` each say that the extension asks for Quarto F or later and is tested with Quarto F and Quarto's current release. DESIGN.md's Quarto version paragraph names F and the CI run on it, and says that releases between F and the release channel get no CI run. PROFILE.md's verify slot names both CI runs. `quarto render docs` exits 0.
 - [ ] AC4: `python3 tests/verify.py` passes on the review head under Quarto 1.10.19.
 
 ## Coverage
 
-- AC1 → T1, T2
+- AC1 → T1, T2, T5
 - AC2 → T3, T5
 - AC3 → T4
 - AC4 → T5
 
 ## Tasks
 
-- [ ] T1: Download `quarto-<v>-macos.tar.gz` for 1.9.36, then each later release of the Scope list as needed, from the quarto-cli GitHub releases into the session scratch folder, and unpack each in its own folder. Run `python3 tests/verify.py` with that release's `bin` first on `PATH`, after `quarto --version` confirms it. Stop at the first release that passes. Log one work-log line per run: the release, the exit status, and for a failure its first FAIL line and whether Quarto's output or the filter caused it.
+- [ ] T1: Download `quarto-<v>-macos.tar.gz` for 1.9.36, then each later release of the Scope list as needed, from the quarto-cli GitHub releases into the session scratch folder, and unpack each in its own folder. Run `python3 tests/verify.py` with that release's `bin` first on `PATH`, after `quarto --version` confirms it. Go up the list from 1.9.36 and stop at the first release that passes, so every release below it has a failing run. Log one work-log line per run: the release, the exit status, and for a failure its first FAIL line or traceback and whether Quarto's output or the filter caused it.
 - [ ] T2: If F is not 1.9.36, set `quarto-required: ">=F"` and append a D-entry for the re-pin, citing the T1 work-log lines for the failing release.
 - [ ] T3: Turn the `verify` job of `.github/workflows/verify.yml` into a matrix over `release` and F with `fail-fast: false`, pass the entry to quarto-actions/setup `version:`, and name the uploaded artifact per entry, since two runs cannot upload one artifact name. Update the file's header comment.
 - [ ] T4: Edit the install sentence in `README.md`, `docs/index.qmd`, and `docs/get-started.qmd`, DESIGN.md's Quarto version paragraph (and its Conventions line on the test command), and PROFILE.md's verify slot. `docs/get-started.qmd` has an R cell, so render it locally with R and commit its `docs/_freeze/` change. Run `quarto render docs`.
-- [ ] T5: Run `python3 tests/verify.py` under Quarto 1.10.19. At review, read both matrix runs on the PR.
+- [ ] T5: Run `python3 tests/verify.py` under Quarto 1.10.19. At review, read both matrix runs on the PR. If the F run fails on Ubuntu, log its first FAIL line or traceback, raise F to the next release of the list, and repeat T2 to T4 for it.
 
 ## Work log
 
@@ -57,3 +57,5 @@ CI runs `tests/verify.py` on the Quarto version that `quarto-required` names, so
 - 2026-10-30: collision check: candidate row "Test the minimum Quarto version in CI" absorbed; M008 (done) built `verify.yml` and left this out; D-008 and D-009 name the CI tools, and a second Quarto version adds none; no D-entry on the floor. Inbox sweep: 0 open issues, 0 open PRs.
 - 2026-10-30: plan gate chose a matrix over release and F in the one `verify` job over a second job with copied steps, because the steps are the same and `main` has no branch protection that requires the `verify` check name; falsified by a floor run that needs steps the release run does not.
 - 2026-10-30: plan gate chose running the floor on every pull request and push to `main` over a weekly run like `verify-prerelease.yml`, because a merge could break the floor unseen until the next weekly run while users install from `main`; falsified by CI time on pull requests becoming a cost the user names.
+- 2026-10-30: criteria audit (full, fresh Opus reader; it ran after the plan commit 2244665, since a stop hook required a commit while the reader was still running): 5 findings, all fixed. AC1 now requires every listed release below F to fail, not only the one just below, and counts a traceback as a failure as well as a FAIL line. AC1 and AC2 require F to pass in CI as well as on the Mac, and F rises if Ubuntu fails (T5). AC3 now requires DESIGN.md to say that releases between F and the release channel get no CI run, and requires PROFILE.md's verify slot to name both runs. AC4: no finding.
+- 2026-10-30: plan gate chose letting F rise at review when Ubuntu fails over a `workflow_dispatch` run of the branch before review, because pushing the branch before review is an outward step that the question set did not grant; falsified by a review that needs more than two pushes to settle F.
