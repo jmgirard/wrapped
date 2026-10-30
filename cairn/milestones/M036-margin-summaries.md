@@ -85,3 +85,4 @@ The LaTeX and Typst summaries in `tests/verify.py` give each margin figure its o
 - ripple #5: `cairn/references/wrap-mechanisms.md` W3 row names only `#figure(...)<id>` — reject (false): the row is about wrapped figures, which are body figures.
 - ripple #6: candidate row "Wrap no-id margin images in PDF" cites `contexts` snapshots, which now also hold margin lines — reject (false): the reviewer found no conflict, and the cited no-id image lines are unchanged.
 - 2026-10-30: review fix-now in progress: docstring, indented content boundaries, and a width case in the AC2 fixture committed; the snapshot update for them is running and lands in the next commit.
+- 2026-10-30: review fix-now done: the update run changed only `margin-after-image.typst.txt` (added `notefigure: fig-after-image-margin-width image-width=yes`); fixes are in 67d082d and this commit.

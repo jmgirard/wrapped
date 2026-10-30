@@ -2,4 +2,5 @@
 # typ
 figure: - image-width=no
 notefigure: fig-after-image-margin image-width=no
+notefigure: fig-after-image-margin-width image-width=yes
 # wraps
