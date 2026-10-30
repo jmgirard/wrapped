@@ -220,3 +220,15 @@ Evidence at 733a1be (no code change since 293d595; `main` at 2029477, the branch
 - ripple #6: the normal-layout page title names figures only — reject, style
 - ripple #7: DESIGN.md step 2 lists "a table in LaTeX and Word" as a context — reject, false: that context is a figure inside a table cell, which still holds
 - ripple #8: the comment "A table keeps its own warning" in float_target is ambiguous now that HTML and Typst tables wrap — fix now
+- fixed 7774664 and 272c859 (return 1, T6): diff-bug #1, #2, #3, #5; blame-history #6, #7, #8; ripple #1, #2, #3, #4, #8; follow-up rows "Name tables in the format warning" and "Treat mixed table and figure cells" written in 7774664.
+
+Pass 2 evidence at 80f6766 (code at 272c859; `main` still 2029477).
+
+- AC1: browser pane at 1280 x 900 on tests/tables.html from the 119-render run: tbl-div (right, 45%, 2em), tbl-block (left, 35%, 1.5em), tbl-pipe (right, 30%, 1em), tbl-cell (right, 35%, 1.5em), tbl-cell-block (left, 35%, 1.5em) each `ok`, every group `ok`.
+- AC2: `python3 tests/verify.py`, all 119 renders pass, with `ok layout tables` for the five forms (and the wide table).
+- AC3: tables.{html,typst} snapshots unchanged from pass 1 for tbl-no-text (no wrap, no warning), tbl-callout and tbl-margin (one warning each), tbl-div's `p, p` group; tables-cap-margin and tables-cap-margin-meta each print one "has its caption in the margin" warning.
+- AC4: tables.tex 0 `wrappedfigure`, 10 `longtable`; tables.docx 0 `w:framePr`; one LaTeX and one Word warning for each of the five forms in their snapshots.
+- AC5: tables.epub snapshot holds only the format warning.
+- AC6: docs/index.qmd gained the table sentence; the pages read in pass 1 are unchanged; `quarto render docs` exit 0.
+- AC7 (local half): 119 renders pass; the 8 snapshot files that exist on main change only in lines that name a `tbl-` float or in the two `cell, p` groups of tbl-cell-block and tbl-cell-both; CI half pending.
+- gate: `cairn_validate.py` all checks passed (after the criteria re-wrap); version 0.2.0 unchanged; no principle changed.
