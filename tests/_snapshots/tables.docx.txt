@@ -1,0 +1,14 @@
+# warnings
+1x wrapped: the table #tbl-block does not wrap in Word. A table wraps only in HTML and Typst.
+1x wrapped: the table #tbl-callout is in a callout, so it does not wrap.
+1x wrapped: the table #tbl-cell does not wrap in Word. A table wraps only in HTML and Typst.
+1x wrapped: the table #tbl-cell-block does not wrap in Word. A table wraps only in HTML and Typst.
+1x wrapped: the table #tbl-div does not wrap in Word. A table wraps only in HTML and Typst.
+1x wrapped: the table #tbl-margin is in the margin, so it does not wrap.
+1x wrapped: the table #tbl-no-text does not wrap in Word. A table wraps only in HTML and Typst.
+1x wrapped: the table #tbl-page does not wrap in Word. A table wraps only in HTML and Typst.
+1x wrapped: the table #tbl-pipe does not wrap in Word. A table wraps only in HTML and Typst.
+1x wrapped: the table #tbl-wide does not wrap in Word. A table wraps only in HTML and Typst.
+# docx
+image: cx=152400
+# frames

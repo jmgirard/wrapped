@@ -1,9 +1,9 @@
 // Layout checks for wrapped figures, run in a browser on a rendered fixture.
 // Serve tests/ over HTTP, open a fixture's HTML, then run in the console:
 //   const m = await import("/layout.js"); m.report()
-// report() returns one entry per wrapped figure, per wrap group that has a
-// block after it, and per image inside a wrapped float, each with `ok` and
-// the measured values.
+// report() returns one entry per wrapped figure or table float, per wrap
+// group that has a block after it, and per image inside a wrapped float,
+// each with `ok` and the measured values.
 // For the docs site's example pages, `python3 tests/docs_layout.py --html`
 // runs `straddle()` on each page in headless Chromium. To run it by hand,
 // serve docs/_site/ with this file in it and run the `straddle()` calls
@@ -82,7 +82,24 @@ function figureEntry(el) {
   const imgWidth = img ? img.getBoundingClientRect().width : NaN;
   const content = box.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
     - parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth);
-  entry.image = { width: +imgWidth.toFixed(1), boxContent: +content.toFixed(1) };
+  // A table float holds a table and no image, so its check is that the
+  // table stays inside the float's box. A table wider than the box scrolls
+  // in the nearest element around it that scrolls, whose box is then the
+  // part that shows. In a code cell that element is above the cell's
+  // output wrapper.
+  const table = img ? null : el.querySelector("table");
+  let contentCheck;
+  if (table) {
+    let holder = table.parentElement;
+    while (holder !== el && getComputedStyle(holder).overflowX === "visible") holder = holder.parentElement;
+    const scrolls = holder !== el && holder.scrollWidth > holder.clientWidth;
+    const t = (scrolls ? holder : table).getBoundingClientRect();
+    contentCheck = ["tableInside", t.left >= box.left - TOL && t.right <= box.right + TOL];
+    entry.table = { left: Math.round(t.left), right: Math.round(t.right), scrolls };
+  } else {
+    contentCheck = ["imageFillsBox", near(imgWidth, content)];
+    entry.image = { width: +imgWidth.toFixed(1), boxContent: +content.toFixed(1) };
+  }
   const caption = el.querySelector("figcaption");
   let captionInside = true;
   if (caption) {
@@ -96,7 +113,7 @@ function figureEntry(el) {
   entry.checks = {
     float: cs.float === side,
     beside,
-    imageFillsBox: near(imgWidth, content),
+    [contentCheck[0]]: contentCheck[1],
     width: near(box.width, entry.width.expected),
     gap: near(margin, entry.gap.expected),
     captionInside,

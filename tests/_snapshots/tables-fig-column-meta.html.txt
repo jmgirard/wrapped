@@ -1,0 +1,13 @@
+# warnings
+1x wrapped: the figure #fig-fig-column is in the margin, so it does not wrap.
+1x wrapped: the table #tbl-page-cell is page-wide, so it does not wrap.
+# breakpoint
+576px
+# figures
+tbl-fig-column: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-fig-column: - style=-
+tbl-page-cell: - style=-
+# images
+plot.png: wrap=- style=width:30.0% width=-
+# groups
+tbl-fig-column, p

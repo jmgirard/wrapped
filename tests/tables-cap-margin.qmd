@@ -1,0 +1,18 @@
+---
+title: "A wrapped table with its caption in the margin"
+filters:
+  - wrapped
+---
+
+Quarto 1.10.19 fails a LaTeX build for a table with its caption in the
+margin, with or without the extension, so this fixture renders to HTML only.
+
+```{r}
+#| label: tbl-cap-margin
+#| tbl-cap: "A table with its caption in the margin."
+#| tbl-cap-location: margin
+#| classes: wrap-right
+knitr::kable(head(cars, 2))
+```
+
+The paragraph after the table with its caption in the margin.

@@ -6,7 +6,10 @@ In PDF through Typst, the extension puts each wrapped figure and the
 paragraphs after it in a `wrap-content` call from the Typst package wrap-it
 0.1.1. The extension ships its own copy of wrap-it, so the render does not
 download it. Citations and `@fig-` links in the text beside the figure
-work.
+work. A wrapped [table float](../get-started.qmd#wrap-a-table) goes in a
+`wrap-content` call in the same way. Table floats wrap in HTML and PDF
+through Typst. In PDF through LaTeX and in Word they keep their normal
+layout, and the render prints a warning.
 
 ## Width and gap
 
@@ -77,6 +80,9 @@ wrap-it has limits:
   new line below the figure and runs the full width.
 - wrap-it issue #1 reports that first-line indents change in wrapped text.
   The extension does not test this case.
+- A table keeps to the width of its box. Typst narrows a wide table's
+  columns and breaks its words to fit. In a narrow box, the text of
+  columns side by side can overlap.
 
 ## Tagged PDF
 

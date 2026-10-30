@@ -16,10 +16,6 @@
 1x wrapped: the span #span-class-id is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the span with no text is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the table "A table with a wrap class" is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
-1x wrapped: the table #tbl-caption-block is not a figure, so it does not wrap.
-1x wrapped: the table #tbl-cars is not a figure, so it does not wrap.
-1x wrapped: the table #tbl-cell-block is not a figure, so it does not wrap.
-1x wrapped: the table #tbl-cell-both is not a figure, so it does not wrap.
 1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
 1x wrapped: width "wide" on #logo is not a length or a percent, so it is 40%.
 1x wrapped: wrap-gap "wide" on #fig-bad-width is not a length or a percent, so it is 1em.
@@ -41,9 +37,9 @@ fig-unwrapped-cell: - style=-
 fig-before-link: - style=-
 (box): wrapped-image wrap-left style=--wrap-gap: 1em; --wrap-width: 20%
 (box): wrapped-image wrap-right style=--wrap-gap: 1em; --wrap-width: 20%
-tbl-caption-block: - style=-
-tbl-cell-block: - style=-
-tbl-cell-both: - style=-
+tbl-caption-block: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
+tbl-cell-block: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+tbl-cell-both: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 tbl-striped: - style=-
 fig-comment: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
 fig-bad-width: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
@@ -94,6 +90,9 @@ wrapped-image, p, p
 wrapped-image, p, p
 wrapped-image, p
 wrapped-image, p
+tbl-caption-block, p
+cell, p
+cell, p
 fig-comment, comment, p, p
 fig-bad-width, p, p
 fig-styled, p, p
@@ -104,7 +103,7 @@ fig-bottom, p, p
 fig-break, p, p, p, p
 fig-break-lines, p, p, p, p
 # tables
-tbl-caption-block: table=table-striped caption=Table 2: A table float with a wrap class in its caption
-tbl-cell-block: table=- caption=Table 3: A table from a cell with a wrap class in its caption
-tbl-cell-both: table=- caption=Table 4: A table from a cell with wrap classes in two places
+tbl-caption-block: table=wrap-left table-striped caption=Table 2: A table float with a wrap class in its caption
+tbl-cell-block: table=wrap-right caption=Table 3: A table from a cell with a wrap class in its caption
+tbl-cell-both: table=wrap-right caption=Table 4: A table from a cell with wrap classes in two places
 tbl-striped: table=table-striped caption=Table 5: A table float with a striped class in its caption

@@ -1,0 +1,154 @@
+---
+title: "Wrapped table floats"
+filters:
+  - wrapped
+format:
+  html: default
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
+  docx: default
+  epub: default
+wrapped:
+  width: 35%
+  gap: 1.5em
+---
+
+## Form 1: a div with the class
+
+::: {#tbl-div .wrap-right width="45%" wrap-gap="2em"}
+
+| Condition | Mean | SD  |
+|-----------|------|-----|
+| A         | 3.1  | 0.4 |
+| B         | 4.2  | 0.6 |
+| C         | 2.81 | 0.5 |
+
+: Table one, from a div with the class.
+
+:::
+
+Marker one. The paragraph after the first table sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+A second paragraph beside the first table. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus, nulla gravida orci a odio.
+
+## Form 2: a caption block inside a div
+
+The heading above ends the first table's group.
+
+::: {#tbl-block}
+
+| Condition | Mean |
+|-----------|------|
+| A         | 3.1  |
+| B         | 4.2  |
+| C         | 2.82 |
+
+: Table two, with a wrap class in its caption block {.wrap-left}
+
+:::
+
+Marker two. The paragraph after the second table sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+## Form 3: a pipe table with its id in the caption block
+
+| Condition | Mean |
+|-----------|------|
+| A         | 3.1  |
+| B         | 4.2  |
+| C         | 2.83 |
+
+: Table three, a pipe table {#tbl-pipe .wrap-right width="30%" wrap-gap="1em"}
+
+Marker three. The paragraph after the third table sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+## Form 4: a code cell with the class
+
+```{r}
+#| label: tbl-cell
+#| echo: false
+#| tbl-cap: "Table four, from a code cell with the class."
+#| classes: wrap-right
+knitr::kable(data.frame(x = c("a", "b", "c"), y = c(1.5, 2.5, 4.45)))
+```
+
+Marker four. The paragraph after the fourth table sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+## Form 5: a code cell caption block
+
+```{r}
+#| label: tbl-cell-block
+#| echo: false
+#| tbl-cap: "Table five, from a code cell caption block {.wrap-left}"
+knitr::kable(data.frame(x = c("p", "q", "r"), y = c(1.1, 2.2, 3.35)))
+```
+
+Marker five. The paragraph after the fifth table sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+## A table with no paragraph after it
+
+::: {#tbl-no-text .wrap-right}
+
+| Condition | Mean |
+|-----------|------|
+| A         | 3.1  |
+
+: A table with a heading after it.
+
+:::
+
+## A table in a callout
+
+::: {.callout-note}
+::: {#tbl-callout .wrap-left}
+
+| Condition | Mean |
+|-----------|------|
+| A         | 3.1  |
+
+: A table in a callout.
+
+:::
+
+The paragraph after the table in the callout.
+:::
+
+## A table in the margin
+
+```{r}
+#| label: tbl-margin
+#| tbl-cap: "A table in the margin."
+#| tbl-column: margin
+#| classes: wrap-left
+knitr::kable(head(cars, 2))
+```
+
+The paragraph after the table in the margin.
+
+## A page-wide table
+
+```{r}
+#| label: tbl-page
+#| tbl-cap: "A page-wide table."
+#| tbl-column: page
+#| classes: wrap-right
+knitr::kable(head(cars, 2))
+```
+
+The paragraph after the page-wide table.
+
+## A table wider than its box
+
+::: {#tbl-wide .wrap-right width="20%"}
+
+| Variable | Description | Range | Supercalifragilistic |
+|----------|-------------|-------|----------------------|
+| speed    | Speed in mph | 4 to 25 | expialidocious |
+
+: A table wider than its box.
+
+:::
+
+Marker wide. The paragraph after the wide table. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

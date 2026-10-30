@@ -1,0 +1,11 @@
+# warnings
+1x wrapped: the table #tbl-meta-column is in the margin, so it does not wrap.
+# breakpoint
+576px
+# figures
+tbl-meta-column: - style=-
+fig-meta-column: wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-meta-column, p

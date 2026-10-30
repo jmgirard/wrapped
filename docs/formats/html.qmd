@@ -10,6 +10,13 @@ flow beside it. In a window as wide as the
 and take the full width of the text column. A width or gap can be a CSS
 length, a percent, or a [CSS function](../width-gap.qmd#css-functions-in-html).
 
+A wrapped [table float](../get-started.qmd#wrap-a-table) floats in the
+same way. A table wider than its box scrolls inside the box. Table floats
+wrap in HTML and PDF through Typst. In PDF through LaTeX and in Word they
+keep their normal layout, and the render prints a warning. The
+extension's tests cover wrapped tables on HTML pages, not in slides or
+dashboards.
+
 A figure in the margin, a figure with its caption in the margin, and a
 figure in a page-wide column keep their normal layout in HTML. [Where a
 figure keeps its normal layout](../normal-layout.qmd) gives the full list.
@@ -32,7 +39,8 @@ columns. A figure with a margin caption or a page-wide class still wraps on
 a slide. A margin setting does not stop a figure from wrapping on a slide
 either: a `.column-margin` or `.fig-column-margin` class, a `.column-margin`
 div, a code cell with `#| column: margin` or `#| fig-column: margin`, or
-`fig-column: margin` or `column: margin` in the document metadata.
+`fig-column: margin` or `column: margin` in the document metadata. For a
+table float, `tbl-column` takes the place of `fig-column` in this list.
 
 By default, revealjs puts an `.aside` div at the foot of the slide. A
 figure in an aside div does not wrap. It keeps its normal layout, and the

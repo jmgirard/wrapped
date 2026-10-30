@@ -23,7 +23,6 @@
 1x wrapped: the figure #fig-two-subcap-2 is in a subfigure panel, so it does not wrap.
 1x wrapped: the image deflist.png is in a list, so it does not wrap.
 1x wrapped: the image plot.png is in a list, so it does not wrap.
-1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
 # breakpoint
 576px
 # figures
@@ -47,7 +46,7 @@ fig-two-subcap-1: - style=-
 fig-two-subcap-2: - style=-
 fig-two-before-heading-1: - style=-
 fig-two-before-heading-2: - style=-
-tbl-wrapped: - style=-
+tbl-wrapped: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
 fig-list: - style=-
 fig-deflist: - style=-
 fig-quote: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
@@ -105,6 +104,7 @@ fig-margin-two-2.png: wrap=- style=- width=672
 fig-margin-two-heading-1.png: wrap=- style=- width=672
 fig-margin-two-heading-2.png: wrap=- style=- width=672
 # groups
+tbl-wrapped, p
 fig-quote, p
 fig-second, p, p
 # margin containers

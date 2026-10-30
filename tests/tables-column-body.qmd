@@ -1,0 +1,24 @@
+---
+title: "A page-wide table cell with tbl-column: body"
+filters:
+  - wrapped
+tbl-column: body
+format:
+  html: default
+  typst:
+    keep-typ: true
+    fig-format: png
+---
+
+Quarto 1.10.19 still sets the table of a cell with `column: page`
+page-wide when the document sets `tbl-column: body`.
+
+```{r}
+#| label: tbl-body-page
+#| tbl-cap: "A table from a cell with column: page."
+#| column: page
+#| classes: wrap-right
+knitr::kable(head(cars, 2))
+```
+
+The paragraph after the page-wide table.

@@ -1,0 +1,5 @@
+# warnings
+1x wrapped: the table #tbl-body-page is page-wide, so it does not wrap.
+# typ
+figure: tbl-body-page image-width=no
+# wraps

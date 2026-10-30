@@ -1,0 +1,8 @@
+# warnings
+1x wrapped: the table #tbl-cap-margin has its caption in the margin, so it does not wrap.
+# breakpoint
+(none)
+# figures
+tbl-cap-margin: - style=-
+# images
+# groups

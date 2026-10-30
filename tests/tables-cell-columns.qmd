@@ -1,0 +1,128 @@
+---
+title: "Column options on code cells with figures and tables"
+filters:
+  - wrapped
+format:
+  html: default
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
+---
+
+## A figure cell with tbl-column
+
+Quarto places a table by `tbl-column`, so the figure stays in the body.
+
+```{r}
+#| label: fig-tbl-column
+#| fig-cap: "A figure from a cell with tbl-column: margin."
+#| tbl-column: margin
+#| classes: wrap-right
+#| out-width: "30%"
+plot(1:10)
+```
+
+The paragraph after the figure from the cell with tbl-column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A table cell with fig-column
+
+Quarto places a figure by `fig-column`, so the table stays in the body.
+
+```{r}
+#| label: tbl-fig-column
+#| tbl-cap: "A table from a cell with fig-column: margin."
+#| fig-column: margin
+#| classes: wrap-left
+knitr::kable(head(cars, 3))
+```
+
+The paragraph after the table from the cell with fig-column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A table cell with column: page
+
+```{r}
+#| label: tbl-column-page
+#| tbl-cap: "A table from a cell with column: page."
+#| column: page
+#| classes: wrap-right
+knitr::kable(head(cars, 3))
+```
+
+The paragraph after the page-wide table.
+
+## Subfigure panels in a cell with tbl-column
+
+The tbl-column class leaves the figure's panels in the body, where they
+keep their normal layout as subfigure panels.
+
+```{r}
+#| label: fig-panels-tbl-column
+#| fig-cap: "Panels from a cell with tbl-column: margin."
+#| fig-subcap: ["One.", "Two."]
+#| tbl-column: margin
+#| classes: wrap-right
+plot(1:10)
+plot(10:1)
+```
+
+The paragraph after the figure panels.
+
+## Table panels in a cell with fig-column
+
+```{r}
+#| label: tbl-panels-fig-column
+#| tbl-cap: "Panels from a cell with fig-column: margin."
+#| tbl-subcap: ["Cars.", "Pressure."]
+#| fig-column: margin
+#| classes: wrap-left
+knitr::kable(head(cars, 2))
+knitr::kable(head(pressure, 2))
+```
+
+The paragraph after the table panels.
+
+## A figure cell with column and fig-column
+
+```{r}
+#| label: fig-page-and-margin
+#| fig-cap: "A figure from a cell with column: page and fig-column: margin."
+#| column: page
+#| fig-column: margin
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the figure with two column options.
+
+## A figure cell with column: page and tbl-column
+
+The tbl-column class places no figure, so `column: page` sets this figure
+page-wide.
+
+```{r}
+#| label: fig-page-tbl-margin
+#| fig-cap: "A figure from a cell with column: page and tbl-column: margin."
+#| column: page
+#| tbl-column: margin
+#| classes: wrap-left
+plot(1:10)
+```
+
+The paragraph after the page-wide figure.
+
+## A figure with its own class in a cell with none
+
+```{r}
+#| echo: false
+#| output: asis
+cat("![A figure written by a cell.](plot.png){#fig-asis .wrap-right width=\"30%\"}\n")
+```
+
+```{r}
+#| echo: true
+1 + 1
+```
+
+The paragraph after the second cell.

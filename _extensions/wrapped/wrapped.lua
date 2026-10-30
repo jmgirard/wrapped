@@ -1,4 +1,6 @@
 -- wrapped: wrap body text around figures marked .wrap-left or .wrap-right.
+-- A #tbl- table float wraps the same way in HTML and Typst and keeps its
+-- normal layout in LaTeX and Word (D-021); "figure" below covers it there.
 --
 -- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output,
 -- revealjs included, floats each wrapped figure inside a .wrap-group div
@@ -51,9 +53,9 @@ local two_column = false
 -- Set in the first pass: meta_fig_column_set when the document sets
 -- fig-column, and meta_column_set when it sets fig-column or column.
 local meta_fig_column_set, meta_column_set = false, false
--- found_wrap: a figure, image, div, link, span, heading, code, or table
--- with no tbl- id carries a wrap class, so a format that cannot wrap
--- prints its one warning. placed: a figure or image wraps, so the
+-- found_wrap: a figure, table float, image, div, link, span, heading,
+-- code, or table carries a wrap class, so a format that cannot wrap prints
+-- its one warning. placed: a figure, table float, or image wraps, so the
 -- document needs the stylesheet, the LaTeX environment, or wrap-it.
 local found_wrap = false
 local placed = false
@@ -897,12 +899,30 @@ local no_text = {}
 -- normal layout and a warning.
 local context_of_float = {}
 
+-- The contexts that a code cell's fig-column-* or tbl-column-* class sets,
+-- by custom id, kept apart from context_of_float because Quarto places
+-- only that type of float by the class: { context, scope = "fig" or
+-- "tbl" }. The float pass takes one for a float of its type only, and the
+-- walk goes on inside the cell, so a subfigure panel there is still
+-- recorded. A context that the cell's other classes set holds for the
+-- other type, in context_of_float.
+local scoped_context = {}
+
+-- Drops the column classes that Quarto scopes to the other float type:
+-- fig-column-* places only figures and tbl-column-* only tables.
+local function own_type_classes(classes, is_table)
+  local other = is_table and "^fig%-column%-" or "^tbl%-column%-"
+  return classes:filter(function(c) return not c:match(other) end)
+end
+
 -- Returns the context that a margin class names, or nil. A code cell with
--- `fig-column: margin` carries the fig-column-margin class. revealjs slides
--- have no margin column, so the margin classes name no place there, but
--- revealjs sets an aside at the foot of the slide by default.
+-- `fig-column: margin` carries the fig-column-margin class, and one with
+-- `tbl-column: margin` the tbl-column-margin class. revealjs slides have no
+-- margin column, so the margin classes name no place there, but revealjs
+-- sets an aside at the foot of the slide by default.
 local function margin_context(classes)
-  if not is_revealjs and (classes:includes("column-margin") or classes:includes("fig-column-margin")) then
+  if not is_revealjs and (classes:includes("column-margin") or classes:includes("fig-column-margin")
+      or classes:includes("tbl-column-margin")) then
     return "is in the margin"
   end
   if classes:includes("aside") then return "is in an aside" end
@@ -919,7 +939,8 @@ end
 
 -- Returns the context that a page-wide column class names, or nil. A code
 -- cell with `column: page` carries the column-page class, and one with
--- `fig-column: page` the fig-column-page class. LaTeX makes a figure
+-- `fig-column: page` or `tbl-column: page` the fig-column-page or
+-- tbl-column-page class. LaTeX makes a figure
 -- page-wide only for the names that start with column-page or
 -- column-screen and do not end in -left, as Quarto's isStarEnv does. Typst
 -- sets a div or a code cell wider than the text for each name, in a
@@ -928,7 +949,7 @@ end
 -- keeps the figure in the body.
 local function page_context(classes, own)
   for _, class in ipairs(classes) do
-    local name = class:gsub("^fig%-", "")
+    local name = class:gsub("^fig%-", ""):gsub("^tbl%-", "")
     local starred = name:match("^column%-page") or name:match("^column%-screen")
     if PAGE_WIDE[name] and (has_page_layout
         or is_typst and not (own and (not starred or name:match("%-inset")))
@@ -950,7 +971,9 @@ end
 local card_depth = 0
 
 -- Returns the context that a block sets for the blocks inside it, or nil.
--- A code cell with `column: margin` carries the column-margin class.
+-- A code cell with `column: margin` carries the column-margin class. A
+-- context that only a fig-column-* or tbl-column-* class sets comes with
+-- its scope, "fig" or "tbl", as a second value (scoped_context).
 local function block_context(block)
   if block.t == "BulletList" or block.t == "OrderedList" or block.t == "DefinitionList" then
     return "is in a list"
@@ -987,7 +1010,23 @@ local function block_context(block)
       and not block.classes:includes("markdown") then
     return "is outside a card in a dashboard"
   end
-  return class_context(block.classes)
+  -- The context reads all the classes, margin before page-wide; then the
+  -- classes that give it decide its scope. A scoped context comes with the
+  -- context of the other classes, if any, as a third value: it holds for
+  -- the other float type, as on a cell with `column: page` and
+  -- `tbl-column: margin`.
+  local context = class_context(block.classes)
+  if not context then return nil end
+  local unscoped = block.classes:filter(function(c)
+    return not (c:match("^fig%-column%-") or c:match("^tbl%-column%-"))
+  end)
+  local plain = class_context(unscoped)
+  if plain == context then return context end
+  for _, scope in ipairs({ "fig", "tbl" }) do
+    local scoped = block.classes:filter(function(c) return c:match("^" .. scope .. "%-column%-") end)
+    if class_context(scoped) == context then return context, scope, plain end
+  end
+  return context
 end
 
 -- A context warning, printed in a format that wraps. Other formats print
@@ -999,11 +1038,15 @@ local function context_warning(subject, context)
 end
 
 -- Records the floats in a list of blocks, subfloats included, by custom id.
-local function record_floats(blocks, context)
+-- `scope` is the float type the context holds for, or nil (scoped_context).
+local function record_floats(blocks, context, scope)
   blocks:walk({
     Div = function(d)
       local id = d.attributes.__quarto_custom_id
-      if is_float_div(d) and id then
+      if not (is_float_div(d) and id) then return end
+      if scope then
+        scoped_context[id] = scoped_context[id] or { context = context, scope = scope }
+      else
         context_of_float[id] = context_of_float[id] or context
       end
     end,
@@ -1012,28 +1055,34 @@ end
 
 -- Records each float in a context's blocks, and gives each wrapped figure
 -- or image there a normal layout with a warning. A float warns later, in
--- the float pass, where its own id is known.
-local function mark_context(blocks, context)
+-- the float pass, where its own id is known. A scoped context also records
+-- `plain`, the context of the cell's other classes, for every float (see
+-- block_context); a captioned image with no id or an image, which is no
+-- table, takes `plain` under a context scoped to tables.
+local function mark_context(blocks, context, scope, plain)
+  local own = scope == "tbl" and plain or context
   return blocks:walk({
     traverse = "topdown",
     Div = function(div)
       if not is_float_div(div) then return nil end
-      record_floats(pandoc.Blocks({ div }), context)
+      record_floats(pandoc.Blocks({ div }), context, scope)
+      if scope and plain then record_floats(pandoc.Blocks({ div }), plain) end
       return nil, false
     end,
     Figure = function(fig)
+      if not own then return nil end
       if not (wrap_class(fig.classes) or image_wrap(fig.content)) then return nil end
       found_wrap = true
       strip_wrap(fig.classes)
       fig.content = fig.content:walk({ Image = drop_wrap })
       context_warning(fig.identifier ~= "" and ("the figure #" .. fig.identifier)
-        or "a figure with no id", context)
+        or "a figure with no id", own)
       return fig, false
     end,
     Image = function(img)
-      if not wrap_class(img.classes) then return nil end
+      if not own or not wrap_class(img.classes) then return nil end
       found_wrap = true
-      context_warning("the image " .. pandoc.utils.stringify(img.src), context)
+      context_warning("the image " .. pandoc.utils.stringify(img.src), own)
       return drop_wrap(img)
     end,
   })
@@ -1046,7 +1095,9 @@ end
 -- panel. A captioned image with no id, or an image, with its own margin
 -- class is in the margin too, except on revealjs slides. Quarto makes only
 -- floats and divs page-wide, so a float's own margin or page-wide class is
--- read in the float pass.
+-- read in the float pass. Inside a context the walk stops, except in a code
+-- cell whose context is scoped to one float type (block_context), where it
+-- goes on to record the subfigure panels.
 local function find_contexts(doc)
   local filter
   local function mark(block)
@@ -1071,10 +1122,13 @@ local function find_contexts(doc)
       end
       return nil, false
     end
-    local context = block_context(block)
+    local context, scope, plain = block_context(block)
     if not context then return nil end
     if block.t == "Div" then
-      block.content = mark_context(block.content, context)
+      block.content = mark_context(block.content, context, scope, plain)
+      -- A scoped context holds for one float type only, so the walk goes
+      -- on inside the cell and records a subfigure panel there too.
+      if scope then return block end
     elseif block.t == "BulletList" or block.t == "OrderedList" then
       for i, item in ipairs(block.content) do
         block.content[i] = mark_context(item, context)
@@ -1151,8 +1205,10 @@ local function meta_text(value)
   return (pandoc.utils.stringify(value):gsub("\u{2013}", "--"))
 end
 
--- The document's fig-cap-location and cap-location, read in the first pass.
+-- The document's fig-cap-location, tbl-cap-location, and cap-location,
+-- read in the first pass.
 local meta_fig_cap_location = nil
+local meta_tbl_cap_location = nil
 local meta_cap_location = nil
 
 -- The document's metadata, read in the first pass, for the stop rule's
@@ -1164,8 +1220,13 @@ local document_meta = {}
 -- is nil when the value names neither the margin nor a page-wide column
 -- there. Quarto 1.10.19 applies the value to a code cell's float even when
 -- the cell sets fig-column: body, and not to a captioned image with no id,
--- which is no float.
+-- which is no float. A table float takes the document's tbl-column, or
+-- else its column, in the same way, and not its fig-column
+-- (meta_table_column_context).
 local meta_column_context = {}
+local meta_table_column_context = {}
+-- Set in the first pass when the document sets tbl-column.
+local meta_tbl_column_set = false
 
 -- The text of a fig-column or column metadata value, or nil. As Quarto's
 -- columnOption does, it reads the first item of a list and treats an empty
@@ -1184,14 +1245,17 @@ local function margin_caption_class(classes, is_float)
   return classes:includes("margin-caption") or (is_float and classes:includes("caption-margin"))
 end
 
--- Whether a figure's caption goes to the margin of an HTML page, as
+-- Whether a float's caption goes to the margin of an HTML page, as
 -- Quarto 1.10.19 decides it. A margin caption class on the float or its
--- image sends it there. Otherwise the figure's own cap-location decides
+-- image sends it there. Otherwise the float's own cap-location decides
 -- when it is set. Without one, the caption goes to the margin when the
--- figure's fig-cap-location or either document key is margin, and a
--- value other than margin in one of them overrides none of the others.
--- Quarto has already copied a code cell's caption location, and its
--- caption-margin class, to the cell's figure as cap-location.
+-- float's fig-cap-location, the document's fig-cap-location, or the
+-- document's cap-location is margin, and a value other than margin in one
+-- of them overrides none of the others. Quarto has already copied a code
+-- cell's caption location, and its caption-margin class, to the cell's
+-- figure as cap-location. A table float reads tbl-cap-location, its own
+-- and the document's, in place of fig-cap-location; Quarto copies it from
+-- a code cell to its table float under that name.
 local function caption_in_margin(float)
   local by_class = margin_caption_class(float.classes, true)
   float.content:walk({
@@ -1200,29 +1264,38 @@ local function caption_in_margin(float)
   if by_class then return true end
   local own = float.attributes["cap-location"]
   if own then return own == "margin" end
-  return float.attributes["fig-cap-location"] == "margin" or meta_fig_cap_location == "margin"
-    or meta_cap_location == "margin"
+  local key, meta_value = "fig-cap-location", meta_fig_cap_location
+  if float.type == "Table" then key, meta_value = "tbl-cap-location", meta_tbl_cap_location end
+  return float.attributes[key] == "margin" or meta_value == "margin" or meta_cap_location == "margin"
 end
 
--- Returns the context that a figure float's column gives it, or nil. In
--- LaTeX and Typst, Quarto 1.10.19 reads a float's own fig-column-* class,
--- the document's fig-column, its own column-* or aside class, and the
--- document's column, and the first one set decides. A code cell's own
--- column is on the cell, not its float, and find_contexts reads it when the
--- document sets neither key. HTML and Word read a margin or page-wide class
--- of the float's own, else the document's value. The second value is true
+-- Returns the context that a float's column gives it, or nil. In LaTeX and
+-- Typst, Quarto 1.10.19 reads a figure float's own fig-column-* class, the
+-- document's fig-column, its own column-* or aside class, and the
+-- document's column, and the first one set decides. A table float reads
+-- tbl-column in place of fig-column. A code cell's own column is on the
+-- cell, not its float, and find_contexts reads it when the document sets
+-- neither key. HTML and Word read a margin or page-wide class of the
+-- float's own, else the document's value; a cell's classes that Quarto
+-- copies to the float include a scoped class of the other float type,
+-- which places nothing here (own_type_classes). The second value is true
 -- when the document's value decides, which float_target reads after a
 -- layout.
 local function column_context(float, cell)
-  local document = cell and meta_column_context.cell or meta_column_context.float
+  local is_table = float.type == "Table"
+  local context = is_table and meta_table_column_context or meta_column_context
+  local document = cell and context.cell or context.float
   if not (is_latex or is_typst) then
-    local own = class_context(float.classes, true)
+    local own = class_context(own_type_classes(float.classes, is_table), true)
     if own then return own, false end
     return document, true
   end
-  local scoped = float.classes:filter(function(c) return c:match("^fig%-column%-") end)
+  local prefix = is_table and "^tbl%-column%-" or "^fig%-column%-"
+  local scoped = float.classes:filter(function(c) return c:match(prefix) end)
   if #scoped > 0 then return class_context(scoped, true), false end
-  if meta_fig_column_set then return document, true end
+  if (is_table and meta_tbl_column_set) or (not is_table and meta_fig_column_set) then
+    return document, true
+  end
   local own = float.classes:filter(function(c) return c:match("^column%-") or c == "aside" end)
   if #own > 0 then return class_context(own, true), false end
   return document, true
@@ -1231,6 +1304,7 @@ end
 local function read_meta(meta)
   document_meta = meta
   meta_fig_cap_location = meta_text(meta["fig-cap-location"])
+  meta_tbl_cap_location = meta_text(meta["tbl-cap-location"])
   meta_cap_location = meta_text(meta["cap-location"])
   if is_docx then
     docx_text_width, docx_columns = read_docx_text_width()
@@ -1246,6 +1320,13 @@ local function read_meta(meta)
   if column then
     local classes = pandoc.List({ "column-" .. column })
     meta_column_context = { float = class_context(classes, true), cell = class_context(classes) }
+  end
+  local tbl_column = meta_column(meta["tbl-column"])
+  local table_column = tbl_column or meta_column(meta.column)
+  meta_tbl_column_set = tbl_column ~= nil
+  if table_column then
+    local classes = pandoc.List({ "column-" .. table_column })
+    meta_table_column_context = { float = class_context(classes, true), cell = class_context(classes) }
   end
   local m = meta.wrapped
   if m == nil then return end
@@ -1308,12 +1389,13 @@ local typst_opens = {}
 -- custom id, cell floats included.
 local docx_frames = {}
 
--- The wrap class of a code cell, carried to the floats inside that cell.
--- `remaining` counts the cell's floats, figures and tables, so a cell with
--- no float carries nothing. Only figures wrap: a table float that takes the
--- class keeps its normal layout. `several` is true when the cell makes more
--- than one float that sits in no other float, and `warned` is set once the
--- cell's one warning is printed.
+-- The code cell that the float pass is in, with its wrap class, if any,
+-- carried to the floats inside that cell. `remaining` counts the cell's
+-- floats, figures and tables, so a cell with no float carries nothing.
+-- A cell with no wrap class still anchors its group, since a table float
+-- inside it can take a wrap class from its caption block. `several` is
+-- true when the cell makes more than one float that sits in no other
+-- float, and `warned` is set once the cell's one warning is printed.
 local carry = nil
 
 local function cell_div(div)
@@ -1321,10 +1403,9 @@ local function cell_div(div)
   -- Each cell ends any carry left from an earlier cell.
   carry = nil
   local c = wrap_class(div.classes)
-  if not c then return nil end
-  strip_wrap(div.classes)
+  if c then strip_wrap(div.classes) end
   local n = count_floats(div)
-  if n == 0 and wraps() then
+  if c and n == 0 and wraps() then
     quarto.log.warning(
       "wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.")
   end
@@ -1367,9 +1448,10 @@ end
 
 -- Quarto adds the classes of the block at a table float's caption end to
 -- the float and its table after this filter runs (table_classes in
--- Quarto's filters/main.lua), so a wrap class there would float the table
--- in HTML. This writes the block again without its wrap classes, or drops
--- it when nothing is left, and returns the first wrap class it held.
+-- Quarto's filters/main.lua), so a wrap class there would float a table
+-- that keeps its normal layout in HTML. This writes the block again
+-- without its wrap classes, or drops it when nothing is left, and returns
+-- the first wrap class it held, which float_target places.
 local function drop_caption_wrap(float)
   local caption = float.caption_long
   if not caption or not caption.content then return nil end
@@ -1407,24 +1489,30 @@ local function keep_normal(float)
 end
 
 local function float_target(float)
-  -- Every float of a wrapped cell uses up the carry, tables included, so
-  -- the carry never reaches a float after the cell.
+  -- Every float of a cell uses up the carry, tables included, so the carry
+  -- never reaches a float after the cell. `carried` is set only when the
+  -- cell has a wrap class, and `cell` then, or for a table float in any
+  -- cell, whose class can come from its caption block. A figure in a cell
+  -- with no wrap class is read as a float of its own, as before tables
+  -- wrapped.
+  local is_table = float.type == "Table"
   local carried, token, cell
   if carry and carry.remaining > 0 then
     carry.remaining = carry.remaining - 1
-    carried, token, cell = carry.class, carry.token, carry
+    carried, token = carry.class, carry.token
+    if carried or is_table then cell = carry end
   end
   local img_class, img_width, img_gap, img_lines = image_wrap(float.content)
-  local caption_class = float.type == "Table" and drop_caption_wrap(float) or nil
+  local caption_class = is_table and drop_caption_wrap(float) or nil
   local class = wrap_class(float.classes) or carried or img_class or caption_class
   if not class then return nil end
-  if float.type == "Figure" then found_wrap = true end
+  if float.type == "Figure" or is_table then found_wrap = true end
   strip_wrap(float.classes)
-  -- Only figures wrap. A table float keeps its normal layout, and Quarto
-  -- copies a cell's classes onto a table float, so the wrap class goes.
-  -- A figure in a context keeps its normal layout too, and so does an HTML
-  -- figure whose caption goes to the margin: CSS places the caption in the
-  -- margin, outside the figure's box, and no text sits beside the figure.
+  -- Figures and tables wrap, and other floats keep their normal layout.
+  -- Quarto copies a cell's classes onto its float, so the wrap class goes.
+  -- A float in a context keeps its normal layout, and so does an HTML
+  -- float whose caption goes to the margin: CSS places the caption in the
+  -- margin, outside the float's box, and no text sits beside the float.
   -- A figure's own column class, or the document's fig-column or column,
   -- can put the float in the margin or a page-wide column (column_context).
   local node = float.__quarto_custom_node
@@ -1432,9 +1520,31 @@ local function float_target(float)
   local layout = float.attributes["layout-ncol"] or float.attributes["layout-nrow"]
     or float.attributes.layout
   local column, by_document = column_context(float, cell)
-  local context = (float.type ~= "Figure" and "is not a figure")
-    or context_of_float[custom_id or ""]
+  -- A context that a code cell's fig-column-* or tbl-column-* class set
+  -- holds only for floats of that type, and there it comes before any
+  -- other, as find_contexts reads the cell before what is inside it
+  -- (scoped_context).
+  local recorded = context_of_float[custom_id or ""]
+  local scoped = scoped_context[custom_id or ""]
+  if scoped and scoped.scope == (is_table and "tbl" or "fig") then recorded = scoped.context end
+  -- Quarto moves a knitr table cell's column class, as from `column: page`,
+  -- from the cell to the output div inside the table float, where
+  -- find_contexts does not look. Quarto 1.10.19's Typst output keeps that
+  -- column with a document tbl-column or column of `body` set too. A
+  -- float's content can be one block, which a walk from that block does
+  -- not visit, so the walk starts from a list.
+  local inner
+  if is_table then
+    local content = float.content
+    if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
+    content:walk({
+      Div = function(d) inner = inner or class_context(own_type_classes(d.classes, true)) end,
+    })
+  end
+  local context = (float.type ~= "Figure" and not is_table and "is not a figure")
+    or recorded
     or (not by_document and column)
+    or inner
     or (layout and "is a subfigure panel")
     or (by_document and column)
     or (has_page_layout and (caption_in_margin(float) or (cell and cell.margin_caption))
@@ -1443,9 +1553,22 @@ local function float_target(float)
   -- its figures normal, with one warning for the cell at its first figure
   -- (D-010). The warning gives the figure's context as the reason when it
   -- has one. A cell in no context with no paragraph after it prints no
-  -- warning. A table keeps its own warning. Quarto numbers such figures
+  -- warning. The cell's count holds every float, tables included, but the
+  -- rule keeps only its figures normal: a table float in such a cell wraps
+  -- or warns on its own. Quarto numbers such figures
   -- with the cell's label and `-1`, `-2`, and so on.
   local several = carried and cell.several and float.type == "Figure"
+  -- LaTeX and Word wrap no table (D-021): Quarto writes a LaTeX table as
+  -- a longtable, which wrapfig cannot hold, and a Word frame holds
+  -- paragraphs, not tables. The warning comes before the next-block rule,
+  -- so a table with no paragraph after it warns there too.
+  if is_table and (is_latex or is_docx) and not context then
+    keep_normal(float)
+    quarto.log.warning(string.format(
+      "wrapped: the table #%s does not wrap in %s. A table wraps only in HTML and Typst.",
+      float.identifier, is_latex and "LaTeX" or "Word"))
+    return float
+  end
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
   if context or no_text[custom_id or ""] or several then
@@ -1492,7 +1615,7 @@ local function float_target(float)
     float.classes:insert(class)
     float.attributes.style = style_for(width, gap, "#" .. float.identifier, float.attributes.style)
   end
-  if carried then
+  if cell then
     wrapped_cells[token] = true
   else
     -- The grouping pass sees this float as a plain Div that Quarto marks
@@ -1889,7 +2012,8 @@ local function docx_group(members)
   return pandoc.List({ pandoc.Div(members, pandoc.Attr("", { "wrap-group" }, { ["data-wrap-frame"] = frame })) })
 end
 
--- Groups each wrapped figure with the paragraphs after it. The group stops
+-- Groups each wrapped figure or table float with the paragraphs after it.
+-- The group stops
 -- at the first block that does not join it: a block that is not a
 -- paragraph, or a paragraph with a lone block shortcode (the stop rule,
 -- `joins_group`). The group's
@@ -1927,7 +2051,8 @@ local function group_blocks(blocks)
       -- In LaTeX, a captioned image with no id stays a Figure.
       members = pandoc.List({ b })
     elseif b.t == "Div" and b.attributes["data-wrap-anchor"] then
-      -- A wrapped cell starts a group only if one of its figures wrapped.
+      -- A cell starts a group only if one of its figure or table floats
+      -- wrapped.
       local token = b.attributes["data-wrap-anchor"]
       b.attributes["data-wrap-anchor"] = nil
       if wrapped_cells[token] then members = pandoc.List({ b }) end
@@ -2050,7 +2175,7 @@ end
 
 -- A table's classes come from an attribute block at the end of its caption,
 -- as in `: A table {.wrap-left}` (caption_block). A table with a tbl- id is
--- a float, and the float pass warns for it.
+-- a float, which the float pass places or warns for.
 local function unplaced_table(tbl)
   local long = tbl.caption.long
   local last = long and long[#long]

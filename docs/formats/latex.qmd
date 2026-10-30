@@ -70,6 +70,9 @@ wrapfig has limits, and the extension keeps some of them:
   figure that moved to the next page waits for one of its own paragraphs.
   A heading or the end of a callout does not take it.
 - A figure in a list keeps its normal layout, as in HTML.
+- A [table float](../get-started.qmd#wrap-a-table) does not wrap. Quarto
+  writes a table as a `longtable`, which wrapfig cannot hold. A wrapped
+  table float keeps its normal layout, and the render prints a warning.
 
 ## Columns
 

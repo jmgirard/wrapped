@@ -1,0 +1,9 @@
+# warnings
+1x wrapped: the figure #fig-fig-column is in the margin, so it does not wrap.
+1x wrapped: the table #tbl-page-cell is page-wide, so it does not wrap.
+# typ
+figure: tbl-fig-column image-width=no
+notefigure: fig-fig-column image-width=yes
+figure: tbl-page-cell image-width=no
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | tbl-fig-column no-alt | p | cites=0

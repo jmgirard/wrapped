@@ -14,18 +14,22 @@ install it with `quarto add jmgirard/wrapped`.
 **Goals.**
 
 - Wrap text to the left or right of one captioned figure. The figure keeps
-  its number, caption, and `@fig-` links.
+  its number, caption, and `@fig-` links. A `#tbl-` table float wraps the
+  same way in HTML and PDF through Typst (D-021, corrected M038).
 - Wrap text around an uncaptioned image.
 - Use one width value for all formats.
 - In a format or context that cannot wrap, keep a normal figure and warn
   once: once for each render in a format, once for each figure in a
   context, and once for a code cell that makes more than one figure, in a
-  context or not (corrected M003, M014, M018).
+  context or not (corrected M003, M014, M018). In LaTeX and Word, also
+  once for each wrapped table float (D-021, corrected M038).
 
 **Non-goals for version 1.**
 
-- Tables (`#tbl-` floats). LaTeX `wraptable` conflicts with `longtable`, and
-  Quarto renders most tables as `longtable`.
+- Tables (`#tbl-` floats) in PDF through LaTeX and in Word. LaTeX
+  `wraptable` conflicts with `longtable`, and Quarto renders every table
+  as `longtable`. A Word frame holds paragraphs, not tables. Table floats
+  wrap in HTML and PDF through Typst (D-021, corrected M038).
 - Subfigure panels (`layout-ncol`, `layout`).
 - Code listings and callouts.
 - A figure in the middle of a paragraph. The figure anchors where it appears
@@ -102,7 +106,8 @@ wrapped:
   breakpoint: 576px   # HTML: at this width or narrower, figures stop floating
 ```
 
-Stop rule: the figure wraps the paragraphs that follow it. Wrapping stops at
+Stop rule: the figure, or in HTML and Typst a table float (M038), wraps
+the paragraphs that follow it. Wrapping stops at
 the first block that is not a paragraph: a heading, list, figure, table, code
 block, callout, or horizontal rule. A paragraph that holds one shortcode
 and nothing else that shows also stops it, such as `{{< pagebreak >}}` or
@@ -201,7 +206,10 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    metadata that the first pass keeps (corrected M021).
 2. It finds the contexts that cannot wrap: lists (definition lists
    included), callouts, column layouts, panel layouts, tabsets, asides,
-   margin blocks (a `fig-column: margin` cell included), subfigure
+   margin blocks (a `fig-column: margin` or `tbl-column: margin` cell
+   included; a cell's `fig-column-*` class holds only for its figure
+   floats and its `tbl-column-*` class only for its table floats, as
+   Quarto places them, `scoped_context`, corrected M038), subfigure
    panels, and in a dashboard code cells outside a `.card` div (corrected
    M022). revealjs slides have no margin column, so there the margin
    classes and a document margin value name no context, and an aside still
@@ -232,8 +240,19 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    after it, and removes the wrap class from such a captioned image with no
    id or image.
 4. In a top-down pass, it carries a code cell's wrap class to that cell's
-   floats and moves an image's class to its float. A float that step 2 or
-   3 recorded, a table, a float with a margin or page-wide class or a
+   floats and moves an image's class to its float. A figure float and a
+   table float wrap (D-021). A table float in LaTeX or Word keeps its
+   normal layout with a warning, and its caption location key is
+   `tbl-cap-location` (corrected M038). A code cell anchors the group of
+   a wrapped float inside it, with or without a wrap class of its own,
+   since a table float can take its class from its caption block, and a
+   cell's `margin-caption` class reaches its floats either way. Quarto
+   moves a knitr table cell's column class, as from `column: page`, from
+   the cell to a div inside the table float, which this step reads for a
+   table, in every format: Quarto 1.10.19's LaTeX and Typst output keep
+   that column with a document `tbl-column` or `column` of `body` set too
+   (corrected M038). A float that step 2 or
+   3 recorded, a float other than a figure or a table, a float with a margin or page-wide class or a
    layout attribute, any figure float when the document's `fig-column` or
    `column` decides its column (`column_context`, below) and names the
    margin, or a page-wide column in a format where step
@@ -244,6 +263,9 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    Typst, `column_context` reads a float's column in Quarto's order: its own
    `fig-column-*` class, the document's `fig-column`, its own `column-*` or
    `aside` class, then the document's `column`; the first one set decides.
+   A table float reads `tbl-column-*` and the document's `tbl-column` in
+   place of the `fig-column` pair, and HTML and Word drop the other float
+   type's scoped class (`own_type_classes`) (corrected M038).
    A code cell's own column sits on the cell, which step 2 reads only when
    the document sets neither key. A layout attribute comes before a
    document value, so a panel warns as a subfigure panel. HTML reads a
@@ -261,7 +283,8 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    (corrected M007). In Typst, each other float records the opening of its
    `wrap-content` call by its custom id, and a captioned image with no id
    gets a `.wrapped-image` box that holds that opening (corrected M005).
-5. In HTML it groups each wrapped figure with the paragraphs after it in a
+5. In HTML it groups each wrapped figure or table float with the
+   paragraphs after it in a
    `.wrap-group` div. The group's `display: flow-root` gives the stop rule.
    A dashboard marks the group and a cell's `.cell` and
    `.cell-output-display` wrappers as flex fill items and containers;
@@ -297,12 +320,12 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    and for a wrap class on a link, span, heading, inline code, code block,
    or table with no `#tbl-` id, which it never places. It reads a table's
    class from the attribute block at its caption's end, as Quarto does
-   after the filter runs (corrected M032, M033). On a `#tbl-` float it
-   reads that block too, warns for a wrap class there, and writes the block
-   again without its wrap classes, since Quarto would add them to the float
-   (corrected M034).
+   after the filter runs (corrected M032, M033). On a `#tbl-` float, step
+   4 reads that block too, takes a wrap class there as the float's own, and
+   writes the block again without its wrap classes, since Quarto would add
+   them to the float (corrected M034, M038).
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
-   wraps. In LaTeX it adds wrapfig and `wrapped.tex`, which defines
+   or table float wraps (corrected M038). In LaTeX it adds wrapfig and `wrapped.tex`, which defines
    `wrappedfigure` over wrapfig's floating placements and `\wrappedstop`,
    which ends a wrap (corrected M007). Where the text runs in columns,
    inside `multicols` or where `\if@twocolumn` is true, `wrappedfigure`
@@ -341,6 +364,11 @@ snapshot difference. The mechanism for each other format is in
 
 ## Known issues
 
+- PDF through Typst: a wrapped table float keeps to the width of its box.
+  Typst narrows a wide table's columns and breaks its words, and in a
+  narrow box the text of columns side by side can overlap (the
+  `tbl-wide` case of `tests/tables.qmd`). The site's
+  `docs/formats/typst.qmd`, Limits, states this limit (M038).
 - PDF through Typst: a wrapped figure whose group does not fit at the bottom
   of a page moves to the next page with the text beside it, and the rest of
   the page stays blank. With `columns:` set, the same holds at the bottom of
