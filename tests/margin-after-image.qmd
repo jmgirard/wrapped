@@ -1,0 +1,25 @@
+---
+title: "wrapped fixture: a margin figure after a captioned image with no id"
+filters:
+  - wrapped
+format:
+  typst:
+    keep-typ: true
+---
+
+In Typst, Quarto writes a captioned image with no id as a body `#figure(`
+call and a float with `.column-margin` as a `#notefigure(` call. The test
+summary gives each call its own line, so the image does not take the margin
+figure's label.
+
+## A captioned image with no id
+
+![A captioned image with no id.](plot.png)
+
+The paragraph after the captioned image with no id. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+## A margin figure
+
+![A margin figure after the captioned image.](plot.png){#fig-after-image-margin .column-margin}
+
+The paragraph after the margin figure. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

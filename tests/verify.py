@@ -146,6 +146,7 @@ RENDERS = [
     ("column-order-fig-margin", "typst", True),
     ("column-order-margin", "pdf", True),
     ("column-order-margin", "typst", True),
+    ("margin-after-image", "typst", True),
     ("stop-rule", "pdf", True),
     ("stop-rule", "typst", True),
     ("stop-rule", "docx", True),
