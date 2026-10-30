@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M035: Test the lowest admitted Quarto in CI
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -43,7 +43,7 @@ CI runs `tests/verify.py` on the Quarto version that `quarto-required` names, so
 - [x] T2: If F is not 1.9.36, set `quarto-required: ">=F"` and append a D-entry for the re-pin, citing the T1 work-log lines for the failing release.
 - [x] T3: Turn the `verify` job of `.github/workflows/verify.yml` into a matrix over `release` and F with `fail-fast: false`, pass the entry to quarto-actions/setup `version:`, and name the uploaded artifact per entry, since two runs cannot upload one artifact name. Update the file's header comment.
 - [x] T4: Edit the install sentence in `README.md`, `docs/index.qmd`, and `docs/get-started.qmd`, DESIGN.md's Quarto version paragraph (and its Conventions line on the test command), and PROFILE.md's verify slot. `docs/get-started.qmd` has an R cell, so render it locally with R and commit its `docs/_freeze/` change. Run `quarto render docs`.
-- [ ] T5: Run `python3 tests/verify.py` under Quarto 1.10.19. At review, read both matrix runs on the PR. If the F run fails on Ubuntu, log its first FAIL line or traceback, raise F to the next release of the list, and repeat T2 to T4 for it.
+- [x] T5: Run `python3 tests/verify.py` under Quarto 1.10.19. At review, read both matrix runs on the PR. If the F run fails on Ubuntu, log its first FAIL line or traceback, raise F to the next release of the list, and repeat T2 to T4 for it.
 
 ## Work log
 
@@ -65,3 +65,4 @@ CI runs `tests/verify.py` on the Quarto version that `quarto-required` names, so
 - 2026-10-30: T4 checkpoint (half done): install sentence in README, `docs/index.qmd`, `docs/get-started.qmd`, DESIGN.md's Quarto version paragraph and Conventions line, and PROFILE.md's verify slot edited; the `quarto render docs` run with R and its `docs/_freeze/` change are still owed.
 - 2026-10-30: T4: `quarto render docs` with R under Quarto 1.10.19 exit 0; only `docs/_freeze/get-started/execute-results/html.json` changed (2 lines). `python3 tests/docs_layout.py` exit 0. The install sentence is two sentences, since the simple-english hook read README's URL line and the old one sentence as one over its length limit.
 - 2026-10-30: claim audit: 15 claims read, 2 corrected — .github/workflows/verify.yml (the header said the pin follows quarto-required; it now says to change the matrix entry by hand), README.md, docs/index.qmd, docs/get-started.qmd ("tested with Quarto's current release" now reads "Each change to it is tested", since verify.yml has no scheduled run). get-started re-rendered with R, exit 0. Not taken: a weekly `schedule:` trigger, which is outside the plan.
+- 2026-10-30: T5: `python3 tests/verify.py` under Quarto 1.10.19 (generator `quarto-1.10.19`) at efba9f4: exit 0, "all 105 renders pass". The later commit 1447147 changes no file under `tests/` or `_extensions/`. The two matrix runs are read at review. Status → review.
