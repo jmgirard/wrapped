@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M038: Wrap table floats in HTML and Typst
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -145,7 +145,7 @@ warning elsewhere, the site, and DESIGN.md.
       `cairn/DESIGN.md` (the non-goal, steps 2, 4, and 6, and a Known
       issues entry for the Typst spill) and row E5 of
       `cairn/references/wrap-mechanisms.md`.
-- [ ] T6: Review return 1. Make `fig-column-*` and `tbl-column-*` cell
+- [x] T6: Review return 1. Make `fig-column-*` and `tbl-column-*` cell
       classes apply only to floats of their own type, read a table float's
       column class on a div inside it, set `found_wrap` only for figure and
       table floats, add `tests/tables-cell-columns.qmd` for the three
@@ -190,6 +190,7 @@ warning elsewhere, the site, and DESIGN.md.
 - 2026-10-30: T6: block_context returns a scope for a context that only a cell's fig-column-* or tbl-column-* class sets, record_floats keeps it in context_scope, and float_target drops a context of the other type; column_context drops the other type's scoped classes (own_type_classes); a table float reads a column class on a div inside it, since float.content can be one Block that a walk does not visit; found_wrap only for figure and table floats. New fixture tests/tables-cell-columns.qmd (HTML, Typst): the tbl-column figure and the fig-column table wrap, and the column: page table warns page-wide.
 - 2026-10-30: T6 text fixes: TABLE_IDS comment, wrapped.lua header and the several-cell comment, DESIGN.md steps 2, 4, 5, and 7, docs/index.qmd table sentence; ROADMAP row "Read table keys for document columns" narrowed to `column`, and rows "Name tables in the format warning" and "Treat mixed table and figure cells" added, both parked.
 - claim audit: 34 claims read, 3 corrected — wrapped.lua and DESIGN.md (Quarto, not knitr, moves a table cell's column class inside the float); the gate on the inner class used meta_column_set, which a document fig-column sets, so a page-wide table cell under fig-column: margin wrapped in Typst; now gated on tbl-column or column (meta_table_column_set), with a tbl-page-cell case added to tests/tables-fig-column-meta.qmd.
+- 2026-10-30: T6 done: python3 tests/verify.py all 119 renders pass; quarto render docs exit 0; status set to review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
