@@ -244,9 +244,11 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    `tbl-cap-location` (corrected M038). A code cell anchors the group of
    a wrapped float inside it, with or without a wrap class of its own,
    since a table float can take its class from its caption block, and a
-   cell's `margin-caption` class reaches its floats either way. knitr puts
-   a table cell's column class, as from `column: page`, on a div inside
-   the table float, which this step reads for a table (corrected M038). A float that step 2 or
+   cell's `margin-caption` class reaches its floats either way. Quarto
+   moves a knitr table cell's column class, as from `column: page`, from
+   the cell to a div inside the table float, which this step reads for a
+   table unless, in LaTeX and Typst, the document sets `tbl-column` or
+   `column` (corrected M038). A float that step 2 or
    3 recorded, a float other than a figure or a table, a float with a margin or page-wide class or a
    layout attribute, any figure float when the document's `fig-column` or
    `column` decides its column (`column_context`, below) and names the

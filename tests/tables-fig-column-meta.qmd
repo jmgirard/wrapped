@@ -25,3 +25,13 @@ The paragraph after the table.
 ![A figure that the document sends to the margin.](plot.png){#fig-fig-column .wrap-left width="30%"}
 
 The paragraph after the figure.
+
+```{r}
+#| label: tbl-page-cell
+#| tbl-cap: "A table from a cell with column: page, which fig-column does not override."
+#| column: page
+#| classes: wrap-right
+knitr::kable(head(cars, 2))
+```
+
+The paragraph after the page-wide table.

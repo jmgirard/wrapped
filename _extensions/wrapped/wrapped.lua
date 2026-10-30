@@ -1205,7 +1205,9 @@ local document_meta = {}
 -- (meta_table_column_context).
 local meta_column_context = {}
 local meta_table_column_context = {}
-local meta_tbl_column_set = false
+-- Set in the first pass: meta_tbl_column_set when the document sets
+-- tbl-column, and meta_table_column_set when it sets tbl-column or column.
+local meta_tbl_column_set, meta_table_column_set = false, false
 
 -- The text of a fig-column or column metadata value, or nil. As Quarto's
 -- columnOption does, it reads the first item of a list and treats an empty
@@ -1302,7 +1304,7 @@ local function read_meta(meta)
   end
   local tbl_column = meta_column(meta["tbl-column"])
   local table_column = tbl_column or meta_column(meta.column)
-  meta_tbl_column_set = tbl_column ~= nil
+  meta_tbl_column_set, meta_table_column_set = tbl_column ~= nil, table_column ~= nil
   if table_column then
     local classes = pandoc.List({ "column-" .. table_column })
     meta_table_column_context = { float = class_context(classes, true), cell = class_context(classes) }
@@ -1500,13 +1502,14 @@ local function float_target(float)
   local recorded = context_of_float[custom_id or ""]
   local scope = context_scope[custom_id or ""]
   if scope and scope ~= (is_table and "tbl" or "fig") then recorded = nil end
-  -- knitr puts a table cell's column class, as from `column: page`, on the
-  -- output div inside the table float, where find_contexts does not look.
-  -- In LaTeX and Typst a document column key decides over it, as over a
-  -- cell's own class. A float's content can be one block, which a walk
-  -- from that block does not visit, so the walk starts from a list.
+  -- Quarto moves a knitr table cell's column class, as from `column: page`,
+  -- from the cell to the output div inside the table float, where
+  -- find_contexts does not look. In LaTeX and Typst a document tbl-column
+  -- or column key decides over it, as over a cell's own class; a document
+  -- fig-column places no table. A float's content can be one block, which
+  -- a walk from that block does not visit, so the walk starts from a list.
   local inner
-  if is_table and not ((is_latex or is_typst) and meta_column_set) then
+  if is_table and not ((is_latex or is_typst) and meta_table_column_set) then
     local content = float.content
     if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
     content:walk({
