@@ -1,6 +1,6 @@
 # M039: Wrap table floats in Word
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -84,6 +84,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - 2026-10-30: T9: the spacer's `w:pPr` gains `w:keepNext`; in LibreOffice the pass-2 heading probes now put the heading on page 2 with its table. `docx_size(..., by_column)` sets each image in a table float's table to its column's equal share of the box less 216 twips of cell margin (1656 twips in a 3744-twip, two-column box). The closing paragraph looks into a div that ends the cell. The height warning now reads "in a wrapped figure or table, so the box sets the image's width" (three snapshots). `docx_tables` adds " keep" to `before=` and each cell image's width. `tests/docx-tables.qmd` gains `#tbl-cell-images` and `#tbl-nested`. `python3 tests/verify.py --update` passed all 124 renders, with only those changes. Plants each red: keepNext dropped (`before=p`), cell images unsized (`images=8400,8400`), last div not read (cell ends in `table`). AC3 reread: ok for all seven tables.
 - 2026-10-30: claim audit: 24 claims read, 2 corrected — _extensions/wrapped/wrapped.lua, docs/formats/word.qmd, tests/docx-tables.qmd (cell images take an equal share per column, not their column's own width; the image in `#tbl-image` sits above its table, not beside it). The heading claim now names LibreOffice, the only app observed. DESIGN.md's Word table paragraph gains the cell-image and keep-with-next sentences.
 - 2026-10-30: T9 shape: equal column shares, not each column's own width, since `fit_table` gives default-width columns equal shares; a table with explicit uneven widths can still clip a wide image in its narrow column (no fixture).
+- 2026-10-30: claim audit re-read: all six corrected claims hold. It noted that the 144-twip floor in `docx_size` can make an image wider than its cell in a box under about 0.5 in for two columns; left as is, since only an asked-for box that narrow reaches it. Status set to review.
 
 ## Decisions
 
