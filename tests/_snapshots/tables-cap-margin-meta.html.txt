@@ -1,0 +1,11 @@
+# warnings
+1x wrapped: the table #tbl-meta-margin has its caption in the margin, so it does not wrap.
+# breakpoint
+576px
+# figures
+tbl-meta-margin: - style=-
+fig-meta-body: wrap-left style=--wrap-gap: 1em; --wrap-width: 30%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-meta-body, p

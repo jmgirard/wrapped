@@ -24,7 +24,7 @@
 1x wrapped: the figure #fig-two-subcap-2 is in a subfigure panel, so it does not wrap.
 1x wrapped: the image deflist.png is in a list, so it does not wrap.
 1x wrapped: the image plot.png is in a list, so it does not wrap.
-1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
+1x wrapped: the table #tbl-wrapped does not wrap in LaTeX. A table wraps only in HTML and Typst.
 # tex
 marginfigure: fig-margin [-] image=[keepaspectratio]
 figure: - [H] image=[keepaspectratio]

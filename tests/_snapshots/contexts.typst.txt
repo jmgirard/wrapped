@@ -23,7 +23,6 @@
 1x wrapped: the figure #fig-two-subcap-2 is in a subfigure panel, so it does not wrap.
 1x wrapped: the image deflist.png is in a list, so it does not wrap.
 1x wrapped: the image plot.png is in a list, so it does not wrap.
-1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
 # typ
 notefigure: fig-margin image-width=no
 figure: - image-width=no
@@ -62,5 +61,6 @@ notefigure: fig-margin-two-2 image-width=no
 notefigure: fig-margin-two-heading-1 image-width=no
 notefigure: fig-margin-two-heading-2 image-width=no
 # wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | tbl-wrapped no-alt | p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-quote no-alt | p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 30%, 40%, 40%)), column-gutter: 1em | fig-second no-alt | p, p | cites=0
