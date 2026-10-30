@@ -1338,18 +1338,20 @@ def typ_block_kind(block):
 
 
 def typ_summary(path):
-    # A body figure's #figure( call starts a line, or follows the indent of
-    # a table cell, unlike the `[#figure(` in Quarto's template. Each chunk
-    # runs to the next call, and the figure's label is the first one in it.
-    # The figure's content ends before its `kind:` line.
+    # A body figure's #figure( call and a margin figure's #notefigure( call
+    # start a line, or follow the indent of a table cell, unlike the
+    # `[#figure(` in Quarto's template. Each chunk runs to the next call of
+    # either kind, and the figure's label is the first one in it. A body
+    # figure's content ends before its `kind:` line, and a margin figure's,
+    # which has `kind:` on the call's first line, before its caption.
     source = path.read_text(encoding="utf-8")
-    chunks = re.split(r"^[ \t]*#figure\(", source, flags=re.M)[1:]
+    parts = re.split(r"^[ \t]*#(figure|notefigure)\(", source, flags=re.M)[1:]
     lines = []
-    for chunk in chunks:
+    for kind, chunk in zip(parts[::2], parts[1::2]):
         label = re.search(r"^[ \t]*<((?:fig|tbl)-[\w-]+)>", chunk, re.M)
-        content = chunk.split("\nkind: ", 1)[0]
+        content = chunk.split("\nkind: " if kind == "figure" else "\n, caption: ", 1)[0]
         width = re.search(r"image\([^)]*width:", content) is not None
-        lines.append(f"figure: {label.group(1) if label else '-'} image-width={'yes' if width else 'no'}")
+        lines.append(f"{kind}: {label.group(1) if label else '-'} image-width={'yes' if width else 'no'}")
     # The filter writes each wrap-content call as raw lines around the box
     # content and the paragraphs, which Typst output separates by blank lines.
     # Each block beside the box is named by its kind, and a count of

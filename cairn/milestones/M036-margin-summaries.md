@@ -38,7 +38,7 @@ The LaTeX and Typst summaries in `tests/verify.py` give each margin figure its o
 ## Tasks
 
 - [x] T1: Add `marginfigure` to the environment pattern of `tex_summary`, so its line uses the same label, options, image, and link parts.
-- [ ] T2: In `typ_summary`, split at `#figure(` and `#notefigure(` calls that start a line or follow a cell's indent, keep which call opened each chunk, and write `figure:` or `notefigure:` lines in that order. Update the function's comment.
+- [x] T2: In `typ_summary`, split at `#figure(` and `#notefigure(` calls that start a line or follow a cell's indent, keep which call opened each chunk, and write `figure:` or `notefigure:` lines in that order. Update the function's comment.
 - [x] T3: Add the AC2 fixture to `tests/` and to `RENDERS` with a `typst` entry. Before T2, render it and record in the work log that the old `typ_summary` gives the image the margin figure's label.
 - [ ] T4: Run `python3 tests/verify.py --update` and read the snapshot diff against AC3. With a script, count the AC1 regex matches in each `pdf` and `typst` render of `RENDERS` against the summary's lines. Run `python3 tests/verify.py`.
 
@@ -55,3 +55,4 @@ The LaTeX and Typst summaries in `tests/verify.py` give each margin figure its o
 - 2026-10-30: status in-progress; branch m036-margin-summaries cut from main at 2f46345.
 - 2026-10-30: T1 done: `tex_summary` matches `marginfigure`; on the kept renders it lists 1, 2, 8, and 6 `marginfigure:` lines for column-order, column-order-margin, contexts, and margin-meta, each with its label; no preamble holds the environment. The verify run for T1–T3 waits for T4, which updates the snapshots these tasks change on purpose.
 - 2026-10-30: T3 done: new fixture `tests/margin-after-image.qmd` (Typst only) with a captioned image with no id, then `fig-after-image-margin` with `.column-margin`; added to `RENDERS` after column-order-margin. Its render holds one `#figure(` and one `#notefigure(` call at line start, and the old `typ_summary` printed `figure: fig-after-image-margin` and no other figure line.
+- 2026-10-30: T2 done: `typ_summary` splits at `#figure(` and `#notefigure(` at line start with a captured kind and writes a line named for it. Choice: a margin figure's content for `image-width` ends before its `\n, caption: ` line, since its `kind:` sits on the call's first line. On the kept renders the new fixture reads `figure: -` then `notefigure: fig-after-image-margin`; margin-meta lists six `notefigure:` lines before its `figure: -`.
