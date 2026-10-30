@@ -37,7 +37,7 @@ The Limits section of `docs/formats/latex.qmd` says that wrapfig can keep lines 
 
 - [x] T1: Run `quarto render docs`. For each of the eight LaTeX PDFs, read text lines and images with `pdftohtml -xml` into a temporary folder. Count only body-font lines that are not the last line of their paragraph (split paragraphs with `blocks()` from `tests/docs_layout.py`). Beside a right figure, a line is narrowed when its right edge lies within 3 px of the right edge of the lines beside the figure. Beside a left figure, a line is narrowed when it starts at least the figure's width plus its gap in from the column's left edge. Measure past the Scope's figure bottom and on the figure's page only, since a page break is its own Limits bullet. Log one work-log line with the eight counts and the y values behind them.
 - [x] T2: Write the sentence in the Limits section from the T1 counts.
-- [ ] T3: Run `quarto render docs` and `python3 tests/docs_layout.py`.
+- [x] T3: Run `quarto render docs` and `python3 tests/docs_layout.py`.
 
 ## Work log
 
@@ -51,3 +51,4 @@ The Limits section of `docs/formats/latex.qmd` says that wrapfig can keep lines 
 - 2026-10-30: implement: branch m037-latex-narrow-past cut from main at ab03bb9; working tree clean.
 - 2026-10-30: T1: measured with a scratch script on the `tests/docs_layout.py` helpers, after `quarto render docs` on this branch; narrowed lines past the figure bottom (bottom px; narrowed line tops): both-sides fig 1: 1 (889; 897), fig 2 (left): 1 (473; 481); code-cell: 1 (916; 920); defaults: 1 (906; 920); div-figure (left): 1 (885; 893); image-figure: 2 (814; 816, 836); uncaptioned-image: 1 (680; 684); width-gap (left): 1 (796; 816); wrap-clear: 0 (879; its beside paragraph ends at 613, and the full-width paragraph after the wrap-clear div starts at 907). Every narrowed line is in the paragraph that ran beside its figure. Nonzero counts: 1 and 2.
 - 2026-10-30: T2: two sentences added to the first Limits bullet of `docs/formats/latex.qmd`, after the one on how wrapfig counts lines; "one or two" from T1, and "a paragraph that runs on below a figure" leaves out wrap-clear, whose beside paragraph ends beside its figure.
+- 2026-10-30: T3: `quarto render docs` exit 0; `python3 tests/docs_layout.py` exit 0, 24 of 24 ok (LaTeX, Typst, Word); `python3 tests/verify.py` all 106 renders pass; the sentence is in `docs/_site/formats/latex.html`.
