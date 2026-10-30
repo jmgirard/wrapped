@@ -32,9 +32,9 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 
 ## Coverage
 
-- AC1 → T1, T2, T3, T7, T8
+- AC1 → T1, T2, T3, T7, T8, T9
 - AC2 → T1, T3
-- AC3 → T2, T4, T7
+- AC3 → T2, T4, T7, T9
 - AC4 → T6
 - AC5 → T5
 - AC6 → T6
@@ -49,6 +49,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - [x] T6: Run `python3 tests/verify.py` and `quarto render docs`. At review, stop once for the user's look in Word, and record the user's report in the Review section.
 - [x] T7: Review return 1: a table, figure float, or callout right before a wrapped Word table float must not merge into it. Put a paragraph before the floating table, and check the case with a render and in LibreOffice.
 - [x] T8: Pass-1 fix-now findings (Review section): size images outside a table float's tables to the box; record the inner table's width, the anchors, links, and citations in `docx_tables`; reword the nested-table count; render `tables-column-meta` to Word; fix the stale lines in DESIGN.md, the Lua headers, `wrap-mechanisms.md`, the `verify.py` docstrings, `docs/index.qmd`, `docs/formats/word.qmd`, and the "tested on HTML pages" sentences.
+- [x] T9: Review return 2: the spacer keeps with the next paragraph, so a heading stays with its table; images in a table float's cells take their column's share of the box; the image-height warning names tables; the closing paragraph looks into a last div; the Word page's multi-column and box-contents sentences and the `docx_group` comment. Each fix gets a `tests/docx-tables.qmd` case and a plant.
 
 ## Work log
 
@@ -80,6 +81,8 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - 2026-10-30: `tests/.gitignore` gained `/.quarto/` from a Quarto render in `tests/`; it is not milestone work and stays unstaged.
 - 2026-10-30: T4 minor amendment: T4 recorded its coordinates in the work log, not the review-owned Review section, which implement does not write.
 - 2026-10-30: review return 2: the spacer paragraph before a Word floating table takes a heading's keep-with-next, so a heading near a page foot is cut off from its wrapped table (pass-2 diff-bug #1, load-bearing). The same return carries the pass-2 fix-now findings that the Review section lists: images in the inner table's cells sized to their column's share of the box, the image-height warning's wording, a closing paragraph after a last Div that ends in a table, and the Word page's multi-column and box-contents sentences and the `docx_group` comment. Defect returns so far: 2.
+- 2026-10-30: T9: the spacer's `w:pPr` gains `w:keepNext`; in LibreOffice the pass-2 heading probes now put the heading on page 2 with its table. `docx_size(..., by_column)` sets each image in a table float's table to its column's equal share of the box less 216 twips of cell margin (1656 twips in a 3744-twip, two-column box). The closing paragraph looks into a div that ends the cell. The height warning now reads "in a wrapped figure or table, so the box sets the image's width" (three snapshots). `docx_tables` adds " keep" to `before=` and each cell image's width. `tests/docx-tables.qmd` gains `#tbl-cell-images` and `#tbl-nested`. `python3 tests/verify.py --update` passed all 124 renders, with only those changes. Plants each red: keepNext dropped (`before=p`), cell images unsized (`images=8400,8400`), last div not read (cell ends in `table`). AC3 reread: ok for all seven tables.
+- 2026-10-30: T9 shape: equal column shares, not each column's own width, since `fit_table` gives default-width columns equal shares; a table with explicit uneven widths can still clip a wide image in its narrow column (no fixture).
 
 ## Decisions
 

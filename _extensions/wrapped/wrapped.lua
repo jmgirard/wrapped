@@ -752,18 +752,22 @@ local function docx_frame(class, width, gap, where)
 end
 
 -- Sets each image in a list of blocks to the frame's width, so the image
--- fills the frame. With `skip_tables`, an image in a table keeps the size
--- that Pandoc gives it, which the box does not set.
-local function docx_size(blocks, twips, skip_tables)
+-- fills the frame. With `by_column`, for a table float's box, an image in a
+-- table takes its column's equal share of the box, less the 108-twip cell
+-- margins on each side that Pandoc's Table style sets.
+local function docx_size(blocks, twips, by_column)
+  local function size(img, w)
+    img.attributes.width = tex_number(w / 1440) .. "in"
+    return img
+  end
   return blocks:walk({
     traverse = "topdown",
     Table = function(tbl)
-      if skip_tables then return tbl, false end
+      if not by_column then return nil end
+      local share = math.max(twips / math.max(#tbl.colspecs, 1) - 216, 144)
+      return tbl:walk({ Image = function(img) return size(img, share) end }), false
     end,
-    Image = function(img)
-      img.attributes.width = tex_number(twips / 1440) .. "in"
-      return img
-    end,
+    Image = function(img) return size(img, twips) end,
   })
 end
 
@@ -829,7 +833,7 @@ local function clean_image(img)
   elseif is_typst or is_docx then
     if img.attributes.height then
       quarto.log.warning(string.format(
-        "wrapped: %s does not use the height of the image %s in a wrapped figure, so the image fills the box width.",
+        "wrapped: %s does not use the height of the image %s in a wrapped figure or table, so the box sets the image's width.",
         is_typst and "Typst" or "Word", pandoc.utils.stringify(img.src)))
     end
     if is_typst then img.attributes.width = "100%" end
@@ -1613,9 +1617,9 @@ local function float_target(float)
     end
   elseif is_docx then
     -- A table float's box is a floating table that wrapped-docx.lua makes
-    -- at post-render (D-022). An image outside its table fills the box. A
-    -- float's content can be one block, which a walk from that block does
-    -- not visit.
+    -- at post-render (D-022). An image outside its table fills the box, and
+    -- one in the table fills its column's share. A float's content can be
+    -- one block, which a walk from that block does not visit.
     local frame, w = docx_frame(class, width, gap, "#" .. float.identifier)
     if is_table and pandoc.utils.type(float.content) == "Block" then
       float.content = docx_size(pandoc.Blocks({ float.content }), w, true)[1]
@@ -2003,7 +2007,8 @@ local function typst_group(members)
   return out
 end
 
--- In Word, a group's .wrap-group div carries its figure's frame, which
+-- In Word, a group's .wrap-group div carries its figure's or table's frame
+-- (for a table, the floating table's side, width, and gap), which
 -- wrapped-docx.lua reads at post-render. A .wrapped-image box gives its
 -- frame to the group, and a code cell or a float gives the frame of its
 -- wrapped float.

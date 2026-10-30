@@ -69,4 +69,4 @@ image: cx=4572000
 frame right w=3744 gap=240 anchor=margin | fig-quote | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame right w=2808 gap=240 anchor=margin | fig-second | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-first,fig-second cites=0
 # floating tables
-table right w=3744 left=240 right=0 anchor=margin/text | before=p | tbl-wrapped, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-wrapped, caption, table pct 5000, p | p, clear | links=- cites=0

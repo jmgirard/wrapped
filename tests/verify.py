@@ -1495,7 +1495,9 @@ def docx_tables(body):
     cells in order (a bookmark's name, "caption" for a paragraph in the
     ImageCaption style, "image" with whether it fills the box for a paragraph
     that holds one, "p" for another paragraph, and "table" with its
-    w:tblW for a table), the kind of the block before it, and the kind of
+    w:tblW and the width in twips of each image in it for a table), the
+    kind of the block before it ("keep" when it keeps with the next), and
+    the kind of
     each block after it up to the clearing break, with the anchors of the
     links and the number of author-year citations there, as for a frame."""
     lines = []
@@ -1508,7 +1510,10 @@ def docx_tables(body):
         if pos is None:
             continue
         width = int(el.find(f"{W}tblPr/{W}tblW").get(f"{W}w"))
-        before = children[i - 2].tag.replace(W, "") if i >= 2 else "-"
+        prev = children[i - 2] if i >= 2 else None
+        before = prev.tag.replace(W, "") if prev is not None else "-"
+        if prev is not None and prev.find(f"{W}pPr/{W}keepNext") is not None:
+            before += " keep"
         parts = []
         for row in el.findall(f"{W}tr"):
             for cell in row.findall(f"{W}tc"):
@@ -1525,7 +1530,9 @@ def docx_tables(body):
                             parts.append("caption" if "ImageCaption" in styles else "p")
                     elif part.tag == f"{W}tbl":
                         inner = part.find(f"{W}tblPr/{W}tblW")
-                        parts.append(f"table {inner.get(f'{W}type')} {inner.get(f'{W}w')}")
+                        widths = [str(int(e.get("cx")) // EMU_PER_TWIP) for e in part.iter(f"{WP}extent")]
+                        parts.append(f"table {inner.get(f'{W}type')} {inner.get(f'{W}w')}"
+                                     + (f" images={','.join(widths)}" if widths else ""))
         after, links, cites, i = docx_after(children, i)
         lines.append(f"table {pos.get(f'{W}tblpXSpec')} w={width} "
                      f"left={pos.get(f'{W}leftFromText')} right={pos.get(f'{W}rightFromText')} "

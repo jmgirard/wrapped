@@ -52,8 +52,8 @@ The `width` and `wrap-gap` values change to Word lengths:
   warning of its own.
 
 The text width is the page width less the left and right margins and the
-gutter. A reference doc with more than one column keeps normal figures,
-and the render prints one warning.
+gutter. A reference doc with more than one column keeps normal figures
+and table floats, and the render prints one warning.
 
 ## Images and frames
 
@@ -75,9 +75,11 @@ rest of the page before it stays blank.
 
 A wrapped [table float](../get-started.qmd#wrap-a-table) goes in a
 floating table, the box that Word wraps text around for a table. The box
-has one cell, which holds the caption and the table. It takes its width
-and gap as a figure's frame does. The filter sets the table to the full
-width of the box. The wrap stops where a figure's wrap stops.
+has one cell, which holds the caption, the table, and any other content of
+the float. It takes its width and gap as a figure's frame does. The filter
+sets the table to the full width of the box. An image beside the table
+fills the box, and an image in a table cell fills an equal share of the
+box for each column. The wrap stops where a figure's wrap stops.
 
 In LibreOffice 26.8 on macOS, a table wider than its box narrows its
 columns to fit the box, and the column text then breaks inside words. A

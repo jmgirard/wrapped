@@ -7,7 +7,8 @@ format: docx
 
 Word joins two tables with nothing between them, so the first two wrapped
 table floats below each follow a block that Word writes as a table. The
-last one holds an image.
+third holds an image beside its table, the fourth holds images in its
+table's cells, and the last ends with a div that holds its table.
 
 | A | B |
 |---|---|
@@ -60,3 +61,39 @@ labore et dolore magna aliqua.
 The paragraph beside the table float with an image. Lorem ipsum dolor sit
 amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
 labore et dolore magna aliqua.
+
+## Images in a table's cells
+
+::: {#tbl-cell-images .wrap-left}
+
+| Before | After |
+|--------|-------|
+| ![](plot.png) | ![](plot.png) |
+
+: A table float with an image in each cell.
+
+:::
+
+The paragraph beside the table float with images in its cells. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## A table in a div at the end of the float
+
+::: {#tbl-nested .wrap-right}
+
+A table float whose table sits in a div of its own.
+
+::: {.inner}
+
+| A | B |
+|---|---|
+| 1 | 2 |
+
+:::
+
+:::
+
+The paragraph beside the table float whose table sits in a div. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
