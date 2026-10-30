@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M038: Wrap table floats in HTML and Typst
 
-- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -174,3 +174,4 @@ warning elsewhere, the site, and DESIGN.md.
 - 2026-10-30: substantive amendment: Scope Out item on document column keys narrowed; the claim audit found that a document `tbl-column: margin` put a table in the margin while the filter floated it there with no warning, and a document `fig-column: margin` kept body tables normal with a false margin warning. column_context now reads tbl-column, its own class and the document's, for table floats and not fig-column; fixtures tables-column-meta and tables-fig-column-meta (HTML and Typst) cover both. No criterion changed; the deliverable gains a fix, so no stop.
 - 2026-10-30: T5 done: site pages, README, DESIGN.md, and wrap-mechanisms E5 updated; docs render exit 0.
 - 2026-10-30: implement complete: python3 tests/verify.py all 117 renders pass after the tbl-column fix; quarto render docs exit 0; status set to review.
+- amendment routed: AC7 — the new snapshot files of tables-cap-margin-meta, tables-column-meta, and tables-fig-column-meta add lines for their control figures, so "no snapshot line for a figure changes" fails as written although no snapshot file on main changed outside table lines; the criterion needs to bind the files that exist on main.
