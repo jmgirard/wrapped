@@ -13,8 +13,8 @@ The documentation is at <https://jmgirard.github.io/wrapped/>.
 
 ## Install
 
-The extension asks for Quarto 1.9.36 or later. It is tested with Quarto
-1.9.36 and with Quarto's current release. In the folder of your project, run:
+The extension asks for Quarto 1.9.36 or later. Each change to it is tested
+with Quarto 1.9.36 and with Quarto's current release. In the folder of your project, run:
 
 ```bash
 quarto add jmgirard/wrapped

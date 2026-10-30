@@ -1,7 +1,8 @@
 # Renders the test fixtures with Quarto's release channel and with the lowest
 # Quarto that quarto-required in _extensions/wrapped/_extension.yml admits,
 # and compares them with the snapshots in tests/_snapshots/
-# (python3 tests/verify.py). Raise the pinned version with quarto-required.
+# (python3 tests/verify.py). When quarto-required rises, change 1.9.36 in the
+# matrix to match: nothing keeps the two in step.
 name: verify
 
 on:
