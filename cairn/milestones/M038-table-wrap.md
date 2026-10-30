@@ -276,3 +276,23 @@ Pass 3 evidence at e8651f6 (code at 0738966; `main` still 2029477).
 - AC6: docs pages changed since pass 2 (reference.qmd rows, stopping.qmd, formats/html.qmd) state the table rule; `quarto render docs` exit 0.
 - AC7 (local half): 122 renders pass in a clean compare run; in the 8 snapshot files on main, every changed line names a `tbl-` float or is one of the two `cell, p` groups; CI half pending.
 - gate: `cairn_validate.py` all checks passed; version 0.2.0 unchanged; no principle changed.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a figure in a cell with `column: page` (or `fig-column: page`) and `tbl-column: margin` wraps with no warning, where main warns page-wide; block_context returned the tbl-scoped margin context and dropped the page-wide one — fix now: block_context returns the plain context beside a scoped one, and mark_context records it for every float (not floor: only a cell that gives a figure a `tbl-column` reaches it, outside documented and common use)
+- diff-bug #2: a cell with no wrap class now anchors the group of a figure float with its own wrap class, which moves its stop past the cell's later code — fix now: `cell` is set for a carried cell or a table float only, so such a figure is read as on main (not floor: only `output: asis` writing a classed figure reaches it)
+- diff-bug #3: the comment "Only figures count here" in float_target, though the cell's count holds tables — fix now
+- diff-bug #4: the `first` flag in scoped_context can never be false, since every outer context stops the walk — fix now (removed; a scoped context of the float's type always comes first)
+- diff-bug #5: no double marks or warnings from the walk into a scoped cell — noted
+- diff-bug #6: the moved LaTeX/Word table warning works with contexts and the several-figures rule — noted
+- diff-bug #7: attribute order changed on untouched elements in cap-margin.html and dashboard.html, since cell_div returns every cell — reject, style (no snapshot or rendered result changes)
+- blame-history #1: same as diff-bug #1 — fix now (as diff-bug #1)
+- blame-history #2: in LaTeX a table's inner `column-page` comes before a document `column` key — reject, edge: only a document `column` key with a page-wide table cell reaches it, and its effect is which warning prints, since LaTeX wraps no table
+- blame-history #3: an unclassed `.margin-caption` cell now keeps an own-class figure normal — fix now (as diff-bug #2: figures in unclassed cells read as on main)
+- blame-history #4: column_context reads the cell-level document value for every cell float — fix now (as diff-bug #2)
+- blame-history #5: an image or non-float figure with a `tbl-column-margin` class now warns "in the margin" — reject, edge: only a hand-written tbl-column class on an image reaches it, and its effect is a warning
+- blame-history #6: the find_contexts and mark_context comments do not say a scoped cell is walked into — fix now
+- prior-review #1: README.md and docs/index.qmd say a table wraps in HTML with no note that only HTML pages are tested — fix now
+- prior-review #2: the README sentence states a user rule — reject, planned change (it mirrors the README's existing figure sentence)
+- ripple #1: DESIGN.md's Goals warning list omits the per-table LaTeX and Word warning — fix now
+- ripple #2: the normal-layout page title names figures only — reject, style
+- ripple #3: wrap-mechanisms E20 and E21 are silent on tables — reject, false: silence is no disagreement, and E3 and E5 carry the table rule
+- ripple #4: docs/defaults.qmd speaks of figures only — reject, false: no statement there disagrees with the diff
