@@ -127,6 +127,18 @@ knitr::kable(head(cars, 2))
 
 The paragraph after the table in the margin.
 
+## A page-wide table
+
+```{r}
+#| label: tbl-page
+#| tbl-cap: "A page-wide table."
+#| tbl-column: page
+#| classes: wrap-right
+knitr::kable(head(cars, 2))
+```
+
+The paragraph after the page-wide table.
+
 ## A table wider than its box
 
 ::: {#tbl-wide .wrap-right width="20%"}
