@@ -27,8 +27,8 @@ CI runs `tests/verify.py` on the Quarto version that `quarto-required` names, so
 
 - [ ] AC1: `quarto-required` in `_extensions/wrapped/_extension.yml` reads `">=F"`, where F is a release of the Scope list on which `python3 tests/verify.py` exits 0 on this Mac and in the PR's CI run under F. Each release of that list below F exits 1 under the same command on this Mac or in CI, with a FAIL line or a Python traceback that the command does not print under Quarto 1.10.19.
 - [ ] AC2: `.github/workflows/verify.yml` runs `python3 tests/verify.py` under Quarto's release channel and under Quarto F (quarto-actions/setup `version:`), on the triggers it has on `main` today, and both runs pass on the PR head. If the CI run fails under a release that passed on this Mac, F rises to the next release of the list, and AC1 and AC3 read that F.
-- [ ] AC3: `README.md`, `docs/index.qmd`, and `docs/get-started.qmd` each say that the extension asks for Quarto F or later and is tested with Quarto F and Quarto's current release. DESIGN.md's Quarto version paragraph names F and the CI run on it, and says that releases between F and the release channel get no CI run. PROFILE.md's verify slot names both CI runs. `quarto render docs` exits 0.
-- [ ] AC4: `python3 tests/verify.py` passes on the review head under Quarto 1.10.19.
+- [x] AC3: `README.md`, `docs/index.qmd`, and `docs/get-started.qmd` each say that the extension asks for Quarto F or later and is tested with Quarto F and Quarto's current release. DESIGN.md's Quarto version paragraph names F and the CI run on it, and says that releases between F and the release channel get no CI run. PROFILE.md's verify slot names both CI runs. `quarto render docs` exits 0.
+- [x] AC4: `python3 tests/verify.py` passes on the review head under Quarto 1.10.19.
 
 ## Coverage
 
@@ -72,25 +72,31 @@ CI runs `tests/verify.py` on the Quarto version that `quarto-required` names, so
 ## Review
 
 - Review head e575869, `main` at 1f54040 (not moved since the cut). Copilot round off.
+- AC1 (Mac part): at e575869, `quarto-required` reads `">=1.9.36"`; `python3 tests/verify.py` with Quarto 1.9.36 first on `PATH` (generator `quarto-1.9.36`) exit 0, "all 105 renders pass". F is 1.9.36, the first release of the list, so no release lies below it. The CI part is read on the PR at step 8, and the box waits for it.
+- AC2: `verify.yml` at e575869 has the matrix `quarto: [release, 1.9.36]`, passed to quarto-actions/setup `version:`, with the triggers of `main` (pull_request to main, push to main ignoring `cairn/**`, workflow_dispatch). Both runs on the PR head are read at step 8, and the box waits for them.
+- AC3: README.md:16, docs/index.qmd:42, docs/get-started.qmd:7 each read "The extension asks for Quarto 1.9.36 or later. Each change to it is tested with Quarto 1.9.36 and with Quarto's current release." DESIGN.md's Quarto version paragraph names 1.9.36, the `verify.yml` run on it, and "Releases between 1.9.36 and the release channel get no CI run"; PROFILE.md's verify slot names both runs (wording fixed e107648). `quarto render docs` exit 0 at e575869; `tests/docs_layout.py` exit 0.
+- AC4: at e575869, `python3 tests/verify.py` under Quarto 1.10.19 (generator `quarto-1.10.19`) exit 0, "all 105 renders pass". e107648 changes only `cairn/` files.
+- Consistency gate: `cairn_validate.py` all checks passed; one version marker (`version: 0.2.0`), unchanged by the branch; verify passes (AC4); the diff touches `docs/`, so `tests/docs_layout.py` passed on the Mac and the docs workflow is read on the PR; changelog "none". No principle changed, so no `cairn_impact` run.
+- snapshot: no changed snapshot file (`git diff --name-only main...HEAD` lists none under `tests/_snapshots/`).
 - spawned: diff-bug, blame-history, prior-review, ripple
 - diff-bug #1: AC1 and AC2 need a 1.9.36 run on Ubuntu, which has not run — reject (planned change: the plan reads both matrix runs at review, and step 8 merges only on green CI).
-- diff-bug #2: no doc says what to do when the release channel and 1.9.36 write different output, so one `--update` can break the other run — fix now.
-- diff-bug #3: the keep-in-step note names `quarto-required` and the matrix only, not the install text in README, `docs/index.qmd`, `docs/get-started.qmd`, DESIGN.md, and PROFILE.md — fix now.
+- diff-bug #2: no doc says what to do when the release channel and 1.9.36 write different output, so one `--update` can break the other run — fix now, fixed e107648.
+- diff-bug #3: the keep-in-step note names `quarto-required` and the matrix only, not the install text in README, `docs/index.qmd`, `docs/get-started.qmd`, DESIGN.md, and PROFILE.md — fix now, fixed e107648.
 - diff-bug #4: "Each change to it is tested" overclaims, since `main` has no branch protection and a failing 1.9.36 run does not block a push — reject (false: the sentence claims a test run, and every push to `main` outside `cairn/` runs it).
 - diff-bug #5: the check names change to `verify (release)` and `verify (1.9.36)` — reject (planned change: the plan gate weighed it, and nothing requires the old name).
 - diff-bug #6: the new install lines are 89 characters against about 76 around them — reject (style).
-- diff-bug #7: DESIGN.md's Conventions line names pull requests only, not pushes to `main` or manual runs — fix now.
-- diff-bug #8: PROFILE.md now says `verify.yml` instead of `.github/workflows/verify.yml` — fix now.
+- diff-bug #7: DESIGN.md's Conventions line names pull requests only, not pushes to `main` or manual runs — fix now, fixed e107648.
+- diff-bug #8: PROFILE.md now says `verify.yml` instead of `.github/workflows/verify.yml` — fix now, fixed e107648.
 - blame-history #1: the matrix doubles the Ubuntu apt and R installs that D-009 found slow, so a pull request has two chances of a setup timeout — follow-up: absorbed into the parked row "Cut the Ubuntu mirror from CI setup" (stays parked, since no run has timed out).
 - blame-history #2: nothing enforces that the matrix entry follows `quarto-required` — reject (duplicate of diff-bug #3, whose fix covers it).
 - blame-history #3: the install text holds only once the Ubuntu 1.9.36 run passes — reject (duplicate of diff-bug #1).
 - blame-history #4: the get-started freeze hash may depend on the Quarto version, which would fail `docs.yml` — reject (false: the stored hash `f290f19d…` equals `md5 -q docs/get-started.qmd`, the page source).
-- blame-history #5: PROFILE.md says "the version that `quarto-required` names", but the field names a range — fix now.
+- blame-history #5: PROFILE.md says "the version that `quarto-required` names", but the field names a range — fix now, fixed e107648.
 - blame-history #6: the absorbed candidate row still carries the M034 caption-block caveat — reject (planned change: hygiene removes the row, and the `#tbl-` caption-block fixture cases passed on 1.9.36 in T1).
 - blame-history #7: `docs/normal-layout.qmd:61` and `docs/formats/latex.qmd:91` state Quarto 1.10.19 behavior — reject (false as a contradiction: each states observed behavior of that version, a dated record).
 - blame-history #8: CLAUDE.md puts user rules on site pages, and README holds the install paragraph — reject (planned change: the plan edits the existing paragraph in place).
 - prior-review #1: "Each change to it is tested" holds for changes merged to `main`, not for other branches — reject (false for users, who install from `main`, where every change outside `cairn/` runs the workflow). No prior review point reintroduced; PR comment probe returned `[]`.
 - ripple #1: the candidate row "Test the minimum Quarto version in CI" still says only 1.10.19 and later are tested — reject (planned change: hygiene graduates the row).
-- ripple #2: `cairn/references/wrap-mechanisms.md:188` says CI runs the release channel on pull requests and omits 1.9.36 — fix now.
+- ripple #2: `cairn/references/wrap-mechanisms.md:188` says CI runs the release channel on pull requests and omits 1.9.36 — fix now, fixed e107648.
 - ripple #3: `verify-prerelease.yml` keeps the artifact name `rendered-outputs` — reject (style: one artifact per run there, no collision).
 - ripple #4: user pages say "Quarto's current release", tracking files say "release channel" — reject (style: the plain-words form on user pages).
