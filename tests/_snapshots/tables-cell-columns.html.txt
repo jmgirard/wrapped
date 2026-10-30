@@ -1,13 +1,30 @@
 # warnings
+1x wrapped: the figure #fig-page-and-margin is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-panels-tbl-column is a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-panels-tbl-column-1 is in a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-panels-tbl-column-2 is in a subfigure panel, so it does not wrap.
 1x wrapped: the table #tbl-column-page is page-wide, so it does not wrap.
+1x wrapped: the table #tbl-panels-fig-column is a subfigure panel, so it does not wrap.
+1x wrapped: the table #tbl-panels-fig-column-1 is in a subfigure panel, so it does not wrap.
+1x wrapped: the table #tbl-panels-fig-column-2 is in a subfigure panel, so it does not wrap.
 # breakpoint
 576px
 # figures
 fig-tbl-column: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
 tbl-fig-column: wrap-left style=--wrap-gap: 1em; --wrap-width: 40%
 tbl-column-page: - style=-
+fig-panels-tbl-column: - style=-
+fig-panels-tbl-column-1: - style=-
+fig-panels-tbl-column-2: - style=-
+tbl-panels-fig-column: - style=-
+tbl-panels-fig-column-1: - style=-
+tbl-panels-fig-column-2: - style=-
+fig-page-and-margin: - style=-
 # images
 fig-tbl-column-1.png: wrap=- style=- width=-
+fig-panels-tbl-column-1.png: wrap=- style=- width=672
+fig-panels-tbl-column-2.png: wrap=- style=- width=672
+fig-page-and-margin-1.png: wrap=- style=- width=672
 # groups
 cell, p
 cell, p

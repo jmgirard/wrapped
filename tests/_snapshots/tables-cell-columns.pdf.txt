@@ -1,0 +1,15 @@
+# warnings
+1x wrapped: the figure #fig-page-and-margin is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-panels-tbl-column is a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-panels-tbl-column-1 is in a subfigure panel, so it does not wrap.
+1x wrapped: the figure #fig-panels-tbl-column-2 is in a subfigure panel, so it does not wrap.
+1x wrapped: the table #tbl-column-page is page-wide, so it does not wrap.
+1x wrapped: the table #tbl-fig-column does not wrap in LaTeX. A table wraps only in HTML and Typst.
+1x wrapped: the table #tbl-panels-fig-column is a subfigure panel, so it does not wrap.
+1x wrapped: the table #tbl-panels-fig-column-1 is in a subfigure panel, so it does not wrap.
+1x wrapped: the table #tbl-panels-fig-column-2 is in a subfigure panel, so it does not wrap.
+# tex
+wrappedfigure: fig-tbl-column [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+figure: fig-panels-tbl-column-1 [H] image=[keepaspectratio]
+marginfigure: fig-page-and-margin [-] image=[keepaspectratio]
