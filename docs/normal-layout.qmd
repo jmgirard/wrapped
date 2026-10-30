@@ -92,12 +92,11 @@ The list above covers both.
 
 ## Tables
 
-A table float wraps in HTML and in PDF through Typst. A `#tbl-` div, a
-pipe table with a `#tbl-` id, or a code cell with a `tbl-` label makes a
-table float. In PDF through LaTeX and in Word a wrapped table float keeps
-its normal layout, and the render prints one warning that names it.
-Quarto writes a LaTeX table as a `longtable`, which wrapfig cannot hold,
-and a Word frame cannot hold a table.
+A table float wraps in HTML, in PDF through Typst, and in Word. A `#tbl-`
+div, a pipe table with a `#tbl-` id, or a code cell with a `tbl-` label
+makes a table float. In PDF through LaTeX a wrapped table float keeps its
+normal layout, and the render prints one warning that names it. Quarto
+writes a LaTeX table as a `longtable`, which wrapfig cannot hold.
 
 The places on this page keep a table float's normal layout as they keep a
 figure's. For a table, `tbl-cap-location` takes the place of

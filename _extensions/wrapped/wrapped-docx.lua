@@ -141,15 +141,52 @@ local function frame_blocks(blocks, frame, image_style, state)
   })
 end
 
--- Returns the div inside a figure table, Quarto's one-cell table that holds
--- a div with the figure's id, or nil for any other table.
-local function figure_div(tbl)
+-- Returns the div inside a float table, Quarto's one-cell table that holds
+-- a div with the float's id, with "fig" or "tbl", or nil for any other
+-- table.
+local function float_div(tbl)
   if #tbl.bodies ~= 1 or #tbl.bodies[1].body ~= 1 then return nil end
   local cells = tbl.bodies[1].body[1].cells
   if #cells ~= 1 or #cells[1].contents ~= 1 then return nil end
   local div = cells[1].contents[1]
-  if div.t == "Div" and div.identifier:match("^fig%-") then return div end
+  if div.t ~= "Div" then return nil end
+  local kind = div.identifier:match("^(fig)%-") or div.identifier:match("^(tbl)%-")
+  if kind then return div, kind end
   return nil
+end
+
+-- A table float's box is a floating table (D-022): Word wraps text around
+-- a table with a w:tblpPr, but a frame holds paragraphs only. Its one cell
+-- holds the float's div, with the caption, the table, and the bookmark
+-- around them. Pandoc writes raw openxml as it is, so a raw block opens the
+-- floating table before the div and another closes it after. The gap goes
+-- on the side toward the text. A cell must end with a paragraph, so an
+-- empty one follows a table at the end.
+local function fit_table(tbl)
+  local shares, sum = {}, 0
+  for i, spec in ipairs(tbl.colspecs) do
+    local w = spec[2]
+    shares[i] = (type(w) == "number" and w > 0) and w or 1
+    sum = sum + shares[i]
+  end
+  for i, spec in ipairs(tbl.colspecs) do
+    tbl.colspecs[i] = { spec[1], shares[i] / sum }
+  end
+  return tbl
+end
+
+local function floating_table(div, frame)
+  div = div:walk({ Table = fit_table })
+  local left = frame.side == "left" and 0 or frame.gap
+  local right = frame.side == "left" and frame.gap or 0
+  local open = string.format(
+    '<w:tbl><w:tblPr><w:tblStyle w:val="Table" /><w:tblpPr w:leftFromText="%s" w:rightFromText="%s" w:vertAnchor="text" w:horzAnchor="margin" w:tblpXSpec="%s" /><w:tblW w:type="dxa" w:w="%s" /><w:tblLayout w:type="fixed" /><w:tblLook w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="0" w:val="0000" /></w:tblPr><w:tblGrid><w:gridCol w:w="%s" /></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="%s" /></w:tcPr>',
+    left, right, frame.side, frame.width, frame.width, frame.width)
+  local last = div.content[#div.content]
+  local close = (last and last.t == "Table" and "<w:p />" or "") .. "</w:tc></w:tr></w:tbl>"
+  return pandoc.Blocks({
+    pandoc.RawBlock("openxml", open), div, pandoc.RawBlock("openxml", close),
+  })
 end
 
 -- Frames the group's figure, which is a figure table, a .wrapped-image box,
@@ -160,17 +197,18 @@ end
 -- it framed the figure, or the name and the reason when it did not.
 local function frame_first(blocks, frame)
   local first = blocks[1]
-  local function framed(div)
+  local function framed(div, kind)
     local name = div.identifier ~= "" and ("#" .. div.identifier) or "a wrapped figure"
+    if kind == "tbl" then return pandoc.Div(floating_table(div, frame)), name end
     if not frameable(div.content) then
       return nil, name, "holds a block that Word cannot put in a frame"
     end
     return pandoc.Div(frame_blocks(div.content, frame, "Compact", {}), pandoc.Attr(div.identifier)), name
   end
   if first.t == "Table" then
-    local div = figure_div(first)
+    local div, kind = float_div(first)
     if not div then return "a wrapped figure", "is not in a form that the filter knows" end
-    local new, name, why = framed(div)
+    local new, name, why = framed(div, kind)
     if why then return name, why end
     blocks[1] = new
     return name
@@ -189,10 +227,10 @@ local function frame_first(blocks, frame)
     traverse = "topdown",
     Table = function(tbl)
       if done then return nil end
-      local div = figure_div(tbl)
+      local div, kind = float_div(tbl)
       if not div then return nil end
       done = true
-      local new, n, w = framed(div)
+      local new, n, w = framed(div, kind)
       name, why = n, w
       if w then return nil, false end
       return new, false

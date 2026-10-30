@@ -12,8 +12,8 @@ length, a percent, or a [CSS function](../width-gap.qmd#css-functions-in-html).
 
 A wrapped [table float](../get-started.qmd#wrap-a-table) floats in the
 same way. A table wider than its box scrolls inside the box. Table floats
-wrap in HTML and PDF through Typst. In PDF through LaTeX and in Word they
-keep their normal layout, and the render prints a warning. The
+wrap in HTML, PDF through Typst, and Word. In PDF through LaTeX they keep
+their normal layout, and the render prints a warning. The
 extension's tests cover wrapped tables on HTML pages, not in slides or
 dashboards.
 

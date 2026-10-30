@@ -1,13 +1,13 @@
 # M039: Wrap table floats in Word
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes the Word output of each document with a wrapped table float
-- **Branch/PR:** —
+- **Branch/PR:** m039-word-table-wrap
 
 ## Goal
 
@@ -62,6 +62,8 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - 2026-10-30: criteria audit (full mode, fresh Opus reader): 11 findings, all fixed. AC1 now names its eleven tables, states `#tbl-page` and `#tbl-cars`, defines width as `w:tblW` against `docx_frame`, and drops the snapshot line format (moved to T3). AC2's search no longer hits figure warnings that stay, and it names the four LaTeX snapshots. AC3 defines the box span and "beside". AC3 and AC4 drop their recording acts (moved to T4 and T6). AC5 reads paragraphs, not lines, and names the app. T3 plants one defect for each axis and fixes the fixture prose. D-022 supersedes the Word part of D-021.
 - 2026-10-30: lessons used: 2026-10-30 (M038) on float content as one Block and cell classes, 2026-10-27 (M012) on checking one fixture, 2026-10-28 (M026) on LibreOffice PDFs that lose letters, so AC3 reads coordinates.
 - 2026-10-30: no split: 6 criteria and 6 tasks. No changelog entry, since the profile keeps no changelog file.
+- 2026-10-30: implement started on m039-word-table-wrap.
+- 2026-10-30: checkpoint (T1, T2, T5 code and docs written; T3 summary code written, snapshots updating; T4 read done, not yet ticked). Inner tables got relative column widths (`fit_table`) after the first LibreOffice render cut off columns past the box. The floating table keeps Quarto's outer `tblStyle` and `tblLook` and closes a cell that ends in a table with an empty paragraph.
 
 ## Decisions
 

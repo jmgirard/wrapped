@@ -26,10 +26,10 @@ install it with `quarto add jmgirard/wrapped`.
 
 **Non-goals for version 1.**
 
-- Tables (`#tbl-` floats) in PDF through LaTeX and in Word. LaTeX
-  `wraptable` conflicts with `longtable`, and Quarto renders every table
-  as `longtable`. A Word frame holds paragraphs, not tables. Table floats
-  wrap in HTML and PDF through Typst (D-021, corrected M038).
+- Tables (`#tbl-` floats) in PDF through LaTeX. LaTeX `wraptable`
+  conflicts with `longtable`, and Quarto renders every table as
+  `longtable`. Table floats wrap in HTML, PDF through Typst, and Word
+  (D-021, D-022, corrected M039).
 - Subfigure panels (`layout-ncol`, `layout`).
 - Code listings and callouts.
 - A figure in the middle of a paragraph. The figure anchors where it appears
@@ -357,6 +357,14 @@ repeated spaces (corrected M030). A clearing break,
 `<w:br w:type="textWrapping" w:clear="all"/>`, ends the group's last
 paragraph (corrected M006).
 
+A wrapped table float's group has no frame (D-022). In its place,
+`wrapped-docx.lua` replaces Quarto's one-cell table with a floating table:
+a raw `w:tbl` open tag whose `w:tblpPr` holds the side and the gap toward
+the text, Quarto's float div with its caption, table, and bookmark, and a
+raw close tag. Pandoc writes raw openxml blocks as they are, so the split
+tags hold. The inner table's columns get relative widths, so they share
+the box width. The same clearing break ends the group (M039).
+
 The grouping pass finds a wrapped float by Quarto's internal
 `__quarto_custom_id` attribute. `tests/verify.py` shows a change there as a
 snapshot difference. The mechanism for each other format is in
@@ -369,6 +377,11 @@ snapshot difference. The mechanism for each other format is in
   narrow box the text of columns side by side can overlap (the
   `tbl-wide` case of `tests/tables.qmd`). The site's
   `docs/formats/typst.qmd`, Limits, states this limit (M038).
+- Word: a wrapped table float keeps to the width of its box. In a
+  LibreOffice PDF, a wide table's column text breaks inside words, and a
+  box taller than the rest of the page breaks across pages (the `tbl-wide`
+  case of `tests/tables.qmd`). The site's `docs/formats/word.qmd`, Tables,
+  states this limit (M039).
 - PDF through Typst: a wrapped figure whose group does not fit at the bottom
   of a page moves to the next page with the text beside it, and the rest of
   the page stays blank. With `columns:` set, the same holds at the bottom of

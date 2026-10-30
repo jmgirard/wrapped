@@ -117,8 +117,8 @@ HTML, in PDF through LaTeX, in PDF through Typst, and in Word.
 
 ## Wrap a table
 
-A table float wraps in HTML and in PDF through Typst. A table float is a
-table with a `#tbl-` label. In PDF through LaTeX and in Word it keeps its
+A table float wraps in HTML, in PDF through Typst, and in Word. A table
+float is a table with a `#tbl-` label. In PDF through LaTeX it keeps its
 normal layout, and the render prints one warning for each table. Put the
 class and the width on a `#tbl-` div:
 

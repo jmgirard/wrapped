@@ -1558,15 +1558,14 @@ local function float_target(float)
   -- or warns on its own. Quarto numbers such figures
   -- with the cell's label and `-1`, `-2`, and so on.
   local several = carried and cell.several and float.type == "Figure"
-  -- LaTeX and Word wrap no table (D-021): Quarto writes a LaTeX table as
-  -- a longtable, which wrapfig cannot hold, and a Word frame holds
-  -- paragraphs, not tables. The warning comes before the next-block rule,
-  -- so a table with no paragraph after it warns there too.
-  if is_table and (is_latex or is_docx) and not context then
+  -- LaTeX wraps no table (D-021, D-022): Quarto writes a LaTeX table as a
+  -- longtable, which wrapfig cannot hold. The warning comes before the
+  -- next-block rule, so a table with no paragraph after it warns there too.
+  if is_table and is_latex and not context then
     keep_normal(float)
     quarto.log.warning(string.format(
-      "wrapped: the table #%s does not wrap in %s. A table wraps only in HTML and Typst.",
-      float.identifier, is_latex and "LaTeX" or "Word"))
+      "wrapped: the table #%s does not wrap in LaTeX. A table wraps in HTML, Typst, and Word.",
+      float.identifier))
     return float
   end
   -- A figure with no paragraph after it keeps a normal figure with no
@@ -1608,8 +1607,10 @@ local function float_target(float)
       typst_opens[custom_id] = typst_open(class, width, gap, "#" .. float.identifier)
     end
   elseif is_docx then
+    -- A table float's box is a floating table that wrapped-docx.lua makes
+    -- at post-render (D-022). Its images keep their own size.
     local frame, w = docx_frame(class, width, gap, "#" .. float.identifier)
-    float.content = docx_size(float.content, w)
+    if not is_table then float.content = docx_size(float.content, w) end
     if custom_id then docx_frames[custom_id] = frame end
   else
     float.classes:insert(class)
