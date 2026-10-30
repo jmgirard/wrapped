@@ -66,3 +66,31 @@ CI runs `tests/verify.py` on the Quarto version that `quarto-required` names, so
 - 2026-10-30: T4: `quarto render docs` with R under Quarto 1.10.19 exit 0; only `docs/_freeze/get-started/execute-results/html.json` changed (2 lines). `python3 tests/docs_layout.py` exit 0. The install sentence is two sentences, since the simple-english hook read README's URL line and the old one sentence as one over its length limit.
 - 2026-10-30: claim audit: 15 claims read, 2 corrected — .github/workflows/verify.yml (the header said the pin follows quarto-required; it now says to change the matrix entry by hand), README.md, docs/index.qmd, docs/get-started.qmd ("tested with Quarto's current release" now reads "Each change to it is tested", since verify.yml has no scheduled run). get-started re-rendered with R, exit 0. Not taken: a weekly `schedule:` trigger, which is outside the plan.
 - 2026-10-30: T5: `python3 tests/verify.py` under Quarto 1.10.19 (generator `quarto-1.10.19`) at efba9f4: exit 0, "all 105 renders pass". The later commit 1447147 changes no file under `tests/` or `_extensions/`. The two matrix runs are read at review. Status → review.
+
+## Decisions
+
+## Review
+
+- Review head e575869, `main` at 1f54040 (not moved since the cut). Copilot round off.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: AC1 and AC2 need a 1.9.36 run on Ubuntu, which has not run — reject (planned change: the plan reads both matrix runs at review, and step 8 merges only on green CI).
+- diff-bug #2: no doc says what to do when the release channel and 1.9.36 write different output, so one `--update` can break the other run — fix now.
+- diff-bug #3: the keep-in-step note names `quarto-required` and the matrix only, not the install text in README, `docs/index.qmd`, `docs/get-started.qmd`, DESIGN.md, and PROFILE.md — fix now.
+- diff-bug #4: "Each change to it is tested" overclaims, since `main` has no branch protection and a failing 1.9.36 run does not block a push — reject (false: the sentence claims a test run, and every push to `main` outside `cairn/` runs it).
+- diff-bug #5: the check names change to `verify (release)` and `verify (1.9.36)` — reject (planned change: the plan gate weighed it, and nothing requires the old name).
+- diff-bug #6: the new install lines are 89 characters against about 76 around them — reject (style).
+- diff-bug #7: DESIGN.md's Conventions line names pull requests only, not pushes to `main` or manual runs — fix now.
+- diff-bug #8: PROFILE.md now says `verify.yml` instead of `.github/workflows/verify.yml` — fix now.
+- blame-history #1: the matrix doubles the Ubuntu apt and R installs that D-009 found slow, so a pull request has two chances of a setup timeout — follow-up: absorbed into the parked row "Cut the Ubuntu mirror from CI setup" (stays parked, since no run has timed out).
+- blame-history #2: nothing enforces that the matrix entry follows `quarto-required` — reject (duplicate of diff-bug #3, whose fix covers it).
+- blame-history #3: the install text holds only once the Ubuntu 1.9.36 run passes — reject (duplicate of diff-bug #1).
+- blame-history #4: the get-started freeze hash may depend on the Quarto version, which would fail `docs.yml` — reject (false: the stored hash `f290f19d…` equals `md5 -q docs/get-started.qmd`, the page source).
+- blame-history #5: PROFILE.md says "the version that `quarto-required` names", but the field names a range — fix now.
+- blame-history #6: the absorbed candidate row still carries the M034 caption-block caveat — reject (planned change: hygiene removes the row, and the `#tbl-` caption-block fixture cases passed on 1.9.36 in T1).
+- blame-history #7: `docs/normal-layout.qmd:61` and `docs/formats/latex.qmd:91` state Quarto 1.10.19 behavior — reject (false as a contradiction: each states observed behavior of that version, a dated record).
+- blame-history #8: CLAUDE.md puts user rules on site pages, and README holds the install paragraph — reject (planned change: the plan edits the existing paragraph in place).
+- prior-review #1: "Each change to it is tested" holds for changes merged to `main`, not for other branches — reject (false for users, who install from `main`, where every change outside `cairn/` runs the workflow). No prior review point reintroduced; PR comment probe returned `[]`.
+- ripple #1: the candidate row "Test the minimum Quarto version in CI" still says only 1.10.19 and later are tested — reject (planned change: hygiene graduates the row).
+- ripple #2: `cairn/references/wrap-mechanisms.md:188` says CI runs the release channel on pull requests and omits 1.9.36 — fix now.
+- ripple #3: `verify-prerelease.yml` keeps the artifact name `rendered-outputs` — reject (style: one artifact per run there, no collision).
+- ripple #4: user pages say "Quarto's current release", tracking files say "release channel" — reject (style: the plain-words form on user pages).
