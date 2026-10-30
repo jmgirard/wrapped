@@ -292,3 +292,19 @@ class does not raise the "does not wrap figures" warning; the table float
 keeps its own warning. **Consequences:** a later finding of the same effect
 is not filed again unless a user reports it. Each drop can be reopened by
 an entry that supersedes this one.
+
+### D-021: Table floats wrap in HTML and Typst (supersedes part of D-020)
+
+2026-10-30, `/milestone-plan` M038. **Context:** the design listed tables
+as a version 1 non-goal, because Quarto writes tables as `longtable` in
+LaTeX and wrapfig cannot wrap one. The user asked whether other elements,
+such as tables, can wrap. **Decision:** at the plan gate the user chose
+`#tbl-` table floats only, in HTML and PDF through Typst first. In LaTeX
+and Word a wrapped table float keeps its normal layout with a warning.
+Word and LaTeX wrapping, tables with no `#tbl-` label, and callouts and
+other boxes stay roadmap candidates. A table float that wraps is no longer
+"not a figure", so in EPUB and the other formats that cannot wrap it
+raises the format warning. This reopens D-020's "Count table floats in the
+format warning", whose premise was that the table float keeps its own
+warning. **Consequences:** the non-goal now covers LaTeX and Word only.
+The rest of D-020 stands.
