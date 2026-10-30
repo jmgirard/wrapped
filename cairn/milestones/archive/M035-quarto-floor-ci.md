@@ -1,0 +1,11 @@
+# M035: Test the lowest admitted Quarto in CI
+
+**Status:** done (2026-10-30, PR #37 https://github.com/jmgirard/wrapped/pull/37)
+
+**Goal:** CI runs `tests/verify.py` on the Quarto version that `quarto-required` names, so the floor the extension states is one the tests pass on.
+
+**Outcome:** The full suite passed under Quarto 1.9.36 on macOS (105 renders, generator `quarto-1.9.36`), so F is 1.9.36 and `quarto-required` stays `">=1.9.36"`, with no re-pin. `.github/workflows/verify.yml`'s `verify` job is a matrix over `quarto: [release, 1.9.36]` with `fail-fast: false`, passed to quarto-actions/setup `version:`. Each entry uploads `rendered-outputs-<entry>`, and the checks are named `verify (release)` and `verify (1.9.36)`. The install text in README, `docs/index.qmd`, and `docs/get-started.qmd` (freeze re-rendered with R) says each change is tested with Quarto 1.9.36 and with the current release. DESIGN.md's Quarto version paragraph says releases between the two get no CI run, that one snapshot set must pass both runs, that a later Quarto whose output 1.9.36 cannot match raises the floor, and which files a floor change edits. PROFILE.md's verify slot and `references/wrap-mechanisms.md` name both runs.
+
+**Decisions:** none milestone-local. Plan choices: a matrix over a second job, a run on every pull request over a weekly one, and raising the floor over fixing the filter for older releases (question set).
+
+**Review:** Criteria audit at plan (5 findings fixed, after the plan commit). Claim audit: 15 claims, 2 corrected. AC3 and AC4 were verified at e575869. AC1 and AC2 were verified on PR #37's CI: `verify (1.9.36)` installed `quarto-1.9.36-linux-amd64.deb` and printed "all 105 renders pass" (7m24s), `verify (release)` passed (6m41s), and docs `render` passed. Four-lens pass, 21 findings: 6 fixed in e107648 (floor-change steps and file list, CI triggers in Conventions, workflow path and "admits" wording in PROFILE, wrap-mechanisms CI line), 1 follow-up added to the parked row "Cut the Ubuntu mirror from CI setup", 14 rejected. Hygiene graduated "Test the minimum Quarto version in CI", captured one lesson, marked M012, M023, and M026 used, and evicted 2026-10-28 (M019) by rank at the 25-lesson limit.

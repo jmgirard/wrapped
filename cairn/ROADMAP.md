@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-30 (triage, second pass: dropped as not worth keeping "Fit images in wide Word frames", "Warn when Word frames are not built", "Keep narrow widths when no width fits", "Count table floats in the format warning", decision entry D-020 written; routed "Warn in the console for LaTeX columns" to Known issues; re-rated parked → normal: "Test the minimum Quarto version in CI", "List margin figures in the summaries", "Say LaTeX narrows lines past figures"; compressed "Cut the Ubuntu mirror from CI setup"; validate green)_
+_Last hygiene check: 2026-10-30 (M035 review: graduated "Test the minimum Quarto version in CI"; M032 row pruned; one lesson captured, M019's evicted by rank; validate green)_
 
 ## Milestones
 
@@ -9,12 +9,11 @@ _Last hygiene check: 2026-10-30 (triage, second pass: dropped as not worth keepi
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M035 | Test the lowest admitted Quarto in CI | review | — | normal | milestones/M035-quarto-floor-ci.md |
 | M036 | List margin figures in the test summaries | planned | — | normal | milestones/M036-margin-summaries.md |
 | M037 | Say LaTeX narrows lines past figures | planned | — | normal | milestones/M037-latex-narrow-past.md |
+| M035 | Test the lowest admitted Quarto in CI | done | — | normal | milestones/archive/M035-quarto-floor-ci.md |
 | M034 | Warn for wrap classes on table floats | done | — | normal | milestones/archive/M034-table-float-class.md |
 | M033 | Warn for a wrap class on a span | done | — | normal | milestones/archive/M033-element-class-warning.md |
-| M032 | Warn for a wrap class on a link | done | — | normal | milestones/archive/M032-link-class-warning.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -28,7 +27,6 @@ _Last hygiene check: 2026-10-30 (triage, second pass: dropped as not worth keepi
      ending with `(#N)` for a row written for GitHub issue N, such as
      `Fix SE of skewness calculation (#100)`; `/cairn-triage` offers a new title for one
      with fewer than 5 words or more than 40 characters; tracking-rules "Candidate short title" has the whole rule -->
-- Test the minimum Quarto version in CI: `quarto-required` says 1.9.36, but only 1.10.19 and later are tested (DESIGN.md, Quarto version). A CI job pinned to 1.9.36 would test the claim or show that the floor must rise. Left out of M008. M034's table-float fix rests on Quarto reading a table float's caption block after pre-quarto filters, probed on 1.10.19 only; where an older version reads it earlier, the warning and the rewrite are lost (M034 review, blame-history #1); promote when a user reports a fault on Quarto below 1.10.19 — added 2026-10-26 — milestones/archive/M008-ci-verify.md — started M035
 - List margin figures in the summaries: `typ_summary` in `tests/verify.py` splits the `.typ` at each `#figure(` and takes the first label in a chunk, but a margin figure is `#notefigure(`, so a body figure with no id followed by a margin cell figure took that cell's label (`figure: fig-meta-margin-two-1`) and the margin figure got no line. M018 moved its margin-meta cell above the no-id image to keep the line (M018 implement). `tex_summary` lists only `figure` and `wrappedfigure` environments, so a LaTeX margin figure gets no line either, and a check that such a figure keeps its normal layout rests on a missing line (M018 review, diff-bug #2, prior-review #3); promote when a check needs a margin figure's summary line — added 2026-10-28 — milestones/archive/M018-cell-warn-once.md — started M036
 - Say LaTeX narrows lines past figures: wrapfig keeps one or two lines narrow past a wrapped figure's bottom (image-figure's PDF: figure bottom at y=814, narrow lines at y=816 and 836), and the Limits section of `docs/formats/latex.qmd` does not say so (M026 review, diff-bug #2); promote when `docs/formats/latex.qmd` next changes — added 2026-10-28 — milestones/archive/M026-wrap-showcase.md — started M037
 - [parked] Cut the Ubuntu mirror from CI setup: `r-lib/actions/setup-r` runs `apt-get update` and installs about 175 Ubuntu packages, and the poppler step runs `apt-get update` too, so a slow mirror can stretch the job toward its 45-minute timeout (M008 review pass 2, diff-bug #1, blame-history #1). Since M027 the docs render job also runs `apt-get update` for poppler and Playwright's `--with-deps`, and the publish job waits for it (M027 review, blame-history #2). Since M035, `verify.yml` runs the setup twice per pull request, once for the release channel and once for Quarto 1.9.36 (M035 review, blame-history #1); promote when a CI or docs run times out in setup — added 2026-10-26 — milestones/archive/M008-ci-verify.md
