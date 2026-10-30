@@ -337,6 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>If a page break comes while lines are still narrowed, the first lines on the next page are narrowed with no figure beside them. A <code>wrap-lines</code> value larger than the figure needs can narrow lines past a page break in the same way.</li>
 <li>Figures in a row: a figure after the paragraphs of a wrapped figure is a block that stops its wrap, so it starts below the wrapped figure. A figure that moved to the next page waits for one of its own paragraphs. A heading or the end of a callout does not take it.</li>
 <li>A figure in a list keeps its normal layout, as in HTML.</li>
+<li>A <a href="../get-started.html#wrap-a-table">table float</a> does not wrap. Quarto writes a table as a <code>longtable</code>, which wrapfig cannot hold. A wrapped table float keeps its normal layout, and the render prints a warning.</li>
 </ul>
 </section>
 <section id="columns" class="level2">

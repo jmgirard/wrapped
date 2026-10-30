@@ -309,6 +309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="html-pages" class="level2">
 <h2 class="anchored" data-anchor-id="html-pages">HTML pages</h2>
 <p>In HTML, a wrapped figure floats to its side, and the paragraphs after it flow beside it. In a window as wide as the <a href="../defaults.html#breakpoint">breakpoint</a> or narrower, figures stop floating and take the full width of the text column. A width or gap can be a CSS length, a percent, or a <a href="../width-gap.html#css-functions-in-html">CSS function</a>.</p>
+<p>A wrapped <a href="../get-started.html#wrap-a-table">table float</a> floats in the same way. A table wider than its box scrolls inside the box. Table floats wrap in HTML and PDF through Typst. In PDF through LaTeX and in Word they keep their normal layout, and the render prints a warning. The extension’s tests cover wrapped tables on HTML pages, not in slides or dashboards.</p>
 <p>A figure in the margin, a figure with its caption in the margin, and a figure in a page-wide column keep their normal layout in HTML. <a href="../normal-layout.html">Where a figure keeps its normal layout</a> gives the full list.</p>
 </section>
 <section id="slides" class="level2">
@@ -319,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="al">![Mean ratings by condition.](ratings.png)</span>{#fig-ratings .wrap-right width="40%"}</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>Ratings rose in both conditions.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Slides have no margin column, no margin captions, and no page-wide columns. A figure with a margin caption or a page-wide class still wraps on a slide. A margin setting does not stop a figure from wrapping on a slide either: a <code>.column-margin</code> or <code>.fig-column-margin</code> class, a <code>.column-margin</code> div, a code cell with <code>#| column: margin</code> or <code>#| fig-column: margin</code>, or <code>fig-column: margin</code> or <code>column: margin</code> in the document metadata.</p>
+<p>Slides have no margin column, no margin captions, and no page-wide columns. A figure with a margin caption or a page-wide class still wraps on a slide. A margin setting does not stop a figure from wrapping on a slide either: a <code>.column-margin</code> or <code>.fig-column-margin</code> class, a <code>.column-margin</code> div, a code cell with <code>#| column: margin</code> or <code>#| fig-column: margin</code>, or <code>fig-column: margin</code> or <code>column: margin</code> in the document metadata. For a table float, <code>tbl-column</code> takes the place of <code>fig-column</code> in this list.</p>
 <p>By default, revealjs puts an <code>.aside</code> div at the foot of the slide. A figure in an aside div does not wrap. It keeps its normal layout, and the render prints one warning for it.</p>
 </section>
 <section id="dashboards" class="level2">

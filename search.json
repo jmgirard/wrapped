@@ -150,7 +150,7 @@
     "href": "normal-layout.html#tables",
     "title": "Where a figure keeps its normal layout",
     "section": "Tables",
-    "text": "Tables\nA table float does not wrap either, and the render prints one warning that names it. A #tbl- div or a code cell with a tbl- label makes a table float. The same holds for a wrap class in the attribute block at the end of a table float’s caption, as in : A table {.wrap-left} in a #tbl- div or #| tbl-cap: \"A table {.wrap-left}\" in a knitr cell. The extension removes the wrap class from that block, so the table keeps its normal layout, and the block’s other classes, such as .striped, still apply.",
+    "text": "Tables\nA table float wraps in HTML and in PDF through Typst. A #tbl- div, a pipe table with a #tbl- id, or a code cell with a tbl- label makes a table float. In PDF through LaTeX and in Word a wrapped table float keeps its normal layout, and the render prints one warning that names it. Quarto writes a LaTeX table as a longtable, which wrapfig cannot hold, and a Word frame cannot hold a table.\nThe places on this page keep a table float’s normal layout as they keep a figure’s. For a table, tbl-cap-location takes the place of fig-cap-location, and tbl-column takes the place of fig-column, on a code cell and in the document metadata. In HTML and PDF through Typst, a tbl-column of margin or page puts the table in the margin or a page-wide column, where it keeps its normal layout. A document’s fig-column leaves tables in the body, where they wrap.\nThe wrap class can also go in the attribute block at the end of a table float’s caption, as in : A table {.wrap-left} in a #tbl- div or #| tbl-cap: \"A table {.wrap-left}\" in a knitr cell. The extension removes the wrap class from that block and places the table itself, and the block’s other classes, such as .striped, still apply.",
     "crumbs": [
       "Get started",
       "Guide",
@@ -222,7 +222,7 @@
     "href": "formats/latex.html#limits",
     "title": "PDF through LaTeX",
     "section": "Limits",
-    "text": "Limits\nwrapfig has limits, and the extension keeps some of them:\n\nwrapfig narrows a number of lines that it counts from the height of the figure. The count can run past the bottom of the figure and its caption. In the LaTeX PDFs of this site’s example pages, a paragraph that runs on past that bottom has one or two narrowed lines there.\nAt the block that stops the wrap, the extension skips the rest of the counted lines. After a wrap-lines value smaller than the figure needs, it skips to below the figure in body text, on the figure’s page. If the text beside the figure is shorter than the figure, the space beside the figure stays empty.\nA figure that does not fit at the bottom of a page moves to the start of a paragraph on the next page. The text before it fills the page. If its paragraphs all end before it is placed, it renders with no text beside it. It renders before the block that stops the wrap, and that block starts below it.\nIf a page break comes while lines are still narrowed, the first lines on the next page are narrowed with no figure beside them. A wrap-lines value larger than the figure needs can narrow lines past a page break in the same way.\nFigures in a row: a figure after the paragraphs of a wrapped figure is a block that stops its wrap, so it starts below the wrapped figure. A figure that moved to the next page waits for one of its own paragraphs. A heading or the end of a callout does not take it.\nA figure in a list keeps its normal layout, as in HTML.",
+    "text": "Limits\nwrapfig has limits, and the extension keeps some of them:\n\nwrapfig narrows a number of lines that it counts from the height of the figure. The count can run past the bottom of the figure and its caption. In the LaTeX PDFs of this site’s example pages, a paragraph that runs on past that bottom has one or two narrowed lines there.\nAt the block that stops the wrap, the extension skips the rest of the counted lines. After a wrap-lines value smaller than the figure needs, it skips to below the figure in body text, on the figure’s page. If the text beside the figure is shorter than the figure, the space beside the figure stays empty.\nA figure that does not fit at the bottom of a page moves to the start of a paragraph on the next page. The text before it fills the page. If its paragraphs all end before it is placed, it renders with no text beside it. It renders before the block that stops the wrap, and that block starts below it.\nIf a page break comes while lines are still narrowed, the first lines on the next page are narrowed with no figure beside them. A wrap-lines value larger than the figure needs can narrow lines past a page break in the same way.\nFigures in a row: a figure after the paragraphs of a wrapped figure is a block that stops its wrap, so it starts below the wrapped figure. A figure that moved to the next page waits for one of its own paragraphs. A heading or the end of a callout does not take it.\nA figure in a list keeps its normal layout, as in HTML.\nA table float does not wrap. Quarto writes a table as a longtable, which wrapfig cannot hold. A wrapped table float keeps its normal layout, and the render prints a warning.",
     "crumbs": [
       "Get started",
       "Formats",
@@ -258,7 +258,7 @@
     "href": "formats/typst.html",
     "title": "PDF through Typst",
     "section": "",
-    "text": "In PDF through Typst, the extension puts each wrapped figure and the paragraphs after it in a wrap-content call from the Typst package wrap-it 0.1.1. The extension ships its own copy of wrap-it, so the render does not download it. Citations and @fig- links in the text beside the figure work.",
+    "text": "In PDF through Typst, the extension puts each wrapped figure and the paragraphs after it in a wrap-content call from the Typst package wrap-it 0.1.1. The extension ships its own copy of wrap-it, so the render does not download it. Citations and @fig- links in the text beside the figure work. A wrapped table float goes in a wrap-content call in the same way. Table floats wrap in HTML and PDF through Typst. In PDF through LaTeX and in Word they keep their normal layout, and the render prints a warning.",
     "crumbs": [
       "Get started",
       "Formats",
@@ -330,7 +330,7 @@
     "href": "formats/typst.html#limits",
     "title": "PDF through Typst",
     "section": "Limits",
-    "text": "Limits\nwrap-it has limits:\n\nwrap-it puts the figure and the text beside it in one box, and the box does not break across pages or columns. If the box does not fit at the bottom of a page or a column, it moves to the next page or column. The rest of the page or column before it stays blank.\nWhen the text is longer than the figure, wrap-it breaks a paragraph at the word where the figure ends. The rest of that paragraph starts on a new line below the figure and runs the full width.\nwrap-it issue #1 reports that first-line indents change in wrapped text. The extension does not test this case.",
+    "text": "Limits\nwrap-it has limits:\n\nwrap-it puts the figure and the text beside it in one box, and the box does not break across pages or columns. If the box does not fit at the bottom of a page or a column, it moves to the next page or column. The rest of the page or column before it stays blank.\nWhen the text is longer than the figure, wrap-it breaks a paragraph at the word where the figure ends. The rest of that paragraph starts on a new line below the figure and runs the full width.\nwrap-it issue #1 reports that first-line indents change in wrapped text. The extension does not test this case.\nA table keeps to the width of its box. Typst narrows a wide table’s columns and breaks its words to fit. In a narrow box, the text of columns side by side can overlap.",
     "crumbs": [
       "Get started",
       "Formats",
@@ -380,11 +380,21 @@
     ]
   },
   {
+    "objectID": "get-started.html#wrap-a-table",
+    "href": "get-started.html#wrap-a-table",
+    "title": "Get started",
+    "section": "Wrap a table",
+    "text": "Wrap a table\nA table float wraps in HTML and in PDF through Typst. A table float is a table with a #tbl- label. In PDF through LaTeX and in Word it keeps its normal layout, and the render prints one warning for each table. Put the class and the width on a #tbl- div:\n::: {#tbl-means .wrap-right width=\"45%\"}\n\n| Condition | Mean | SD  |\n|-----------|------|-----|\n| A         | 3.1  | 0.4 |\n| B         | 4.2  | 0.6 |\n\n: Mean ratings by condition.\n\n:::\n\n\n\n\n\nTable 1: Mean ratings by condition.\n\n\n\n\n\nCondition\nMean\nSD\n\n\n\n\nA\n3.1\n0.4\n\n\nB\n4.2\n0.6\n\n\n\n\n\n\nTable 1 floats to the right, and this paragraph flows beside it. The caption and the table share the box, at 45% of the text column.\nThe same rules about width, gap, and where wrapping stops apply to a table as to a figure.\n\n\nThe class can also go in the attribute block at the end of the caption:\n\nA pipe table with its id in the block, as in : Mean ratings by condition. {#tbl-means .wrap-right width=\"45%\"}. The block can also hold width and wrap-gap.\nA block inside a #tbl- div, as in : Mean ratings by condition. {.wrap-right}. Put a width or wrap-gap for this form on the div.\nA code cell with a tbl- label: the class goes in #| classes:, or in a block at the end of #| tbl-cap:. A code cell table takes the width and gap of the document defaults.",
+    "crumbs": [
+      "Get started"
+    ]
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "wrapped",
     "section": "",
-    "text": "wrapped is a Quarto filter extension. It lets body text flow beside a figure, to the left or right of it. The figure keeps its number, its caption, and its @fig- links.\nThis version wraps figures in HTML output, revealjs slides and dashboards included, in PDF through LaTeX, in PDF through Typst, and in Word. In every other format, a wrapped figure renders as a normal figure, and the render prints one warning.",
+    "text": "wrapped is a Quarto filter extension. It lets body text flow beside a figure, to the left or right of it. The figure keeps its number, its caption, and its @fig- links.\nThis version wraps figures in HTML output, revealjs slides and dashboards included, in PDF through LaTeX, in PDF through Typst, and in Word. In every other format, a wrapped figure renders as a normal figure, and the render prints one warning. A table with a #tbl- label wraps in HTML and in PDF through Typst. In the other formats it keeps its normal layout, and the render prints a warning. Wrapped tables are tested on HTML pages, not in slides or dashboards.",
     "crumbs": [
       "Get started",
       "wrapped"
@@ -453,7 +463,7 @@
     "href": "reference.html#classes-and-attributes",
     "title": "Reference",
     "section": "Classes and attributes",
-    "text": "Classes and attributes\nThese go on a figure or an image. On a code cell, the class goes in #| classes: and the width in #| out-width: (see Get started). “All four formats” means HTML, PDF through LaTeX, PDF through Typst, and Word. HTML includes revealjs slides and dashboards.\n\n\n\n\n\n\n\n\n\n\nName\nKind\nValues\nDefault\nWorks in\n\n\n\n\n.wrap-right\nclass\nnone\nnone\nAll four formats\n\n\n.wrap-left\nclass\nnone\nnone\nAll four formats\n\n\n.wrap-clear\nclass on an empty div\nnone\nnone\nAll four formats\n\n\nwidth\nattribute\nA percent of the text column, or a length such as 3in, 250px, or 20em. Each format takes its own set of units. In HTML, also a calc(), min(), max(), or clamp() value.\nThe document default, else 40%\nAll four formats, each with its own units\n\n\nwrap-gap\nattribute\nA length or a percent of the text column. In HTML, also a calc(), min(), max(), or clamp() value.\nThe document default, else 1em\nAll four formats, each with its own units\n\n\nwrap-lines\nattribute\nA number of lines\nCounted from the figure’s height\nPDF through LaTeX only\n\n\n\nwidth and wrap-gap convert to each format’s units as the pages for LaTeX, Typst, and Word state.",
+    "text": "Classes and attributes\nThese go on a figure, an image, or a table float. On a code cell, the class goes in #| classes:. A code cell figure’s width goes in #| out-width: (see Get started), and a code cell table takes the document defaults. “All four formats” means HTML, PDF through LaTeX, PDF through Typst, and Word. HTML includes revealjs slides and dashboards. A table float wraps only in HTML and PDF through Typst. In PDF through LaTeX and in Word it keeps its normal layout, and the render prints a warning (see Get started).\n\n\n\n\n\n\n\n\n\n\nName\nKind\nValues\nDefault\nWorks in\n\n\n\n\n.wrap-right\nclass\nnone\nnone\nAll four formats; on a table float, HTML and PDF through Typst\n\n\n.wrap-left\nclass\nnone\nnone\nAll four formats; on a table float, HTML and PDF through Typst\n\n\n.wrap-clear\nclass on an empty div\nnone\nnone\nAll four formats\n\n\nwidth\nattribute\nA percent of the text column, or a length such as 3in, 250px, or 20em. Each format takes its own set of units. In HTML, also a calc(), min(), max(), or clamp() value.\nThe document default, else 40%\nAll four formats, each with its own units\n\n\nwrap-gap\nattribute\nA length or a percent of the text column. In HTML, also a calc(), min(), max(), or clamp() value.\nThe document default, else 1em\nAll four formats, each with its own units\n\n\nwrap-lines\nattribute\nA number of lines\nCounted from the figure’s height\nPDF through LaTeX only\n\n\n\nwidth and wrap-gap convert to each format’s units as the pages for LaTeX, Typst, and Word state.",
     "crumbs": [
       "Get started",
       "Reference"
@@ -475,7 +485,7 @@
     "href": "formats/html.html",
     "title": "HTML, slides, and dashboards",
     "section": "",
-    "text": "In HTML, a wrapped figure floats to its side, and the paragraphs after it flow beside it. In a window as wide as the breakpoint or narrower, figures stop floating and take the full width of the text column. A width or gap can be a CSS length, a percent, or a CSS function.\nA figure in the margin, a figure with its caption in the margin, and a figure in a page-wide column keep their normal layout in HTML. Where a figure keeps its normal layout gives the full list.",
+    "text": "In HTML, a wrapped figure floats to its side, and the paragraphs after it flow beside it. In a window as wide as the breakpoint or narrower, figures stop floating and take the full width of the text column. A width or gap can be a CSS length, a percent, or a CSS function.\nA wrapped table float floats in the same way. A table wider than its box scrolls inside the box. Table floats wrap in HTML and PDF through Typst. In PDF through LaTeX and in Word they keep their normal layout, and the render prints a warning. The extension’s tests cover wrapped tables on HTML pages, not in slides or dashboards.\nA figure in the margin, a figure with its caption in the margin, and a figure in a page-wide column keep their normal layout in HTML. Where a figure keeps its normal layout gives the full list.",
     "crumbs": [
       "Get started",
       "Formats",
@@ -487,7 +497,7 @@
     "href": "formats/html.html#html-pages",
     "title": "HTML, slides, and dashboards",
     "section": "",
-    "text": "In HTML, a wrapped figure floats to its side, and the paragraphs after it flow beside it. In a window as wide as the breakpoint or narrower, figures stop floating and take the full width of the text column. A width or gap can be a CSS length, a percent, or a CSS function.\nA figure in the margin, a figure with its caption in the margin, and a figure in a page-wide column keep their normal layout in HTML. Where a figure keeps its normal layout gives the full list.",
+    "text": "In HTML, a wrapped figure floats to its side, and the paragraphs after it flow beside it. In a window as wide as the breakpoint or narrower, figures stop floating and take the full width of the text column. A width or gap can be a CSS length, a percent, or a CSS function.\nA wrapped table float floats in the same way. A table wider than its box scrolls inside the box. Table floats wrap in HTML and PDF through Typst. In PDF through LaTeX and in Word they keep their normal layout, and the render prints a warning. The extension’s tests cover wrapped tables on HTML pages, not in slides or dashboards.\nA figure in the margin, a figure with its caption in the margin, and a figure in a page-wide column keep their normal layout in HTML. Where a figure keeps its normal layout gives the full list.",
     "crumbs": [
       "Get started",
       "Formats",
@@ -499,7 +509,7 @@
     "href": "formats/html.html#slides",
     "title": "HTML, slides, and dashboards",
     "section": "Slides",
-    "text": "Slides\nIn revealjs slides, a wrapped figure floats beside the paragraphs after it on the same slide, as on an HTML page:\n## Results\n\n![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width=\"40%\"}\n\nRatings rose in both conditions.\nSlides have no margin column, no margin captions, and no page-wide columns. A figure with a margin caption or a page-wide class still wraps on a slide. A margin setting does not stop a figure from wrapping on a slide either: a .column-margin or .fig-column-margin class, a .column-margin div, a code cell with #| column: margin or #| fig-column: margin, or fig-column: margin or column: margin in the document metadata.\nBy default, revealjs puts an .aside div at the foot of the slide. A figure in an aside div does not wrap. It keeps its normal layout, and the render prints one warning for it.",
+    "text": "Slides\nIn revealjs slides, a wrapped figure floats beside the paragraphs after it on the same slide, as on an HTML page:\n## Results\n\n![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width=\"40%\"}\n\nRatings rose in both conditions.\nSlides have no margin column, no margin captions, and no page-wide columns. A figure with a margin caption or a page-wide class still wraps on a slide. A margin setting does not stop a figure from wrapping on a slide either: a .column-margin or .fig-column-margin class, a .column-margin div, a code cell with #| column: margin or #| fig-column: margin, or fig-column: margin or column: margin in the document metadata. For a table float, tbl-column takes the place of fig-column in this list.\nBy default, revealjs puts an .aside div at the foot of the slide. A figure in an aside div does not wrap. It keeps its normal layout, and the render prints one warning for it.",
     "crumbs": [
       "Get started",
       "Formats",
@@ -547,7 +557,7 @@
     "href": "formats/word.html#images-and-frames",
     "title": "Word",
     "section": "Images and frames",
-    "text": "Images and frames\nThe image takes the width of the frame and keeps its shape. The extension does not use an image’s height in a wrapped figure in Word, and the render prints a warning. The wrap-lines attribute does nothing in Word.\nA list in a figure div goes in the frame with the image and the caption. Word cannot put a code block, a table, a heading, a horizontal rule, or raw content in a frame. A figure div that holds one keeps its normal layout, and the render prints a warning.\nA frame does not break across pages. If a frame does not fit at the bottom of a page, Word moves it and the paragraph after it to the next page. The rest of the page before it stays blank.",
+    "text": "Images and frames\nThe image takes the width of the frame and keeps its shape. The extension does not use an image’s height in a wrapped figure in Word, and the render prints a warning. The wrap-lines attribute does nothing in Word.\nA list in a figure div goes in the frame with the image and the caption. Word cannot put a code block, a table, a heading, a horizontal rule, or raw content in a frame. A figure div that holds one keeps its normal layout, and the render prints a warning. For the same reason, a wrapped table float keeps its normal layout, and the render prints a warning.\nA frame does not break across pages. If a frame does not fit at the bottom of a page, Word moves it and the paragraph after it to the next page. The rest of the page before it stays blank.",
     "crumbs": [
       "Get started",
       "Formats",
@@ -571,7 +581,7 @@
     "href": "stopping.html",
     "title": "Where wrapping stops",
     "section": "",
-    "text": "The figure wraps the paragraphs that follow it. Wrapping stops at the first block that is not a paragraph, and that block starts below the figure. Examples of blocks that are not paragraphs are a heading, a list, a table, a code block, a callout, another figure, and a horizontal rule.\nAn image with no caption and no wrap class counts as a paragraph. Quarto expands {{&lt; include &gt;}} before the filter runs, so the included blocks follow these rules as written.",
+    "text": "The figure wraps the paragraphs that follow it. Wrapping stops at the first block that is not a paragraph, and that block starts below the figure. Examples of blocks that are not paragraphs are a heading, a list, a table, a code block, a callout, another figure, and a horizontal rule. A wrapped table float stops at the same blocks in HTML and PDF through Typst.\nAn image with no caption and no wrap class counts as a paragraph. Quarto expands {{&lt; include &gt;}} before the filter runs, so the included blocks follow these rules as written.",
     "crumbs": [
       "Get started",
       "Guide",

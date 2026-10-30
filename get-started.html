@@ -295,6 +295,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#an-image-with-no-caption" id="toc-an-image-with-no-caption" class="nav-link" data-scroll-target="#an-image-with-no-caption">An image with no caption</a></li>
   <li><a href="#a-figure-from-a-code-cell" id="toc-a-figure-from-a-code-cell" class="nav-link" data-scroll-target="#a-figure-from-a-code-cell">A figure from a code cell</a></li>
   </ul></li>
+  <li><a href="#wrap-a-table" id="toc-wrap-a-table" class="nav-link" data-scroll-target="#wrap-a-table">Wrap a table</a></li>
   </ul>
 </nav>
     </div>
@@ -421,9 +422,65 @@ Figure&nbsp;3: A scatter plot.
 </div>
 </div>
 <p>The <a href="./examples/index.html">examples</a> show each of these forms rendered in HTML, in PDF through LaTeX, in PDF through Typst, and in Word.</p>
-
-
 </section>
+</section>
+<section id="wrap-a-table" class="level2">
+<h2 class="anchored" data-anchor-id="wrap-a-table">Wrap a table</h2>
+<p>A table float wraps in HTML and in PDF through Typst. A table float is a table with a <code>#tbl-</code> label. In PDF through LaTeX and in Word it keeps its normal layout, and the render prints one warning for each table. Put the class and the width on a <code>#tbl-</code> div:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>::: {#tbl-means .wrap-right width="45%"}</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Condition <span class="pp">|</span> Mean <span class="pp">|</span> SD  <span class="pp">|</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------|------|-----|</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> A         <span class="pp">|</span> 3.1  <span class="pp">|</span> 0.4 <span class="pp">|</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> B         <span class="pp">|</span> 4.2  <span class="pp">|</span> 0.6 <span class="pp">|</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>: Mean ratings by condition.</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="demo">
+<div class="wrap-group">
+<div id="tbl-means" class="wrap-right quarto-float quarto-figure quarto-figure-center anchored" style="--wrap-width: 45%; --wrap-gap: 1em;">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-means-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Mean ratings by condition.
+</figcaption>
+<div aria-describedby="tbl-means-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="wrap-right caption-top table">
+<thead>
+<tr class="header">
+<th>Condition</th>
+<th>Mean</th>
+<th>SD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>3.1</td>
+<td>0.4</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>4.2</td>
+<td>0.6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-means" class="quarto-xref">Table&nbsp;1</a> floats to the right, and this paragraph flows beside it. The caption and the table share the box, at 45% of the text column.</p>
+<p>The same rules about width, gap, and where wrapping stops apply to a table as to a figure.</p>
+</div>
+</div>
+<p>The class can also go in the attribute block at the end of the caption:</p>
+<ul>
+<li>A pipe table with its id in the block, as in <code>: Mean ratings by condition. {#tbl-means .wrap-right width="45%"}</code>. The block can also hold <code>width</code> and <code>wrap-gap</code>.</li>
+<li>A block inside a <code>#tbl-</code> div, as in <code>: Mean ratings by condition. {.wrap-right}</code>. Put a <code>width</code> or <code>wrap-gap</code> for this form on the div.</li>
+<li>A code cell with a <code>tbl-</code> label: the class goes in <code>#| classes:</code>, or in a block at the end of <code>#| tbl-cap:</code>. A code cell table takes the width and gap of the <a href="./defaults.html">document defaults</a>.</li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
