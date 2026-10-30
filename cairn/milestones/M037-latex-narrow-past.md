@@ -25,8 +25,8 @@ The Limits section of `docs/formats/latex.qmd` says that wrapfig can keep lines 
 
 ## Acceptance criteria
 
-- [ ] AC1: The Limits section of `docs/formats/latex.qmd` says that wrapfig can keep lines narrow past a wrapped figure's bottom. It gives the number or range of lines as measured in the site's example pages, and that number or range includes every nonzero count that the Scope measurement finds in the eight LaTeX PDFs. If every count is zero, the sentence is not added and the candidate row is dropped with that measurement as its reason.
-- [ ] AC2: `quarto render docs` exits 0, and `python3 tests/docs_layout.py` passes on the rendered site.
+- [x] AC1: The Limits section of `docs/formats/latex.qmd` says that wrapfig can keep lines narrow past a wrapped figure's bottom. It gives the number or range of lines as measured in the site's example pages, and that number or range includes every nonzero count that the Scope measurement finds in the eight LaTeX PDFs. If every count is zero, the sentence is not added and the candidate row is dropped with that measurement as its reason.
+- [x] AC2: `quarto render docs` exits 0, and `python3 tests/docs_layout.py` passes on the rendered site.
 
 ## Coverage
 
@@ -54,3 +54,8 @@ The Limits section of `docs/formats/latex.qmd` says that wrapfig can keep lines 
 - 2026-10-30: T3: `quarto render docs` exit 0; `python3 tests/docs_layout.py` exit 0, 24 of 24 ok (LaTeX, Typst, Word); `python3 tests/verify.py` all 106 renders pass; the sentence is in `docs/_site/formats/latex.html`.
 - 2026-10-30: claim audit: 2 claims read, 1 corrected — docs/formats/latex.qmd (fresh Opus reader: "under it" could read as under the image, where the PDFs show 1 to 4 narrow lines; now "past that bottom ... below it", that bottom being the figure's and its caption's; the reader's one re-read found it true, with defaults and width-gap at 1 or 2 by how a line starting 1 to 6 px above the caption's bottom is read).
 - 2026-10-30: after the claim-audit fix: `quarto render docs` exit 0, `python3 tests/docs_layout.py` exit 0 (24 ok); `tests/verify.py` not rerun, since the fix touches only `docs/formats/latex.qmd`, which it does not render (106 of 106 passed at the T2 commit). Status set to review.
+
+## Review
+
+- AC1 evidence (2026-10-30, branch head a27f42c, fresh `quarto render docs`): the first Limits bullet of `docs/formats/latex.qmd` says "The count can run past the bottom of the figure and its caption. In the LaTeX PDFs of this site's example pages, a paragraph that runs on past that bottom keeps one or two narrow lines below it." The T1 measurement re-run on this render gives the same counts: 1 for both-sides (both figures), code-cell, defaults, div-figure, uncaptioned-image, width-gap; 2 for image-figure; 0 for wrap-clear. Nonzero counts {1, 2} lie in "one or two". Pass.
+- AC2 evidence (2026-10-30, same render): `quarto render docs` exit 0; `python3 tests/docs_layout.py` exit 0, 24 ok and 0 FAIL over LaTeX, Typst, and Word. Pass.
