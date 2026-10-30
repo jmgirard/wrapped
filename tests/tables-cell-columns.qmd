@@ -4,6 +4,8 @@ filters:
   - wrapped
 format:
   html: default
+  pdf:
+    keep-tex: true
   typst:
     keep-typ: true
     fig-format: png
