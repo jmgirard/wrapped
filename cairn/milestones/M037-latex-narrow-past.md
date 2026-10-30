@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M037: Say LaTeX narrows lines past figures
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -52,3 +52,5 @@ The Limits section of `docs/formats/latex.qmd` says that wrapfig can keep lines 
 - 2026-10-30: T1: measured with a scratch script on the `tests/docs_layout.py` helpers, after `quarto render docs` on this branch; narrowed lines past the figure bottom (bottom px; narrowed line tops): both-sides fig 1: 1 (889; 897), fig 2 (left): 1 (473; 481); code-cell: 1 (916; 920); defaults: 1 (906; 920); div-figure (left): 1 (885; 893); image-figure: 2 (814; 816, 836); uncaptioned-image: 1 (680; 684); width-gap (left): 1 (796; 816); wrap-clear: 0 (879; its beside paragraph ends at 613, and the full-width paragraph after the wrap-clear div starts at 907). Every narrowed line is in the paragraph that ran beside its figure. Nonzero counts: 1 and 2.
 - 2026-10-30: T2: two sentences added to the first Limits bullet of `docs/formats/latex.qmd`, after the one on how wrapfig counts lines; "one or two" from T1, and "a paragraph that runs on below a figure" leaves out wrap-clear, whose beside paragraph ends beside its figure.
 - 2026-10-30: T3: `quarto render docs` exit 0; `python3 tests/docs_layout.py` exit 0, 24 of 24 ok (LaTeX, Typst, Word); `python3 tests/verify.py` all 106 renders pass; the sentence is in `docs/_site/formats/latex.html`.
+- 2026-10-30: claim audit: 2 claims read, 1 corrected — docs/formats/latex.qmd (fresh Opus reader: "under it" could read as under the image, where the PDFs show 1 to 4 narrow lines; now "past that bottom ... below it", that bottom being the figure's and its caption's; the reader's one re-read found it true, with defaults and width-gap at 1 or 2 by how a line starting 1 to 6 px above the caption's bottom is read).
+- 2026-10-30: after the claim-audit fix: `quarto render docs` exit 0, `python3 tests/docs_layout.py` exit 0 (24 ok); `tests/verify.py` not rerun, since the fix touches only `docs/formats/latex.qmd`, which it does not render (106 of 106 passed at the T2 commit). Status set to review.
