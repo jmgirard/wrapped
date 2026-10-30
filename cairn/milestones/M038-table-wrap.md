@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M038: Wrap table floats in HTML and Typst
 
-- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -180,6 +180,7 @@ warning elsewhere, the site, and DESIGN.md.
 - amendment return: AC7 — "`python3 tests/verify.py` passes every render, on this Mac and on each Quarto version that `verify.yml` runs on the PR. Existing figure and other non-table snapshot lines are unchanged: in each `tests/_snapshots/` file that exists on `main`, every line that `git diff main...HEAD -- tests/_snapshots` adds or removes names a table float by its `tbl-` id, with or without `#`, or is a `# groups` line `cell, …` whose cell, counted in source order in its fixture, has a `tbl-` label."
 - 2026-10-30: amendment done; status back to review. The full suite on the review head passed (all 117 renders) before the amendment, and no code changed since.
 - 2026-10-30: review moved the 19 work-log lines that implement had appended below the `## Review` heading back into the Work log; their text is unchanged.
+- review return 1: diff-bug #1 and #3 (load-bearing): scoped column classes (fig-column-*, tbl-column-*) must apply only to floats of their own type, and a table float must read a page-wide or margin column class on a div inside it; with them the fix-now items diff-bug #2, #5, blame-history #6, #7, #8, ripple #1, #2, #3, #4, #8, and the two follow-up rows.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
@@ -197,3 +198,32 @@ Evidence at 733a1be (no code change since 293d595; `main` at 2029477, the branch
 - AC6: read normal-layout.qmd (Tables), reference.qmd, get-started.qmd (Wrap a table: example, the forms that carry width and gap), formats/html.qmd and typst.qmd (both halves of the rule and the wide-table behavior), formats/latex.qmd and word.qmd (their own format's limit; neither lists which elements take a wrap class), README.md (both halves); `quarto render docs` exit 0 at 293d595 code.
 - AC7 (local half): all 117 renders pass on this Mac; `git diff main...HEAD -- tests/_snapshots` changes 8 files that exist on main, and each of their 44 changed lines names tbl-caption-block, tbl-cell-block, tbl-cell-both, tbl-cars, or tbl-wrapped, or is one of the two `cell, p` groups of the `tbl-cell-block` and `tbl-cell-both` cells (tests/fixture.qmd:218, :226). CI half pending: the PR's verify runs on Quarto 1.9.36 and the release channel.
 - gate: `cairn_validate.py` all checks passed; no principle changed, so no `cairn_impact` run; one version marker (`_extension.yml` 0.2.0), unchanged on the branch; verify passes on the review head (AC7); `tests/docs_layout.py --no-word` all ok on the Mac (the Word check is hand-run and was not run; no example page changed); the docs workflow runs on the PR; changelog slot "none".
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a figure in a code cell with `#| tbl-column: margin` (or `page`) and a wrap class stops wrapping with a false "is in the margin" warning, where main wraps it; margin_context and page_context read the scoped class whatever the float's type — fix now (floor: load-bearing regression)
+- diff-bug #2: a table float in a cell with `#| fig-column: margin` gets a false margin warning, where Quarto leaves it in the body — fix now (same cause as #1)
+- diff-bug #3: a knitr table cell with `#| column: page` wraps with no warning in HTML and Typst while Quarto sets it page-wide; knitr puts `column-page` on a div inside the float, which find_contexts skips — fix now (floor: load-bearing, a documented Quarto option gives a wrong layout with no warning)
+- diff-bug #4: the format warning names only figures when a table is the wrapped element (two-column LaTeX, Word with columns, EPUB) — follow-up: candidate row "Name tables in the format warning", parked, promote when a user reports it
+- diff-bug #5: found_wrap is set for every float type, so a wrapped listing now raises the EPUB format warning where main printed nothing — fix now
+- diff-bug #6: tables wrap in revealjs with no table context check — reject, planned change (Scope Out, row "Check wrapped tables in slides")
+- diff-bug #7: the new `table=wrap-right` snapshot lines record that Quarto copies the float's class onto the inner table — reject, planned change (table_summary records wrap classes that reach a table, M034)
+- blame-history #1: a wrapped table float with no paragraph after it prints no LaTeX or Word warning (tbl-cars, tbl-no-text) — reject, planned change (the next-block rule applies to tables as to figures, with no warning)
+- blame-history #2: a classed cell that makes a table and a figure wraps the table and keeps the figure normal under a "makes more than one figure" warning; D-010 counts figures only — follow-up: candidate row "Treat mixed table and figure cells", parked, promote when a user reports it
+- blame-history #3: tables wrap in revealjs, untested — reject, planned change (as diff-bug #6)
+- blame-history #4: layout.js tableInside cannot fail for a wide table — reject, false: before the overflow rule existed, the same check failed for tbl-wide (work log, T1); without the rule `scrolls` is false and the table's own box is measured
+- blame-history #5: a document `column` is read for table floats with no fixture — reject, planned change (Scope Out)
+- blame-history #6: found_wrap set for every float type — fix now (as diff-bug #5)
+- blame-history #7: the TABLE_IDS comment says every entry has a caption block, but tbl-div and tbl-cell have none — fix now
+- blame-history #8: DESIGN.md step 4 names the cell anchor but not that unclassed cells now feed the margin-caption carry — fix now
+- blame-history #9: Quarto copying tbl-cap-location from a cell to its table float is unverified — reject, false: the plan probe's dump showed `tbl-cap-location=margin` on the float, and the claim audit confirmed it with a debug filter
+- prior-review #1: a figure with an image-level wrap class in an unclassed cell now anchors the whole cell — reject, false: the diff-bug reviewer rendered that case (asis output with its own wrap class) and its warnings and groups match main
+- prior-review #2: the HTML docs layout check (`tests/docs_layout.py --html`) has not run for this branch — reject, false: docs.yml runs `--html` on the PR, which the gate reads before the merge
+- prior-review #3: the EPUB format warning names figures for a table — follow-up: row "Name tables in the format warning" (as diff-bug #4)
+- prior-review #4: the Typst overlap limit has no check — reject, planned change: the limit states Typst's own layout, seen in the tbl-wide render, and a test of it would test dependency behavior
+- ripple #1: DESIGN.md step 7 says the stylesheet is added when a figure wraps; a table now adds it — fix now
+- ripple #2: the parked row "Read table keys for document columns" describes fig-column behavior the diff removed — fix now (narrow the row to `column`)
+- ripple #3: docs/index.qmd says the version wraps figures with no table sentence — fix now
+- ripple #4: the wrapped.lua header and DESIGN.md step 5 speak of figures only where tables now float and group — fix now
+- ripple #5: reference.qmd's class rows say "All four formats" — reject, false: the paragraph above the table says a table float wraps only in HTML and Typst
+- ripple #6: the normal-layout page title names figures only — reject, style
+- ripple #7: DESIGN.md step 2 lists "a table in LaTeX and Word" as a context — reject, false: that context is a figure inside a table cell, which still holds
+- ripple #8: the comment "A table keeps its own warning" in float_target is ambiguous now that HTML and Typst tables wrap — fix now
