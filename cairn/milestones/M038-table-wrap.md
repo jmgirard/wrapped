@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M038: Wrap table floats in HTML and Typst
 
-- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -174,6 +174,7 @@ warning elsewhere, the site, and DESIGN.md.
 - claim audit: 34 claims read, 3 corrected — wrapped.lua and DESIGN.md (Quarto, not knitr, moves a table cell's column class inside the float); the gate on the inner class used meta_column_set, which a document fig-column sets, so a page-wide table cell under fig-column: margin wrapped in Typst; now gated on tbl-column or column (meta_table_column_set), with a tbl-page-cell case added to tests/tables-fig-column-meta.qmd.
 - 2026-10-30: T6 done: python3 tests/verify.py all 119 renders pass; quarto render docs exit 0; status set to review.
 - 2026-10-30: the plan-owned body reached 153 lines with T6, so the Acceptance criteria section was re-wrapped to 110 columns in one pass with no word changed (cairn_validate weight caps).
+- review return 2: diff-bug #1 (load-bearing): a scoped column context must not stop the subfigure-panel contexts of the floats inside the cell; with it diff-bug #2 and #4, prior-review #1, and ripple #1, #2, #6, #7, #8, and the follow-up rows.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
@@ -232,3 +233,28 @@ Pass 2 evidence at 80f6766 (code at 272c859; `main` still 2029477).
 - AC6: docs/index.qmd gained the table sentence; the pages read in pass 1 are unchanged; `quarto render docs` exit 0.
 - AC7 (local half): 119 renders pass; the 8 snapshot files that exist on main change only in lines that name a `tbl-` float or in the two `cell, p` groups of tbl-cell-block and tbl-cell-both; CI half pending.
 - gate: `cairn_validate.py` all checks passed (after the criteria re-wrap); version 0.2.0 unchanged; no principle changed.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a cell with `fig-subcap` (or `tbl-subcap`) and a scoped column class of the other float type now wraps its panels with no warning, where main warned "subfigure panel"; a scoped context stops find_contexts at the cell, so the panel contexts are never recorded — fix now (floor: load-bearing regression of figure behavior)
+- diff-bug #2: in Typst, a document `tbl-column: body` or `column: body` plus a table cell with `#| column: page` wraps a wideblock with no warning; the inner-class gate on meta_table_column_set is wrong, since Quarto 1.10.19 still writes the wideblock — fix now
+- diff-bug #3: a figure cell with `column: margin` and `fig-column: page` warns "in the margin" where Quarto sets it page-wide in Typst; main does the same — follow-up: candidate row "Read both column kinds on a cell", parked, promote when a user reports it
+- diff-bug #4: a figure cell with `column: page` and `fig-column: margin` now warns "page-wide" where main warned "in the margin", since block_context reads unscoped classes first — fix now (keep main's order over all classes)
+- diff-bug #5: in a dashboard, a table cell with a margin or page column warns though dashboards have no margin — reject, planned change: figures do the same on main, and the row "Check wrapped tables in slides" covers dashboard tables
+- diff-bug #6: in revealjs, tables with column options wrap with no warning — reject, planned change (Scope Out)
+- diff-bug #7: a table panel's warning reads "the table #tbl-sub2 is a subfigure panel" — reject, style (the same template figures use)
+- blame-history #1: with only a document `tbl-column` set, a table cell's own `column: margin` still sets its context in LaTeX and Typst, unlike M016's rule for figures; no fixture — follow-up: absorbed into row "Read table keys for document columns"
+- blame-history #2: a cell with both a fig-column-* and a tbl-column-* class records one scope only — follow-up: absorbed into row "Read both column kinds on a cell"
+- blame-history #3: the warning reason changed for a cell with an unscoped and a scoped class — fix now (as diff-bug #4)
+- blame-history #4: a figure with its own wrap class in an unclassed cell now groups the whole cell — reject, false: the pass-1 diff-bug reviewer rendered that case and it matches main
+- blame-history #5: a mixed table and figure cell — reject, already follow-up row "Treat mixed table and figure cells"
+- blame-history #6: figure-worded format warnings for a table-only document — reject, already follow-up row "Name tables in the format warning"
+- blame-history #7: tableInside cannot fail for a wide table — reject, false: without the overflow rule the walk reaches the float, `scrolls` is false, and the table's own box is measured; the check failed that way before the rule existed
+- prior-review #1: a wrapped table float with no paragraph after it prints no LaTeX or Word warning, though docs/formats/latex.qmd, normal-layout.qmd, and the README promise one — fix now (supersedes pass-1 blame-history #1's reject: the docs promise a warning)
+- prior-review #2: the warning reason changed for a cell with both class kinds — fix now (as diff-bug #4)
+- ripple #1: reference.qmd's class rows say "All four formats" — fix now (name the table formats in the rows)
+- ripple #2: DESIGN.md's column_context paragraph names only fig-column keys — fix now
+- ripple #3: the unlabeled-table warning says "A wrap class goes on an image or a figure" — follow-up: absorbed into row "Name tables in the format warning", since a text change alters existing snapshot lines
+- ripple #4: figure-worded format warnings — reject, already follow-up row
+- ripple #5: a no-text table prints no LaTeX or Word warning — fix now (as prior-review #1)
+- ripple #6: wrapped.lua comments at the grouping pass say "wrapped figure" only — fix now
+- ripple #7: DESIGN.md's stop rule and docs/stopping.qmd name figures only — fix now
+- ripple #8: docs/formats/html.qmd and wrap-mechanisms E3 list margin triggers without tbl-column — fix now
