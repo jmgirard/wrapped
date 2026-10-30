@@ -25,9 +25,9 @@ The LaTeX and Typst summaries in `tests/verify.py` give each margin figure its o
 
 ## Acceptance criteria
 
-- [ ] AC1: For each `pdf` and `typst` entry of `RENDERS` in `tests/verify.py`, the summary of its rendered `.tex` or `.typ` has one `marginfigure:` line per match of `\\begin\{marginfigure\}` and one `notefigure:` line per match of `^[ \t]*#notefigure\(` in that file, in document order. Each line carries the `fig-` label inside its LaTeX environment, or the first label line after its Typst call and before the next call, or `-` when there is none.
-- [ ] AC2: A new fixture in `RENDERS`, rendered to Typst, holds a captioned body image with no id followed by a margin figure with a `fig-` id (the order M018 moved away from), and its snapshot holds `figure: -` followed by a `notefigure:` line with that id.
-- [ ] AC3: `python3 tests/verify.py` passes on the review head, and in `git diff main -- tests/_snapshots` each changed line is an added `marginfigure:` or `notefigure:` line, a line of the AC2 fixture's new snapshots, or a `figure:` line whose old label is the label of a margin figure line in the new summary.
+- [x] AC1: For each `pdf` and `typst` entry of `RENDERS` in `tests/verify.py`, the summary of its rendered `.tex` or `.typ` has one `marginfigure:` line per match of `\\begin\{marginfigure\}` and one `notefigure:` line per match of `^[ \t]*#notefigure\(` in that file, in document order. Each line carries the `fig-` label inside its LaTeX environment, or the first label line after its Typst call and before the next call, or `-` when there is none.
+- [x] AC2: A new fixture in `RENDERS`, rendered to Typst, holds a captioned body image with no id followed by a margin figure with a `fig-` id (the order M018 moved away from), and its snapshot holds `figure: -` followed by a `notefigure:` line with that id.
+- [x] AC3: `python3 tests/verify.py` passes on the review head, and in `git diff main -- tests/_snapshots` each changed line is an added `marginfigure:` or `notefigure:` line, a line of the AC2 fixture's new snapshots, or a `figure:` line whose old label is the label of a margin figure line in the new summary.
 
 ## Coverage
 
@@ -59,3 +59,28 @@ The LaTeX and Typst summaries in `tests/verify.py` give each margin figure its o
 - 2026-10-30: T4 done: `--update` changed 12 snapshots by 43 added lines, all `marginfigure:` or `notefigure:`, with no `figure:` line changed, and wrote `margin-after-image.typst.txt` (`figure: -`, then `notefigure: fig-after-image-margin`). A scratch count script (not committed) read the 56 pdf and typst renders of `RENDERS`: 13 hold margin figures, and each summary's margin lines match the regex count and the labels read from the file in order; against main's `verify.py` it reports 13 of 13 mismatched. `python3 tests/verify.py`: all 106 renders pass.
 - 2026-10-30: claim audit: not owed — internal tier
 - 2026-10-30: status review; all four tasks checked, `python3 tests/verify.py` green on 6c2cfec.
+
+## Review
+
+- AC1 (6146b0f, renders from a fresh `python3 tests/verify.py` run): a scratch script imported `tests/verify.py` and read the 56 `pdf` and `typst` entries of `RENDERS`; 13 hold margin figures, and in each the `marginfigure:` or `notefigure:` line count equals the count of `\\begin\{marginfigure\}` or `^[ \t]*#notefigure\(` matches, with labels equal in order to those read from each environment or from the call to the next call; 0 mismatched. Against main's `verify.py`, 13 of 13 mismatch.
+- AC2 (6146b0f): `("margin-after-image", "typst", True)` is in `RENDERS`; `tests/margin-after-image.qmd` holds a captioned image with no id, then `fig-after-image-margin` with `.column-margin`; `tests/_snapshots/margin-after-image.typst.txt` reads `figure: - image-width=no` then `notefigure: fig-after-image-margin image-width=no`, and the suite run compared it green.
+- AC3 (6146b0f): `python3 tests/verify.py` exit 0, "all 106 renders pass". `git diff main -- tests/_snapshots`: 12 files modified, 1 added (`margin-after-image.typst.txt`), no removed line; every added line in the modified files is a `marginfigure:` or `notefigure:` line, and no `figure:` line changed.
+- gate: `cairn_validate.py` all checks passed; no principle changed, so no impact report. Profile gate: the version marker is unchanged at one site; verify green (AC3); the diff touches no `docs/`, `_extensions/`, or docs checker, so the docs workflow and `tests/docs_layout.py` are not owed; changelog none.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a margin figure's content boundary `\n, caption: ` (and the body figure's `\nkind: `) assumes unindented lines, so an indented call would run to the next call and could report a later image's width — fix now (boundaries take `[ \t]*`).
+- diff-bug #2: no `notefigure:` line has `image-width=yes`, so the new boundary has no positive case — fix now (a margin figure with `width="50%"` added to the AC2 fixture; a scratch render shows Quarto keeps `width: 50.0%` inside the call).
+- diff-bug #3: the summaries disagree on `fig-aside`: LaTeX lists `marginfigure: fig-aside`, Typst lists `figure: fig-aside`, because Quarto writes `#note(` around a line-start `#figure(` — follow-up: candidate row "Summarize margin panels and Typst asides", parked, since no check reads an aside's kind; the line carries its own label, which is what the Goal asks.
+- diff-bug #4: a margin figure with subfigure panels would report a panel's label in LaTeX and `notefigure: -` in Typst, as body panels already do; no render has one — follow-up: the same row, parked.
+- diff-bug #5: AC1 says "the first label line" while the code takes the first `fig-` or `tbl-` label, so a margin call with no `fig-` label before a heading label would differ — reject (false): inside AC1's named domain, the `pdf` and `typst` entries of `RENDERS`, the AC1 script found every label equal; no render has the case.
+- diff-bug #6: `python3 tests/verify.py` fails at three of the branch's commits — reject (false): the merge squashes the branch, so `main` gets one commit, green.
+- blame-history #1: the comment's "content ends before its `kind:` line" is false for indented table-cell figures, a weakness since M013 widened the call split — fix now (same change as diff-bug #1).
+- blame-history #2: the notefigure width boundary is never exercised as a positive — fix now (same change as diff-bug #2).
+- blame-history #3: the module docstring names only `#figure(` calls for Typst — fix now (docstring names `#notefigure(` too).
+- blame-history #4: the new fixture sets no `fig-format: png` — reject (false): the option affects computed cell figures only, and the fixture has no code cell.
+- prior-review #1: a `#notefigure(` with no caption line would run to the next call — reject (false): a scratch render shows Quarto writes a margin figure with no caption as a body `#figure(`, so every `#notefigure(` has a caption line.
+- ripple #1: ROADMAP candidate row "List margin figures in the summaries" still describes the old behavior — reject (planned change): the plan absorbed the row, and post-merge hygiene removes it.
+- ripple #2: `tests/verify.py` module docstring names only `#figure(` for Typst — fix now (same as blame-history #3).
+- ripple #3: the docstring's "each figure environment" for PDF does not name `marginfigure` — reject (false): `marginfigure` is a figure environment, so the sentence holds.
+- ripple #4: `TYPST_BLOCKS` lacks `#notefigure`, so one beside a wrap box would count as "p" — reject (false): a margin figure is a block that is not a paragraph, so it ends the wrap group (`group_blocks`, `_extensions/wrapped/wrapped.lua`) and never sits in a wrap body.
+- ripple #5: `cairn/references/wrap-mechanisms.md` W3 row names only `#figure(...)<id>` — reject (false): the row is about wrapped figures, which are body figures.
+- ripple #6: candidate row "Wrap no-id margin images in PDF" cites `contexts` snapshots, which now also hold margin lines — reject (false): the reviewer found no conflict, and the cited no-id image lines are unchanged.
