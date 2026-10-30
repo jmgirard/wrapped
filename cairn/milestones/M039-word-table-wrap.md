@@ -1,6 +1,6 @@
 # M039: Wrap table floats in Word
 
-- **Status:** review
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -70,6 +70,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - 2026-10-30: claim audit: 56 claims read, 4 corrected — tests/verify.py, docs/formats/word.qmd, tests/fixture.qmd; 4 stale unchanged lines fixed too (wrapped.lua header, wrapped-docx.lua header and frame_first comment, docs/normal-layout.qmd tbl-column in Word). The Word page now names LibreOffice for the wide-table behavior, since Word itself is not yet checked. Re-read pending; suite rerunning.
 - 2026-10-30: claim audit re-read: 5 corrected claims hold; 2 fixed once more with no further pass (the frame_first comment now claims @fig- links only, since no snapshot records a link to a floating table; DESIGN.md's grid sum is Pandoc's 7920 twips, not the 9360-twip text width).
 - 2026-10-30: T6: `python3 tests/verify.py` passed all 122 renders after the claim fixes, and `quarto render docs` exited 0 with no warning. The user's look in Word is review's stop. Status set to review.
+- 2026-10-30: review return 1: a table, figure float, or callout right before a wrapped Word table float merges into it, because the raw floating table gets no paragraph between them (diff-bug #1, load-bearing). The same return carries the pass-1 fix-now findings that the Review section lists: images in a table float sized to the box, `docx_tables` recording inner width, anchor, links, and citations, the nested-count wording, a Word render of `tables-column-meta`, and the stale lines in DESIGN.md, the Lua headers, `wrap-mechanisms.md`, `verify.py` docstrings, `docs/index.qmd`, `docs/formats/word.qmd`, and the "tested on HTML pages" sentences.
 - 2026-10-30: `tests/.gitignore` gained `/.quarto/` from a Quarto render in `tests/`; it is not milestone work and stays unstaged.
 - 2026-10-30: T4 minor amendment: T4 recorded its coordinates in the work log, not the review-owned Review section, which implement does not write.
 
@@ -79,3 +80,38 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 
 - Pass 1, 2026-10-30, review head 5a7cc5c, base main 72abe16 (branch level with origin/main). Copilot round off (no header line).
 - AC5 evidence: `grep -rn -i 'table' docs --include='*.qmd'` outside `_site`/`_freeze` found 56 lines, and `grep -n -i 'table' README.md` found 2. Each paragraph holding a found line that names formats for table floats names Word among the formats where they wrap (`index.qmd:38`, `README.md:10`, `get-started.qmd:120`, `normal-layout.qmd:95`, `reference.qmd:15` and the two class rows, `stopping.qmd:9`, `formats/html.qmd:14`, `formats/typst.qmd:10`). `formats/latex.qmd:73` names LaTeX only. No paragraph says a table float keeps its normal layout in Word or wraps only in HTML and Typst. `docs/formats/word.qmd` Tables says the table sits in a floating table with its caption inside it, and names LibreOffice 26.8 for the wide-table narrowing and in-word breaks.
+- Gate (pass 1 head): `python3 tests/verify.py` exit 0, all 122 renders pass; `python3 tests/docs_layout.py` exit 0 (LaTeX, Typst, Word PDFs); `--html` not run on the Mac (Playwright for Python not installed), left to the docs workflow on the PR.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a table, figure float, or callout (all tables in docx) right before a wrapped table float merges into the raw floating table, since Pandoc adds no paragraph between them — fix now; load-bearing, so review return 1
+- diff-bug #2: an image inside a table float keeps its own width and is clipped by the fixed box — fix now (size images outside the float's tables to the box)
+- diff-bug #3: the inner table's 7920-twip grid fit is seen only in LibreOffice — noted; AC4's look in Word checks it
+- diff-bug #4: `fit_table` gives default-width columns equal shares, so a long text column gets no more room than a number column — follow-up: [low] candidate "Size Word table columns by content"
+- diff-bug #5: in a block quote the box sits at the page margin, not the quote's indent — reject, planned change: a Word figure frame uses the same margin anchor, and the docs say the box places as a frame does
+- diff-bug #6: LibreOffice drew `#tbl-grid`'s box above its heading after the clipped image box — noted; falls with #2, rechecked after its fix
+- diff-bug #7: the XML holds on every named path — noted
+- diff-bug #8: `docx_tables` records no inner-table width or anchor, so dropping `fit_table` passes — fix now
+- diff-bug #9: a dropped clearing break shows as "floating tables not at the top level", the wrong cause — fix now (reword to "not listed above")
+- diff-bug #10: no Word render covers a document `tbl-column` — fix now (Word render of `tables-column-meta`)
+- blame-history #1: DESIGN.md lines 18, 109, and 244 omit Word or say Word tables keep their normal layout — fix now
+- blame-history #2: images in a table float keep their own size — fix now (same as diff-bug #2)
+- blame-history #3: `#tbl-no-text` in Word now prints no warning — reject, planned change: AC1 names it, by the next-block rule
+- blame-history #4: README carries a table rule against CLAUDE.md's site-page rule — reject, planned change: M038 put the sentence there, and M039 keeps it true
+- blame-history #5: no Word snapshot covers the metadata `tbl-column` claim — fix now (same as diff-bug #10)
+- blame-history #6: "Wrapped tables are tested on HTML pages, not in slides or dashboards" leaves out Word and Typst — fix now
+- prior-review #1: Word layout seen only in LibreOffice — noted; AC4 checks it
+- prior-review #2: table lines drop the links and citations that frame lines record — fix now
+- prior-review #3: images in a table float are not fitted — fix now (same as diff-bug #2)
+- prior-review #4: `#tbl-page` now wraps in Word — reject, planned change: a page-wide figure wraps in Word too, and AC1 names it
+- prior-review #5: a Word table caption's trailing space is untested — reject, false: no caption in `tests/tables.docx` ends in a space
+- prior-review #6: table floats skip the `frameable` check — reject, false: a table cell holds any block, and diff-bug #7 found valid XML on every path
+- prior-review #7: the hardcoded `Table` style can be missing from a reference doc — reject, false: Quarto writes the same style on its own float tables
+- prior-review #8: README table rule — reject, planned change (as blame-history #4)
+- ripple #1: ROADMAP's "Wrap table floats in Word documents" row is stale — reject, planned change: hygiene removes the row at the merge
+- ripple #2–#6, #8: DESIGN.md lines 17-18, 24-25, 109, 218, 244, and 345-346 — fix now
+- ripple #7: the callouts candidate row says Word cannot set a box beside text — fix now (narrow the row)
+- ripple #9, #10: `wrapped.lua` and `wrapped-docx.lua` header comments name frames only — fix now
+- ripple #11: `wrap-mechanisms.md` lines 131 and 145-146 name frames only — fix now
+- ripple #12: `tests/verify.py` docstring lines 22-23 and 39-41 omit the floating-table section — fix now
+- ripple #13: `docs/index.qmd:26` names only a frame in Word — fix now
+- ripple #14: `docs/formats/word.qmd:65` "Word cannot put a table in a frame" reads against the Tables section — fix now (point to Tables)
+- ripple #15: a table-only document in Word with columns prints "does not wrap figures" — follow-up: existing row "Name tables in the format warning"
