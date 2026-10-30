@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.10.20">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -79,7 +79,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-ae09e3805c836bfb0422aa6789ab7554.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -331,7 +331,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="limits">Limits</h2>
 <p>wrapfig has limits, and the extension keeps some of them:</p>
 <ul>
-<li>wrapfig narrows a number of lines that it counts from the height of the figure. At the block that stops the wrap, the extension skips the lines that the figure still needs. After a <code>wrap-lines</code> value smaller than the figure needs, it skips to below the figure in body text, on the figure’s page. If the text beside the figure is shorter than the figure, the space beside the figure stays empty.</li>
+<li>wrapfig narrows a number of lines that it counts from the height of the figure. The count can run past the bottom of the figure and its caption. In the LaTeX PDFs of this site’s <a href="../examples/index.html">example pages</a>, a paragraph that runs on past that bottom has one or two narrowed lines there.</li>
+<li>At the block that stops the wrap, the extension skips the rest of the counted lines. After a <code>wrap-lines</code> value smaller than the figure needs, it skips to below the figure in body text, on the figure’s page. If the text beside the figure is shorter than the figure, the space beside the figure stays empty.</li>
 <li>A figure that does not fit at the bottom of a page moves to the start of a paragraph on the next page. The text before it fills the page. If its paragraphs all end before it is placed, it renders with no text beside it. It renders before the block that stops the wrap, and that block starts below it.</li>
 <li>If a page break comes while lines are still narrowed, the first lines on the next page are narrowed with no figure beside them. A <code>wrap-lines</code> value larger than the figure needs can narrow lines past a page break in the same way.</li>
 <li>Figures in a row: a figure after the paragraphs of a wrapped figure is a block that stops its wrap, so it starts below the wrapped figure. A figure that moved to the next page waits for one of its own paragraphs. A heading or the end of a callout does not take it.</li>
