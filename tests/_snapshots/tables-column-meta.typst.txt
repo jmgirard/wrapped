@@ -1,0 +1,7 @@
+# warnings
+1x wrapped: the table #tbl-meta-column is in the margin, so it does not wrap.
+# typ
+notefigure: tbl-meta-column image-width=no
+figure: fig-meta-column image-width=yes
+# wraps
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 30%, 40%, 40%)), column-gutter: 1em | fig-meta-column no-alt | p | cites=0

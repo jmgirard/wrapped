@@ -101,8 +101,11 @@ and a Word frame cannot hold a table.
 
 The places on this page keep a table float's normal layout as they keep a
 figure's. For a table, `tbl-cap-location` takes the place of
-`fig-cap-location`, and a code cell with `#| tbl-column: margin` or
-`#| tbl-column: page` puts its table in the margin or a page-wide column.
+`fig-cap-location`, and `tbl-column` takes the place of `fig-column`, on
+a code cell and in the document metadata. In HTML and PDF through Typst,
+a `tbl-column` of `margin` or `page` puts the table in the margin or a
+page-wide column, where it keeps its normal layout. A document's
+`fig-column` leaves tables in the body, where they wrap.
 
 The wrap class can also go in the attribute block at the end of a table
 float's caption, as in `: A table {.wrap-left}` in a `#tbl-` div or

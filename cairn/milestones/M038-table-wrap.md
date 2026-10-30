@@ -39,8 +39,10 @@ warning elsewhere, the site, and DESIGN.md.
   content".
 - revealjs slides and dashboards get no table case: candidate row "Check
   wrapped tables in slides".
-- A document `fig-column` or `column` read for a table float: candidate
-  row "Read table keys for document columns".
+- A document `column` read for a table float stays as for a figure, with
+  no fixture. The document `tbl-column` and `fig-column` cases moved In
+  (amended 2026-10-30), so the candidate row "Read table keys for
+  document columns" is covered except for `column`.
 - In PDF through Typst, a table whose content is wider than its box keeps
   to the box: Typst narrows its columns and breaks its words, and in a
   narrow box the text of columns side by side can overlap. In HTML, such a
@@ -134,7 +136,7 @@ warning elsewhere, the site, and DESIGN.md.
       `tbl-cell-block`, `tbl-cell-both`, `tbl-striped`, and `tbl-cars` in
       `tests/fixture.qmd`, and `tbl-wrapped` in `tests/contexts.qmd`. Run
       the full `tests/verify.py`.
-- [ ] T5: Update the pages of AC6 and add the example. Update
+- [x] T5: Update the pages of AC6 and add the example. Update
       `cairn/DESIGN.md` (the non-goal, steps 2, 4, and 6, and a Known
       issues entry for the Typst spill) and row E5 of
       `cairn/references/wrap-mechanisms.md`.
@@ -168,3 +170,6 @@ warning elsewhere, the site, and DESIGN.md.
 - 2026-10-30: observed: in HTML, Quarto copies a wrapped table float's class onto its inner table element (the `# tables` lines show `table=wrap-right`); no rule in wrapped.css selects `table.wrap-*`, so it changes no layout.
 - 2026-10-30: T1 to T4 done: tables.qmd with 13 cases (5 forms, no-text, callout, margin, page-wide, wide) plus two HTML-only margin-caption fixtures; HTML layout.js report ok for all 6 wrapped tables at 1280x900; Typst beside cases ok for 6 tables, and a plant with two classes removed failed 2 of them; full suite green after --update.
 - 2026-10-30: quarto render docs exit 0 (one existing #fig-callout warning); tests/docs_layout.py --no-word all ok; the get-started table demo floats right at 45% in the browser at 1280x900.
+- claim audit: 60 claims read, 4 corrected — docs/reference.qmd (code cell table width), docs/normal-layout.qmd (tbl-column per format; document keys), wrapped.lua caption_in_margin comment; also tests/layout.js now walks up to the element that scrolls (a weaker-than-stated comment).
+- 2026-10-30: substantive amendment: Scope Out item on document column keys narrowed; the claim audit found that a document `tbl-column: margin` put a table in the margin while the filter floated it there with no warning, and a document `fig-column: margin` kept body tables normal with a false margin warning. column_context now reads tbl-column, its own class and the document's, for table floats and not fig-column; fixtures tables-column-meta and tables-fig-column-meta (HTML and Typst) cover both. No criterion changed; the deliverable gains a fix, so no stop.
+- 2026-10-30: T5 done: site pages, README, DESIGN.md, and wrap-mechanisms E5 updated; docs render exit 0.

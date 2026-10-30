@@ -84,12 +84,15 @@ function figureEntry(el) {
     - parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth);
   // A table float holds a table and no image, so its check is that the
   // table stays inside the float's box. A table wider than the box scrolls
-  // in its container, whose box is then the part that shows.
+  // in the nearest element around it that scrolls, whose box is then the
+  // part that shows. In a code cell that element is above the cell's
+  // output wrapper.
   const table = img ? null : el.querySelector("table");
   let contentCheck;
   if (table) {
-    const holder = table.parentElement;
-    const scrolls = getComputedStyle(holder).overflowX !== "visible" && holder.scrollWidth > holder.clientWidth;
+    let holder = table.parentElement;
+    while (holder !== el && getComputedStyle(holder).overflowX === "visible") holder = holder.parentElement;
+    const scrolls = holder !== el && holder.scrollWidth > holder.clientWidth;
     const t = (scrolls ? holder : table).getBoundingClientRect();
     contentCheck = ["tableInside", t.left >= box.left - TOL && t.right <= box.right + TOL];
     entry.table = { left: Math.round(t.left), right: Math.round(t.right), scrolls };

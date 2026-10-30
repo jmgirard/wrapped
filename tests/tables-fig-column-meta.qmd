@@ -1,0 +1,27 @@
+---
+title: "Wrapped tables with fig-column: margin"
+filters:
+  - wrapped
+fig-column: margin
+format:
+  html: default
+  typst:
+    keep-typ: true
+    fig-format: png
+---
+
+::: {#tbl-fig-column .wrap-right}
+
+| Condition | Mean |
+|-----------|------|
+| A         | 3.1  |
+
+: A table, which fig-column leaves in the body.
+
+:::
+
+The paragraph after the table.
+
+![A figure that the document sends to the margin.](plot.png){#fig-fig-column .wrap-left width="30%"}
+
+The paragraph after the figure.

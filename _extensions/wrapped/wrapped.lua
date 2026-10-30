@@ -1169,8 +1169,12 @@ local document_meta = {}
 -- is nil when the value names neither the margin nor a page-wide column
 -- there. Quarto 1.10.19 applies the value to a code cell's float even when
 -- the cell sets fig-column: body, and not to a captioned image with no id,
--- which is no float.
+-- which is no float. A table float takes the document's tbl-column, or
+-- else its column, in the same way, and not its fig-column
+-- (meta_table_column_context).
 local meta_column_context = {}
+local meta_table_column_context = {}
+local meta_tbl_column_set = false
 
 -- The text of a fig-column or column metadata value, or nil. As Quarto's
 -- columnOption does, it reads the first item of a list and treats an empty
@@ -1189,16 +1193,17 @@ local function margin_caption_class(classes, is_float)
   return classes:includes("margin-caption") or (is_float and classes:includes("caption-margin"))
 end
 
--- Whether a figure's caption goes to the margin of an HTML page, as
+-- Whether a float's caption goes to the margin of an HTML page, as
 -- Quarto 1.10.19 decides it. A margin caption class on the float or its
--- image sends it there. Otherwise the figure's own cap-location decides
+-- image sends it there. Otherwise the float's own cap-location decides
 -- when it is set. Without one, the caption goes to the margin when the
--- figure's fig-cap-location or either document key is margin, and a
--- value other than margin in one of them overrides none of the others.
--- Quarto has already copied a code cell's caption location, and its
--- caption-margin class, to the cell's figure as cap-location. A table
--- float reads tbl-cap-location in place of fig-cap-location, which Quarto
--- copies from a code cell to its table float under that name.
+-- float's fig-cap-location, the document's fig-cap-location, or the
+-- document's cap-location is margin, and a value other than margin in one
+-- of them overrides none of the others. Quarto has already copied a code
+-- cell's caption location, and its caption-margin class, to the cell's
+-- figure as cap-location. A table float reads tbl-cap-location, its own
+-- and the document's, in place of fig-cap-location; Quarto copies it from
+-- a code cell to its table float under that name.
 local function caption_in_margin(float)
   local by_class = margin_caption_class(float.classes, true)
   float.content:walk({
@@ -1212,25 +1217,30 @@ local function caption_in_margin(float)
   return float.attributes[key] == "margin" or meta_value == "margin" or meta_cap_location == "margin"
 end
 
--- Returns the context that a figure float's column gives it, or nil. In
--- LaTeX and Typst, Quarto 1.10.19 reads a float's own fig-column-* class,
--- the document's fig-column, its own column-* or aside class, and the
--- document's column, and the first one set decides. A code cell's own
--- column is on the cell, not its float, and find_contexts reads it when the
--- document sets neither key. HTML and Word read a margin or page-wide class
--- of the float's own, else the document's value. The second value is true
--- when the document's value decides, which float_target reads after a
--- layout.
+-- Returns the context that a float's column gives it, or nil. In LaTeX and
+-- Typst, Quarto 1.10.19 reads a figure float's own fig-column-* class, the
+-- document's fig-column, its own column-* or aside class, and the
+-- document's column, and the first one set decides. A table float reads
+-- tbl-column in place of fig-column. A code cell's own column is on the
+-- cell, not its float, and find_contexts reads it when the document sets
+-- neither key. HTML and Word read a margin or page-wide class of the
+-- float's own, else the document's value. The second value is true when
+-- the document's value decides, which float_target reads after a layout.
 local function column_context(float, cell)
-  local document = cell and meta_column_context.cell or meta_column_context.float
+  local is_table = float.type == "Table"
+  local context = is_table and meta_table_column_context or meta_column_context
+  local document = cell and context.cell or context.float
   if not (is_latex or is_typst) then
     local own = class_context(float.classes, true)
     if own then return own, false end
     return document, true
   end
-  local scoped = float.classes:filter(function(c) return c:match("^fig%-column%-") end)
+  local prefix = is_table and "^tbl%-column%-" or "^fig%-column%-"
+  local scoped = float.classes:filter(function(c) return c:match(prefix) end)
   if #scoped > 0 then return class_context(scoped, true), false end
-  if meta_fig_column_set then return document, true end
+  if (is_table and meta_tbl_column_set) or (not is_table and meta_fig_column_set) then
+    return document, true
+  end
   local own = float.classes:filter(function(c) return c:match("^column%-") or c == "aside" end)
   if #own > 0 then return class_context(own, true), false end
   return document, true
@@ -1255,6 +1265,13 @@ local function read_meta(meta)
   if column then
     local classes = pandoc.List({ "column-" .. column })
     meta_column_context = { float = class_context(classes, true), cell = class_context(classes) }
+  end
+  local tbl_column = meta_column(meta["tbl-column"])
+  local table_column = tbl_column or meta_column(meta.column)
+  meta_tbl_column_set = tbl_column ~= nil
+  if table_column then
+    local classes = pandoc.List({ "column-" .. table_column })
+    meta_table_column_context = { float = class_context(classes, true), cell = class_context(classes) }
   end
   local m = meta.wrapped
   if m == nil then return end

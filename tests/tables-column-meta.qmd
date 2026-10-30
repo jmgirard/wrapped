@@ -1,0 +1,27 @@
+---
+title: "Wrapped tables with tbl-column: margin"
+filters:
+  - wrapped
+tbl-column: margin
+format:
+  html: default
+  typst:
+    keep-typ: true
+    fig-format: png
+---
+
+::: {#tbl-meta-column .wrap-right}
+
+| Condition | Mean |
+|-----------|------|
+| A         | 3.1  |
+
+: A table that the document sends to the margin.
+
+:::
+
+The paragraph after the table.
+
+![A figure, which tbl-column leaves in the body.](plot.png){#fig-meta-column .wrap-left width="30%"}
+
+The paragraph after the figure.

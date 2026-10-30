@@ -8,8 +8,10 @@ name links to the page that gives its full rules.
 ## Classes and attributes
 
 These go on a figure, an image, or a table float. On a code cell, the
-class goes in `#| classes:` and the width in `#| out-width:` (see
-[Get started](get-started.qmd#a-figure-from-a-code-cell)). "All four formats" means HTML, PDF through LaTeX, PDF through Typst, and
+class goes in `#| classes:`. A code cell figure's width goes in
+`#| out-width:` (see
+[Get started](get-started.qmd#a-figure-from-a-code-cell)), and a code
+cell table takes the document defaults. "All four formats" means HTML, PDF through LaTeX, PDF through Typst, and
 Word. HTML includes revealjs slides and dashboards. A table float wraps
 only in HTML and PDF through Typst. In PDF through LaTeX and in Word it
 keeps its normal layout, and the render prints a warning (see
