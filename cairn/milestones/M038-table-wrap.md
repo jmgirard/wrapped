@@ -182,6 +182,7 @@ warning elsewhere, the site, and DESIGN.md.
 - claim audit: 31 claims read, 0 corrected — wrapped.lua, DESIGN.md, ROADMAP.md rows, wrap-mechanisms E3, docs/formats/html.qmd, docs/reference.qmd, docs/stopping.qmd, fixtures; one loose DESIGN.md sentence widened to name LaTeX beside Typst.
 - 2026-10-30: T7 done: the --update run passed all 122 renders; the next compare run crashed once on stop-shortcode.docx (exit 139), which passed three solo reruns matching its snapshot and which the branch does not touch; a clean compare run then passed all 122; quarto render docs exit 0; status set to review.
 
+- step-7 approval: m038-table-wrap approved for merge
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
 
