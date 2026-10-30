@@ -193,7 +193,7 @@ end
 -- Frames the group's figure, which is a float table, a .wrapped-image box,
 -- or a code cell that holds a float table. A float table's div keeps the
 -- float's id, so Pandoc writes its bookmark around the frame or inside the
--- floating table, and the @fig- and @tbl- links still reach it. Quarto
+-- floating table, and the @fig- links still reach a frame. Quarto
 -- writes a figure table's image paragraph in the Compact style. Returns
 -- the figure's name and nil when it framed the figure, or the name and the
 -- reason when it did not.
