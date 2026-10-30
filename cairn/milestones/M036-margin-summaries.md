@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M036: List margin figures in the test summaries
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** internal — the LaTeX and Typst summaries of `tests/verify.py`; no rendered output changes for users
-- **Branch/PR:** —
+- **Branch/PR:** m036-margin-summaries
 
 ## Goal
 
@@ -37,7 +37,7 @@ The LaTeX and Typst summaries in `tests/verify.py` give each margin figure its o
 
 ## Tasks
 
-- [ ] T1: Add `marginfigure` to the environment pattern of `tex_summary`, so its line uses the same label, options, image, and link parts.
+- [x] T1: Add `marginfigure` to the environment pattern of `tex_summary`, so its line uses the same label, options, image, and link parts.
 - [ ] T2: In `typ_summary`, split at `#figure(` and `#notefigure(` calls that start a line or follow a cell's indent, keep which call opened each chunk, and write `figure:` or `notefigure:` lines in that order. Update the function's comment.
 - [ ] T3: Add the AC2 fixture to `tests/` and to `RENDERS` with a `typst` entry. Before T2, render it and record in the work log that the old `typ_summary` gives the image the margin figure's label.
 - [ ] T4: Run `python3 tests/verify.py --update` and read the snapshot diff against AC3. With a script, count the AC1 regex matches in each `pdf` and `typst` render of `RENDERS` against the summary's lines. Run `python3 tests/verify.py`.
@@ -52,3 +52,5 @@ The LaTeX and Typst summaries in `tests/verify.py` give each margin figure its o
 - 2026-10-30: collision check: candidate row "List margin figures in the summaries" absorbed; M018 (done) is its source and moved a cell instead of fixing the summary; no D-entry on the summaries. Checker-regress shape: no hit, since the summaries check the shipped filter's rendered output, not repo-internal records. Inbox sweep: 0 open issues, 0 open PRs.
 - 2026-10-30: probe (local renders on `main`): `\begin{marginfigure}` appears in six `.tex` files and `#notefigure(` in six `.typ` files (column-order, column-order-margin, column-order-fig-margin, column-order-page, contexts, margin-meta).
 - 2026-10-30: criteria audit (reduced, fresh Opus reader; it ran after the plan commit 2244665): 5 findings, all fixed. A Typst label comes on the line after its `#notefigure(` call, not inside it (`tests/margin-meta.typ`), so AC1 and AC3 now read the first label line after the call. AC1 now names its regexes and its domain, the `pdf` and `typst` entries of `RENDERS`, because stale `.tex` and `.typ` files sit in `tests/`. AC2's one-off scratch run became a fixture in `RENDERS` (T3).
+- 2026-10-30: status in-progress; branch m036-margin-summaries cut from main at 2f46345.
+- 2026-10-30: T1 done: `tex_summary` matches `marginfigure`; on the kept renders it lists 1, 2, 8, and 6 `marginfigure:` lines for column-order, column-order-margin, contexts, and margin-meta, each with its label; no preamble holds the environment. The verify run for T1–T3 waits for T4, which updates the snapshots these tasks change on purpose.

@@ -414,7 +414,7 @@ def xref_summary(path):
 def tex_summary(path):
     # The body only: the preamble holds the wrapper and its comments.
     tex = path.read_text(encoding="utf-8").split("\\begin{document}", 1)[-1]
-    found = re.finditer(r"\\begin\{(figure|wrappedfigure)\}(?:\[([^\]]*)\])?(.*?)\\end\{\1\}|\\wrappedstop\b", tex, re.S)
+    found = re.finditer(r"\\begin\{(figure|wrappedfigure|marginfigure)\}(?:\[([^\]]*)\])?(.*?)\\end\{\1\}|\\wrappedstop\b", tex, re.S)
     lines = []
     for m in found:
         if m.group(1) is None:
