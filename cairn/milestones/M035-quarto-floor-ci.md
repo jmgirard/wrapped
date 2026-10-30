@@ -66,6 +66,7 @@ CI runs `tests/verify.py` on the Quarto version that `quarto-required` names, so
 - 2026-10-30: T4: `quarto render docs` with R under Quarto 1.10.19 exit 0; only `docs/_freeze/get-started/execute-results/html.json` changed (2 lines). `python3 tests/docs_layout.py` exit 0. The install sentence is two sentences, since the simple-english hook read README's URL line and the old one sentence as one over its length limit.
 - 2026-10-30: claim audit: 15 claims read, 2 corrected — .github/workflows/verify.yml (the header said the pin follows quarto-required; it now says to change the matrix entry by hand), README.md, docs/index.qmd, docs/get-started.qmd ("tested with Quarto's current release" now reads "Each change to it is tested", since verify.yml has no scheduled run). get-started re-rendered with R, exit 0. Not taken: a weekly `schedule:` trigger, which is outside the plan.
 - 2026-10-30: T5: `python3 tests/verify.py` under Quarto 1.10.19 (generator `quarto-1.10.19`) at efba9f4: exit 0, "all 105 renders pass". The later commit 1447147 changes no file under `tests/` or `_extensions/`. The two matrix runs are read at review. Status → review.
+- 2026-10-30: step-7 approval: m035-quarto-floor-ci approved for merge
 
 ## Decisions
 
