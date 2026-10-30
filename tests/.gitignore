@@ -1,6 +1,7 @@
 *.html
 *.pdf
 *.docx
+*.epub
 *.tex
 *.typ
 *_files/
