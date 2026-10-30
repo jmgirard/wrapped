@@ -15,14 +15,15 @@ install it with `quarto add jmgirard/wrapped`.
 
 - Wrap text to the left or right of one captioned figure. The figure keeps
   its number, caption, and `@fig-` links. A `#tbl-` table float wraps the
-  same way in HTML and PDF through Typst (D-021, corrected M038).
+  same way in HTML, PDF through Typst, and Word (D-021, D-022, corrected
+  M038, M039).
 - Wrap text around an uncaptioned image.
 - Use one width value for all formats.
 - In a format or context that cannot wrap, keep a normal figure and warn
   once: once for each render in a format, once for each figure in a
   context, and once for a code cell that makes more than one figure, in a
-  context or not (corrected M003, M014, M018). In LaTeX and Word, also
-  once for each wrapped table float (D-021, corrected M038).
+  context or not (corrected M003, M014, M018). In LaTeX, also once for
+  each wrapped table float (D-021, corrected M038, M039).
 
 **Non-goals for version 1.**
 
@@ -106,7 +107,8 @@ wrapped:
   breakpoint: 576px   # HTML: at this width or narrower, figures stop floating
 ```
 
-Stop rule: the figure, or in HTML and Typst a table float (M038), wraps
+Stop rule: the figure, or in HTML, Typst, and Word a table float (M038,
+M039), wraps
 the paragraphs that follow it. Wrapping stops at
 the first block that is not a paragraph: a heading, list, figure, table, code
 block, callout, or horizontal rule. A paragraph that holds one shortcode
@@ -241,9 +243,9 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    id or image.
 4. In a top-down pass, it carries a code cell's wrap class to that cell's
    floats and moves an image's class to its float. A figure float and a
-   table float wrap (D-021). A table float in LaTeX or Word keeps its
-   normal layout with a warning, and its caption location key is
-   `tbl-cap-location` (corrected M038). A code cell anchors the group of
+   table float wrap (D-021). A table float in LaTeX keeps its normal
+   layout with a warning, and its caption location key is
+   `tbl-cap-location` (corrected M038, M039). A code cell anchors the group of
    a wrapped float inside it, with or without a wrap class of its own,
    since a table float can take its class from its caption block, and a
    cell's `margin-caption` class reaches its floats either way. Quarto
@@ -342,7 +344,8 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    with `columns:` set (corrected M010, corrected M011, corrected M019). Word needs nothing here. Elsewhere it prints
    one format warning.
 
-At `post-render`, `wrapped-docx.lua` turns each Word group into a frame. It
+At `post-render`, `wrapped-docx.lua` turns each Word figure group into a
+frame (a table float's group takes a floating table, below). It
 removes Quarto's one-cell figure table, or turns a Pandoc `Figure` into its
 image and caption paragraphs, and puts the same `w:framePr` in a raw
 `w:pPr` on the image paragraph and each caption paragraph. Word reads the
@@ -365,7 +368,10 @@ raw close tag. Pandoc writes raw openxml blocks as they are, so the split
 tags hold. The inner table's columns get relative widths, so Pandoc
 writes it at the full width of the box (`w:tblW` of 100%). Its grid
 columns still sum to Pandoc's default of 7920 twips, wider than the box,
-and LibreOffice fits them to the box. The same clearing break ends the group (M039).
+and LibreOffice fits them to the box. The cell has no margins, and an
+image outside the inner table fills the box. Word joins two tables with
+nothing between them, so a 1 pt paragraph goes before the floating table.
+The same clearing break ends the group (M039).
 
 The grouping pass finds a wrapped float by Quarto's internal
 `__quarto_custom_id` attribute. `tests/verify.py` shows a change there as a

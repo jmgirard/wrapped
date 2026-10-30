@@ -32,9 +32,9 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 
 ## Coverage
 
-- AC1 → T1, T2, T3
+- AC1 → T1, T2, T3, T7, T8
 - AC2 → T1, T3
-- AC3 → T2, T4
+- AC3 → T2, T4, T7
 - AC4 → T6
 - AC5 → T5
 - AC6 → T6
@@ -47,6 +47,8 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - [x] T4: Convert `tests/tables.docx` to PDF with LibreOffice, and read the AC3 coordinates with `pdftotext -bbox`. If the wide table runs past its box, fix the fit. Record the coordinates in a work-log line, and keep the check script for review to rerun.
 - [x] T5: Docs and README: change each paragraph that the AC5 searches find. Write the wrapped-table text and its limits in `docs/formats/word.qmd`. Update E5 and the Word mechanism text in `cairn/DESIGN.md`, and the W4 row of `cairn/references/wrap-mechanisms.md`.
 - [x] T6: Run `python3 tests/verify.py` and `quarto render docs`. At review, stop once for the user's look in Word, and record the user's report in the Review section.
+- [ ] T7: Review return 1: a table, figure float, or callout right before a wrapped Word table float must not merge into it. Put a paragraph before the floating table, and check the case with a render and in LibreOffice.
+- [ ] T8: Pass-1 fix-now findings (Review section): size images outside a table float's tables to the box; record the inner table's width, the anchors, links, and citations in `docx_tables`; reword the nested-table count; render `tables-column-meta` to Word; fix the stale lines in DESIGN.md, the Lua headers, `wrap-mechanisms.md`, the `verify.py` docstrings, `docs/index.qmd`, `docs/formats/word.qmd`, and the "tested on HTML pages" sentences.
 
 ## Work log
 
@@ -71,6 +73,8 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - 2026-10-30: claim audit re-read: 5 corrected claims hold; 2 fixed once more with no further pass (the frame_first comment now claims @fig- links only, since no snapshot records a link to a floating table; DESIGN.md's grid sum is Pandoc's 7920 twips, not the 9360-twip text width).
 - 2026-10-30: T6: `python3 tests/verify.py` passed all 122 renders after the claim fixes, and `quarto render docs` exited 0 with no warning. The user's look in Word is review's stop. Status set to review.
 - 2026-10-30: review return 1: a table, figure float, or callout right before a wrapped Word table float merges into it, because the raw floating table gets no paragraph between them (diff-bug #1, load-bearing). The same return carries the pass-1 fix-now findings that the Review section lists: images in a table float sized to the box, `docx_tables` recording inner width, anchor, links, and citations, the nested-count wording, a Word render of `tables-column-meta`, and the stale lines in DESIGN.md, the Lua headers, `wrap-mechanisms.md`, `verify.py` docstrings, `docs/index.qmd`, `docs/formats/word.qmd`, and the "tested on HTML pages" sentences.
+- 2026-10-30: T7: a 1 pt paragraph (`w:line="20"` exact) now goes before each floating table, and the floating cell has no left or right margin. A scratch probe showed a plain table and a figure float right before wrapped tables staying apart in LaTeX-free LibreOffice output. New fixture `tests/docx-tables.qmd` (Word only) holds both cases and an image in a table float.
+- 2026-10-30: T8: `docx_size` skips images in tables, so an image outside a table float's table fills the box (2377440 EMU in a 3744-twip box). `docx_tables` records anchors, the block before, image fill, the inner `w:tblW`, links, and citations; the count reads "not listed above". `tables-column-meta` renders to Word (its table warns "is in the margin"). Stale lines fixed in DESIGN.md (goals, warnings, stop rule, pass 4, post-render), the Lua headers, `wrap-mechanisms.md`, the `verify.py` docstring, `docs/formats/word.qmd`, and the three "tested on HTML pages" sentences. Two pass-1 fix-now findings turned out false on reading: ripple #6 (DESIGN.md's "a table in LaTeX and Word" is the figure-in-a-table-cell context, still true) and ripple #13 (`docs/index.qmd:26` describes how the page's demo figure is drawn).
 - 2026-10-30: `tests/.gitignore` gained `/.quarto/` from a Quarto render in `tests/`; it is not milestone work and stays unstaged.
 - 2026-10-30: T4 minor amendment: T4 recorded its coordinates in the work log, not the review-owned Review section, which implement does not write.
 

@@ -128,7 +128,7 @@ Word frame (W4), on the image paragraph and the caption paragraph (corrected M01
 _extensions/wrapped/
   _extension.yml        # contributes: filters (pre-quarto and post-render entries)
   wrapped.lua           # shared parsing: classes, width, stop rule, warnings
-  wrapped-docx.lua      # post-render: Word frames
+  wrapped-docx.lua      # post-render: Word frames and floating tables
   wrapped.css           # HTML layout
   wrapped.tex           # LaTeX wrapper environment
   typst/packages/preview/wrap-it/0.1.1/
@@ -142,8 +142,8 @@ The filter has two entry points (corrected M006):
   `\wrappedstop` after each LaTeX group (corrected M007), and writes the
   Typst `wrap-content` call. In Word it marks each group with its frame in
   `data-wrap-frame`.
-- `post-render` runs `wrapped-docx.lua`, which builds the docx frames after
-  Quarto renders figures. It changes nothing in other formats.
+- `post-render` runs `wrapped-docx.lua`, which builds the docx frames and
+  floating tables after Quarto renders figures and tables. It changes nothing in other formats.
 
 ## Edge cases
 

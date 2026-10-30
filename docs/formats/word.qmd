@@ -64,7 +64,8 @@ render prints a warning. The `wrap-lines` attribute does nothing in Word.
 A list in a figure div goes in the frame with the image and the caption.
 Word cannot put a code block, a table, a heading, a horizontal rule, or
 raw content in a frame. A figure div that holds one keeps its normal
-layout, and the render prints a warning.
+layout, and the render prints a warning. A table float uses a floating
+table in place of a frame (see [Tables](#tables)).
 
 A frame does not break across pages. If a frame does not fit at the bottom
 of a page, Word moves it and the paragraph after it to the next page. The

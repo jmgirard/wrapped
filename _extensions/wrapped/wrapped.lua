@@ -16,7 +16,7 @@
 -- wrap-it package. Word output groups each wrapped figure with its
 -- paragraphs as in HTML, and marks the group with the frame's side, width,
 -- and gap in twips; wrapped-docx.lua turns the group into a Word frame at
--- post-render. A LaTeX document with classoption: twocolumn and every other
+-- post-render, or for a table float into a floating table. A LaTeX document with classoption: twocolumn and every other
 -- format keep a normal figure. In LaTeX, wrapped.tex also sets a normal
 -- figure where it finds columns while LaTeX runs. A figure with no wrap
 -- class is left as it is in every format.
@@ -752,9 +752,14 @@ local function docx_frame(class, width, gap, where)
 end
 
 -- Sets each image in a list of blocks to the frame's width, so the image
--- fills the frame.
-local function docx_size(blocks, twips)
+-- fills the frame. With `skip_tables`, an image in a table keeps its size,
+-- as the table's column sets it.
+local function docx_size(blocks, twips, skip_tables)
   return blocks:walk({
+    traverse = "topdown",
+    Table = function(tbl)
+      if skip_tables then return tbl, false end
+    end,
     Image = function(img)
       img.attributes.width = tex_number(twips / 1440) .. "in"
       return img
@@ -1608,9 +1613,15 @@ local function float_target(float)
     end
   elseif is_docx then
     -- A table float's box is a floating table that wrapped-docx.lua makes
-    -- at post-render (D-022). Its images keep their own size.
+    -- at post-render (D-022). An image outside its table fills the box. A
+    -- float's content can be one block, which a walk from that block does
+    -- not visit.
     local frame, w = docx_frame(class, width, gap, "#" .. float.identifier)
-    if not is_table then float.content = docx_size(float.content, w) end
+    if is_table and pandoc.utils.type(float.content) == "Block" then
+      float.content = docx_size(pandoc.Blocks({ float.content }), w, true)[1]
+    else
+      float.content = docx_size(float.content, w, is_table)
+    end
     if custom_id then docx_frames[custom_id] = frame end
   else
     float.classes:insert(class)

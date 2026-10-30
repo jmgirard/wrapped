@@ -2,7 +2,7 @@
 -- figure. In docx, the pre-quarto pass in wrapped.lua puts each wrapped
 -- figure and the paragraphs after it in a .wrap-group div, whose
 -- data-wrap-frame holds the frame's side, width, and gap in twips, as
--- "right 3744 240". This pass turns the figure into a Word frame. It
+-- "right 3744 240". This pass turns a figure into a Word frame. It
 -- removes Quarto's one-cell figure table and gives the image paragraph and
 -- each caption paragraph the same w:framePr, so Word shows them as one
 -- frame with the group's paragraphs beside it. Pandoc writes every image
@@ -161,8 +161,11 @@ end
 -- holds the float's div, with the caption, the table, and the bookmark
 -- around them. Pandoc writes raw openxml as it is, so a raw block opens the
 -- floating table before the div and another closes it after. The gap goes
--- on the side toward the text. A cell must end with a paragraph, so an
--- empty one follows a table at the end.
+-- on the side toward the text. The cell has no margins, so its content is
+-- as wide as the box, as in a frame. A cell must end with a paragraph, so
+-- an empty one follows a table at the end. Word joins two tables with
+-- nothing between them, and Pandoc cannot see the raw table to put its
+-- paragraph there, so a 1 pt paragraph comes before the floating table.
 local function fit_table(tbl)
   local shares, sum = {}, 0
   for i, spec in ipairs(tbl.colspecs) do
@@ -181,7 +184,7 @@ local function floating_table(div, frame)
   local left = frame.side == "left" and 0 or frame.gap
   local right = frame.side == "left" and frame.gap or 0
   local open = string.format(
-    '<w:tbl><w:tblPr><w:tblStyle w:val="Table" /><w:tblpPr w:leftFromText="%s" w:rightFromText="%s" w:vertAnchor="text" w:horzAnchor="margin" w:tblpXSpec="%s" /><w:tblW w:type="dxa" w:w="%s" /><w:tblLayout w:type="fixed" /><w:tblLook w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="0" w:val="0000" /></w:tblPr><w:tblGrid><w:gridCol w:w="%s" /></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="%s" /></w:tcPr>',
+    '<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact" /></w:pPr></w:p><w:tbl><w:tblPr><w:tblStyle w:val="Table" /><w:tblpPr w:leftFromText="%s" w:rightFromText="%s" w:vertAnchor="text" w:horzAnchor="margin" w:tblpXSpec="%s" /><w:tblW w:type="dxa" w:w="%s" /><w:tblLayout w:type="fixed" /><w:tblCellMar><w:left w:w="0" w:type="dxa" /><w:right w:w="0" w:type="dxa" /></w:tblCellMar><w:tblLook w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="0" w:val="0000" /></w:tblPr><w:tblGrid><w:gridCol w:w="%s" /></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="%s" /></w:tcPr>',
     left, right, frame.side, frame.width, frame.width, frame.width)
   local last = div.content[#div.content]
   local close = (last and last.t == "Table" and "<w:p />" or "") .. "</w:tc></w:tr></w:tbl>"

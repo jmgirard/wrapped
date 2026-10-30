@@ -1,0 +1,61 @@
+---
+title: "wrapped fixture: Word table floats after a table"
+filters:
+  - wrapped
+format: docx
+---
+
+Word joins two tables with nothing between them, so each wrapped table
+float below follows a block that Word writes as a table.
+
+| A | B |
+|---|---|
+| 1 | 2 |
+
+::: {#tbl-after-table .wrap-right}
+
+| Condition | Mean |
+|-----------|------|
+| A         | 3.1  |
+
+: A wrapped table right after a plain table.
+
+:::
+
+The paragraph beside the table after a plain table. Lorem ipsum dolor sit
+amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua. See @tbl-after-table.
+
+![A figure float with no wrap class.](plot.png){#fig-before-table width="40%"}
+
+::: {#tbl-after-figure .wrap-left}
+
+| X | Y |
+|---|---|
+| 1 | 2 |
+
+: A wrapped table right after a figure float.
+
+:::
+
+The paragraph beside the table after a figure float. Lorem ipsum dolor sit
+amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua.
+
+## An image in a table float
+
+::: {#tbl-image .wrap-right}
+
+![](plot.png)
+
+| P | Q |
+|---|---|
+| 1 | 2 |
+
+: A table float that holds an image.
+
+:::
+
+The paragraph beside the table float with an image. Lorem ipsum dolor sit
+amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua.
