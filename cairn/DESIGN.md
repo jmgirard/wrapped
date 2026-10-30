@@ -378,3 +378,8 @@ snapshot difference. The mechanism for each other format is in
   in its normal layout with a warning, so the failure is Quarto's. The
   site's `docs/normal-layout.qmd`, Places that keep the normal layout in
   some formats, states this limit (M013, corrected M024).
+- PDF through LaTeX: columns set by a class, `\twocolumn`, or `multicols`
+  are found by `wrapped.tex` only while LaTeX runs, so the warning goes to
+  the LaTeX log and Quarto's console shows none; only `classoption` gets a
+  console warning. The site's `docs/formats/latex.qmd`, Columns, states
+  this limit (routed from candidates 2026-10-30; added 2026-10-26 — M009).

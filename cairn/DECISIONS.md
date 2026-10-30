@@ -272,3 +272,23 @@ runs on main are never cancelled, but a newer queued run replaces an older
 queued one. **Consequences:** a later finding of the same effect is not
 filed again unless a user reports it. Each drop can be reopened by an entry
 that supersedes this one.
+
+### D-020: Triage drops four more candidate rows as not worth keeping
+
+2026-10-30, `/cairn-triage`. **Context:** a second triage pass re-weighed
+every candidate row and Known issues entry on its merits, under rules that
+let it place a row on any rung. **Decision:** the user accepted dropping
+four rows. "Fit images in wide Word frames": Pandoc caps an image at 8400
+twips, so a Word frame between 8400 twips and the text width holds a
+narrower image; a frame that wide leaves no room for text to wrap. "Warn
+when Word frames are not built": `wrapped.lua` run alone by path, without
+`wrapped-docx.lua`, renders wrapped figures as normal figures with no
+warning; only a run outside the documented install reaches it. "Keep narrow
+widths when no width fits": in Word and Typst, a figure whose width and gap
+fill the text takes 40%, so `width="0.5in"` with a `6in` gap widens; only a
+gap that fills the text reaches it, and the site states the rule. "Count
+table floats in the format warning": in EPUB a `#tbl-` float with a wrap
+class does not raise the "does not wrap figures" warning; the table float
+keeps its own warning. **Consequences:** a later finding of the same effect
+is not filed again unless a user reports it. Each drop can be reopened by
+an entry that supersedes this one.
