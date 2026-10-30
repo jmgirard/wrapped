@@ -1,0 +1,6 @@
+# warnings
+1x wrapped: the table #tbl-meta-column is in the margin, so it does not wrap.
+# docx
+image: cx=1783080
+# frames
+frame left w=2808 gap=240 anchor=margin | fig-meta-column | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
