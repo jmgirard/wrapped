@@ -145,6 +145,11 @@ warning elsewhere, the site, and DESIGN.md.
       `cairn/DESIGN.md` (the non-goal, steps 2, 4, and 6, and a Known
       issues entry for the Typst spill) and row E5 of
       `cairn/references/wrap-mechanisms.md`.
+- [ ] T6: Review return 1. Make `fig-column-*` and `tbl-column-*` cell
+      classes apply only to floats of their own type, read a table float's
+      column class on a div inside it, set `found_wrap` only for figure and
+      table floats, add `tests/tables-cell-columns.qmd` for the three
+      cases, and make the fix-now text edits the Review section lists.
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates. -->

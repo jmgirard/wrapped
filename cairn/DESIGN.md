@@ -205,7 +205,9 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
 2. It finds the contexts that cannot wrap: lists (definition lists
    included), callouts, column layouts, panel layouts, tabsets, asides,
    margin blocks (a `fig-column: margin` or `tbl-column: margin` cell
-   included, corrected M038), subfigure
+   included; a cell's `fig-column-*` class holds only for its figure
+   floats and its `tbl-column-*` class only for its table floats, as
+   Quarto places them, `context_scope`, corrected M038), subfigure
    panels, and in a dashboard code cells outside a `.card` div (corrected
    M022). revealjs slides have no margin column, so there the margin
    classes and a document margin value name no context, and an aside still
@@ -241,8 +243,10 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    normal layout with a warning, and its caption location key is
    `tbl-cap-location` (corrected M038). A code cell anchors the group of
    a wrapped float inside it, with or without a wrap class of its own,
-   since a table float can take its class from its caption block
-   (corrected M038). A float that step 2 or
+   since a table float can take its class from its caption block, and a
+   cell's `margin-caption` class reaches its floats either way. knitr puts
+   a table cell's column class, as from `column: page`, on a div inside
+   the table float, which this step reads for a table (corrected M038). A float that step 2 or
    3 recorded, a float other than a figure or a table, a float with a margin or page-wide class or a
    layout attribute, any figure float when the document's `fig-column` or
    `column` decides its column (`column_context`, below) and names the
@@ -271,7 +275,8 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    (corrected M007). In Typst, each other float records the opening of its
    `wrap-content` call by its custom id, and a captioned image with no id
    gets a `.wrapped-image` box that holds that opening (corrected M005).
-5. In HTML it groups each wrapped figure with the paragraphs after it in a
+5. In HTML it groups each wrapped figure or table float with the
+   paragraphs after it in a
    `.wrap-group` div. The group's `display: flow-root` gives the stop rule.
    A dashboard marks the group and a cell's `.cell` and
    `.cell-output-display` wrappers as flex fill items and containers;
@@ -312,7 +317,7 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    writes the block again without its wrap classes, since Quarto would add
    them to the float (corrected M034, M038).
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
-   wraps. In LaTeX it adds wrapfig and `wrapped.tex`, which defines
+   or table float wraps (corrected M038). In LaTeX it adds wrapfig and `wrapped.tex`, which defines
    `wrappedfigure` over wrapfig's floating placements and `\wrappedstop`,
    which ends a wrap (corrected M007). Where the text runs in columns,
    inside `multicols` or where `\if@twocolumn` is true, `wrappedfigure`

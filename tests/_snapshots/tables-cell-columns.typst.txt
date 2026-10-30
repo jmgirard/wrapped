@@ -1,0 +1,9 @@
+# warnings
+1x wrapped: the table #tbl-column-page is page-wide, so it does not wrap.
+# typ
+figure: fig-tbl-column image-width=yes
+figure: tbl-fig-column image-width=no
+figure: tbl-column-page image-width=no
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 30%, 40%, 40%)), column-gutter: 1em | fig-tbl-column no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | tbl-fig-column no-alt | p | cites=0

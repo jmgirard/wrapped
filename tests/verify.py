@@ -129,6 +129,8 @@ RENDERS = [
     ("tables-column-meta", "typst", True),
     ("tables-fig-column-meta", "html", True),
     ("tables-fig-column-meta", "typst", True),
+    ("tables-cell-columns", "html", True),
+    ("tables-cell-columns", "typst", True),
     ("cap-margin", "html", True),
     ("cap-margin", "pdf", True),
     ("cap-margin", "typst", True),
@@ -370,9 +372,11 @@ def margin_summary(fixture):
     return lines
 
 
-# Table floats whose caption ends in an attribute block, each with whether
-# that block sets .striped. knitr's tables are striped in any case, so
-# table-striped is recorded only where the block sets it.
+# Table floats whose wrap classes and caption the summary records, each with
+# whether its caption's attribute block sets .striped. Most end in such a
+# block; tbl-div and tbl-cell in tables.qmd have none. knitr's tables are
+# striped in any case, so table-striped is recorded only where the block
+# sets it.
 TABLE_IDS = {
     "fixture": {"tbl-caption-block": True, "tbl-cell-block": False, "tbl-cell-both": False, "tbl-striped": True},
     "tables": {"tbl-div": False, "tbl-block": False, "tbl-pipe": False, "tbl-cell": False, "tbl-cell-block": False},
