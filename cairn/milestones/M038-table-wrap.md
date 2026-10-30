@@ -296,3 +296,4 @@ Pass 3 evidence at e8651f6 (code at 0738966; `main` still 2029477).
 - ripple #2: the normal-layout page title names figures only — reject, style
 - ripple #3: wrap-mechanisms E20 and E21 are silent on tables — reject, false: silence is no disagreement, and E3 and E5 carry the table rule
 - ripple #4: docs/defaults.qmd speaks of figures only — reject, false: no statement there disagrees with the diff
+- fixed 5cf4f4d and 0104432 (pass 3 fix-now): diff-bug #1, #2, #3, #4; blame-history #1, #3, #4, #6; prior-review #1; ripple #1. Re-verified: `python3 tests/verify.py --update` then a clean compare run, all 122 renders pass; `quarto render docs` exit 0; `fig-asis` and `fig-page-tbl-margin` outputs match main's filter in HTML, Typst, and LaTeX.
