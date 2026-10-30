@@ -1,6 +1,6 @@
 # M039: Wrap table floats in Word
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -46,7 +46,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - [x] T3: `tests/verify.py`: make `docx_summary` list each floating table, with its side, width, gap, bookmark, caption style, and the blocks after it up to the clearing break. Run `--update`, and read the snapshot diff for `tables`, `fixture`, `contexts`, and `tables-cell-columns`. Plant one defect for each axis and see the check fail for each: the wrong side, a dropped `w:tblpPr`, the caption moved out of the cell, a dropped bookmark, and a dropped clearing break. Cover at least one div float and one code-cell float. Fix the prose of `tests/fixture.qmd` (lines 214, 223, and 231) that says a table keeps a normal layout in Word.
 - [x] T4: Convert `tests/tables.docx` to PDF with LibreOffice, and read the AC3 coordinates with `pdftotext -bbox`. If the wide table runs past its box, fix the fit. Record the coordinates in a work-log line, and keep the check script for review to rerun.
 - [x] T5: Docs and README: change each paragraph that the AC5 searches find. Write the wrapped-table text and its limits in `docs/formats/word.qmd`. Update E5 and the Word mechanism text in `cairn/DESIGN.md`, and the W4 row of `cairn/references/wrap-mechanisms.md`.
-- [ ] T6: Run `python3 tests/verify.py` and `quarto render docs`. At review, stop once for the user's look in Word, and record the user's report in the Review section.
+- [x] T6: Run `python3 tests/verify.py` and `quarto render docs`. At review, stop once for the user's look in Word, and record the user's report in the Review section.
 
 ## Work log
 
@@ -69,6 +69,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - 2026-10-30: T4 (LibreOffice 26.8.1.1 PDF, `pdftotext -bbox`, scratchpad `ac3.py`): tables 1, 2, 3, 4, 5, 9, and 10 each have paragraph lines beside the table's text outside the box span (e.g. table 1 span x=329.4-540.0, 8 lines beside, rows y=144.2-245.8), and the next block starts below the table (table 1 next heading y=335.3). Table 9's one-line paragraph starts at y=230.9, above its caption text at 240.9, since the caption has 10 pt space before it, and overlaps the rows. `#tbl-wide` (span x=446.4-540.0) breaks across pages 3 and 4, and its 98 cell words all lie inside the span. It is the document's last group, so no block follows its clearing break.
 - 2026-10-30: claim audit: 56 claims read, 4 corrected — tests/verify.py, docs/formats/word.qmd, tests/fixture.qmd; 4 stale unchanged lines fixed too (wrapped.lua header, wrapped-docx.lua header and frame_first comment, docs/normal-layout.qmd tbl-column in Word). The Word page now names LibreOffice for the wide-table behavior, since Word itself is not yet checked. Re-read pending; suite rerunning.
 - 2026-10-30: claim audit re-read: 5 corrected claims hold; 2 fixed once more with no further pass (the frame_first comment now claims @fig- links only, since no snapshot records a link to a floating table; DESIGN.md's grid sum is Pandoc's 7920 twips, not the 9360-twip text width).
+- 2026-10-30: T6: `python3 tests/verify.py` passed all 122 renders after the claim fixes, and `quarto render docs` exited 0 with no warning. The user's look in Word is review's stop. Status set to review.
 - 2026-10-30: `tests/.gitignore` gained `/.quarto/` from a Quarto render in `tests/`; it is not milestone work and stays unstaged.
 - 2026-10-30: T4 minor amendment: T4 recorded its coordinates in the work log, not the review-owned Review section, which implement does not write.
 
