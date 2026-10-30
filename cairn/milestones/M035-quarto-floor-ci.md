@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M035: Test the lowest admitted Quarto in CI
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — the lowest Quarto version users can install with, and the install text in README and the site, change
-- **Branch/PR:** —
+- **Branch/PR:** m035-quarto-floor-ci
 
 ## Goal
 

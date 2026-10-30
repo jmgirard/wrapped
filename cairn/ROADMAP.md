@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-30 (triage, second pass: dropped as not worth keepi
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M035 | Test the lowest admitted Quarto in CI | planned | — | normal | milestones/M035-quarto-floor-ci.md |
+| M035 | Test the lowest admitted Quarto in CI | in-progress | — | normal | milestones/M035-quarto-floor-ci.md |
 | M036 | List margin figures in the test summaries | planned | — | normal | milestones/M036-margin-summaries.md |
 | M037 | Say LaTeX narrows lines past figures | planned | — | normal | milestones/M037-latex-narrow-past.md |
 | M034 | Warn for wrap classes on table floats | done | — | normal | milestones/archive/M034-table-float-class.md |
