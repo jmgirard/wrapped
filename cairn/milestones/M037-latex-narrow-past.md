@@ -61,22 +61,26 @@ The Limits section of `docs/formats/latex.qmd` says that wrapfig can keep lines 
 - AC2 evidence (2026-10-30, same render): `quarto render docs` exit 0; `python3 tests/docs_layout.py` exit 0, 24 ok and 0 FAIL over LaTeX, Typst, and Word. Pass.
 - gate: `cairn_validate.py` all checks passed (exit 0). Version marker unchanged (no `_extensions/` change). Changelog none. Docs workflow on the PR: runs at step 8.
 - spawned: diff-bug, blame-history, prior-review, ripple
-- diff-bug #1: "skips the lines that the figure still needs" now reads as if it could mean only to the figure's bottom; `wrapped.tex` skips the rest of wrapfig's height count, extra lines included — fix now (now "skips the rest of the counted lines").
+- diff-bug #1: "skips the lines that the figure still needs" now reads as if it could mean only to the figure's bottom; `wrapped.tex` skips the rest of wrapfig's height count, extra lines included — fix now (now "skips the rest of the counted lines"), fixed 6d17397.
 - diff-bug #2: "a paragraph that runs on past that bottom" describes less than wrapfig does, since a new paragraph inside the count is narrowed too — reject (false): the sentence before it states the general case, and this one reports what the example PDFs show.
-- diff-bug #3: "below it" can read as below the paragraph — fix now (now "there").
-- diff-bug #4: "narrow lines" breaks the page's "narrowed lines" term — fix now.
-- diff-bug #5: the first Limits bullet now has seven sentences on four topics — fix now (split into two bullets: the count and its overrun; the stop block and short text).
-- diff-bug #6: "this site's example pages" is not linked — fix now (links `../examples/index.qmd`).
-- diff-bug #7: the edit left a short source line unreflowed — fix now (reflowed with #1–#5).
+- diff-bug #3: "below it" can read as below the paragraph — fix now (now "there"), fixed 6d17397.
+- diff-bug #4: "narrow lines" breaks the page's "narrowed lines" term — fix now, fixed 6d17397.
+- diff-bug #5: the first Limits bullet now has seven sentences on four topics — fix now (split into two bullets: the count and its overrun; the stop block and short text), fixed 6d17397.
+- diff-bug #6: "this site's example pages" is not linked — fix now (links `../examples/index.qmd`), fixed 6d17397.
+- diff-bug #7: the edit left a short source line unreflowed — fix now (reflowed with #1–#5), fixed 6d17397.
 - diff-bug #8: no `cairn/DESIGN.md` Known issues entry for this limit — reject (false): LaTeX limits live in the site's Limits section (CLAUDE.md), and none of the other LaTeX limits has an entry.
 - blame-history #1: the example pages, `docs/index.qmd`, and `docs/get-started.qmd` say the last lines run under the figure at full width, against the new LaTeX text — reject (false): the narrowed lines are the first ones below the bottom, and T1's past-line lists show full-width lines after them on every page; `docs/index.qmd` and `docs/get-started.qmd` render to HTML only.
 - blame-history #2: defaults and width-gap reach a count only by how a line just above the caption's bottom is read — reject (false): T1 counts only line tops strictly below the bottom and still finds 1 on each (defaults 920 under 906, width-gap 816 under 796).
 - blame-history #3: DECISIONS.md does not record narrowing past the figure under the default count — reject (false): this is a wrapfig limit, not a choice, and limits go on the site page.
 - prior-review #1: the example pages' "last lines … to the right edge, under the figure" contradicts the new text — reject (false): same evidence as blame-history #1.
-- prior-review #2: the edit left a ragged source line — fix now (same fix as diff-bug #7).
-- prior-review #3: "the lines" in the stop-block sentence can be read as the narrow lines — fix now (same fix as diff-bug #1).
+- prior-review #2: the edit left a ragged source line — fix now (same fix as diff-bug #7), fixed 6d17397.
+- prior-review #3: "the lines" in the stop-block sentence can be read as the narrow lines — fix now (same fix as diff-bug #1), fixed 6d17397.
 - ripple #1: README.md:44–47 says the last lines of the second paragraph run under the figure at full width — reject (false): those are the paragraph's last lines, which run full width in the image-figure LaTeX PDF (856, 877) after the narrowed 816 and 836.
 - ripple #2: `_extensions/wrapped/wrapped.tex:99` says wrapfig's count "ends at about the figure's bottom" — reject (false): "about" stands, and the comment at lines 76–83 gives the end as `\WF@size`, which adds 1.5 `\baselineskip` and two `\intextsep` to the figure's depth, consistent with the new text.
 - ripple #3–#7: `docs/index.qmd`, defaults, both-sides, image-figure, code-cell, div-figure, uncaptioned-image, width-gap say the last lines run full width under the figure — reject (false): same evidence as blame-history #1.
 - ripple #8: `docs/get-started.qmd:40–42` says the paragraphs run full width once the text passes the figure's bottom — reject (false): the page renders to HTML only (`docs/_quarto.yml` has no other format), and the sentence describes its HTML demo.
 - ripple #9: the candidate row "Say LaTeX narrows lines past figures" still reads as open — reject (false): post-merge hygiene graduates it.
+- AC1 re-check after the fix (6d17397, fresh `quarto render docs`): the first Limits bullet now says "The count can run past the bottom of the figure and its caption. In the LaTeX PDFs of this site's [example pages](../examples/index.qmd), a paragraph that runs on past that bottom has one or two narrowed lines there." The T1 counts are unchanged, {1, 2} lie in "one or two". Pass.
+- AC2 re-check after the fix: `quarto render docs` exit 0; `python3 tests/docs_layout.py` exit 0, 24 ok; the link renders as `../examples/index.html`. Pass.
+- gate: `python3 tests/verify.py` all 106 renders pass (exit 0) on 2df8af7; the fix 6d17397 touches only `docs/formats/latex.qmd`, which the suite does not render.
+- snapshot: no changed `_snaps` or `__snapshots__` file (the list is empty).
