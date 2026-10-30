@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-30 (M035 review: graduated "Test the minimum Quarto version in CI"; M032 row pruned; one lesson captured, M019's evicted by rank; validate green)_
+_Last hygiene check: 2026-10-30 (M036 review: graduated "List margin figures in the summaries"; M033 row pruned; one lesson captured, M021's evicted by rank; validate green)_
 
 ## Milestones
 
@@ -9,11 +9,10 @@ _Last hygiene check: 2026-10-30 (M035 review: graduated "Test the minimum Quarto
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M036 | List margin figures in the test summaries | review | — | normal | milestones/M036-margin-summaries.md |
 | M037 | Say LaTeX narrows lines past figures | planned | — | normal | milestones/M037-latex-narrow-past.md |
+| M036 | List margin figures in the test summaries | done | — | normal | milestones/archive/M036-margin-summaries.md |
 | M035 | Test the lowest admitted Quarto in CI | done | — | normal | milestones/archive/M035-quarto-floor-ci.md |
 | M034 | Warn for wrap classes on table floats | done | — | normal | milestones/archive/M034-table-float-class.md |
-| M033 | Warn for a wrap class on a span | done | — | normal | milestones/archive/M033-element-class-warning.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -27,7 +26,6 @@ _Last hygiene check: 2026-10-30 (M035 review: graduated "Test the minimum Quarto
      ending with `(#N)` for a row written for GitHub issue N, such as
      `Fix SE of skewness calculation (#100)`; `/cairn-triage` offers a new title for one
      with fewer than 5 words or more than 40 characters; tracking-rules "Candidate short title" has the whole rule -->
-- List margin figures in the summaries: `typ_summary` in `tests/verify.py` splits the `.typ` at each `#figure(` and takes the first label in a chunk, but a margin figure is `#notefigure(`, so a body figure with no id followed by a margin cell figure took that cell's label (`figure: fig-meta-margin-two-1`) and the margin figure got no line. M018 moved its margin-meta cell above the no-id image to keep the line (M018 implement). `tex_summary` lists only `figure` and `wrappedfigure` environments, so a LaTeX margin figure gets no line either, and a check that such a figure keeps its normal layout rests on a missing line (M018 review, diff-bug #2, prior-review #3); promote when a check needs a margin figure's summary line — added 2026-10-28 — milestones/archive/M018-cell-warn-once.md — started M036
 - Say LaTeX narrows lines past figures: wrapfig keeps one or two lines narrow past a wrapped figure's bottom (image-figure's PDF: figure bottom at y=814, narrow lines at y=816 and 836), and the Limits section of `docs/formats/latex.qmd` does not say so (M026 review, diff-bug #2); promote when `docs/formats/latex.qmd` next changes — added 2026-10-28 — milestones/archive/M026-wrap-showcase.md — started M037
 - [parked] Cut the Ubuntu mirror from CI setup: `r-lib/actions/setup-r` runs `apt-get update` and installs about 175 Ubuntu packages, and the poppler step runs `apt-get update` too, so a slow mirror can stretch the job toward its 45-minute timeout (M008 review pass 2, diff-bug #1, blame-history #1). Since M027 the docs render job also runs `apt-get update` for poppler and Playwright's `--with-deps`, and the publish job waits for it (M027 review, blame-history #2). Since M035, `verify.yml` runs the setup twice per pull request, once for the release channel and once for Quarto 1.9.36 (M035 review, blame-history #1); promote when a CI or docs run times out in setup — added 2026-10-26 — milestones/archive/M008-ci-verify.md
 - [parked] Trim the LaTeX stop gap at page tops: a wrapped figure placed at the top of a page leaves about one more blank line before its stop block than one in mid-page (60 px against 39 px in a scratch render), since wrapfig counts its lines from a height less \intextsep there. No fixture covers a page-top figure or a group that ends at a div's end (M007 review, diff-bug #7; corrected M025). The skip counts lines and ignores \parskip, so the gap below a figure grows about 10 px for each paragraph beside it, and when narrowed lines cross a page break the stop skips about 2 empty lines at the next page's top with no figure there (M007 review pass 2, diff-bug #3 and #4); promote when a user reports it — added 2026-10-26 — milestones/archive/M007-latex-stops.md
