@@ -354,7 +354,7 @@
     "href": "get-started.html",
     "title": "Get started",
     "section": "",
-    "text": "The extension asks for Quarto 1.9.36 or later, and it is tested with Quarto 1.10.19. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThis command puts the extension under _extensions/. Then add the filter to the document’s YAML header:\nfilters:\n  - wrapped",
+    "text": "The extension asks for Quarto 1.9.36 or later. Each change to it is tested with Quarto 1.9.36 and with Quarto’s current release. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThis command puts the extension under _extensions/. Then add the filter to the document’s YAML header:\nfilters:\n  - wrapped",
     "crumbs": [
       "Get started"
     ]
@@ -364,7 +364,7 @@
     "href": "get-started.html#install",
     "title": "Get started",
     "section": "",
-    "text": "The extension asks for Quarto 1.9.36 or later, and it is tested with Quarto 1.10.19. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThis command puts the extension under _extensions/. Then add the filter to the document’s YAML header:\nfilters:\n  - wrapped",
+    "text": "The extension asks for Quarto 1.9.36 or later. Each change to it is tested with Quarto 1.9.36 and with Quarto’s current release. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThis command puts the extension under _extensions/. Then add the filter to the document’s YAML header:\nfilters:\n  - wrapped",
     "crumbs": [
       "Get started"
     ]
@@ -395,7 +395,7 @@
     "href": "index.html#install",
     "title": "wrapped",
     "section": "Install",
-    "text": "Install\nThe extension asks for Quarto 1.9.36 or later, and it is tested with Quarto 1.10.19. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThen add the filter to the document’s YAML header:\nfilters:\n  - wrapped\nGet started shows each kind of figure that wraps. The examples show each one rendered in HTML, in PDF through LaTeX, in PDF through Typst, and in Word.",
+    "text": "Install\nThe extension asks for Quarto 1.9.36 or later. Each change to it is tested with Quarto 1.9.36 and with Quarto’s current release. In the folder of your project, run:\nquarto add jmgirard/wrapped\nThen add the filter to the document’s YAML header:\nfilters:\n  - wrapped\nGet started shows each kind of figure that wraps. The examples show each one rendered in HTML, in PDF through LaTeX, in PDF through Typst, and in Word.",
     "crumbs": [
       "Get started",
       "wrapped"
