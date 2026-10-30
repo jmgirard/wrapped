@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M038: Wrap table floats in HTML and Typst
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -132,7 +132,7 @@ warning elsewhere, the site, and DESIGN.md.
       column class on a div inside it, set `found_wrap` only for figure and
       table floats, add `tests/tables-cell-columns.qmd` for the three
       cases, and make the fix-now text edits the Review section lists.
-- [ ] T7: Review return 2. Keep a scoped column context from hiding the subfigure panels
+- [x] T7: Review return 2. Keep a scoped column context from hiding the subfigure panels
       in its cell, read a table's inner column class in every format, warn for every wrapped LaTeX and
       Word table, add the panel, mixed-class, and `tbl-column: body` cases, and make the text fixes.
 
@@ -180,6 +180,7 @@ warning elsewhere, the site, and DESIGN.md.
 - review return 2: diff-bug #1 (load-bearing): a scoped column context must not stop the subfigure-panel contexts of the floats inside the cell; with it diff-bug #2 and #4, prior-review #1, and ripple #1, #2, #6, #7, #8, and the follow-up rows.
 - 2026-10-30: T7 added for review return 2 (minor amendment).
 - claim audit: 31 claims read, 0 corrected — wrapped.lua, DESIGN.md, ROADMAP.md rows, wrap-mechanisms E3, docs/formats/html.qmd, docs/reference.qmd, docs/stopping.qmd, fixtures; one loose DESIGN.md sentence widened to name LaTeX beside Typst.
+- 2026-10-30: T7 done: the --update run passed all 122 renders; the next compare run crashed once on stop-shortcode.docx (exit 139), which passed three solo reruns matching its snapshot and which the branch does not touch; a clean compare run then passed all 122; quarto render docs exit 0; status set to review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
