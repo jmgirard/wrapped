@@ -264,3 +264,15 @@ Pass 2 evidence at 80f6766 (code at 272c859; `main` still 2029477).
 - ripple #6: wrapped.lua comments at the grouping pass say "wrapped figure" only — fix now
 - ripple #7: DESIGN.md's stop rule and docs/stopping.qmd name figures only — fix now
 - ripple #8: docs/formats/html.qmd and wrap-mechanisms E3 list margin triggers without tbl-column — fix now
+- fixed 5e445e5, 6859710, 0738966 (return 2, T7): diff-bug #1, #2, #4; blame-history #3; prior-review #1, #2; ripple #1, #2, #5, #6, #7, #8; follow-up rows "Read both column kinds on a cell" written and "Read table keys for document columns" and "Name tables in the format warning" extended in 5e445e5.
+
+Pass 3 evidence at e8651f6 (code at 0738966; `main` still 2029477).
+
+- AC1: browser pane at 1280 x 900 on tests/tables.html from the 122-render run: the five forms each `ok` on their side at 45%/2em, 35%/1.5em, 30%/1em, 35%/1.5em, 35%/1.5em; every group `ok`.
+- AC2: `python3 tests/verify.py` all 122 renders pass, with `ok layout tables` for the five forms and the wide table.
+- AC3: tables.{html,typst} snapshots: tbl-no-text unwrapped with no warning, one callout and one margin warning, tbl-div's group `p, p`; the two tables-cap-margin fixtures each print one "caption in the margin" warning.
+- AC4: tables.tex 0 `wrappedfigure`, 10 `longtable`; tables.docx 0 `w:framePr`; tables.pdf has 7 and tables.docx 8 "does not wrap in LaTeX/Word" lines, one for each of the five forms among them (the rest are tbl-no-text, tbl-wide, and in Word tbl-page).
+- AC5: tables.epub snapshot holds only the format warning.
+- AC6: docs pages changed since pass 2 (reference.qmd rows, stopping.qmd, formats/html.qmd) state the table rule; `quarto render docs` exit 0.
+- AC7 (local half): 122 renders pass in a clean compare run; in the 8 snapshot files on main, every changed line names a `tbl-` float or is one of the two `cell, p` groups; CI half pending.
+- gate: `cairn_validate.py` all checks passed; version 0.2.0 unchanged; no principle changed.
