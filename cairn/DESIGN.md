@@ -45,8 +45,14 @@ stable release whose source has the loader for an extension's
 The spikes ran only on Quarto 1.10.19. Since M035, `verify.yml` runs
 `tests/verify.py` on Quarto 1.9.36 as well as on the release channel, and
 the full suite passed on 1.9.36 on macOS (M035 work log). Releases between
-1.9.36 and the release channel get no CI run. If a change needs a later
-Quarto, `quarto-required` and the pinned matrix entry rise together.
+1.9.36 and the release channel get no CI run. One set of snapshots must
+pass under both runs. If a later Quarto writes output that 1.9.36 cannot
+match, or a change needs a later Quarto, raise the floor to the lowest
+release that passes, as M035 chose over keeping old releases. A floor
+change edits `quarto-required`, the matrix entry in `verify.yml`, the
+install text in `README.md`, `docs/index.qmd`, and `docs/get-started.qmd`
+(with its `docs/_freeze/` file), this paragraph, the Conventions line on
+tests, and PROFILE.md's verify slot.
 
 ### Syntax
 
@@ -149,7 +155,8 @@ under `typst/packages/` (D-004, corrected M006). Users reach it through
   (CLAUDE.md, `PROFILE.md` release-walk).
 - Tests render fixture documents and compare the output. See `PROFILE.md`
   test-doctrine. GitHub Actions runs the same test command on each pull
-  request to `main`, under Quarto's release channel and under Quarto 1.9.36
+  request to `main`, each push to `main` outside `cairn/`, and by hand,
+  under Quarto's release channel and under Quarto 1.9.36
   (`.github/workflows/verify.yml`, D-008, D-009, corrected M035).
 - The documentation site in `docs/` is a Quarto website that uses the
   extension through a `docs/_extensions` symlink. `.github/workflows/docs.yml`
