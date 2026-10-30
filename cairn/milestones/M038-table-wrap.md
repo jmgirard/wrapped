@@ -179,6 +179,7 @@ warning elsewhere, the site, and DESIGN.md.
 - 2026-10-30: the plan-owned body reached 153 lines with T6, so the Acceptance criteria section was re-wrapped to 110 columns in one pass with no word changed (cairn_validate weight caps).
 - review return 2: diff-bug #1 (load-bearing): a scoped column context must not stop the subfigure-panel contexts of the floats inside the cell; with it diff-bug #2 and #4, prior-review #1, and ripple #1, #2, #6, #7, #8, and the follow-up rows.
 - 2026-10-30: T7 added for review return 2 (minor amendment).
+- claim audit: 31 claims read, 0 corrected — wrapped.lua, DESIGN.md, ROADMAP.md rows, wrap-mechanisms E3, docs/formats/html.qmd, docs/reference.qmd, docs/stopping.qmd, fixtures; one loose DESIGN.md sentence widened to name LaTeX beside Typst.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
