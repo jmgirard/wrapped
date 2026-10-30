@@ -51,9 +51,9 @@ local two_column = false
 -- Set in the first pass: meta_fig_column_set when the document sets
 -- fig-column, and meta_column_set when it sets fig-column or column.
 local meta_fig_column_set, meta_column_set = false, false
--- found_wrap: a figure, image, div, link, span, heading, code, or table
--- with no tbl- id carries a wrap class, so a format that cannot wrap
--- prints its one warning. placed: a figure or image wraps, so the
+-- found_wrap: a figure, table float, image, div, link, span, heading,
+-- code, or table carries a wrap class, so a format that cannot wrap prints
+-- its one warning. placed: a figure, table float, or image wraps, so the
 -- document needs the stylesheet, the LaTeX environment, or wrap-it.
 local found_wrap = false
 local placed = false
@@ -898,11 +898,13 @@ local no_text = {}
 local context_of_float = {}
 
 -- Returns the context that a margin class names, or nil. A code cell with
--- `fig-column: margin` carries the fig-column-margin class. revealjs slides
--- have no margin column, so the margin classes name no place there, but
--- revealjs sets an aside at the foot of the slide by default.
+-- `fig-column: margin` carries the fig-column-margin class, and one with
+-- `tbl-column: margin` the tbl-column-margin class. revealjs slides have no
+-- margin column, so the margin classes name no place there, but revealjs
+-- sets an aside at the foot of the slide by default.
 local function margin_context(classes)
-  if not is_revealjs and (classes:includes("column-margin") or classes:includes("fig-column-margin")) then
+  if not is_revealjs and (classes:includes("column-margin") or classes:includes("fig-column-margin")
+      or classes:includes("tbl-column-margin")) then
     return "is in the margin"
   end
   if classes:includes("aside") then return "is in an aside" end
@@ -919,7 +921,8 @@ end
 
 -- Returns the context that a page-wide column class names, or nil. A code
 -- cell with `column: page` carries the column-page class, and one with
--- `fig-column: page` the fig-column-page class. LaTeX makes a figure
+-- `fig-column: page` or `tbl-column: page` the fig-column-page or
+-- tbl-column-page class. LaTeX makes a figure
 -- page-wide only for the names that start with column-page or
 -- column-screen and do not end in -left, as Quarto's isStarEnv does. Typst
 -- sets a div or a code cell wider than the text for each name, in a
@@ -928,7 +931,7 @@ end
 -- keeps the figure in the body.
 local function page_context(classes, own)
   for _, class in ipairs(classes) do
-    local name = class:gsub("^fig%-", "")
+    local name = class:gsub("^fig%-", ""):gsub("^tbl%-", "")
     local starred = name:match("^column%-page") or name:match("^column%-screen")
     if PAGE_WIDE[name] and (has_page_layout
         or is_typst and not (own and (not starred or name:match("%-inset")))
@@ -1151,8 +1154,10 @@ local function meta_text(value)
   return (pandoc.utils.stringify(value):gsub("\u{2013}", "--"))
 end
 
--- The document's fig-cap-location and cap-location, read in the first pass.
+-- The document's fig-cap-location, tbl-cap-location, and cap-location,
+-- read in the first pass.
 local meta_fig_cap_location = nil
+local meta_tbl_cap_location = nil
 local meta_cap_location = nil
 
 -- The document's metadata, read in the first pass, for the stop rule's
@@ -1191,7 +1196,9 @@ end
 -- figure's fig-cap-location or either document key is margin, and a
 -- value other than margin in one of them overrides none of the others.
 -- Quarto has already copied a code cell's caption location, and its
--- caption-margin class, to the cell's figure as cap-location.
+-- caption-margin class, to the cell's figure as cap-location. A table
+-- float reads tbl-cap-location in place of fig-cap-location, which Quarto
+-- copies from a code cell to its table float under that name.
 local function caption_in_margin(float)
   local by_class = margin_caption_class(float.classes, true)
   float.content:walk({
@@ -1200,8 +1207,9 @@ local function caption_in_margin(float)
   if by_class then return true end
   local own = float.attributes["cap-location"]
   if own then return own == "margin" end
-  return float.attributes["fig-cap-location"] == "margin" or meta_fig_cap_location == "margin"
-    or meta_cap_location == "margin"
+  local key, meta_value = "fig-cap-location", meta_fig_cap_location
+  if float.type == "Table" then key, meta_value = "tbl-cap-location", meta_tbl_cap_location end
+  return float.attributes[key] == "margin" or meta_value == "margin" or meta_cap_location == "margin"
 end
 
 -- Returns the context that a figure float's column gives it, or nil. In
@@ -1231,6 +1239,7 @@ end
 local function read_meta(meta)
   document_meta = meta
   meta_fig_cap_location = meta_text(meta["fig-cap-location"])
+  meta_tbl_cap_location = meta_text(meta["tbl-cap-location"])
   meta_cap_location = meta_text(meta["cap-location"])
   if is_docx then
     docx_text_width, docx_columns = read_docx_text_width()
@@ -1308,12 +1317,13 @@ local typst_opens = {}
 -- custom id, cell floats included.
 local docx_frames = {}
 
--- The wrap class of a code cell, carried to the floats inside that cell.
--- `remaining` counts the cell's floats, figures and tables, so a cell with
--- no float carries nothing. Only figures wrap: a table float that takes the
--- class keeps its normal layout. `several` is true when the cell makes more
--- than one float that sits in no other float, and `warned` is set once the
--- cell's one warning is printed.
+-- The code cell that the float pass is in, with its wrap class, if any,
+-- carried to the floats inside that cell. `remaining` counts the cell's
+-- floats, figures and tables, so a cell with no float carries nothing.
+-- A cell with no wrap class still anchors its group, since a table float
+-- inside it can take a wrap class from its caption block. `several` is
+-- true when the cell makes more than one float that sits in no other
+-- float, and `warned` is set once the cell's one warning is printed.
 local carry = nil
 
 local function cell_div(div)
@@ -1321,10 +1331,9 @@ local function cell_div(div)
   -- Each cell ends any carry left from an earlier cell.
   carry = nil
   local c = wrap_class(div.classes)
-  if not c then return nil end
-  strip_wrap(div.classes)
+  if c then strip_wrap(div.classes) end
   local n = count_floats(div)
-  if n == 0 and wraps() then
+  if c and n == 0 and wraps() then
     quarto.log.warning(
       "wrapped: a code cell with a wrap class makes no figure with a fig- label, so nothing wraps.")
   end
@@ -1367,9 +1376,10 @@ end
 
 -- Quarto adds the classes of the block at a table float's caption end to
 -- the float and its table after this filter runs (table_classes in
--- Quarto's filters/main.lua), so a wrap class there would float the table
--- in HTML. This writes the block again without its wrap classes, or drops
--- it when nothing is left, and returns the first wrap class it held.
+-- Quarto's filters/main.lua), so a wrap class there would float a table
+-- that keeps its normal layout in HTML. This writes the block again
+-- without its wrap classes, or drops it when nothing is left, and returns
+-- the first wrap class it held, which float_target places.
 local function drop_caption_wrap(float)
   local caption = float.caption_long
   if not caption or not caption.content then return nil end
@@ -1407,8 +1417,9 @@ local function keep_normal(float)
 end
 
 local function float_target(float)
-  -- Every float of a wrapped cell uses up the carry, tables included, so
-  -- the carry never reaches a float after the cell.
+  -- Every float of a cell uses up the carry, tables included, so the carry
+  -- never reaches a float after the cell. `cell` is set for a float in a
+  -- cell, and `carried` only when that cell has a wrap class.
   local carried, token, cell
   if carry and carry.remaining > 0 then
     carry.remaining = carry.remaining - 1
@@ -1418,13 +1429,13 @@ local function float_target(float)
   local caption_class = float.type == "Table" and drop_caption_wrap(float) or nil
   local class = wrap_class(float.classes) or carried or img_class or caption_class
   if not class then return nil end
-  if float.type == "Figure" then found_wrap = true end
+  found_wrap = true
   strip_wrap(float.classes)
-  -- Only figures wrap. A table float keeps its normal layout, and Quarto
-  -- copies a cell's classes onto a table float, so the wrap class goes.
-  -- A figure in a context keeps its normal layout too, and so does an HTML
-  -- figure whose caption goes to the margin: CSS places the caption in the
-  -- margin, outside the figure's box, and no text sits beside the figure.
+  -- Figures and tables wrap, and other floats keep their normal layout.
+  -- Quarto copies a cell's classes onto its float, so the wrap class goes.
+  -- A float in a context keeps its normal layout, and so does an HTML
+  -- float whose caption goes to the margin: CSS places the caption in the
+  -- margin, outside the float's box, and no text sits beside the float.
   -- A figure's own column class, or the document's fig-column or column,
   -- can put the float in the margin or a page-wide column (column_context).
   local node = float.__quarto_custom_node
@@ -1432,7 +1443,8 @@ local function float_target(float)
   local layout = float.attributes["layout-ncol"] or float.attributes["layout-nrow"]
     or float.attributes.layout
   local column, by_document = column_context(float, cell)
-  local context = (float.type ~= "Figure" and "is not a figure")
+  local is_table = float.type == "Table"
+  local context = (float.type ~= "Figure" and not is_table and "is not a figure")
     or context_of_float[custom_id or ""]
     or (not by_document and column)
     or (layout and "is a subfigure panel")
@@ -1460,6 +1472,16 @@ local function float_target(float)
       local noun = ({ Figure = "figure", Table = "table" })[float.type] or "float"
       context_warning(string.format("the %s #%s", noun, float.identifier), context)
     end
+    return float
+  end
+  -- LaTeX and Word wrap no table (D-021): Quarto writes a LaTeX table as
+  -- a longtable, which wrapfig cannot hold, and a Word frame holds
+  -- paragraphs, not tables.
+  if is_table and (is_latex or is_docx) then
+    keep_normal(float)
+    quarto.log.warning(string.format(
+      "wrapped: the table #%s does not wrap in %s. A table wraps only in HTML and Typst.",
+      float.identifier, is_latex and "LaTeX" or "Word"))
     return float
   end
   float.content = clean_images(float.content)
@@ -1492,7 +1514,7 @@ local function float_target(float)
     float.classes:insert(class)
     float.attributes.style = style_for(width, gap, "#" .. float.identifier, float.attributes.style)
   end
-  if carried then
+  if cell then
     wrapped_cells[token] = true
   else
     -- The grouping pass sees this float as a plain Div that Quarto marks
@@ -2050,7 +2072,7 @@ end
 
 -- A table's classes come from an attribute block at the end of its caption,
 -- as in `: A table {.wrap-left}` (caption_block). A table with a tbl- id is
--- a float, and the float pass warns for it.
+-- a float, which the float pass places or warns for.
 local function unplaced_table(tbl)
   local long = tbl.caption.long
   local last = long and long[#long]

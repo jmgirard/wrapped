@@ -1,0 +1,22 @@
+---
+title: "Wrapped tables with tbl-cap-location: margin"
+filters:
+  - wrapped
+tbl-cap-location: margin
+---
+
+::: {#tbl-meta-margin .wrap-right}
+
+| Condition | Mean |
+|-----------|------|
+| A         | 3.1  |
+
+: A table whose caption the document sends to the margin.
+
+:::
+
+The paragraph after the table.
+
+![A figure, whose caption tbl-cap-location leaves in place.](plot.png){#fig-meta-body .wrap-left width="30%"}
+
+The paragraph after the figure.

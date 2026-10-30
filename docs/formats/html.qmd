@@ -10,6 +10,11 @@ flow beside it. In a window as wide as the
 and take the full width of the text column. A width or gap can be a CSS
 length, a percent, or a [CSS function](../width-gap.qmd#css-functions-in-html).
 
+A wrapped [table float](../get-started.qmd#wrap-a-table) floats in the
+same way. A table wider than its box scrolls inside the box. The
+extension's tests cover wrapped tables on HTML pages, not in slides or
+dashboards.
+
 A figure in the margin, a figure with its caption in the margin, and a
 figure in a page-wide column keep their normal layout in HTML. [Where a
 figure keeps its normal layout](../normal-layout.qmd) gives the full list.

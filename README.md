@@ -7,7 +7,9 @@ caption, and its `@fig-` links.
 This version wraps figures in HTML output, revealjs slides and dashboards
 included, in PDF through LaTeX, in PDF through Typst, and in Word. In
 every other format, a wrapped figure renders as a normal figure, and the
-render prints one warning.
+render prints one warning. A table with a `#tbl-` label wraps in HTML and
+in PDF through Typst. In the other formats it keeps its normal layout,
+and the render prints a warning.
 
 The documentation is at <https://jmgirard.github.io/wrapped/>.
 

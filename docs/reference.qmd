@@ -7,10 +7,12 @@ name links to the page that gives its full rules.
 
 ## Classes and attributes
 
-These go on a figure or an image. On a code cell, the class goes in
-`#| classes:` and the width in `#| out-width:` (see
+These go on a figure, an image, or a table float. On a code cell, the
+class goes in `#| classes:` and the width in `#| out-width:` (see
 [Get started](get-started.qmd#a-figure-from-a-code-cell)). "All four formats" means HTML, PDF through LaTeX, PDF through Typst, and
-Word. HTML includes revealjs slides and dashboards.
+Word. HTML includes revealjs slides and dashboards. A table float wraps
+only in HTML and PDF through Typst (see
+[Get started](get-started.qmd#wrap-a-table)).
 
 | Name | Kind | Values | Default | Works in |
 |---|---|---|---|---|

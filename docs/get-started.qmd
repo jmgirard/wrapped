@@ -114,3 +114,53 @@ of the column.
 
 The [examples](examples/index.qmd) show each of these forms rendered in
 HTML, in PDF through LaTeX, in PDF through Typst, and in Word.
+
+## Wrap a table
+
+A table float wraps in HTML and in PDF through Typst. A table float is a
+table with a `#tbl-` label. In PDF through LaTeX and in Word it keeps its
+normal layout, and the render prints one warning for each table. Put the
+class and the width on a `#tbl-` div:
+
+```markdown
+::: {#tbl-means .wrap-right width="45%"}
+
+| Condition | Mean | SD  |
+|-----------|------|-----|
+| A         | 3.1  | 0.4 |
+| B         | 4.2  | 0.6 |
+
+: Mean ratings by condition.
+
+:::
+```
+
+::: demo
+::: {#tbl-means .wrap-right width="45%"}
+
+| Condition | Mean | SD  |
+|-----------|------|-----|
+| A         | 3.1  | 0.4 |
+| B         | 4.2  | 0.6 |
+
+: Mean ratings by condition.
+
+:::
+
+@tbl-means floats to the right, and this paragraph flows beside it. The
+caption and the table share the box, at 45% of the text column.
+
+The same rules about width, gap, and where wrapping stops apply to a table
+as to a figure.
+:::
+
+The class can also go in the attribute block at the end of the caption:
+
+- A pipe table with its id in the block, as in
+  `: Mean ratings by condition. {#tbl-means .wrap-right width="45%"}`.
+  The block can also hold `width` and `wrap-gap`.
+- A block inside a `#tbl-` div, as in `: Mean ratings by condition. {.wrap-right}`.
+  Put a `width` or `wrap-gap` for this form on the div.
+- A code cell with a `tbl-` label: the class goes in `#| classes:`, or in a
+  block at the end of `#| tbl-cap:`. A code cell table takes the width and
+  gap of the [document defaults](defaults.qmd).

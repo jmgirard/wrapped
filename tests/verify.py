@@ -118,6 +118,13 @@ RENDERS = [
     ("table-cell", "typst", True),
     ("table-cell", "docx", True),
     ("table-cell-image", "pdf", True),
+    ("tables", "html", True),
+    ("tables", "pdf", True),
+    ("tables", "typst", True),
+    ("tables", "docx", True),
+    ("tables", "epub", True),
+    ("tables-cap-margin", "html", True),
+    ("tables-cap-margin-meta", "html", True),
     ("cap-margin", "html", True),
     ("cap-margin", "pdf", True),
     ("cap-margin", "typst", True),
@@ -362,7 +369,10 @@ def margin_summary(fixture):
 # Table floats whose caption ends in an attribute block, each with whether
 # that block sets .striped. knitr's tables are striped in any case, so
 # table-striped is recorded only where the block sets it.
-TABLE_IDS = {"fixture": {"tbl-caption-block": True, "tbl-cell-block": False, "tbl-cell-both": False, "tbl-striped": True}}
+TABLE_IDS = {
+    "fixture": {"tbl-caption-block": True, "tbl-cell-block": False, "tbl-cell-both": False, "tbl-striped": True},
+    "tables": {"tbl-div": False, "tbl-block": False, "tbl-pipe": False, "tbl-cell": False, "tbl-cell-block": False},
+}
 
 
 def table_summary(path, ids):
@@ -1061,6 +1071,40 @@ def typst_gap_meta_cases():
     yield "default with gap too wide", typst_width_case("Fig MDefault.", "Marker fallback", TYPST_40)
 
 
+def typst_table_case(caption, last, para, side):
+    """A Typst table float whose paragraph's first line starts above the
+    bottom of the table's last row and lies wholly on the side away from
+    the table. The table's boxes are the text boxes from its caption's
+    first line down to its last row, less the lines of the paragraph,
+    which start where the first line starts."""
+    def case(boxes, edges, lh):
+        cap = find_words(boxes, caption)
+        row = find_words(boxes, last)
+        line = find_words(boxes, para)
+        if not (cap.page == row.page == line.page):
+            raise LayoutError(f"the caption, last row, and paragraph are on pages {cap.page}, {row.page}, {line.page}")
+        if not line.top < row.bottom:
+            raise LayoutError("the paragraph's first line starts below the table's last row")
+        table = [b for b in boxes if b.kind == "text" and b.page == cap.page
+                 and b.top >= cap.top - NEAR and b.bottom <= row.bottom + NEAR
+                 and abs(b.left - line.left) > NEAR]
+        if cap not in table or row not in table:
+            raise LayoutError("the caption or the last row starts where the paragraph does")
+        if side == "right" and line.right > min(b.left for b in table) + NEAR:
+            raise LayoutError(f"the paragraph's first line ends at {line.right:.0f} px, right of the table's left edge")
+        if side == "left" and line.left < max(b.right for b in table) - NEAR:
+            raise LayoutError(f"the paragraph's first line starts at {line.left:.0f} px, left of the table's right edge")
+    return case
+
+
+def typst_table_cases():
+    yield "div", typst_table_case("Table 1:", "2.81", "Marker one.", "right")
+    yield "caption block in a div", typst_table_case("Table 2:", "2.82", "Marker two.", "left")
+    yield "pipe table", typst_table_case("Table 3:", "2.83", "Marker three.", "right")
+    yield "cell class", typst_table_case("Table 4:", "4.45", "Marker four.", "right")
+    yield "cell caption block", typst_table_case("Table 5:", "3.35", "Marker five.", "left")
+
+
 def join_lines(boxes):
     """The text boxes as lines, each one box that joins the boxes on a page
     that share a top, left to right."""
@@ -1214,6 +1258,7 @@ TYPST_LAYOUT = {
     "typst-gap": typst_gap_cases,
     "typst-gap-meta": typst_gap_meta_cases,
     "typst-columns": typst_columns_cases,
+    "tables": typst_table_cases,
 }
 
 # The fixtures in two columns, whose cases take the edges of each column

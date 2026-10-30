@@ -54,6 +54,14 @@
   max-width: 100%;
 }
 
+/* A table wider than its float's box scrolls inside the box, as in
+   Bootstrap's .table-responsive, so it does not run into the text beside
+   it. */
+.quarto-float.wrap-right .quarto-float-tbl > div,
+.quarto-float.wrap-left .quarto-float-tbl > div {
+  overflow-x: auto;
+}
+
 .wrap-clear {
   clear: both;
 }
