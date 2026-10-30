@@ -4,8 +4,8 @@ title: "Get started"
 
 ## Install
 
-The extension asks for Quarto 1.9.36 or later, and it is tested with Quarto
-1.10.19. In the folder of your project, run:
+The extension asks for Quarto 1.9.36 or later. It is tested with Quarto
+1.9.36 and with Quarto's current release. In the folder of your project, run:
 
 ```bash
 quarto add jmgirard/wrapped
