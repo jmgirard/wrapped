@@ -1,5 +1,6 @@
 # warnings
 1x wrapped: the figure #fig-page-and-margin is in the margin, so it does not wrap.
+1x wrapped: the figure #fig-page-tbl-margin is page-wide, so it does not wrap.
 1x wrapped: the figure #fig-panels-tbl-column is a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-panels-tbl-column-1 is in a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-panels-tbl-column-2 is in a subfigure panel, so it does not wrap.
@@ -13,3 +14,4 @@ wrappedfigure: fig-tbl-column [side=right,width=0.3\linewidth,gap=1em] image=[wi
 wrappedstop
 figure: fig-panels-tbl-column-1 [H] image=[keepaspectratio]
 marginfigure: fig-page-and-margin [-] image=[keepaspectratio]
+figure: fig-asis [-] image=[width=0.3\linewidth,height=\textheight,keepaspectratio]
