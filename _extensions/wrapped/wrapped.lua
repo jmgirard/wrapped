@@ -899,11 +899,13 @@ local no_text = {}
 -- normal layout and a warning.
 local context_of_float = {}
 
--- The float type that a recorded context holds for, by custom id: "fig"
--- when a code cell's fig-column-* class set it and "tbl" when its
--- tbl-column-* class did, since Quarto places only that type of float by
--- the class. A context with no scope holds for every float.
-local context_scope = {}
+-- The contexts that a code cell's fig-column-* or tbl-column-* class sets,
+-- by custom id, kept apart from context_of_float because Quarto places
+-- only that type of float by the class: { context, scope = "fig" or
+-- "tbl", first = true when no other context was recorded before it }. The
+-- float pass takes one for a float of its type only, and the walk goes on
+-- inside the cell, so a subfigure panel there is still recorded.
+local scoped_context = {}
 
 -- Drops the column classes that Quarto scopes to the other float type:
 -- fig-column-* places only figures and tbl-column-* only tables.
@@ -970,7 +972,7 @@ local card_depth = 0
 -- Returns the context that a block sets for the blocks inside it, or nil.
 -- A code cell with `column: margin` carries the column-margin class. A
 -- context that only a fig-column-* or tbl-column-* class sets comes with
--- its scope, "fig" or "tbl", as a second value (context_scope).
+-- its scope, "fig" or "tbl", as a second value (scoped_context).
 local function block_context(block)
   if block.t == "BulletList" or block.t == "OrderedList" or block.t == "DefinitionList" then
     return "is in a list"
@@ -1007,17 +1009,19 @@ local function block_context(block)
       and not block.classes:includes("markdown") then
     return "is outside a card in a dashboard"
   end
+  -- The context reads all the classes, margin before page-wide; then the
+  -- classes that give it decide its scope.
+  local context = class_context(block.classes)
+  if not context then return nil end
   local unscoped = block.classes:filter(function(c)
     return not (c:match("^fig%-column%-") or c:match("^tbl%-column%-"))
   end)
-  local context = class_context(unscoped)
-  if context then return context end
+  if class_context(unscoped) == context then return context end
   for _, scope in ipairs({ "fig", "tbl" }) do
     local scoped = block.classes:filter(function(c) return c:match("^" .. scope .. "%-column%-") end)
-    context = class_context(scoped)
-    if context then return context, scope end
+    if class_context(scoped) == context then return context, scope end
   end
-  return nil
+  return context
 end
 
 -- A context warning, printed in a format that wraps. Other formats print
@@ -1029,14 +1033,17 @@ local function context_warning(subject, context)
 end
 
 -- Records the floats in a list of blocks, subfloats included, by custom id.
--- `scope` is the float type the context holds for, or nil (context_scope).
+-- `scope` is the float type the context holds for, or nil (scoped_context).
 local function record_floats(blocks, context, scope)
   blocks:walk({
     Div = function(d)
       local id = d.attributes.__quarto_custom_id
-      if is_float_div(d) and id and not context_of_float[id] then
-        context_of_float[id] = context
-        context_scope[id] = scope
+      if not (is_float_div(d) and id) then return end
+      if scope then
+        scoped_context[id] = scoped_context[id]
+          or { context = context, scope = scope, first = context_of_float[id] == nil }
+      else
+        context_of_float[id] = context_of_float[id] or context
       end
     end,
   })
@@ -1109,6 +1116,9 @@ local function find_contexts(doc)
     if not context then return nil end
     if block.t == "Div" then
       block.content = mark_context(block.content, context, scope)
+      -- A scoped context holds for one float type only, so the walk goes
+      -- on inside the cell and records a subfigure panel there too.
+      if scope then return block end
     elseif block.t == "BulletList" or block.t == "OrderedList" then
       for i, item in ipairs(block.content) do
         block.content[i] = mark_context(item, context)
@@ -1205,9 +1215,8 @@ local document_meta = {}
 -- (meta_table_column_context).
 local meta_column_context = {}
 local meta_table_column_context = {}
--- Set in the first pass: meta_tbl_column_set when the document sets
--- tbl-column, and meta_table_column_set when it sets tbl-column or column.
-local meta_tbl_column_set, meta_table_column_set = false, false
+-- Set in the first pass when the document sets tbl-column.
+local meta_tbl_column_set = false
 
 -- The text of a fig-column or column metadata value, or nil. As Quarto's
 -- columnOption does, it reads the first item of a list and treats an empty
@@ -1304,7 +1313,7 @@ local function read_meta(meta)
   end
   local tbl_column = meta_column(meta["tbl-column"])
   local table_column = tbl_column or meta_column(meta.column)
-  meta_tbl_column_set, meta_table_column_set = tbl_column ~= nil, table_column ~= nil
+  meta_tbl_column_set = tbl_column ~= nil
   if table_column then
     local classes = pandoc.List({ "column-" .. table_column })
     meta_table_column_context = { float = class_context(classes, true), cell = class_context(classes) }
@@ -1498,18 +1507,21 @@ local function float_target(float)
     or float.attributes.layout
   local column, by_document = column_context(float, cell)
   -- A context that a code cell's fig-column-* or tbl-column-* class set
-  -- holds only for floats of that type (context_scope).
+  -- holds only for floats of that type, and an outer context recorded
+  -- before it comes first (scoped_context).
   local recorded = context_of_float[custom_id or ""]
-  local scope = context_scope[custom_id or ""]
-  if scope and scope ~= (is_table and "tbl" or "fig") then recorded = nil end
+  local scoped = scoped_context[custom_id or ""]
+  if scoped and scoped.scope == (is_table and "tbl" or "fig") and (scoped.first or not recorded) then
+    recorded = scoped.context
+  end
   -- Quarto moves a knitr table cell's column class, as from `column: page`,
   -- from the cell to the output div inside the table float, where
-  -- find_contexts does not look. In LaTeX and Typst a document tbl-column
-  -- or column key decides over it, as over a cell's own class; a document
-  -- fig-column places no table. A float's content can be one block, which
-  -- a walk from that block does not visit, so the walk starts from a list.
+  -- find_contexts does not look. Quarto 1.10.19's Typst output keeps that
+  -- column with a document tbl-column or column of `body` set too. A
+  -- float's content can be one block, which a walk from that block does
+  -- not visit, so the walk starts from a list.
   local inner
-  if is_table and not ((is_latex or is_typst) and meta_table_column_set) then
+  if is_table then
     local content = float.content
     if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
     content:walk({
@@ -1532,6 +1544,17 @@ local function float_target(float)
   -- or warns on its own. Quarto numbers such figures
   -- with the cell's label and `-1`, `-2`, and so on.
   local several = carried and cell.several and float.type == "Figure"
+  -- LaTeX and Word wrap no table (D-021): Quarto writes a LaTeX table as
+  -- a longtable, which wrapfig cannot hold, and a Word frame holds
+  -- paragraphs, not tables. The warning comes before the next-block rule,
+  -- so a table with no paragraph after it warns there too.
+  if is_table and (is_latex or is_docx) and not context then
+    keep_normal(float)
+    quarto.log.warning(string.format(
+      "wrapped: the table #%s does not wrap in %s. A table wraps only in HTML and Typst.",
+      float.identifier, is_latex and "LaTeX" or "Word"))
+    return float
+  end
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
   if context or no_text[custom_id or ""] or several then
@@ -1546,16 +1569,6 @@ local function float_target(float)
       local noun = ({ Figure = "figure", Table = "table" })[float.type] or "float"
       context_warning(string.format("the %s #%s", noun, float.identifier), context)
     end
-    return float
-  end
-  -- LaTeX and Word wrap no table (D-021): Quarto writes a LaTeX table as
-  -- a longtable, which wrapfig cannot hold, and a Word frame holds
-  -- paragraphs, not tables.
-  if is_table and (is_latex or is_docx) then
-    keep_normal(float)
-    quarto.log.warning(string.format(
-      "wrapped: the table #%s does not wrap in %s. A table wraps only in HTML and Typst.",
-      float.identifier, is_latex and "LaTeX" or "Word"))
     return float
   end
   float.content = clean_images(float.content)
@@ -1985,7 +1998,8 @@ local function docx_group(members)
   return pandoc.List({ pandoc.Div(members, pandoc.Attr("", { "wrap-group" }, { ["data-wrap-frame"] = frame })) })
 end
 
--- Groups each wrapped figure with the paragraphs after it. The group stops
+-- Groups each wrapped figure or table float with the paragraphs after it.
+-- The group stops
 -- at the first block that does not join it: a block that is not a
 -- paragraph, or a paragraph with a lone block shortcode (the stop rule,
 -- `joins_group`). The group's
@@ -2023,7 +2037,8 @@ local function group_blocks(blocks)
       -- In LaTeX, a captioned image with no id stays a Figure.
       members = pandoc.List({ b })
     elseif b.t == "Div" and b.attributes["data-wrap-anchor"] then
-      -- A wrapped cell starts a group only if one of its figures wrapped.
+      -- A cell starts a group only if one of its figure or table floats
+      -- wrapped.
       local token = b.attributes["data-wrap-anchor"]
       b.attributes["data-wrap-anchor"] = nil
       if wrapped_cells[token] then members = pandoc.List({ b }) end

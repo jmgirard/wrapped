@@ -132,6 +132,9 @@ warning elsewhere, the site, and DESIGN.md.
       column class on a div inside it, set `found_wrap` only for figure and
       table floats, add `tests/tables-cell-columns.qmd` for the three
       cases, and make the fix-now text edits the Review section lists.
+- [ ] T7: Review return 2. Keep a scoped column context from hiding the subfigure panels
+      in its cell, read a table's inner column class in every format, warn for every wrapped LaTeX and
+      Word table, add the panel, mixed-class, and `tbl-column: body` cases, and make the text fixes.
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates. -->
@@ -175,6 +178,7 @@ warning elsewhere, the site, and DESIGN.md.
 - 2026-10-30: T6 done: python3 tests/verify.py all 119 renders pass; quarto render docs exit 0; status set to review.
 - 2026-10-30: the plan-owned body reached 153 lines with T6, so the Acceptance criteria section was re-wrapped to 110 columns in one pass with no word changed (cairn_validate weight caps).
 - review return 2: diff-bug #1 (load-bearing): a scoped column context must not stop the subfigure-panel contexts of the floats inside the cell; with it diff-bug #2 and #4, prior-review #1, and ripple #1, #2, #6, #7, #8, and the follow-up rows.
+- 2026-10-30: T7 added for review return 2 (minor amendment).
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->

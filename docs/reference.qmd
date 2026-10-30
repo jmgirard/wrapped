@@ -19,8 +19,8 @@ keeps its normal layout, and the render prints a warning (see
 
 | Name | Kind | Values | Default | Works in |
 |---|---|---|---|---|
-| [`.wrap-right`](get-started.qmd#wrap-a-figure) | class | none | none | All four formats |
-| [`.wrap-left`](get-started.qmd#wrap-a-figure) | class | none | none | All four formats |
+| [`.wrap-right`](get-started.qmd#wrap-a-figure) | class | none | none | All four formats; on a table float, HTML and PDF through Typst |
+| [`.wrap-left`](get-started.qmd#wrap-a-figure) | class | none | none | All four formats; on a table float, HTML and PDF through Typst |
 | [`.wrap-clear`](stopping.qmd#stop-wrapping-earlier) | class on an empty div | none | none | All four formats |
 | [`width`](width-gap.qmd#width) | attribute | A percent of the text column, or a length such as `3in`, `250px`, or `20em`. Each format takes its own set of units. In HTML, also a `calc()`, `min()`, `max()`, or `clamp()` value. | The document default, else `40%` | All four formats, each with its own units |
 | [`wrap-gap`](width-gap.qmd#gap) | attribute | A length or a percent of the text column. In HTML, also a `calc()`, `min()`, `max()`, or `clamp()` value. | The document default, else `1em` | All four formats, each with its own units |

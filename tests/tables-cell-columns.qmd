@@ -49,3 +49,47 @@ knitr::kable(head(cars, 3))
 ```
 
 The paragraph after the page-wide table.
+
+## Subfigure panels in a cell with tbl-column
+
+The tbl-column class leaves the figure's panels in the body, where they
+keep their normal layout as subfigure panels.
+
+```{r}
+#| label: fig-panels-tbl-column
+#| fig-cap: "Panels from a cell with tbl-column: margin."
+#| fig-subcap: ["One.", "Two."]
+#| tbl-column: margin
+#| classes: wrap-right
+plot(1:10)
+plot(10:1)
+```
+
+The paragraph after the figure panels.
+
+## Table panels in a cell with fig-column
+
+```{r}
+#| label: tbl-panels-fig-column
+#| tbl-cap: "Panels from a cell with fig-column: margin."
+#| tbl-subcap: ["Cars.", "Pressure."]
+#| fig-column: margin
+#| classes: wrap-left
+knitr::kable(head(cars, 2))
+knitr::kable(head(pressure, 2))
+```
+
+The paragraph after the table panels.
+
+## A figure cell with column and fig-column
+
+```{r}
+#| label: fig-page-and-margin
+#| fig-cap: "A figure from a cell with column: page and fig-column: margin."
+#| column: page
+#| fig-column: margin
+#| classes: wrap-right
+plot(1:10)
+```
+
+The paragraph after the figure with two column options.

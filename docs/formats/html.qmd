@@ -39,7 +39,8 @@ columns. A figure with a margin caption or a page-wide class still wraps on
 a slide. A margin setting does not stop a figure from wrapping on a slide
 either: a `.column-margin` or `.fig-column-margin` class, a `.column-margin`
 div, a code cell with `#| column: margin` or `#| fig-column: margin`, or
-`fig-column: margin` or `column: margin` in the document metadata.
+`fig-column: margin` or `column: margin` in the document metadata. For a
+table float, `tbl-column` takes the place of `fig-column` in this list.
 
 By default, revealjs puts an `.aside` div at the foot of the slide. A
 figure in an aside div does not wrap. It keeps its normal layout, and the

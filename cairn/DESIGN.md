@@ -105,7 +105,8 @@ wrapped:
   breakpoint: 576px   # HTML: at this width or narrower, figures stop floating
 ```
 
-Stop rule: the figure wraps the paragraphs that follow it. Wrapping stops at
+Stop rule: the figure, or in HTML and Typst a table float (M038), wraps
+the paragraphs that follow it. Wrapping stops at
 the first block that is not a paragraph: a heading, list, figure, table, code
 block, callout, or horizontal rule. A paragraph that holds one shortcode
 and nothing else that shows also stops it, such as `{{< pagebreak >}}` or
@@ -207,7 +208,7 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    margin blocks (a `fig-column: margin` or `tbl-column: margin` cell
    included; a cell's `fig-column-*` class holds only for its figure
    floats and its `tbl-column-*` class only for its table floats, as
-   Quarto places them, `context_scope`, corrected M038), subfigure
+   Quarto places them, `scoped_context`, corrected M038), subfigure
    panels, and in a dashboard code cells outside a `.card` div (corrected
    M022). revealjs slides have no margin column, so there the margin
    classes and a document margin value name no context, and an aside still
@@ -247,8 +248,9 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    cell's `margin-caption` class reaches its floats either way. Quarto
    moves a knitr table cell's column class, as from `column: page`, from
    the cell to a div inside the table float, which this step reads for a
-   table unless, in LaTeX and Typst, the document sets `tbl-column` or
-   `column` (corrected M038). A float that step 2 or
+   table, in every format: Quarto 1.10.19's Typst output keeps that
+   column with a document `tbl-column` or `column` of `body` set too
+   (corrected M038). A float that step 2 or
    3 recorded, a float other than a figure or a table, a float with a margin or page-wide class or a
    layout attribute, any figure float when the document's `fig-column` or
    `column` decides its column (`column_context`, below) and names the
@@ -260,6 +262,9 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    Typst, `column_context` reads a float's column in Quarto's order: its own
    `fig-column-*` class, the document's `fig-column`, its own `column-*` or
    `aside` class, then the document's `column`; the first one set decides.
+   A table float reads `tbl-column-*` and the document's `tbl-column` in
+   place of the `fig-column` pair, and HTML and Word drop the other float
+   type's scoped class (`own_type_classes`) (corrected M038).
    A code cell's own column sits on the cell, which step 2 reads only when
    the document sets neither key. A layout attribute comes before a
    document value, so a panel warns as a subfigure panel. HTML reads a
