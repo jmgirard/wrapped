@@ -9,6 +9,7 @@ _Last hygiene check: 2026-10-30 (M038 review: M035 row pruned; candidate links m
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
+| M039 | Wrap table floats in Word | planned | — | normal | milestones/M039-word-table-wrap.md |
 | M038 | Wrap table floats in HTML and Typst | done | — | normal | milestones/archive/M038-table-wrap.md |
 | M037 | Say LaTeX narrows lines past figures | done | — | normal | milestones/archive/M037-latex-narrow-past.md |
 | M036 | List margin figures in the test summaries | done | — | normal | milestones/archive/M036-margin-summaries.md |
@@ -25,7 +26,7 @@ _Last hygiene check: 2026-10-30 (M038 review: M035 row pruned; candidate links m
      ending with `(#N)` for a row written for GitHub issue N, such as
      `Fix SE of skewness calculation (#100)`; `/cairn-triage` offers a new title for one
      with fewer than 5 words or more than 40 characters; tracking-rules "Candidate short title" has the whole rule -->
-- Wrap table floats in Word documents: Word frames hold paragraphs, not tables, so a wrapped `#tbl-` float needs a floating table (`w:tblpPr`) with its caption inside it. No probe has checked Word's or LibreOffice's reading of one. Under M038 a wrapped table float keeps its normal layout in Word with a warning (D-021) — added 2026-10-30 — milestones/archive/M038-table-wrap.md
+- Wrap table floats in Word documents: Word frames hold paragraphs, not tables, so a wrapped `#tbl-` float needs a floating table (`w:tblpPr`) with its caption inside it. No probe has checked Word's or LibreOffice's reading of one. Under M038 a wrapped table float keeps its normal layout in Word with a warning (D-021) — added 2026-10-30 — milestones/archive/M038-table-wrap.md — started M039
 - Wrap table floats in LaTeX PDFs: Quarto 1.10.19 writes pipe and knitr tables as `longtable` (probe 2026-10-30), which cannot sit in wrapfig's `wraptable`. The table would need a rewrite as a `tabular`, which does not break across pages. Under M038 a wrapped table float keeps its normal layout in LaTeX with a warning (D-021) — added 2026-10-30 — milestones/archive/M038-table-wrap.md
 - [low] Wrap tables that have no tbl- label: a captioned table with no `#tbl-` label is a Pandoc Table, not a float, and keeps M033's warning. Wrapping it needs a box like the `.wrapped-image` box of a captioned image with no id. The M038 plan gate kept labeled tables only (D-021) — added 2026-10-30 — milestones/archive/M038-table-wrap.md
 - [low] Wrap callouts and other boxed content: the user asked whether other elements than figures can wrap. The M038 plan gate chose tables first. Callouts, or any div with a wrap class, could float in HTML and Typst, but each needs its own mechanism in LaTeX and Word, where a breakable box cannot sit beside text (D-021) — added 2026-10-30 — milestones/archive/M038-table-wrap.md

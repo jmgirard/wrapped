@@ -308,3 +308,17 @@ raises the format warning. This reopens D-020's "Count table floats in the
 format warning", whose premise was that the table float keeps its own
 warning. **Consequences:** the non-goal now covers LaTeX and Word only.
 The rest of D-020 stands.
+
+### D-022: Table floats wrap in Word as floating tables (supersedes part of D-021)
+
+2026-10-30, `/milestone-plan` M039. **Context:** D-021 kept a wrapped
+table float normal in Word, with a warning, because a Word frame holds
+paragraphs, not tables. Word also has floating tables (`w:tblpPr`), and
+body text wraps around them. **Decision:** at the plan gate the user chose
+to wrap `#tbl-` table floats in Word. The post-render pass turns Quarto's
+one-cell outer table into a floating table that holds the caption and the
+table. The clearing break that ends a figure's wrap ends the table's wrap
+too. A LibreOffice PDF and the user's look in Word check the layout.
+**Consequences:** the non-goal now covers LaTeX only, and the LaTeX
+warning names Word among the formats where a table wraps. The rest of
+D-021 stands.
