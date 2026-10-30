@@ -185,9 +185,9 @@ The filter has two entry points (corrected M006):
   (`tests/verify.py`, corrected 2026-10-25, M002 review).
 - Before each release, a person opens the docx in Word, LibreOffice, and
   Google Docs.
-- CI runs the test command against the Quarto release channel on each pull
-  request and push to `main`, and against the pre-release channel weekly
-  (corrected M008, D-008).
+- CI runs the test command against the Quarto release channel and Quarto
+  1.9.36 on each pull request and push to `main`, and against the
+  pre-release channel weekly (corrected M008, D-008, M035).
 
 ## Disposition
 
