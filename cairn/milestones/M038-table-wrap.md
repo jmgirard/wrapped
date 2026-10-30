@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M038: Wrap table floats in HTML and Typst
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -100,9 +100,14 @@ warning elsewhere, the site, and DESIGN.md.
       which forms carry a width and a gap. `docs/formats/typst.qmd` and
       `docs/formats/html.qmd` state the wide-table behavior of Scope Out.
       `quarto render docs` exits 0.
-- [ ] AC7: `python3 tests/verify.py` passes every render. No snapshot line
-      for a figure or for an element other than a table changes on the
-      branch, as `git diff main -- tests/_snapshots` shows.
+- [ ] AC7: `python3 tests/verify.py` passes every render, on this Mac and
+      on each Quarto version that `verify.yml` runs on the PR. Existing
+      figure and other non-table snapshot lines are unchanged: in each
+      `tests/_snapshots/` file that exists on `main`, every line that
+      `git diff main...HEAD -- tests/_snapshots` adds or removes names a
+      table float by its `tbl-` id, with or without `#`, or is a
+      `# groups` line `cell, …` whose cell, counted in source order in its
+      fixture, has a `tbl-` label.
 
 ## Coverage
 <!-- owner: plan · create/amend-via-gate -->
@@ -177,3 +182,6 @@ warning elsewhere, the site, and DESIGN.md.
 - amendment routed: AC7 — the new snapshot files of tables-cap-margin-meta, tables-column-meta, and tables-fig-column-meta add lines for their control figures, so "no snapshot line for a figure changes" fails as written although no snapshot file on main changed outside table lines; the criterion needs to bind the files that exist on main.
 - re-audit: AC7 (full) — 3 findings on the first amended wording: "names the code cell" overstated what a `cell, p` groups line shows; the criterion bound the snapshot record without saying it stands for unchanged output; the list of line kinds was longer than needed. Wording fixed to the reader's suggestion and sent to a second fresh reader.
 - re-audit: AC7 (full) — 4 findings on the second wording: most changed lines name the id without "#"; the `cell` clause needs the fixture source order to check; "output is unchanged" claims more than snapshot summaries record; the snapshots must pass on both Quarto versions verify.yml runs. Second re-audit line, so the wording goes to the user.
+- 2026-10-30: the user chose AC7's final wording with the CI clause at the second-re-audit stop (option "Final wording + CI").
+- amendment return: AC7 — "`python3 tests/verify.py` passes every render, on this Mac and on each Quarto version that `verify.yml` runs on the PR. Existing figure and other non-table snapshot lines are unchanged: in each `tests/_snapshots/` file that exists on `main`, every line that `git diff main...HEAD -- tests/_snapshots` adds or removes names a table float by its `tbl-` id, with or without `#`, or is a `# groups` line `cell, …` whose cell, counted in source order in its fixture, has a `tbl-` label."
+- 2026-10-30: amendment done; status back to review. The full suite on the review head passed (all 117 renders) before the amendment, and no code changed since.
