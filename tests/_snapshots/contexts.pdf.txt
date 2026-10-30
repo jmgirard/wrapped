@@ -26,7 +26,10 @@
 1x wrapped: the image plot.png is in a list, so it does not wrap.
 1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
 # tex
+marginfigure: fig-margin [-] image=[keepaspectratio]
 figure: - [H] image=[keepaspectratio]
+marginfigure: fig-aside [-] image=[keepaspectratio]
+marginfigure: fig-margin-cell [-] image=[keepaspectratio]
 figure: fig-panel-a [-] image=[keepaspectratio]
 figure: fig-sub-wrapped [-] image=[keepaspectratio]
 figure: fig-layout-cell [-] image=[keepaspectratio]
@@ -41,6 +44,7 @@ figure: fig-two-before-heading-2 [H] image=[keepaspectratio]
 figure: fig-list [-] image=[keepaspectratio]
 figure: fig-deflist [-] image=[keepaspectratio]
 figure: fig-quote [-] image=[keepaspectratio]
+marginfigure: fig-figcol-margin [-] image=[keepaspectratio]
 figure: fig-callout [H] image=[keepaspectratio]
 figure: fig-column [-] image=[keepaspectratio]
 figure: - [H] image=[keepaspectratio]
@@ -52,3 +56,7 @@ wrappedfigure: fig-second [side=right,width=0.3\linewidth,gap=1em] image=[width=
 wrappedstop
 figure: fig-callout-two-1 [H] image=[keepaspectratio]
 figure: fig-callout-two-2 [H] image=[keepaspectratio]
+marginfigure: fig-margin-two-1 [-] image=[keepaspectratio]
+marginfigure: fig-margin-two-2 [-] image=[keepaspectratio]
+marginfigure: fig-margin-two-heading-1 [-] image=[keepaspectratio]
+marginfigure: fig-margin-two-heading-2 [-] image=[keepaspectratio]

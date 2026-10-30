@@ -5,5 +5,11 @@
 1x wrapped: the figure #fig-meta-margin-cell is in the margin, so it does not wrap.
 1x wrapped: the figure #fig-meta-margin-div is in the margin, so it does not wrap.
 # tex
+marginfigure: fig-meta-margin [-] image=[keepaspectratio]
+marginfigure: fig-meta-margin-div [-] image=[keepaspectratio]
+marginfigure: fig-meta-margin-cell [-] image=[keepaspectratio]
+marginfigure: fig-meta-body-cell [-] image=[keepaspectratio]
+marginfigure: fig-meta-margin-two-1 [-] image=[keepaspectratio]
+marginfigure: fig-meta-margin-two-2 [-] image=[keepaspectratio]
 wrappedfigure: - [side=left,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop

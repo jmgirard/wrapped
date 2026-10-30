@@ -3,6 +3,7 @@
 # typ
 figure: fig-order-margin image-width=yes
 figure: fig-order-page image-width=yes
+notefigure: fig-order-figmargin image-width=no
 figure: fig-order-plain image-width=yes
 figure: fig-order-div image-width=yes
 figure: fig-order-cell-margin image-width=yes

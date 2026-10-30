@@ -25,8 +25,10 @@
 1x wrapped: the image plot.png is in a list, so it does not wrap.
 1x wrapped: the table #tbl-wrapped is not a figure, so it does not wrap.
 # typ
+notefigure: fig-margin image-width=no
 figure: - image-width=no
 figure: fig-aside image-width=no
+notefigure: fig-margin-cell image-width=no
 figure: fig-panel-a image-width=no
 figure: fig-panel-b image-width=no
 figure: fig-sub-wrapped image-width=no
@@ -44,6 +46,7 @@ figure: fig-two-before-heading-2 image-width=no
 figure: tbl-wrapped image-width=no
 figure: fig-deflist image-width=no
 figure: fig-quote image-width=yes
+notefigure: fig-figcol-margin image-width=no
 figure: fig-callout image-width=no
 figure: fig-column image-width=no
 figure: - image-width=no
@@ -54,6 +57,10 @@ figure: fig-first image-width=yes
 figure: fig-second image-width=yes
 figure: fig-callout-two-1 image-width=no
 figure: fig-callout-two-2 image-width=no
+notefigure: fig-margin-two-1 image-width=no
+notefigure: fig-margin-two-2 image-width=no
+notefigure: fig-margin-two-heading-1 image-width=no
+notefigure: fig-margin-two-heading-2 image-width=no
 # wraps
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-quote no-alt | p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 30%, 40%, 40%)), column-gutter: 1em | fig-second no-alt | p, p | cites=0
