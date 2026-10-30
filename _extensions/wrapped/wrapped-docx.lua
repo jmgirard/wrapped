@@ -9,7 +9,8 @@
 -- inline and assigns its relationship id, so the image stays a Pandoc
 -- image, and a framed image takes its fig-alt text as its alt text (a
 -- float's fig-alt goes on the frame's first image only, unless that image
--- has its own fig-alt). A
+-- has its own fig-alt). A table float's one-cell table becomes a floating
+-- table in place of a frame (floating_table). A
 -- clearing break after the group's last paragraph ends the wrap
 -- (the stop rule). Other formats are left as they are.
 
@@ -189,12 +190,13 @@ local function floating_table(div, frame)
   })
 end
 
--- Frames the group's figure, which is a figure table, a .wrapped-image box,
--- or a code cell that holds a figure table. A figure table's div keeps the
--- figure's id, so Pandoc writes its bookmark around the frame, and the
--- @fig- links still reach it. Quarto writes a figure table's image
--- paragraph in the Compact style. Returns the figure's name and nil when
--- it framed the figure, or the name and the reason when it did not.
+-- Frames the group's figure, which is a float table, a .wrapped-image box,
+-- or a code cell that holds a float table. A float table's div keeps the
+-- float's id, so Pandoc writes its bookmark around the frame or inside the
+-- floating table, and the @fig- and @tbl- links still reach it. Quarto
+-- writes a figure table's image paragraph in the Compact style. Returns
+-- the figure's name and nil when it framed the figure, or the name and the
+-- reason when it did not.
 local function frame_first(blocks, frame)
   local first = blocks[1]
   local function framed(div, kind)

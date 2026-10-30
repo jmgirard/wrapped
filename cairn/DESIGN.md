@@ -362,8 +362,10 @@ A wrapped table float's group has no frame (D-022). In its place,
 a raw `w:tbl` open tag whose `w:tblpPr` holds the side and the gap toward
 the text, Quarto's float div with its caption, table, and bookmark, and a
 raw close tag. Pandoc writes raw openxml blocks as they are, so the split
-tags hold. The inner table's columns get relative widths, so they share
-the box width. The same clearing break ends the group (M039).
+tags hold. The inner table's columns get relative widths, so Pandoc
+writes it at the full width of the box (`w:tblW` of 100%). Its grid
+columns still sum to the page's text width, and LibreOffice fits them to
+the box. The same clearing break ends the group (M039).
 
 The grouping pass finds a wrapped float by Quarto's internal
 `__quarto_custom_id` attribute. `tests/verify.py` shows a change there as a

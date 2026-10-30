@@ -1619,7 +1619,7 @@ def docx_summary(path):
         lines.append("# floating tables")
         lines += tables
     if nested:
-        lines.append(f"floating tables outside the body: {nested}")
+        lines.append(f"floating tables not at the top level of the body: {nested}")
     if path.stem in DOCX_UNFRAMED_ALT:
         lines.append("# images outside a frame")
         for p in body.iter(f"{W}p"):

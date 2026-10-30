@@ -66,21 +66,21 @@ Word cannot put a code block, a table, a heading, a horizontal rule, or
 raw content in a frame. A figure div that holds one keeps its normal
 layout, and the render prints a warning.
 
+A frame does not break across pages. If a frame does not fit at the bottom
+of a page, Word moves it and the paragraph after it to the next page. The
+rest of the page before it stays blank.
+
 ## Tables
 
 A wrapped [table float](../get-started.qmd#wrap-a-table) goes in a
 floating table, the box that Word wraps text around for a table. The box
 has one cell, which holds the caption and the table. It takes its width
-and gap as a figure's frame does, and the table's columns share the width
-of the box. The wrap stops where a figure's wrap stops.
+and gap as a figure's frame does. The filter sets the table to the full
+width of the box. The wrap stops where a figure's wrap stops.
 
-A table wider than its box narrows its columns to fit the box. In
-LibreOffice 26.8 on macOS, the column text then breaks inside words, and a
-box taller than the rest of the page breaks across pages.
-
-A frame does not break across pages. If a frame does not fit at the bottom
-of a page, Word moves it and the paragraph after it to the next page. The
-rest of the page before it stays blank.
+In LibreOffice 26.8 on macOS, a table wider than its box narrows its
+columns to fit the box, and the column text then breaks inside words. A
+box taller than the rest of the page breaks across pages there.
 
 ## Apps that show frames
 

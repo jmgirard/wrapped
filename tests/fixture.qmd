@@ -212,7 +212,7 @@ The table keeps a normal layout, and the render prints a warning for it.
 
 :::
 
-The table wraps in HTML, Typst, and Word and keeps its striped class. In LaTeX it keeps a normal layout, and the render prints a warning for it.
+The table wraps in HTML, Typst, and Word, and keeps its striped class in HTML. In LaTeX it keeps a normal layout, and the render prints a warning for it.
 
 ```{r}
 #| label: tbl-cell-block
