@@ -51,63 +51,45 @@ warning elsewhere, the site, and DESIGN.md.
 ## Acceptance criteria
 <!-- owner: plan · create/amend-via-gate; review reads, never reinterprets. -->
 
-- [x] AC1: A new fixture `tests/tables.qmd` holds a wrapped table float in
-      five forms. Form 1 is a `#tbl-` div with the class, `width`, and
-      `wrap-gap`. Form 2 is a `: Cap {.wrap-left}` caption block inside a
-      `#tbl-` div. Form 3 is a pipe table whose caption block is
-      `{#tbl-… .wrap-right width=… wrap-gap=…}`. Form 4 is a knitr cell
-      with `#| classes: wrap-right` and a `tbl-` label. Form 5 is a knitr
-      `tbl-cap` that ends in `{.wrap-left}`. In HTML, each float has its
-      wrap class. Its width and gap custom properties equal the values that
-      forms 1 and 3 set, or the fixture's `wrapped:` width and gap for
-      forms 2, 4, and 5. Each float is in a `.wrap-group` div with the
-      paragraphs after it. In a browser at a 1280 x 900 viewport,
-      `tests/layout.js` shows each float on its side at its width. The
-      first paragraph's first line lies beside the float at the float's
-      gap. The table's box lies inside the float's box.
-- [x] AC2: In PDF through Typst, each float of AC1 is in a `wrap-content`
-      call with the paragraphs after it in the `.typ` file. The PDF is read
-      as `pdftohtml -xml` text boxes. The first line of the paragraph after
-      each table starts above the bottom of the table's last row. For a
-      `.wrap-right` table, that line ends left of every text box of the
-      table and its caption. For a `.wrap-left` table, it starts right of
-      every such box.
-- [x] AC3: `tests/tables.qmd` shows five figure rules that hold for a table
-      float. (a) A wrapped table float whose next block is not a paragraph
-      keeps its normal layout with no warning, in HTML and Typst. (b) A
-      wrapped table float in a callout keeps its normal layout with one
-      warning that names the table and the callout, in HTML and Typst.
-      (c) A heading after the paragraphs ends the group, so the heading is
-      not in the `.wrap-group` div (HTML) or the `wrap-content` call
-      (Typst). (d) In HTML, a wrapped table float with
-      `tbl-cap-location: margin` keeps its normal layout with one warning
-      that its caption is in the margin. (e) A wrapped code cell table with
-      `#| tbl-column: margin` keeps its normal layout with one warning that
+- [x] AC1: A new fixture `tests/tables.qmd` holds a wrapped table float in five forms. Form 1 is a `#tbl-` div
+      with the class, `width`, and `wrap-gap`. Form 2 is a `: Cap {.wrap-left}` caption block inside a `#tbl-`
+      div. Form 3 is a pipe table whose caption block is `{#tbl-… .wrap-right width=… wrap-gap=…}`. Form 4 is
+      a knitr cell with `#| classes: wrap-right` and a `tbl-` label. Form 5 is a knitr `tbl-cap` that ends in
+      `{.wrap-left}`. In HTML, each float has its wrap class. Its width and gap custom properties equal the
+      values that forms 1 and 3 set, or the fixture's `wrapped:` width and gap for forms 2, 4, and 5. Each
+      float is in a `.wrap-group` div with the paragraphs after it. In a browser at a 1280 x 900 viewport,
+      `tests/layout.js` shows each float on its side at its width. The first paragraph's first line lies
+      beside the float at the float's gap. The table's box lies inside the float's box.
+- [x] AC2: In PDF through Typst, each float of AC1 is in a `wrap-content` call with the paragraphs after it in
+      the `.typ` file. The PDF is read as `pdftohtml -xml` text boxes. The first line of the paragraph after
+      each table starts above the bottom of the table's last row. For a `.wrap-right` table, that line ends
+      left of every text box of the table and its caption. For a `.wrap-left` table, it starts right of every
+      such box.
+- [x] AC3: `tests/tables.qmd` shows five figure rules that hold for a table float. (a) A wrapped table float
+      whose next block is not a paragraph keeps its normal layout with no warning, in HTML and Typst. (b) A
+      wrapped table float in a callout keeps its normal layout with one warning that names the table and the
+      callout, in HTML and Typst. (c) A heading after the paragraphs ends the group, so the heading is not in
+      the `.wrap-group` div (HTML) or the `wrap-content` call (Typst). (d) In HTML, a wrapped table float with
+      `tbl-cap-location: margin` keeps its normal layout with one warning that its caption is in the margin.
+      (e) A wrapped code cell table with `#| tbl-column: margin` keeps its normal layout with one warning that
       it is in the margin, in HTML and Typst.
-- [x] AC4: In PDF through LaTeX and in Word, each float of AC1 keeps its
-      normal layout. The `.tex` file has no `wrappedfigure` around it, and
-      the docx has no `w:framePr` on its paragraphs. The render prints one
-      warning for each of the five floats. The warning names the table by
-      its id and says that a table wraps only in HTML and Typst.
-- [x] AC5: In EPUB, a render of `tests/tables.qmd` prints the one format
-      warning that a format which cannot wrap prints, and no table warning.
-- [x] AC6: The site states that a `#tbl-` table float wraps in HTML and
-      Typst and keeps its normal layout with a warning in LaTeX and Word,
-      wherever it says which elements take a wrap class. The pages are
-      `docs/normal-layout.qmd` (Tables), `docs/reference.qmd`,
-      `docs/get-started.qmd`, the four pages under `docs/formats/`, and
-      `README.md`. One site page shows the syntax with an example and says
-      which forms carry a width and a gap. `docs/formats/typst.qmd` and
-      `docs/formats/html.qmd` state the wide-table behavior of Scope Out.
-      `quarto render docs` exits 0.
-- [ ] AC7: `python3 tests/verify.py` passes every render, on this Mac and
-      on each Quarto version that `verify.yml` runs on the PR. Existing
-      figure and other non-table snapshot lines are unchanged: in each
-      `tests/_snapshots/` file that exists on `main`, every line that
-      `git diff main...HEAD -- tests/_snapshots` adds or removes names a
-      table float by its `tbl-` id, with or without `#`, or is a
-      `# groups` line `cell, …` whose cell, counted in source order in its
-      fixture, has a `tbl-` label.
+- [x] AC4: In PDF through LaTeX and in Word, each float of AC1 keeps its normal layout. The `.tex` file has no
+      `wrappedfigure` around it, and the docx has no `w:framePr` on its paragraphs. The render prints one
+      warning for each of the five floats. The warning names the table by its id and says that a table wraps
+      only in HTML and Typst.
+- [x] AC5: In EPUB, a render of `tests/tables.qmd` prints the one format warning that a format which cannot
+      wrap prints, and no table warning.
+- [x] AC6: The site states that a `#tbl-` table float wraps in HTML and Typst and keeps its normal layout with
+      a warning in LaTeX and Word, wherever it says which elements take a wrap class. The pages are
+      `docs/normal-layout.qmd` (Tables), `docs/reference.qmd`, `docs/get-started.qmd`, the four pages under
+      `docs/formats/`, and `README.md`. One site page shows the syntax with an example and says which forms
+      carry a width and a gap. `docs/formats/typst.qmd` and `docs/formats/html.qmd` state the wide-table
+      behavior of Scope Out. `quarto render docs` exits 0.
+- [ ] AC7: `python3 tests/verify.py` passes every render, on this Mac and on each Quarto version that
+      `verify.yml` runs on the PR. Existing figure and other non-table snapshot lines are unchanged: in each
+      `tests/_snapshots/` file that exists on `main`, every line that `git diff main...HEAD --
+      tests/_snapshots` adds or removes names a table float by its `tbl-` id, with or without `#`, or is a `#
+      groups` line `cell, …` whose cell, counted in source order in its fixture, has a `tbl-` label.
 
 ## Coverage
 <!-- owner: plan · create/amend-via-gate -->
@@ -191,6 +173,7 @@ warning elsewhere, the site, and DESIGN.md.
 - 2026-10-30: T6 text fixes: TABLE_IDS comment, wrapped.lua header and the several-cell comment, DESIGN.md steps 2, 4, 5, and 7, docs/index.qmd table sentence; ROADMAP row "Read table keys for document columns" narrowed to `column`, and rows "Name tables in the format warning" and "Treat mixed table and figure cells" added, both parked.
 - claim audit: 34 claims read, 3 corrected — wrapped.lua and DESIGN.md (Quarto, not knitr, moves a table cell's column class inside the float); the gate on the inner class used meta_column_set, which a document fig-column sets, so a page-wide table cell under fig-column: margin wrapped in Typst; now gated on tbl-column or column (meta_table_column_set), with a tbl-page-cell case added to tests/tables-fig-column-meta.qmd.
 - 2026-10-30: T6 done: python3 tests/verify.py all 119 renders pass; quarto render docs exit 0; status set to review.
+- 2026-10-30: the plan-owned body reached 153 lines with T6, so the Acceptance criteria section was re-wrapped to 110 columns in one pass with no word changed (cairn_validate weight caps).
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local. -->
