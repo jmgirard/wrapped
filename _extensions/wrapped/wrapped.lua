@@ -753,7 +753,7 @@ end
 
 -- Sets each image in a list of blocks to the frame's width, so the image
 -- fills the frame. With `by_column`, for a table float's box, an image in a
--- table takes its column's equal share of the box, less the 108-twip cell
+-- table takes the box's equal share per column, less the 108-twip cell
 -- margins on each side that Pandoc's Table style sets.
 local function docx_size(blocks, twips, by_column)
   local function size(img, w)
@@ -1618,8 +1618,9 @@ local function float_target(float)
   elseif is_docx then
     -- A table float's box is a floating table that wrapped-docx.lua makes
     -- at post-render (D-022). An image outside its table fills the box, and
-    -- one in the table fills its column's share. A float's content can be
-    -- one block, which a walk from that block does not visit.
+    -- one in the table takes the box's equal share per column. A float's
+    -- content can be one block, which a walk from that block does not
+    -- visit.
     local frame, w = docx_frame(class, width, gap, "#" .. float.identifier)
     if is_table and pandoc.utils.type(float.content) == "Block" then
       float.content = docx_size(pandoc.Blocks({ float.content }), w, true)[1]

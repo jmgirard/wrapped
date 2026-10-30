@@ -167,7 +167,7 @@ end
 -- nothing between them, and Pandoc cannot see the raw table to put its
 -- paragraph there, so a 1 pt paragraph comes before the floating table. It
 -- keeps with the next paragraph, so a heading before it, which keeps with
--- it, stays on the page of the table.
+-- it, moves to the next page with the table (seen in LibreOffice).
 local function fit_table(tbl)
   local shares, sum = {}, 0
   for i, spec in ipairs(tbl.colspecs) do

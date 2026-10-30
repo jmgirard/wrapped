@@ -77,9 +77,10 @@ A wrapped [table float](../get-started.qmd#wrap-a-table) goes in a
 floating table, the box that Word wraps text around for a table. The box
 has one cell, which holds the caption, the table, and any other content of
 the float. It takes its width and gap as a figure's frame does. The filter
-sets the table to the full width of the box. An image beside the table
-fills the box, and an image in a table cell fills an equal share of the
-box for each column. The wrap stops where a figure's wrap stops.
+sets the table to the full width of the box. An image outside the table
+fills the box. An image in a table cell takes the box width divided by
+the number of columns, less the cell margins, so it fills its cell when
+the columns are equal. The wrap stops where a figure's wrap stops.
 
 In LibreOffice 26.8 on macOS, a table wider than its box narrows its
 columns to fit the box, and the column text then breaks inside words. A

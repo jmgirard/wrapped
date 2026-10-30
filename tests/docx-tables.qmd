@@ -7,7 +7,7 @@ format: docx
 
 Word joins two tables with nothing between them, so the first two wrapped
 table floats below each follow a block that Word writes as a table. The
-third holds an image beside its table, the fourth holds images in its
+third holds an image above its table, the fourth holds images in its
 table's cells, and the last ends with a div that holds its table.
 
 | A | B |
