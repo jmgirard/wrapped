@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-30 (M036 review: graduated "List margin figures in the summaries"; M033 row pruned; one lesson captured, M021's evicted by rank; validate green)_
+_Last hygiene check: 2026-10-30 (M037 review: graduated "Say LaTeX narrows lines past figures"; M034 row pruned; no lesson captured, three marked used; validate green)_
 
 ## Milestones
 
@@ -9,10 +9,9 @@ _Last hygiene check: 2026-10-30 (M036 review: graduated "List margin figures in 
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M037 | Say LaTeX narrows lines past figures | review | — | normal | milestones/M037-latex-narrow-past.md |
+| M037 | Say LaTeX narrows lines past figures | done | — | normal | milestones/archive/M037-latex-narrow-past.md |
 | M036 | List margin figures in the test summaries | done | — | normal | milestones/archive/M036-margin-summaries.md |
 | M035 | Test the lowest admitted Quarto in CI | done | — | normal | milestones/archive/M035-quarto-floor-ci.md |
-| M034 | Warn for wrap classes on table floats | done | — | normal | milestones/archive/M034-table-float-class.md |
 
 ## Candidates
 <!-- unnumbered ideas; one line each, ordered high → normal → low → parked:
@@ -26,7 +25,6 @@ _Last hygiene check: 2026-10-30 (M036 review: graduated "List margin figures in 
      ending with `(#N)` for a row written for GitHub issue N, such as
      `Fix SE of skewness calculation (#100)`; `/cairn-triage` offers a new title for one
      with fewer than 5 words or more than 40 characters; tracking-rules "Candidate short title" has the whole rule -->
-- Say LaTeX narrows lines past figures: wrapfig keeps one or two lines narrow past a wrapped figure's bottom (image-figure's PDF: figure bottom at y=814, narrow lines at y=816 and 836), and the Limits section of `docs/formats/latex.qmd` does not say so (M026 review, diff-bug #2); promote when `docs/formats/latex.qmd` next changes — added 2026-10-28 — milestones/archive/M026-wrap-showcase.md — started M037
 - [parked] Cut the Ubuntu mirror from CI setup: `r-lib/actions/setup-r` runs `apt-get update` and installs about 175 Ubuntu packages, and the poppler step runs `apt-get update` too, so a slow mirror can stretch the job toward its 45-minute timeout (M008 review pass 2, diff-bug #1, blame-history #1). Since M027 the docs render job also runs `apt-get update` for poppler and Playwright's `--with-deps`, and the publish job waits for it (M027 review, blame-history #2). Since M035, `verify.yml` runs the setup twice per pull request, once for the release channel and once for Quarto 1.9.36 (M035 review, blame-history #1); promote when a CI or docs run times out in setup — added 2026-10-26 — milestones/archive/M008-ci-verify.md
 - [parked] Trim the LaTeX stop gap at page tops: a wrapped figure placed at the top of a page leaves about one more blank line before its stop block than one in mid-page (60 px against 39 px in a scratch render), since wrapfig counts its lines from a height less \intextsep there. No fixture covers a page-top figure or a group that ends at a div's end (M007 review, diff-bug #7; corrected M025). The skip counts lines and ignores \parskip, so the gap below a figure grows about 10 px for each paragraph beside it, and when narrowed lines cross a page break the stop skips about 2 empty lines at the next page's top with no figure there (M007 review pass 2, diff-bug #3 and #4); promote when a user reports it — added 2026-10-26 — milestones/archive/M007-latex-stops.md
 - [parked] Test small wrap-lines stops in layouts: M025 moves a stop block below the figure after a small `wrap-lines` count ends, in body text outside boxes only. Inside a callout or other box, the page position that M025 measures describes the outer page, and no render checks a wrap there (M025 plan, criteria audit; merged here M032 plan). M025's skip after a small `wrap-lines` count is tested only for a paragraph after a heading at a page top, and is untested for a mid-page start, for a wrap that starts at a page top with no heading (about 9 pt lower than mid-page by estimate), for a footnote beside the figure, which can lower the page goal and lose the skip, with code block, list, table, or block quote stops, and under a larger `\parskip` or `linestretch`. When TeX breaks the page just before the figure's first line, the skip is lost and the stop block overlaps as before M025. A raw `wrapfigure` in the user's LaTeX also starts the skip's record (M025 review, diff-bug #1, #4, #5, #9); promote when a user reports a stop block over a figure — added 2026-10-28 — milestones/archive/M025-small-wrap-lines.md
