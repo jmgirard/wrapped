@@ -116,21 +116,21 @@ warning elsewhere, the site, and DESIGN.md.
 ## Tasks
 <!-- owner: plan (create) / implement (check-off, minor edits) -->
 
-- [ ] T1: Write `tests/tables.qmd` with the cases of AC1 to AC5 and one
+- [x] T1: Write `tests/tables.qmd` with the cases of AC1 to AC5 and one
       table whose content is wider than its box. Add it to `RENDERS` in
       `tests/verify.py` for HTML, Typst, LaTeX, Word, and EPUB. Extend the
       table summary and the PDF checks for the wrap and the beside test.
       Extend `tests/layout.js` to measure a float that holds a table, not
       an image (`imageFillsBox`, tests/layout.js:80). Run it red first.
-- [ ] T2: In `float_target` in `wrapped.lua` (line 1409), let a table
+- [x] T2: In `float_target` in `wrapped.lua` (line 1409), let a table
       float wrap in HTML and Typst. Set `found_wrap` for it. Read
       `tbl-cap-location` and `tbl-column` where step 2 and
       `column_context` read the figure keys. Keep its normal layout in
       LaTeX and Word with the new warning.
-- [ ] T3: Make the grouping pass and `wrapped.css` place a table float in
+- [x] T3: Make the grouping pass and `wrapped.css` place a table float in
       HTML and Typst as they place a figure float. Fit the table to the
       float box's width in both formats.
-- [ ] T4: Re-snapshot the table cases that now wrap: `tbl-caption-block`,
+- [x] T4: Re-snapshot the table cases that now wrap: `tbl-caption-block`,
       `tbl-cell-block`, `tbl-cell-both`, `tbl-striped`, and `tbl-cars` in
       `tests/fixture.qmd`, and `tbl-wrapped` in `tests/contexts.qmd`. Run
       the full `tests/verify.py`.
@@ -166,3 +166,4 @@ warning elsewhere, the site, and DESIGN.md.
 - 2026-10-30: implementation choice: the tbl-cap-location: margin case moved to HTML-only fixtures tests/tables-cap-margin.qmd and tables-cap-margin-meta.qmd, because Quarto 1.10.19 fails the LaTeX build for such a table with or without the extension ("Misplaced \noalign").
 - 2026-10-30: full suite with --update: 113 renders; snapshot diff limited to table lines in fixture and contexts (tbl-caption-block, tbl-cell-block, tbl-cell-both, tbl-cars, tbl-wrapped) and the new tables fixtures; the Typst wide-table case first failed on a caption renumbered by the new tbl-page case, fixed, then passed.
 - 2026-10-30: observed: in HTML, Quarto copies a wrapped table float's class onto its inner table element (the `# tables` lines show `table=wrap-right`); no rule in wrapped.css selects `table.wrap-*`, so it changes no layout.
+- 2026-10-30: T1 to T4 done: tables.qmd with 13 cases (5 forms, no-text, callout, margin, page-wide, wide) plus two HTML-only margin-caption fixtures; HTML layout.js report ok for all 6 wrapped tables at 1280x900; Typst beside cases ok for 6 tables, and a plant with two classes removed failed 2 of them; full suite green after --update.
