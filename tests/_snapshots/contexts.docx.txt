@@ -23,7 +23,6 @@
 1x wrapped: the figure #fig-two-subcap-2 is in a subfigure panel, so it does not wrap.
 1x wrapped: the image deflist.png is in a list, so it does not wrap.
 1x wrapped: the image plot.png is in a list, so it does not wrap.
-1x wrapped: the table #tbl-wrapped does not wrap in Word. A table wraps only in HTML and Typst.
 # docx
 image: cx=5334000
 image: cx=5334000
@@ -69,3 +68,5 @@ image: cx=4572000
 # frames
 frame right w=3744 gap=240 anchor=margin | fig-quote | image plot.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame right w=2808 gap=240 anchor=margin | fig-second | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, clear | links=fig-first,fig-second cites=0
+# floating tables
+table right w=3744 left=240 right=0 | tbl-wrapped, caption, table, p | p, clear

@@ -5,7 +5,7 @@
 1x wrapped: the figure #fig-panels-tbl-column-1 is in a subfigure panel, so it does not wrap.
 1x wrapped: the figure #fig-panels-tbl-column-2 is in a subfigure panel, so it does not wrap.
 1x wrapped: the table #tbl-column-page is page-wide, so it does not wrap.
-1x wrapped: the table #tbl-fig-column does not wrap in LaTeX. A table wraps only in HTML and Typst.
+1x wrapped: the table #tbl-fig-column does not wrap in LaTeX. A table wraps in HTML, Typst, and Word.
 1x wrapped: the table #tbl-panels-fig-column is a subfigure panel, so it does not wrap.
 1x wrapped: the table #tbl-panels-fig-column-1 is in a subfigure panel, so it does not wrap.
 1x wrapped: the table #tbl-panels-fig-column-2 is in a subfigure panel, so it does not wrap.
