@@ -1,6 +1,6 @@
 # M039: Wrap table floats in Word
 
-- **Status:** review
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -79,6 +79,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - 2026-10-30: claim audit: 31 claims read, 2 corrected — tests/docx-tables.qmd, _extensions/wrapped/wrapped.lua (the fixture's opening now says the first two floats follow a table; the `docx_size` comment no longer says a table's column sizes its image). The re-read found both hold.
 - 2026-10-30: `tests/.gitignore` gained `/.quarto/` from a Quarto render in `tests/`; it is not milestone work and stays unstaged.
 - 2026-10-30: T4 minor amendment: T4 recorded its coordinates in the work log, not the review-owned Review section, which implement does not write.
+- 2026-10-30: review return 2: the spacer paragraph before a Word floating table takes a heading's keep-with-next, so a heading near a page foot is cut off from its wrapped table (pass-2 diff-bug #1, load-bearing). The same return carries the pass-2 fix-now findings that the Review section lists: images in the inner table's cells sized to their column's share of the box, the image-height warning's wording, a closing paragraph after a last Div that ends in a table, and the Word page's multi-column and box-contents sentences and the `docx_group` comment. Defect returns so far: 2.
 
 ## Decisions
 
@@ -121,3 +122,29 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - ripple #13: `docs/index.qmd:26` names only a frame in Word — fix now
 - ripple #14: `docs/formats/word.qmd:65` "Word cannot put a table in a frame" reads against the Tables section — fix now (point to Tables)
 - ripple #15: a table-only document in Word with columns prints "does not wrap figures" — follow-up: existing row "Name tables in the format warning"
+- Pass-1 fix-now items fixed in daaa5e6, d2dd8d5, and ddf362b. On reading, ripple #6 (DESIGN.md's "a table in LaTeX and Word" is the figure-in-a-table-cell context) and ripple #13 (`docs/index.qmd:26` describes the page's demo figure) are reject, false.
+- Pass 2, 2026-10-30, review head ddf362b, base main 72abe16 (level). Gate: `python3 tests/verify.py` exit 0, all 124 renders pass; `quarto render docs` exit 0 with no warning; `python3 tests/docs_layout.py` exit 0.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: the 1 pt spacer takes a heading's keep-with-next, so a heading near a page foot sits alone while its wrapped table moves to the next page (LibreOffice probe; Word keeps the same rule) — fix now (`w:keepNext` on the spacer); load-bearing, so review return 2
+- diff-bug #2: images in the inner table's cells keep Pandoc's width and are clipped by the box, so a table of images now wraps broken where it kept its normal layout before — fix now (size each cell image to its column's share of the box)
+- diff-bug #3: the spacer is written before every floating table and moves the paragraph beside it down 5 to 10 pt — follow-up: [parked] candidate "Write the Word table spacer only after a table", promote when a user reports the gap
+- diff-bug #4: `before=` catches a dropped spacer only in `docx-tables` — reject, planned change: that fixture exists for this case, and its plant turned red
+- diff-bug #5: `cites` never varies and `anchor` looks constant — reject, false: `anchor` reads `w:horzAnchor` and `w:vertAnchor` from the XML, and `cites` mirrors the frame lines that prior-review #2 asked for
+- diff-bug #6: zero cell margins move caption and table text 5.4 pt toward the margin — noted; DESIGN.md records it, as a frame has no inset
+- diff-bug #7: a figure float whose image is in a table has its image sized, then keeps its normal layout — follow-up: [parked] candidate "Keep image size in unframed Word figures", promote when a user reports it (it predates M039)
+- diff-bug #8: the `docx_size` walk still sizes every figure image — noted
+- diff-bug #9: three comment blocks are wrapped unevenly — reject, style
+- blame-history #1: images in a table float's cells overflow (as diff-bug #2) — fix now
+- blame-history #2: the image-height warning says the image fills the box width, false for an image in a table float — fix now
+- blame-history #3: a Word table float with no paragraph after it prints no warning — reject, planned change (as pass-1 blame-history #3)
+- blame-history #4: table-float images get no fig-alt from `alt_image` — reject, planned change: D-017 sets fig-alt only on figures the filter frames, and a table float's images got none before M039 either
+- blame-history #5: a cell whose last block is a Div ending in a table gets no closing paragraph — fix now (look into the last Div)
+- blame-history #6: a second floating table before a clearing break shows only in the unlisted count — reject, planned change: the count exists to report it
+- prior-review #1: cell images overflow (as diff-bug #2) — fix now
+- prior-review #2: table-float images get no fig-alt — reject (as blame-history #4)
+- prior-review #3: the docs do not mention that `#tbl-page` wraps in Word — reject, false: `docs/normal-layout.qmd` says a `tbl-column` of `page` leaves a Word table in the body, where it wraps
+- ripple #1: `wrap-mechanisms.md` W4 row's mechanism column describes the figure table only — reject, planned change: the row's last column states the table case (M039, D-022)
+- ripple #2: `docs/formats/word.qmd:55` says a multi-column reference doc keeps normal figures, and tables keep theirs too — fix now
+- ripple #3: `docs/formats/word.qmd:78` says the box holds the caption and the table, leaving out an image beside the table — fix now
+- ripple #4: the Word page gives no Word behavior for a table box at a page end — noted; AC4's look covers Word, and the page names LibreOffice for its page break
+- ripple #5: the `docx_group` comment says the group carries its figure's frame — fix now (figure or table)
