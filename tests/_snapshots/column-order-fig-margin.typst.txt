@@ -4,7 +4,10 @@
 1x wrapped: the figure #fig-figm-plain is in the margin, so it does not wrap.
 # typ
 figure: fig-figm-figbody image-width=yes
+notefigure: fig-figm-body image-width=no
+notefigure: fig-figm-plain image-width=no
 figure: fig-figm-div image-width=yes
+notefigure: fig-figm-cell-body image-width=no
 # wraps
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-figm-figbody no-alt | p | cites=0
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 40%, 40%, 40%)), column-gutter: 1em | fig-figm-div no-alt | p | cites=0

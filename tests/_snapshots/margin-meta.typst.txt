@@ -5,6 +5,12 @@
 1x wrapped: the figure #fig-meta-margin-cell is in the margin, so it does not wrap.
 1x wrapped: the figure #fig-meta-margin-div is in the margin, so it does not wrap.
 # typ
+notefigure: fig-meta-margin image-width=no
+notefigure: fig-meta-margin-div image-width=no
+notefigure: fig-meta-margin-cell image-width=no
+notefigure: fig-meta-body-cell image-width=no
+notefigure: fig-meta-margin-two-1 image-width=no
+notefigure: fig-meta-margin-two-2 image-width=no
 figure: - image-width=yes
 # wraps
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1em, 30%, 40%, 40%)), column-gutter: 1em | plot.png no-alt | p | cites=0

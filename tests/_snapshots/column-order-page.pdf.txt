@@ -8,3 +8,5 @@
 # tex
 wrappedfigure: fig-page-body [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+marginfigure: fig-page-margin [-] image=[keepaspectratio]
+marginfigure: fig-page-asis-margin [-] image=[keepaspectratio]

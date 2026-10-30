@@ -5,5 +5,8 @@
 # tex
 wrappedfigure: fig-figm-figbody [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+marginfigure: fig-figm-body [-] image=[keepaspectratio]
+marginfigure: fig-figm-plain [-] image=[keepaspectratio]
 wrappedfigure: fig-figm-div [side=left,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+marginfigure: fig-figm-cell-body [-] image=[keepaspectratio]

@@ -4,3 +4,5 @@
 # tex
 wrappedfigure: fig-marg-body [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+marginfigure: fig-marg-plain [-] image=[keepaspectratio]
+marginfigure: fig-marg-cell [-] image=[keepaspectratio]
