@@ -32,10 +32,9 @@ intended output change, run it with `--update` and review the snapshot
 diff. Other layout is not in this command. Measure HTML layout in a browser with `tests/layout.js`, as its header says (corrected M007).
 For the docs example pages, run `python3 tests/docs_layout.py` after `quarto render docs` (needs `soffice` and poppler). It checks the LaTeX, Typst, and Word PDFs. Its `--html` option runs the HTML check in Playwright's Chromium, and `--js` prints the browser calls to run by hand (corrected M026, M027).
 
-CI runs it on Ubuntu (D-008, D-009). `.github/workflows/verify.yml` runs it
-under Quarto's release channel and under Quarto 1.9.36, the version that
-`quarto-required` names. It runs on pull requests, pushes to `main` outside
-`cairn/`, and by hand (corrected M035). `verify-prerelease.yml` uses the pre-release channel weekly and by hand
+CI runs it on Ubuntu (D-008, D-009). `verify.yml` runs it under Quarto's release channel and
+under Quarto 1.9.36, the version that `quarto-required` names. It runs on pull requests,
+pushes to `main` outside `cairn/`, and by hand (corrected M035). `verify-prerelease.yml` uses the pre-release channel weekly and by hand
 and blocks no merge. The same snapshots must pass on macOS and in CI.
 `docs.yml` renders `docs/` with no R and is not this command (corrected M023). Its render job then runs `tests/docs_layout.py --no-word` and `--html`, and the publish job waits for it. The Word check runs only by hand on the Mac (D-016, corrected M027).
 
