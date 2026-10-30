@@ -752,8 +752,8 @@ local function docx_frame(class, width, gap, where)
 end
 
 -- Sets each image in a list of blocks to the frame's width, so the image
--- fills the frame. With `skip_tables`, an image in a table keeps its size,
--- as the table's column sets it.
+-- fills the frame. With `skip_tables`, an image in a table keeps the size
+-- that Pandoc gives it, which the box does not set.
 local function docx_size(blocks, twips, skip_tables)
   return blocks:walk({
     traverse = "topdown",

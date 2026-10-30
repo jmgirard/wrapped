@@ -5,8 +5,9 @@ filters:
 format: docx
 ---
 
-Word joins two tables with nothing between them, so each wrapped table
-float below follows a block that Word writes as a table.
+Word joins two tables with nothing between them, so the first two wrapped
+table floats below each follow a block that Word writes as a table. The
+last one holds an image.
 
 | A | B |
 |---|---|
