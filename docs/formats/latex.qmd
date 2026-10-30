@@ -48,13 +48,14 @@ wrapfig has limits, and the extension keeps some of them:
 
 - wrapfig narrows a number of lines that it counts from the height of the
   figure. The count can run past the bottom of the figure and its caption.
-  In the LaTeX PDFs of this site's example pages, a paragraph that runs on
-  past that bottom keeps one or two narrow lines below it. At the block that
-  stops the wrap, the extension skips the lines
-  that the figure still needs. After a `wrap-lines` value smaller than the
-  figure needs, it skips to below the figure in body text, on the figure's
-  page. If the text beside the figure is shorter than the figure, the
-  space beside the figure stays empty.
+  In the LaTeX PDFs of this site's [example pages](../examples/index.qmd),
+  a paragraph that runs on past that bottom has one or two narrowed lines
+  there.
+- At the block that stops the wrap, the extension skips the rest of the
+  counted lines. After a `wrap-lines` value smaller than the figure needs,
+  it skips to below the figure in body text, on the figure's page. If the
+  text beside the figure is shorter than the figure, the space beside the
+  figure stays empty.
 - A figure that does not fit at the bottom of a page moves to the start of
   a paragraph on the next page. The text before it fills the page. If its
   paragraphs all end before it is placed, it renders with no text beside
