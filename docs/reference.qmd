@@ -11,7 +11,8 @@ These go on a figure, an image, or a table float. On a code cell, the
 class goes in `#| classes:` and the width in `#| out-width:` (see
 [Get started](get-started.qmd#a-figure-from-a-code-cell)). "All four formats" means HTML, PDF through LaTeX, PDF through Typst, and
 Word. HTML includes revealjs slides and dashboards. A table float wraps
-only in HTML and PDF through Typst (see
+only in HTML and PDF through Typst. In PDF through LaTeX and in Word it
+keeps its normal layout, and the render prints a warning (see
 [Get started](get-started.qmd#wrap-a-table)).
 
 | Name | Kind | Values | Default | Works in |

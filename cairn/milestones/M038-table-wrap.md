@@ -41,8 +41,10 @@ warning elsewhere, the site, and DESIGN.md.
   wrapped tables in slides".
 - A document `fig-column` or `column` read for a table float: candidate
   row "Read table keys for document columns".
-- A table whose content is wider than its box spills into the text in
-  Typst. The site states this limit. No fix is planned.
+- In PDF through Typst, a table whose content is wider than its box keeps
+  to the box: Typst narrows its columns and breaks its words, and in a
+  narrow box the text of columns side by side can overlap. In HTML, such a
+  table scrolls inside its box. The site states both. No fix is planned.
 
 ## Acceptance criteria
 <!-- owner: plan · create/amend-via-gate; review reads, never reinterprets. -->
@@ -93,8 +95,9 @@ warning elsewhere, the site, and DESIGN.md.
       `docs/normal-layout.qmd` (Tables), `docs/reference.qmd`,
       `docs/get-started.qmd`, the four pages under `docs/formats/`, and
       `README.md`. One site page shows the syntax with an example and says
-      which forms carry a width and a gap. `docs/formats/typst.qmd` states
-      the spill limit of Scope Out. `quarto render docs` exits 0.
+      which forms carry a width and a gap. `docs/formats/typst.qmd` and
+      `docs/formats/html.qmd` state the wide-table behavior of Scope Out.
+      `quarto render docs` exits 0.
 - [ ] AC7: `python3 tests/verify.py` passes every render. No snapshot line
       for a figure or for an element other than a table changes on the
       branch, as `git diff main -- tests/_snapshots` shows.
@@ -157,3 +160,7 @@ warning elsewhere, the site, and DESIGN.md.
 ## Review
 <!-- owner: review · exclusive -->
 - 2026-10-30: checkpoint (in progress): filter, CSS, tests/tables.qmd, the two tables-cap-margin fixtures, verify.py table cases, layout.js table check, docs, and DESIGN.md written; full verify and snapshots pending; no task checked off yet.
+- 2026-10-30: substantive amendment: Scope Out's wide-table item and AC6's last clause changed from "spills into the text in Typst" to the observed behavior (Typst narrows columns and hyphenates, HTML scrolls in the box); a probe of an auto-width and a relative-width table showed no spill. The deliverable the user sees is unchanged, so no stop.
+- re-audit: AC6 (full) — 2 findings: the wide-table behavior was documented but untested (fixed in T1: a Typst beside case for tbl-wide, and layout.js's tableInside reads the scroll container); reference.qmd, formats/html.qmd, and formats/typst.qmd stated only part of the four-format rule (fixed by adding the missing clauses, AC6 wording kept).
+- 2026-10-30: implementation choice: a code cell with floats now anchors its group with or without a wrap class (cell_div), because a table float in a cell can take its class from its caption block; found when form 5 failed the HTML beside check.
+- 2026-10-30: implementation choice: the tbl-cap-location: margin case moved to HTML-only fixtures tests/tables-cap-margin.qmd and tables-cap-margin-meta.qmd, because Quarto 1.10.19 fails the LaTeX build for such a table with or without the extension ("Misplaced \noalign").

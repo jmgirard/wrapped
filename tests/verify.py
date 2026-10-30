@@ -1103,6 +1103,7 @@ def typst_table_cases():
     yield "pipe table", typst_table_case("Table 3:", "2.83", "Marker three.", "right")
     yield "cell class", typst_table_case("Table 4:", "4.45", "Marker four.", "right")
     yield "cell caption block", typst_table_case("Table 5:", "3.35", "Marker five.", "left")
+    yield "table wider than its box", typst_table_case("Table 9:", "cious", "Marker wide.", "right")
 
 
 def join_lines(boxes):
