@@ -386,9 +386,10 @@ snapshot difference. The mechanism for each other format is in
   `tbl-wide` case of `tests/tables.qmd`). The site's
   `docs/formats/typst.qmd`, Limits, states this limit (M038).
 - Word: a wrapped table float keeps to the width of its box. In a
-  LibreOffice PDF, a wide table's column text breaks inside words, and a
-  box taller than the rest of the page breaks across pages (the `tbl-wide`
-  case of `tests/tables.qmd`). The site's `docs/formats/word.qmd`, Tables,
+  LibreOffice PDF, a wide table's column text breaks inside words (the
+  `tbl-wide` case of `tests/tables.qmd`), and a box taller than the rest
+  of the page breaks across pages (`tbl-image` in `tests/docx-tables.qmd`,
+  corrected M039 review). The site's `docs/formats/word.qmd`, Tables,
   states this limit (M039).
 - PDF through Typst: a wrapped figure whose group does not fit at the bottom
   of a page moves to the next page with the text beside it, and the rest of
