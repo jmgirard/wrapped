@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M040: Wrap table floats in LaTeX PDFs
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -142,7 +142,7 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
       `cairn/references/wrap-mechanisms.md` E5 and the LaTeX row. Run the
       AC6 grep and fix each line it lists; render the docs and run
       `tests/docs_layout.py`.
-- [ ] T5: Full `python3 tests/verify.py`; revert any `/.quarto/` lines a
+- [x] T5: Full `python3 tests/verify.py`; revert any `/.quarto/` lines a
       render adds to `tests/.gitignore`; open the PR at review and wait on
       CI.
 
@@ -178,6 +178,7 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 - 2026-10-31: T5: `python3 tests/verify.py` at c7a5686: all 125 renders pass, 80 layout and 4 log checks ok, no snapshot change after the fixture prose edit. `tests/.gitignore`'s `/.quarto/` lines (from `--output-dir` scratch renders) stay unstaged.
 - 2026-10-31: claim audit: 68 claims read, 5 corrected — `wrapped.lua` (`text_shares` row spans, raw-LaTeX comment and warning), `docs/formats/latex.qmd` (pipe widths over 72 characters; text shares only when no column has a width; "holds raw LaTeX"), `docs/normal-layout.qmd` (LaTeX leaves a `tbl-column` margin or page table in the text column), `docs/reference.qmd`, `docs/get-started.qmd`. The same reader re-read all five and confirmed them.
 - 2026-10-31: claim-audit fallout (minor amendment, T3): `text_shares` skipped no row-span-covered column, so an HTML-read table counted a row's text under the wrong column; it now skips them. A wrapped grid table with a row span failed the build, since the raw `\multirow` loaded no package; `latex_tabular` now loads multirow. New fixture `tests/tables-span.qmd` (with test filter `tests/html-table.lua`) pins both: `tbl-html` 0.1562/0.8438 (0.8438/0.1562 with the skip removed), `tbl-span` builds. The `tbl-raw` warning reads "holds raw LaTeX, as a table from gt, kableExtra, or tinytable does".
+- 2026-10-31: T5 done: `python3 tests/verify.py` at 0532352: all 126 renders pass, 80 layout and 4 log checks ok; docs render exit 0 and `tests/docs_layout.py` exit 0 (24 ok) after the claim-audit docs edits. Status review; PR and CI at `/milestone-review`.
 - 2026-10-31: proposed AC2 column clause for the user: "Each column of the six tables of `tests/tables.qmd`, whose columns have no widths, is a `p{}` column whose `\real{}` factor (the share of the box's line width less its column padding that Pandoc writes) equals that column's length divided by the sum of the table's column lengths, rounded to four decimals, where a column's length is the larger of one and the largest number of characters, spaces included, in the plain text (formatting removed) of a header or body cell of that column that spans no other column; the columns of `tbl-rel`, whose columns all have relative widths, have `\real{}` factors equal to each width that Pandoc's reader gives the column (its dashes' share of the separator line) divided by the sum of the widths, rounded to four decimals (evidence: both fixtures' LaTeX snapshots)."
 
 ## Decisions
