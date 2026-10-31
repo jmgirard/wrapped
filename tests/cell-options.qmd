@@ -60,3 +60,62 @@ knitr::kable(head(cars, 3))
 The paragraph after the table cell with no options. Lorem ipsum dolor sit
 amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
 labore et dolore magna aliqua.
+
+## A figure cell with wrap-gap and out-width
+
+```{r}
+#| label: fig-cell-gap
+#| fig-cap: "A figure cell with wrap-gap and out-width."
+#| classes: wrap-right
+#| wrap-gap: 2.5em
+#| out-width: 30%
+plot(1:3)
+```
+
+The paragraph after the figure cell with wrap-gap and out-width. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## A figure cell with wrap-gap and no out-width
+
+```{r}
+#| label: fig-cell-gap-only
+#| fig-cap: "A figure cell with wrap-gap and no out-width."
+#| classes: wrap-left
+#| wrap-gap: 1.5em
+plot(1:3)
+```
+
+The paragraph after the figure cell with wrap-gap and no out-width. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## A figure cell with width
+
+```{r}
+#| label: fig-cell-width
+#| fig-cap: "A figure cell with width and out-width."
+#| classes: wrap-right
+#| width: 25%
+#| out-width: 35%
+plot(1:3)
+```
+
+The paragraph after the figure cell with width. Lorem ipsum dolor sit amet,
+consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
+dolore magna aliqua.
+
+## A figure cell with a gap below zero
+
+```{r}
+#| label: fig-cell-negative
+#| fig-cap: "A figure cell with a gap below zero."
+#| classes: wrap-left
+#| wrap-gap: -1em
+#| out-width: 30%
+plot(1:3)
+```
+
+The paragraph after the figure cell with a gap below zero. Lorem ipsum dolor
+sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua.

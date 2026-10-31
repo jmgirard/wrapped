@@ -1,8 +1,18 @@
 # warnings
+1x wrapped: the code cell of the figure #fig-cell-width sets width, which a figure cell does not read. Set the figure's width with out-width.
+1x wrapped: wrap-gap "-1em" on #fig-cell-negative is not a length or a percent, so it is 20px.
 # tex
 wrappedtable: tbl-cell-opts [side=right,width=0.3\linewidth,gap=3em] caption=yes tabular=1 longtable=0 columns=0.5556 0.4444
 wrappedstop
 wrappedtable: tbl-cell-cap [side=left,width=0.35\linewidth,gap=2em] caption=yes tabular=1 longtable=0 columns=0.5556 0.4444
 wrappedstop
 wrappedtable: tbl-cell-none [side=right,width=0.45\linewidth,gap=15pt] caption=yes tabular=1 longtable=0 columns=0.5556 0.4444
+wrappedstop
+wrappedfigure: fig-cell-gap [side=right,width=0.3\linewidth,gap=2.5em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-cell-gap-only [side=left,width=0.45\linewidth,gap=1.5em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-cell-width [side=right,width=0.35\linewidth,gap=15pt] image=[width=1\linewidth,height=\textheight,keepaspectratio]
+wrappedstop
+wrappedfigure: fig-cell-negative [side=left,width=0.3\linewidth,gap=15pt] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop

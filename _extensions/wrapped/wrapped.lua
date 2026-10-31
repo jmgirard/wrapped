@@ -1675,8 +1675,12 @@ local function cell_div(div)
     local token = tostring(next_token)
     -- Quarto turns a cell's caption-margin class into the cap-location of
     -- its figure, but not its margin-caption class, so that one is carried.
+    -- knitr puts a cell's `width` and `wrap-gap` options on the cell div. A
+    -- table float gets them too, but a figure float does not, so a figure
+    -- reads its gap from here.
     carry = { class = c, remaining = n, token = token, several = count_top_floats(div) > 1,
-      margin_caption = div.classes:includes("margin-caption") }
+      margin_caption = div.classes:includes("margin-caption"),
+      gap = div.attributes["wrap-gap"], width = div.attributes.width }
     if wraps() then div.attributes["data-wrap-anchor"] = token end
   end
   return div
@@ -1870,8 +1874,16 @@ local function float_target(float)
     img_width = nil
   end
   local width = float.attributes.width or img_width
-  local gap = float.attributes["wrap-gap"] or img_gap
+  local gap = float.attributes["wrap-gap"] or (cell and cell.gap) or img_gap
   local lines = float.attributes["wrap-lines"] or img_lines
+  -- A figure cell's width comes from `out-width`, which knitr gives the
+  -- image, so the cell's `width` option does nothing for a figure.
+  if float.type == "Figure" and cell and cell.width and not cell.width_warned then
+    cell.width_warned = true
+    quarto.log.warning(string.format(
+      "wrapped: the code cell of the figure #%s sets width, which a figure cell does not read. Set the figure's width with out-width.",
+      float.identifier))
+  end
   float.attributes.width = nil
   float.attributes["wrap-gap"] = nil
   float.attributes["wrap-lines"] = nil

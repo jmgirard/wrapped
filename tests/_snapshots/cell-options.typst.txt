@@ -1,9 +1,19 @@
 # warnings
+1x wrapped: the code cell of the figure #fig-cell-width sets width, which a figure cell does not read. Set the figure's width with out-width.
+1x wrapped: wrap-gap "-1em" on #fig-cell-negative is not a length or a percent, so it is 20px.
 # typ
 figure: tbl-cell-opts image-width=no
 figure: tbl-cell-cap image-width=no
 figure: tbl-cell-none image-width=no
+figure: fig-cell-gap image-width=yes
+figure: fig-cell-gap-only image-width=yes
+figure: fig-cell-width image-width=yes
+figure: fig-cell-negative image-width=yes
 # wraps
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 3em, 30%, 45%, 40%)), column-gutter: 3em | tbl-cell-opts no-alt | p | cites=0
 align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 2em, 35%, 45%, 40%)), column-gutter: 2em | tbl-cell-cap no-alt | p | cites=0
 align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 15pt, 45%, 45%, 40%)), column-gutter: 15pt | tbl-cell-none no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 2.5em, 30%, 45%, 40%)), column-gutter: 2.5em | fig-cell-gap no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 1.5em, 45%, 45%, 40%)), column-gutter: 1.5em | fig-cell-gap-only no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 15pt, 35%, 45%, 40%)), column-gutter: 15pt | fig-cell-width no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 15pt, 30%, 45%, 40%)), column-gutter: 15pt | fig-cell-negative no-alt | p | cites=0

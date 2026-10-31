@@ -1,12 +1,26 @@
 # warnings
+1x wrapped: the code cell of the figure #fig-cell-width sets width, which a figure cell does not read. Set the figure's width with out-width.
+1x wrapped: wrap-gap "-1em" on #fig-cell-negative is not a length or a percent, so it is 20px.
 # breakpoint
 576px
 # figures
 tbl-cell-opts: wrap-right style=--wrap-gap: 3em; --wrap-width: 30%
 tbl-cell-cap: wrap-left style=--wrap-gap: 2em; --wrap-width: 35%
 tbl-cell-none: wrap-right style=--wrap-gap: 20px; --wrap-width: 45%
+fig-cell-gap: wrap-right style=--wrap-gap: 2.5em; --wrap-width: 30%
+fig-cell-gap-only: wrap-left style=--wrap-gap: 1.5em; --wrap-width: 45%
+fig-cell-width: wrap-right style=--wrap-gap: 20px; --wrap-width: 35%
+fig-cell-negative: wrap-left style=--wrap-gap: 20px; --wrap-width: 30%
 # images
+fig-cell-gap-1.png: wrap=- style=- width=-
+fig-cell-gap-only-1.png: wrap=- style=- width=-
+fig-cell-width-1.png: wrap=- style=- width=-
+fig-cell-negative-1.png: wrap=- style=- width=-
 # groups
+cell, p
+cell, p
+cell, p
+cell, p
 cell, p
 cell, p
 cell, p

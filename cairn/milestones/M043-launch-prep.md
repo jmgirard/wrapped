@@ -102,7 +102,7 @@ user's act; the repeated four-format wording on pages other than the home page a
       knitr table cells: class in `#| classes:` with `#| width:` and `#| wrap-gap:`, class in a `#| tbl-cap:`
       block with the same options, and one with no options. Snapshot the four formats and read that the
       summaries carry each width and gap. Extend a summary where it does not show one.
-- [ ] T4: Make a figure cell read `#| wrap-gap:` from its cell div in `cell_div` or `float_target`, warn on a
+- [x] T4: Make a figure cell read `#| wrap-gap:` from its cell div in `cell_div` or `float_target`, warn on a
       figure cell's `#| width:`, and route a negative cell gap through the existing gap check. Add figure
       cells to the fixture of T3, with and without `#| out-width:`, and update the four snapshots.
 - [ ] T5: Update `docs/get-started.qmd` ("A figure from a code cell" and "Wrap a table"),
@@ -139,6 +139,7 @@ user's act; the repeated four-format wording on pages other than the home page a
 - 2026-10-31: implement started on branch m043-launch-prep, cut from main at cae0f85.
 - 2026-10-31: T1-T2 done: `tests/meta-unknown.qmd` (keys `wrap-gap` and `Width`) printed no key warning before the change; `read_meta` now warns once per unknown key in sorted order with the `gap` hint for `wrap-gap`; HTML and EPUB snapshots show both warnings and the 40% and 1em defaults.
 - 2026-10-31: T3 done: `tests/cell-options.qmd` (document `wrapped:` 45% and 20px) snapshots show the classes cell at 30%/3em, the caption-block cell at 35%/2em, and the no-option cell at 45%/20px in HTML, LaTeX (`wrappedtable` options), Typst (`wrapped-width` and `column-gutter`), and Word (box width and text distance); the existing summaries already carry each width and gap, so none was extended.
+- 2026-10-31: T4 done: knitr puts `width` and `wrap-gap` on the cell div but not on a figure float (dump filter), so `cell_div` carries both and `float_target` takes a figure's gap from the float, then the cell, then the image; a figure cell's `width` warns once naming `out-width`. Snapshots: 2.5em at out-width 30%, 1.5em at the 45% default with no out-width, the width warning with out-width 35% kept, and `-1em` falling back to 20px with the same "not a length or a percent" warning a figure attribute of `-1em` prints, in all four formats.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
