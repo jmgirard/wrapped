@@ -281,6 +281,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#width-and-gap" id="toc-width-and-gap" class="nav-link active" data-scroll-target="#width-and-gap">Width and gap</a></li>
   <li><a href="#lines-beside-the-figure" id="toc-lines-beside-the-figure" class="nav-link" data-scroll-target="#lines-beside-the-figure">Lines beside the figure</a></li>
   <li><a href="#limits" id="toc-limits" class="nav-link" data-scroll-target="#limits">Limits</a></li>
+  <li><a href="#tables" id="toc-tables" class="nav-link" data-scroll-target="#tables">Tables</a></li>
   <li><a href="#columns" id="toc-columns" class="nav-link" data-scroll-target="#columns">Columns</a></li>
   <li><a href="#tagged-pdf" id="toc-tagged-pdf" class="nav-link" data-scroll-target="#tagged-pdf">Tagged PDF</a></li>
   </ul>
@@ -308,7 +309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>In PDF through LaTeX, the extension puts each wrapped figure in a <code>wrapfigure</code> from the LaTeX package wrapfig. Where the text runs in columns, it does not (see <a href="#columns">Columns</a>). If your TeX distribution does not have wrapfig, install it, for example with <code>tlmgr install wrapfig</code>.</p>
+<p>In PDF through LaTeX, the extension puts each wrapped figure in a <code>wrapfigure</code> from the LaTeX package wrapfig, and each wrapped <a href="#tables">table float</a> in a <code>wraptable</code>. Where the text runs in columns, it does not (see <a href="#columns">Columns</a>). If your TeX distribution does not have wrapfig, install it, for example with <code>tlmgr install wrapfig</code>.</p>
 <section id="width-and-gap" class="level2">
 <h2 class="anchored" data-anchor-id="width-and-gap">Width and gap</h2>
 <p>The <code>width</code> and <code>wrap-gap</code> values change to LaTeX lengths:</p>
@@ -337,14 +338,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>If a page break comes while lines are still narrowed, the first lines on the next page are narrowed with no figure beside them. A <code>wrap-lines</code> value larger than the figure needs can narrow lines past a page break in the same way.</li>
 <li>Figures in a row: a figure after the paragraphs of a wrapped figure is a block that stops its wrap, so it starts below the wrapped figure. A figure that moved to the next page waits for one of its own paragraphs. A heading or the end of a callout does not take it.</li>
 <li>A figure in a list keeps its normal layout, as in HTML.</li>
-<li>A <a href="../get-started.html#wrap-a-table">table float</a> does not wrap. Quarto writes a table as a <code>longtable</code>, which wrapfig cannot hold. A wrapped table float keeps its normal layout, and the render prints a warning.</li>
+</ul>
+</section>
+<section id="tables" class="level2">
+<h2 class="anchored" data-anchor-id="tables">Tables</h2>
+<p>Quarto writes a table as a <code>longtable</code>, which wrapfig cannot hold. For a wrapped <a href="../get-started.html#wrap-a-table">table float</a>, the extension writes the table as a <code>tabular</code> in a <code>wraptable</code>, with its caption, its number, and its <code>@tbl-</code> links. Citations, cross-references, shortcodes, formatting, and footnotes in a cell work as in a normal table. The limits above for figures apply to tables too, and a table has three more:</p>
+<ul>
+<li>A wrapped table does not break across pages. A table that does not fit at the bottom of a page moves to the next page, as a figure does.</li>
+<li>The columns share the width of the box, and a table’s column text wraps inside its cells. In a table where no column has a width, each column takes a share in proportion to its longest cell text. A pipe table with any line longer than 72 characters has widths of its own, set by the dashes of its separator line, and its columns keep those shares. A <code>tbl-colwidths</code> value of percentages on the table’s <code>#tbl-</code> div or code cell sets the shares, as it does for a normal table. A <code>tbl-colwidths</code> in the document’s metadata does not reach a wrapped table. In a narrow box, a wide table’s column text breaks inside words, and the text of columns side by side can overlap.</li>
+<li>A table float that holds raw LaTeX keeps its normal layout, and the render prints a warning that names it. gt, kableExtra, tinytable, and <code>knitr::kable(format = "latex")</code> write a table as raw LaTeX.</li>
 </ul>
 </section>
 <section id="columns" class="level2">
 <h2 class="anchored" data-anchor-id="columns">Columns</h2>
 <ul>
-<li>Where the text runs in columns, set by <code>classoption: twocolumn</code>, a class default, <code>\twocolumn</code>, or <code>multicols</code>, wrapped figures render as normal figures: they do not wrap. A percent width is a share of the column, or of the box that holds the figure. With <code>classoption: twocolumn</code>, the filter writes Quarto’s normal figure, and the render prints one warning.</li>
-<li>In other documents, a class that sets two columns by default, such as IEEEtran, a <code>\twocolumn</code> command, and a <code>multicols</code> environment are found only while LaTeX runs. In two-column text, a captioned figure floats as a normal figure does. An image with no caption, or a figure inside a box such as a <code>minipage</code>, stays in place. Inside <code>multicols</code>, where LaTeX loses floats, each figure stays in place. After <code>\onecolumn</code>, figures wrap again.</li>
+<li>Where the text runs in columns, set by <code>classoption: twocolumn</code>, a class default, <code>\twocolumn</code>, or <code>multicols</code>, wrapped figures render as normal figures and wrapped tables as normal tables: they do not wrap. A percent width is a share of the column, or of the box that holds the figure. With <code>classoption: twocolumn</code>, the filter writes Quarto’s normal figure, and the render prints one warning.</li>
+<li>In other documents, a class that sets two columns by default, such as IEEEtran, a <code>\twocolumn</code> command, and a <code>multicols</code> environment are found only while LaTeX runs. In two-column text, a captioned figure floats as a normal figure does. An image with no caption, or a figure inside a box such as a <code>minipage</code>, stays in place. Inside <code>multicols</code>, where LaTeX loses floats, each figure stays in place. A wrapped table does what a captioned figure does. After <code>\onecolumn</code>, figures wrap again.</li>
 <li>In those cases the render prints no warning. LaTeX writes the warning to its log, and Quarto keeps the log with <code>latex-clean: false</code>. A column layout from a LaTeX class or package that neither turns on LaTeX’s two-column mode nor opens a <code>multicols</code> environment is not detected.</li>
 </ul>
 </section>

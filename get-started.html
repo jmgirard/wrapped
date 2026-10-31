@@ -426,7 +426,7 @@ Figure&nbsp;3: A scatter plot.
 </section>
 <section id="wrap-a-table" class="level2">
 <h2 class="anchored" data-anchor-id="wrap-a-table">Wrap a table</h2>
-<p>A table float wraps in HTML, in PDF through Typst, and in Word. A table float is a table with a <code>#tbl-</code> label. In PDF through LaTeX it keeps its normal layout, and the render prints one warning for each table. Put the class and the width on a <code>#tbl-</code> div:</p>
+<p>A table float wraps in HTML, in PDF through LaTeX, in PDF through Typst, and in Word. A table float is a table with a <code>#tbl-</code> label. A table float that holds raw LaTeX, or a raw Word XML table, as R packages such as gt write them, keeps its normal layout in that format, and the render prints one warning for each table. Put the class and the width on a <code>#tbl-</code> div:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>::: {#tbl-means .wrap-right width="45%"}</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Condition <span class="pp">|</span> Mean <span class="pp">|</span> SD  <span class="pp">|</span></span>
@@ -477,7 +477,7 @@ Table&nbsp;1: Mean ratings by condition.
 <ul>
 <li>A pipe table with its id in the block, as in <code>: Mean ratings by condition. {#tbl-means .wrap-right width="45%"}</code>. The block can also hold <code>width</code> and <code>wrap-gap</code>.</li>
 <li>A block inside a <code>#tbl-</code> div, as in <code>: Mean ratings by condition. {.wrap-right}</code>. Put a <code>width</code> or <code>wrap-gap</code> for this form on the div.</li>
-<li>A code cell with a <code>tbl-</code> label: the class goes in <code>#| classes:</code>, or in a block at the end of <code>#| tbl-cap:</code>. A code cell table takes the width and gap of the <a href="./defaults.html">document defaults</a>. In Word, a table from gt or flextable keeps its normal layout (see <a href="./formats/word.html#tables">Word</a>).</li>
+<li>A code cell with a <code>tbl-</code> label: the class goes in <code>#| classes:</code>, or in a block at the end of <code>#| tbl-cap:</code>. A code cell table takes the width and gap of the <a href="./defaults.html">document defaults</a>. In Word, a table from gt or flextable keeps its normal layout (see <a href="./formats/word.html#tables">Word</a>). In PDF through LaTeX, a table from gt, kableExtra, or tinytable keeps its normal layout (see <a href="./formats/latex.html#tables">PDF through LaTeX</a>).</li>
 </ul>
 
 
