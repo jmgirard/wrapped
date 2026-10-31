@@ -109,7 +109,7 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
       and flextable code cells, outside `verify.py`'s fixture list, its header naming the packages
       it needs. In `tests/verify.py`'s `docx_tables`, record each inner table's `w:gridCol` widths
       and `dxa` `w:tcW` widths in the snapshot.
-- [ ] T2: In `wrapped.lua`, remove `raw_docx_table` (about line 1732) and its check (about line
+- [x] T2: In `wrapped.lua`, remove `raw_docx_table` (about line 1732) and its check (about line
       1850). In `wrapped-docx.lua`, fit each raw openxml block that holds a `w:tbl` from
       `floating_table`'s walk: replace or add the first table's `w:tblW` in schema order (adding a
       `w:tblPr` when the table has none), and scale its first `w:tblGrid` and its `dxa` `w:tcW`
@@ -141,6 +141,7 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
 - 2026-10-31: criteria audit (full mode, fresh Opus reader): 9 findings, all fixed. AC1 now states docx properties, not snapshot lines; `tbl-raw` and `tbl-flex` get uneven grids and T3 an equal-columns plant; scaling rounds running edges, so each column stays within 1 twip; AC3 names the one warning at f207fe3; D-025 lands in the plan commit; AC4 measures the lowest text box of the last row, caption excluded; AC5's grep adds `openxml|raw Word`, judges sentences, and drops its catch-all; AC5 limits proportions to the fixed-layout flextable; `tbl-raw` has no `w:tblPr` and AC4 has Word open the `docx-tables` render. AC6 passed.
 - 2026-10-31: implement started on `m041-word-raw-tables`; the uncommitted `tests/.gitignore` lines (`/.quarto/`, `**/*.quarto_ipynb`, from an earlier render) are not this milestone's and stay unstaged.
 - 2026-10-31: T1: `tests/docx-tables.qmd` has `tbl-raw` (no `w:tblPr`, grid and `dxa` cells 1000/3000) and `tbl-gt`, `tbl-flex` (grid 2880/1080/1080, a two-column header cell), and `tbl-flex-auto`, copied with whitespace between tags removed from gt 1.4.0 and flextable 0.10.1 output; `tests/docx-raw-tables.qmd` renders the packages by hand; `docx_tables` records `grid=` and `tcw=`. The fixture inserts went through a Python script, since the copied XML runs to 31 KB. On the current filter all four warn and stay normal.
+- 2026-10-31: T2: `raw_docx_table` and its warning are gone; `fit_raw` in `wrapped-docx.lua` runs from `floating_table`'s walk. It finds the first `<w:tbl>` or `<w:tbl ...>` tag (a first pattern ran past a bare `<w:tbl>` into `<w:tblGrid>`, fixed), puts `w:tblW` after any `BEFORE_TBLW` element, scales the grid by rounded edges, and scales depth-1 `dxa` `w:tcW` by a scanner that stops at the table's end. Scratch render: `tbl-raw` grid and cells 936/2808, `tbl-flex` grid 2139/803/802, all four `dxa 3744`, one warning (image height). The new `grid=` field also shows the grid Pandoc writes for its own tables (3960 per column in a 3744 box), unchanged by this milestone.
 
 ## Decisions
 
