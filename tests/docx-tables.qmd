@@ -68,7 +68,7 @@ labore et dolore magna aliqua.
 
 | Before | After |
 |--------|-------|
-| ![](plot.png) | ![](plot.png) |
+| ![](plot.png){height=1in} | ![](plot.png) |
 
 : A table float with an image in each cell.
 

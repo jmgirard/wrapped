@@ -1,4 +1,5 @@
 # warnings
+1x wrapped: Word does not use the height of the image plot.png in a wrapped table, so the box or its column sets the image's width.
 1x wrapped: the table #tbl-raw is raw Word XML, as from gt or flextable, so it does not wrap in Word.
 # docx
 image: cx=2133600

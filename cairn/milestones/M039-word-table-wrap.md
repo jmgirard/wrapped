@@ -32,7 +32,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 
 ## Coverage
 
-- AC1 → T1, T2, T3, T7, T8, T9
+- AC1 → T1, T2, T3, T7, T8, T9, T10
 - AC2 → T1, T3
 - AC3 → T2, T4, T7, T9
 - AC4 → T6
@@ -50,6 +50,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - [x] T7: Review return 1: a table, figure float, or callout right before a wrapped Word table float must not merge into it. Put a paragraph before the floating table, and check the case with a render and in LibreOffice.
 - [x] T8: Pass-1 fix-now findings (Review section): size images outside a table float's tables to the box; record the inner table's width, the anchors, links, and citations in `docx_tables`; reword the nested-table count; render `tables-column-meta` to Word; fix the stale lines in DESIGN.md, the Lua headers, `wrap-mechanisms.md`, the `verify.py` docstrings, `docs/index.qmd`, `docs/formats/word.qmd`, and the "tested on HTML pages" sentences.
 - [x] T9: Review return 2: the spacer keeps with the next paragraph, so a heading stays with its table; images in a table float's cells take their column's share of the box; the image-height warning names tables; the closing paragraph looks into a last div; the Word page's multi-column and box-contents sentences and the `docx_group` comment. Each fix gets a `tests/docx-tables.qmd` case and a plant.
+- [x] T10: Narrowing at the thrash stop (the user's choice): keep a raw openxml table float normal in Word with a warning; close the cell past empty divs and after a raw block; size cell images by `fit_table`'s shares, keeping a smaller own width; restore the user's M006 height-warning wording for figures, with a table sentence of its own; the pass-3 comment and docs fixes. Each fix gets a `tests/docx-tables.qmd` case and a plant.
 
 ## Work log
 
@@ -89,6 +90,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - 2026-10-31: question set (thrash stop): the user's look at `tests/tables.docx` and `tests/docx-tables.docx` in Microsoft Word — "Yes, looks right".
 - 2026-10-31: substantive amendment: Scope In now says a table float whose table is raw openxml (gt, flextable) keeps its normal layout in Word with a warning, and Scope Out sends wrapping it to the candidate "Wrap gt and flextable tables in Word" (split from M039). No criterion's wording changed. The user chose this at the thrash stop.
 - 2026-10-31: T10 checkpoint (suite update running): `raw_docx_table` keeps a raw openxml table float normal in Word with "the table #<id> is raw Word XML, as from gt or flextable, so it does not wrap in Word."; the closing paragraph looks past empty divs and also follows a raw block; `docx_size(by_column)` uses `fit_table`'s shares summed over a column span, keeps a smaller own width, and floors at half the cell; the height warning keeps the user's M006 figure wording and says "in a wrapped table, so the box or its column sets the image's width" for a table; comments and `docs/formats/word.qmd` follow. Rows: "Size Word table columns by content" and "Keep image size in unframed Word figures" merged into "[low] Size images and columns in Word tables", which also takes pass-3 diff-bug #3 and #7 and a fixture finding (a table float with no width of its own takes its box width from its first image, in every format, since M038).
+- 2026-10-31: T10 checks: `python3 tests/verify.py --update` passed all 124 renders; the diff restores the M006 height-warning text in three snapshots and adds the `docx-tables` cases (`#tbl-empty-div`, `#tbl-uneven` with `images=240,2320`, `#tbl-raw`'s warning); a cell-image height then added the table warning to that snapshot. Plants on `docx-tables`, each red: raw detection off (`tbl-raw` floats with no warning), the pass-2 closing rule (`tbl-empty-div` cell ends in `table`), equal shares (`images=240,1656`), own width ignored (`images=991,2320`), table wording off (figure wording on a table image). Restored render matches.
 
 ## Decisions
 
