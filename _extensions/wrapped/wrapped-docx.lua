@@ -219,13 +219,18 @@ local function fit_raw(raw, width)
   if s2 and (not start or s2 < start) then start, open_end = s2, e2 end
   if not start then return nil end
   local tblw = string.format('<w:tblW w:type="dxa" w:w="%d"/>', width)
-  local empty_s, empty_e = text:find("^%s*<w:tblPr%s*/>", open_end + 1)
-  if empty_s then
+  -- The table's own w:tblPr and w:tblGrid come before its first row, the
+  -- w:tblPr after any range markup, such as a bookmark.
+  local function first_row()
+    return text:find("<w:tr[%s>]", open_end + 1) or #text + 1
+  end
+  local empty_s, empty_e = text:find("<w:tblPr%s*/>", open_end + 1)
+  if empty_s and empty_s < first_row() then
     text = text:sub(1, empty_s - 1) .. "<w:tblPr></w:tblPr>" .. text:sub(empty_e + 1)
   end
-  local pr_s, pr_e = text:find("^%s*<w:tblPr>", open_end + 1)
-  if pr_s then
-    local close_s, close_e = text:find("</w:tblPr>", pr_e + 1, true)
+  local pr_s, pr_e = text:find("<w:tblPr%s*>", open_end + 1)
+  if pr_s and pr_s < first_row() then
+    local close_s = text:find("</w:tblPr>", pr_e + 1, true)
     local pr = text:sub(pr_e + 1, close_s - 1)
     pr = pr:gsub("<w:tblW[^>]*/>", ""):gsub("<w:tblW[^>]*>.-</w:tblW>", "")
     local at = 0
@@ -235,12 +240,14 @@ local function fit_raw(raw, width)
     end
     pr = pr:sub(1, at) .. tblw .. pr:sub(at + 1)
     text = text:sub(1, pr_e) .. pr .. text:sub(close_s)
-    open_end = pr_e + #pr + #"</w:tblPr>"
   else
-    text = text:sub(1, open_end) .. "<w:tblPr>" .. tblw .. "</w:tblPr>" .. text:sub(open_end + 1)
-    open_end = open_end + #"<w:tblPr>" + #tblw + #"</w:tblPr>"
+    -- A new w:tblPr goes after any range markup, before the grid or the
+    -- first row.
+    local at = math.min(text:find("<w:tblGrid[%s>]", open_end + 1) or #text + 1, first_row())
+    text = text:sub(1, at - 1) .. "<w:tblPr>" .. tblw .. "</w:tblPr>" .. text:sub(at)
   end
-  local grid_s, grid_e = text:find("^%s*<w:tblGrid>.-</w:tblGrid>", open_end + 1)
+  local grid_s, grid_e = text:find("<w:tblGrid%s*>.-</w:tblGrid>", open_end + 1)
+  if grid_s and grid_s > first_row() then grid_s = nil end
   if not grid_s then
     raw.text = text
     return raw
@@ -261,7 +268,8 @@ local function fit_raw(raw, width)
     edge = next_edge
     return a .. string.format("%d", col) .. b
   end)
-  -- The dxa w:tcW of the table's own cells, at depth 1, up to its end.
+  -- The twip w:tcW of the table's own cells, at depth 1, up to its end. A
+  -- w:tcW with no w:type is in twips.
   local rest = text:sub(grid_e + 1)
   local depth, done = 1, false
   rest = rest:gsub("<[^>]*>", function(tag)
@@ -271,7 +279,8 @@ local function fit_raw(raw, width)
     elseif tag == "</w:tbl>" then
       depth = depth - 1
       if depth == 0 then done = true end
-    elseif depth == 1 and tag:match("^<w:tcW[%s/>]") and tag:match('w:type="dxa"') then
+    elseif depth == 1 and tag:match("^<w:tcW[%s/>]")
+      and (tag:match('w:type="dxa"') or not tag:match("w:type=")) then
       return (tag:gsub('w:w="(%d+)"', function(w)
         return string.format('w:w="%d"', math.floor(tonumber(w) * ratio + 0.5))
       end))

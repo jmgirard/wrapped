@@ -30,8 +30,10 @@ citations in those paragraphs. It also counts framed paragraphs that are
 in no frame. When the docx holds a floating table, a wrapped table float's
 box, it lists each one: its side, width, text distances, and anchors, the
 block before it, the parts of its cell (bookmark, caption, images and
-whether each fills the box, the inner table's width and the width of each
-image in it), and the blocks,
+whether each fills the box, the inner table's width, the width of each
+image in it, and for an inner table with a twip width, as wrapped-docx.lua
+gives a raw table, its grid, its cells' twip widths, and any w:tblPr child
+after its width that the schema puts before it), and the blocks,
 links, and citations after it up to the clearing break, and counts the
 floating tables that it did not list. For a fixture in DOCX_UNFRAMED_ALT, it also lists the alt text
 of each image outside a frame, and for a fixture in DOCX_STYLES the last
@@ -1613,8 +1615,9 @@ def docx_tables(body):
     ImageCaption style, "image" with whether it fills the box for a paragraph
     that holds one, "p" for another paragraph, and "table" with its
     w:tblW, the w:tblPr children after its w:tblW that the schema puts
-    before it, its w:gridCol widths, the dxa w:tcW widths of its own cells,
-    and the width in twips of each image in it for a table), the
+    before it, and, when its w:tblW is in twips, its w:gridCol widths and
+    the twip w:tcW widths of its own cells (a w:tcW with no w:type is in
+    twips), and the width in twips of each image in it for a table), the
     kind of the block before it ("keep" when it keeps with the next), and
     the kind of
     each block after it up to the clearing break, with the anchors of the
@@ -1650,9 +1653,10 @@ def docx_tables(body):
                     elif part.tag == f"{W}tbl":
                         inner = part.find(f"{W}tblPr/{W}tblW")
                         widths = [str(int(e.get("cx")) // EMU_PER_TWIP) for e in part.iter(f"{WP}extent")]
-                        grid = [g.get(f"{W}w") for g in part.findall(f"{W}tblGrid/{W}gridCol")]
+                        grid = [g.get(f"{W}w") for g in part.findall(f"{W}tblGrid/{W}gridCol")
+                                if inner.get(f"{W}type") == "dxa"]
                         tcw = [c.get(f"{W}w") for c in part.findall(f"{W}tr/{W}tc/{W}tcPr/{W}tcW")
-                               if c.get(f"{W}type") == "dxa"]
+                               if c.get(f"{W}type") in ("dxa", None)]
                         names = [c.tag.replace(W, "") for c in part.find(f"{W}tblPr")]
                         late = [n for n in names[names.index("tblW") + 1:] if n in TBLW_BEFORE]
                         parts.append(f"table {inner.get(f'{W}type')} {inner.get(f'{W}w')}"

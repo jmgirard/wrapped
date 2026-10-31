@@ -1,7 +1,8 @@
 -- wrapped: wrap body text around figures marked .wrap-left or .wrap-right.
 -- A #tbl- table float wraps the same way in all four formats and keeps its
--- normal layout when its table is raw LaTeX in LaTeX (D-021, D-022, D-024,
--- D-025); "figure" below covers it there.
+-- normal layout when its table is raw LaTeX in LaTeX (D-021, D-022, D-024);
+-- a raw Word XML table wraps in Word (D-025). "Figure" below covers a table
+-- float there.
 --
 -- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output,
 -- revealjs included, floats each wrapped figure inside a .wrap-group div

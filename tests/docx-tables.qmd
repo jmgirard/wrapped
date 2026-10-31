@@ -203,10 +203,11 @@ tempor incididunt ut labore et dolore magna aliqua.
 ::: {#tbl-raw-empty-pr .wrap-right}
 
 ```{=openxml}
-<w:tbl><w:tblPr/><w:tblGrid><w:gridCol w:w="1000"/><w:gridCol w:w="2000"/></w:tblGrid><w:tr><w:tc><w:p><w:r><w:t>A</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>B</w:t></w:r></w:p></w:tc></w:tr></w:tbl>
+<w:tbl><w:tblPr/><w:tblGrid><w:gridCol w:w="1000"/><w:gridCol w:w="2000"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="1000"/></w:tcPr><w:p><w:r><w:t>A</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="2000"/></w:tcPr><w:p><w:r><w:t>B</w:t></w:r></w:p></w:tc></w:tr></w:tbl>
 ```
 
-A raw Word table with a self-closing `w:tblPr`.
+A raw Word table with a self-closing `w:tblPr` and cell widths with no
+`w:type`, which Word reads as twips.
 
 :::
 
@@ -229,6 +230,23 @@ A raw Word table whose `w:bidiVisual` has a closing tag and no attributes.
 The paragraph beside the raw table with a closing tag. Lorem ipsum dolor
 sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
 labore et dolore magna aliqua.
+
+## A raw Word table with a bookmark and spaced tags
+
+::: {#tbl-raw-spaced .wrap-right}
+
+```{=openxml}
+<w:tbl><w:bookmarkStart w:id="9901" w:name="raw-spaced"/><w:bookmarkEnd w:id="9901"/><w:tblPr ><w:tblLook w:val="0000"/></w:tblPr><w:tblGrid ><w:gridCol w:w="1000"/><w:gridCol w:w="2000"/></w:tblGrid><w:tr><w:tc><w:p><w:r><w:t>A</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>B</w:t></w:r></w:p></w:tc></w:tr></w:tbl>
+```
+
+A raw Word table with a bookmark before its `w:tblPr`, and a space before
+the `>` of its `w:tblPr` and `w:tblGrid` tags.
+
+:::
+
+The paragraph beside the raw table with a bookmark and spaced tags. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
 
 ## A table at the end of a block quote
 
