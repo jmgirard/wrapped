@@ -122,8 +122,6 @@ These places keep the normal layout only in the formats named. The render
 prints the same warning there, and the figure wraps in the other formats.
 
 - A block quote: in PDF through LaTeX.
-- A table float whose table is raw Word XML, as gt and flextable write
-  one: in Word, where the warning names gt and flextable.
 - A table float that holds raw LaTeX, as a table from gt, kableExtra,
   tinytable, or `knitr::kable(format = "latex")` does: in PDF through
   LaTeX, where the warning names gt, kableExtra, and tinytable.

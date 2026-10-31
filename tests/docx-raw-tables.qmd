@@ -3,6 +3,7 @@ title: "wrapped fixture: gt and flextable tables in Word"
 filters:
   - wrapped
 format: docx
+echo: false
 ---
 
 This fixture is not in `tests/verify.py`, because the CI setup installs
