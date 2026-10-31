@@ -148,6 +148,7 @@ user's act; the repeated four-format wording on pages other than the home page a
 - 2026-10-31: review pass 1 merged the follow-up row "Strip code cell options from cell divs" and the plan's "Check code cell options in Jupyter" into "Check and tidy code cell options" (roadmap line cap); the Scope Out item still names the old Jupyter title.
 - 2026-10-31: amendment routed: AC1 — diff-bug #3: AC1 asks the EPUB snapshot to show the default width and gap, which an EPUB snapshot never records, so AC1 as written cannot be met; the fixture now has five unknown keys beside `wrap-gap`, not one.
 - 2026-10-31: status in-progress for the AC1 amendment.
+- 2026-10-31: re-audit: AC1 (full) — 4 findings: the no-effect claim cannot fail while the fixture holds only unknown keys (add a known `width: 30%`); "sorted" names no order (say byte order); the snapshot sorts warnings, so name the key-order check as the order's evidence; the format domain rests on the format-independent loop, no change.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

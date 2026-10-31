@@ -8,7 +8,7 @@
 # breakpoint
 576px
 # figures
-fig-unknown: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+fig-unknown: wrap-right style=--wrap-gap: 1em; --wrap-width: 30%
 # images
 plot.png: wrap=- style=- width=-
 # groups
