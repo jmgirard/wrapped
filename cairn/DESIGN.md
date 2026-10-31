@@ -15,23 +15,23 @@ install it with `quarto add jmgirard/wrapped`.
 
 - Wrap text to the left or right of one captioned figure. The figure keeps
   its number, caption, and `@fig-` links. A `#tbl-` table float wraps the
-  same way in all four formats, except a raw Word XML table in Word and a
-  raw LaTeX table in LaTeX (D-021, D-022, D-023, D-024, corrected M038,
-  M039, M040).
+  same way in all four formats, except a raw LaTeX table in LaTeX (D-021,
+  D-022, D-024, D-025, corrected M038, M039, M040, M041).
 - Wrap text around an uncaptioned image.
 - Use one width value for all formats.
 - In a format or context that cannot wrap, keep a normal figure and warn
   once: once for each render in a format, once for each figure in a
   context, and once for a code cell that makes more than one figure, in a
-  context or not (corrected M003, M014, M018). In Word and LaTeX, also
-  once for each wrapped table float whose table is raw Word XML or raw
-  LaTeX (D-023, D-024, corrected M038, M039, M040).
+  context or not (corrected M003, M014, M018). In LaTeX, also once for
+  each wrapped table float that holds raw LaTeX (D-024, corrected M038,
+  M039, M040, M041).
 
 **Non-goals for version 1.**
 
-- Raw tables from R packages: a raw Word XML table (gt, flextable) in
-  Word and a raw LaTeX table (gt, kableExtra, tinytable) in LaTeX keep
-  their normal layout (D-023, D-024). Table floats that Pandoc writes wrap
+- Raw LaTeX tables from R packages: a raw LaTeX table (gt, kableExtra,
+  tinytable) in LaTeX keeps its normal layout (D-024). A raw Word XML
+  table (gt, flextable) wraps in Word (D-025, corrected M041). Table
+  floats that Pandoc writes wrap
   in all four formats; in LaTeX the filter rewrites Quarto's `longtable`
   as a `tabular`, since `wraptable` cannot hold a `longtable` (corrected
   M039, M040).
@@ -247,8 +247,8 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
 4. In a top-down pass, it carries a code cell's wrap class to that cell's
    floats and moves an image's class to its float. A figure float and a
    table float wrap (D-021). A table float that holds raw LaTeX keeps its
-   normal layout in LaTeX with a warning (`raw_latex_table`, D-024), as
-   one that holds raw openxml does in Word (D-023). A LaTeX table float
+   normal layout in LaTeX with a warning (`raw_latex_table`, D-024). One
+   that holds raw openxml wraps in Word (D-025, corrected M041). A LaTeX table float
    that wraps takes `fig-env` `wrappedtable` and `tbl-pos` options, and
    `latex_tabular` rewrites each Pandoc table in it as a `tabular`: it
    gives the columns shares of the box (a `tbl-colwidths` list from the
@@ -392,9 +392,13 @@ image outside the inner table fills the box. An image in an inner-table
 cell takes at most the cell's share of the box (the shares `fit_table`
 gives, summed over a column span; a row span from an earlier row is not
 counted), less the Table style's 108-twip cell
-margins on each side, and keeps a smaller width of its own. A table float
-whose table is raw openxml (gt, flextable) keeps its normal layout with a
-warning, since the filter cannot fit its own column widths (D-023). The
+margins on each side, and keeps a smaller width of its own. In a raw
+openxml table (gt, flextable), `fit_raw` sets the first table's `w:tblW`
+to the box width in twips, adding a `w:tblPr` where there is none, and
+scales its `w:tblGrid` to the box in its own proportions, and then its
+own cells' twip `w:tcW` widths by the same ratio; a gt table or an
+autofit flextable has no grid, so Word sizes its columns (D-025,
+corrected M041). The
 cell gets a closing paragraph unless its last block, past empty divs, is
 one Pandoc writes as a paragraph (a non-empty paragraph, a heading, a
 code block, or a rule). Word joins two tables with
@@ -424,9 +428,11 @@ snapshot difference. The mechanism for each other format is in
   `docs/formats/typst.qmd`, Limits, states this limit (M038).
 - Word: a wrapped table float keeps to the width of its box. In a
   LibreOffice PDF, a wide table's column text breaks inside words (the
-  `tbl-wide` case of `tests/tables.qmd`), and a box taller than the rest
+  `tbl-wide` case of `tests/tables.qmd`), as it does in Word 16.114 for a
+  wide gt or flextable table (an 8-column probe, M041 review), and a box taller than the rest
   of the page breaks across pages (`tbl-image` in `tests/docx-tables.qmd`,
-  corrected M039 review). The site's `docs/formats/word.qmd`, Tables,
+  corrected M039 review), in Word 16.114 too (a scratch render of
+  `tests/docx-raw-tables.qmd` with its code shown, corrected M041). The site's `docs/formats/word.qmd`, Tables,
   states this limit (M039).
 - PDF through Typst: a wrapped figure whose group does not fit at the bottom
   of a page moves to the next page with the text beside it, and the rest of

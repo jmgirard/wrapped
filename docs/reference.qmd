@@ -14,8 +14,8 @@ class goes in `#| classes:`. A code cell figure's width goes in
 cell table takes the document defaults. "All four formats" means HTML, PDF through LaTeX, PDF through Typst, and
 Word. HTML includes revealjs slides and dashboards. A table float wraps
 in all four formats, except a table float that holds raw LaTeX in PDF
-through LaTeX, or a raw Word XML table in Word, as R packages such as gt
-write them (see [Get started](get-started.qmd#wrap-a-table)).
+through LaTeX, as R packages such as gt write it (see
+[Get started](get-started.qmd#wrap-a-table)).
 
 | Name | Kind | Values | Default | Works in |
 |---|---|---|---|---|

@@ -1,0 +1,58 @@
+---
+title: "wrapped fixture: gt and flextable tables in Word"
+filters:
+  - wrapped
+format: docx
+echo: false
+---
+
+This fixture is not in `tests/verify.py`, because the CI setup installs
+knitr and rmarkdown only. It needs the R packages gt and flextable. Render
+it by hand from `tests/` with `quarto render docx-raw-tables.qmd`, then
+make a PDF in LibreOffice (`soffice --headless --convert-to pdf`) and in
+Word (`word-pdf.applescript`) to see each table beside its paragraph.
+
+```{r}
+#| label: tbl-gt
+#| tbl-cap: A gt table.
+#| classes: wrap-right
+gt::gt(head(mtcars[, 1:4], 3))
+```
+
+The paragraph beside the gt table. Lorem ipsum dolor sit amet, consectetur
+adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+pariatur.
+
+```{r}
+#| label: tbl-flex
+#| tbl-cap: A flextable with a wider first column and a merged header.
+#| classes: .wrap-left
+ft <- flextable::flextable(head(mtcars[, 1:4], 3))
+ft <- flextable::add_header_row(ft, values = c("a", "b"), colwidths = c(2, 2))
+flextable::width(ft, j = 1, width = 2)
+```
+
+The paragraph beside the flextable. Lorem ipsum dolor sit amet, consectetur
+adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+pariatur.
+
+```{r}
+#| label: tbl-flex-auto
+#| tbl-cap: An autofit flextable.
+#| classes: .wrap-right
+ft <- flextable::flextable(head(mtcars[, 1:4], 3))
+flextable::set_table_properties(ft, layout = "autofit", width = 1)
+```
+
+The paragraph beside the autofit flextable. Lorem ipsum dolor sit amet,
+consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+nulla pariatur.

@@ -1,7 +1,8 @@
 -- wrapped: wrap body text around figures marked .wrap-left or .wrap-right.
 -- A #tbl- table float wraps the same way in all four formats and keeps its
--- normal layout when its table is raw Word XML in Word or raw LaTeX in
--- LaTeX (D-021, D-022, D-023, D-024); "figure" below covers it there.
+-- normal layout when its table is raw LaTeX in LaTeX (D-021, D-022, D-024);
+-- a raw Word XML table wraps in Word (D-025). "Figure" below covers a table
+-- float there.
 --
 -- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output,
 -- revealjs included, floats each wrapped figure inside a .wrap-group div
@@ -1726,20 +1727,6 @@ local function drop_caption_wrap(float)
   return class
 end
 
--- True when a float's content holds a raw openxml table, as gt and
--- flextable write a table for Word. A float's content can be one block,
--- which a walk from that block does not visit.
-local function raw_docx_table(content)
-  if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
-  local found = false
-  content:walk({
-    RawBlock = function(raw)
-      if raw.format == "openxml" and raw.text:match("<w:tbl[%s>]") then found = true end
-    end,
-  })
-  return found
-end
-
 -- True when a float's content holds any raw LaTeX block, as a table from
 -- gt, kableExtra, tinytable, or knitr::kable(format = "latex") does. The
 -- filter cannot rewrite such a table for wraptable (D-024).
@@ -1836,21 +1823,13 @@ local function float_target(float)
   -- In LaTeX, a table float that holds any raw LaTeX block, as a table
   -- from gt, kableExtra, or tinytable does, keeps its normal layout: the
   -- filter cannot rewrite such a table as a tabular for wraptable (D-024).
-  -- It warns before the next-block rule, as Word does.
+  -- It warns before the next-block rule. In Word, a raw openxml table, as
+  -- gt and flextable write it, wraps: wrapped-docx.lua fits it to the box
+  -- (D-025).
   if is_table and is_latex and not context and raw_latex_table(float.content) then
     keep_normal(float)
     quarto.log.warning(string.format(
       "wrapped: the table #%s holds raw LaTeX, as a table from gt, kableExtra, or tinytable does, so it does not wrap in LaTeX.",
-      float.identifier))
-    return float
-  end
-  -- In Word, a table that is raw openxml, as gt and flextable write it,
-  -- keeps its normal layout: the filter cannot fit its columns to the box
-  -- (D-023). It warns before the next-block rule, as LaTeX does.
-  if is_table and is_docx and not context and raw_docx_table(float.content) then
-    keep_normal(float)
-    quarto.log.warning(string.format(
-      "wrapped: the table #%s is raw Word XML, as from gt or flextable, so it does not wrap in Word.",
       float.identifier))
     return float
   end

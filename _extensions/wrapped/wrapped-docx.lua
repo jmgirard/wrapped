@@ -10,7 +10,8 @@
 -- image, and a framed image takes its fig-alt text as its alt text (a
 -- float's fig-alt goes on the frame's first image only, unless that image
 -- has its own fig-alt). A table float's one-cell table becomes a floating
--- table in place of a frame (floating_table). A
+-- table in place of a frame (floating_table), and a raw openxml table in
+-- it, as gt and flextable write one, is fitted to the box (fit_raw). A
 -- clearing break after the group's last paragraph ends the wrap
 -- (the stop rule). Other formats are left as they are.
 
@@ -185,8 +186,116 @@ local function fit_table(tbl)
   return tbl
 end
 
+-- The w:tblPr children that come before w:tblW, in schema order.
+local BEFORE_TBLW = {
+  "tblStyle", "tblpPr", "tblOverlap", "bidiVisual", "tblStyleRowBandSize",
+  "tblStyleColBandSize",
+}
+
+-- The end of the element `name` (self-closing or with a closing tag, with
+-- or without attributes) in `pr`, or nil when `pr` has none.
+local function element_end(pr, name)
+  local s, e, after = pr:find("<w:" .. name .. "([%s/>])")
+  if not s then return nil end
+  if after ~= ">" then e = pr:find(">", e, true) end
+  if pr:sub(e - 1, e) == "/>" then return e end
+  local _, close = pr:find("</w:" .. name .. ">", e + 1, true)
+  return close
+end
+
+-- Fits a raw openxml table, as gt and flextable write one (D-025), to the
+-- box: its w:tblW becomes the box width, in schema order, in a w:tblPr
+-- added when it has none. A w:tblGrid, as flextable's fixed layout writes,
+-- scales to the box in its own proportions, each column the difference of
+-- its rounded edges, so the sum is the box width; each dxa w:tcW of the
+-- table's own cells then scales by the same ratio. A table with no grid,
+-- as gt writes, keeps its w:tcW widths. Only the block's first table is
+-- fitted, and a table nested in its cells keeps its widths.
+local function fit_raw(raw, width)
+  if raw.format ~= "openxml" then return nil end
+  local text = raw.text
+  local start, open_end = text:find("<w:tbl>", 1, true)
+  local s2, e2 = text:find("<w:tbl%s[^>]*>")
+  if s2 and (not start or s2 < start) then start, open_end = s2, e2 end
+  if not start then return nil end
+  local tblw = string.format('<w:tblW w:type="dxa" w:w="%d"/>', width)
+  -- The table's own w:tblPr and w:tblGrid come before its first row, the
+  -- w:tblPr after any range markup, such as a bookmark.
+  local function first_row()
+    return text:find("<w:tr[%s>]", open_end + 1) or #text + 1
+  end
+  local empty_s, empty_e = text:find("<w:tblPr%s*/>", open_end + 1)
+  if empty_s and empty_s < first_row() then
+    text = text:sub(1, empty_s - 1) .. "<w:tblPr></w:tblPr>" .. text:sub(empty_e + 1)
+  end
+  local pr_s, pr_e = text:find("<w:tblPr%s*>", open_end + 1)
+  if pr_s and pr_s < first_row() then
+    local close_s = text:find("</w:tblPr>", pr_e + 1, true)
+    local pr = text:sub(pr_e + 1, close_s - 1)
+    pr = pr:gsub("<w:tblW[^>]*/>", ""):gsub("<w:tblW[^>]*>.-</w:tblW>", "")
+    local at = 0
+    for _, name in ipairs(BEFORE_TBLW) do
+      local e = element_end(pr, name)
+      if e and e > at then at = e end
+    end
+    pr = pr:sub(1, at) .. tblw .. pr:sub(at + 1)
+    text = text:sub(1, pr_e) .. pr .. text:sub(close_s)
+  else
+    -- A new w:tblPr goes after any range markup, before the grid or the
+    -- first row.
+    local at = math.min(text:find("<w:tblGrid[%s>]", open_end + 1) or #text + 1, first_row())
+    text = text:sub(1, at - 1) .. "<w:tblPr>" .. tblw .. "</w:tblPr>" .. text:sub(at)
+  end
+  local grid_s, grid_e = text:find("<w:tblGrid%s*>.-</w:tblGrid>", open_end + 1)
+  if grid_s and grid_s > first_row() then grid_s = nil end
+  if not grid_s then
+    raw.text = text
+    return raw
+  end
+  local grid = text:sub(grid_s, grid_e)
+  local sum = 0
+  for w in grid:gmatch('<w:gridCol[^>]-w:w="(%d+)"') do sum = sum + tonumber(w) end
+  if sum == 0 then
+    raw.text = text
+    return raw
+  end
+  local ratio = width / sum
+  local cum, edge = 0, 0
+  grid = grid:gsub('(<w:gridCol[^>]-w:w=")(%d+)(")', function(a, w, b)
+    cum = cum + tonumber(w)
+    local next_edge = math.floor(cum * ratio + 0.5)
+    local col = next_edge - edge
+    edge = next_edge
+    return a .. string.format("%d", col) .. b
+  end)
+  -- The twip w:tcW of the table's own cells, at depth 1, up to its end. A
+  -- w:tcW with no w:type is in twips.
+  local rest = text:sub(grid_e + 1)
+  local depth, done = 1, false
+  rest = rest:gsub("<[^>]*>", function(tag)
+    if done then return nil end
+    if tag:match("^<w:tbl[%s>]") then
+      depth = depth + 1
+    elseif tag == "</w:tbl>" then
+      depth = depth - 1
+      if depth == 0 then done = true end
+    elseif depth == 1 and tag:match("^<w:tcW[%s/>]")
+      and (tag:match('w:type="dxa"') or not tag:match("w:type=")) then
+      return (tag:gsub('w:w="(%d+)"', function(w)
+        return string.format('w:w="%d"', math.floor(tonumber(w) * ratio + 0.5))
+      end))
+    end
+    return nil
+  end)
+  raw.text = text:sub(1, grid_s - 1) .. grid .. rest
+  return raw
+end
+
 local function floating_table(div, frame)
-  div = div:walk({ Table = fit_table })
+  div = div:walk({
+    Table = fit_table,
+    RawBlock = function(raw) return fit_raw(raw, tonumber(frame.width)) end,
+  })
   local left = frame.side == "left" and 0 or frame.gap
   local right = frame.side == "left" and frame.gap or 0
   local open = string.format(

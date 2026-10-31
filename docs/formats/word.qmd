@@ -83,13 +83,18 @@ margins (half the cell in a very narrow one), unless its own `width` is
 smaller. A percent `width` is a percent of the text width. The wrap stops
 where a figure's wrap stops.
 
-A table that gt or flextable makes is raw Word XML, which the extension
-cannot fit to a box. A wrapped table float that holds one keeps its
-normal layout in Word, and the render prints a warning.
+A table that gt or flextable makes is raw Word XML. The filter sets it to
+the full width of the box too. A flextable with its default fixed layout
+keeps its columns' proportions, and a gt table or an autofit flextable
+lets Word size its columns at the width of the box. An image in a flextable cell
+does not show in a Quarto Word document, with or without the extension.
 
 In LibreOffice 26.8 on macOS, a table wider than its box narrows its
-columns to fit the box, and the column text then breaks inside words. A
-box taller than the rest of the page breaks across pages there.
+columns to fit the box, and the column text then breaks inside words.
+Microsoft Word 16.114 on macOS does the same for a gt or flextable table.
+In
+LibreOffice 26.8 and in Microsoft Word 16.114 on macOS, a box taller than
+the rest of the page breaks across pages.
 
 ## Apps that show frames
 
