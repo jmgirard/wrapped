@@ -1,0 +1,9 @@
+# warnings
+# typ
+figure: tbl-cell-opts image-width=no
+figure: tbl-cell-cap image-width=no
+figure: tbl-cell-none image-width=no
+# wraps
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 3em, 30%, 45%, 40%)), column-gutter: 3em | tbl-cell-opts no-alt | p | cites=0
+align: top + wrapped-side(left), columns: wrapped-columns(left, wrapped-width(wrapped-size, 2em, 35%, 45%, 40%)), column-gutter: 2em | tbl-cell-cap no-alt | p | cites=0
+align: top + wrapped-side(right), columns: wrapped-columns(right, wrapped-width(wrapped-size, 15pt, 45%, 45%, 40%)), column-gutter: 15pt | tbl-cell-none no-alt | p | cites=0

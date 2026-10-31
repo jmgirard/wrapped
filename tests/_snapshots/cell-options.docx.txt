@@ -1,0 +1,7 @@
+# warnings
+# docx
+# frames
+# floating tables
+table right w=2808 left=720 right=0 anchor=margin/text | before=p keep | tbl-cell-opts, caption, table pct 5000, p | p, clear | links=- cites=0
+table left w=3276 left=0 right=480 anchor=margin/text | before=p keep | tbl-cell-cap, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=4212 left=300 right=0 anchor=margin/text | before=p keep | tbl-cell-none, caption, table pct 5000, p | p, clear | links=- cites=0

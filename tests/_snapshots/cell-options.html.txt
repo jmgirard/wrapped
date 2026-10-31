@@ -1,0 +1,12 @@
+# warnings
+# breakpoint
+576px
+# figures
+tbl-cell-opts: wrap-right style=--wrap-gap: 3em; --wrap-width: 30%
+tbl-cell-cap: wrap-left style=--wrap-gap: 2em; --wrap-width: 35%
+tbl-cell-none: wrap-right style=--wrap-gap: 20px; --wrap-width: 45%
+# images
+# groups
+cell, p
+cell, p
+cell, p

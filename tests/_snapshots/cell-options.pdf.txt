@@ -1,0 +1,8 @@
+# warnings
+# tex
+wrappedtable: tbl-cell-opts [side=right,width=0.3\linewidth,gap=3em] caption=yes tabular=1 longtable=0 columns=0.5556 0.4444
+wrappedstop
+wrappedtable: tbl-cell-cap [side=left,width=0.35\linewidth,gap=2em] caption=yes tabular=1 longtable=0 columns=0.5556 0.4444
+wrappedstop
+wrappedtable: tbl-cell-none [side=right,width=0.45\linewidth,gap=15pt] caption=yes tabular=1 longtable=0 columns=0.5556 0.4444
+wrappedstop

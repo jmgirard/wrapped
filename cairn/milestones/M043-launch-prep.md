@@ -98,7 +98,7 @@ user's act; the repeated four-format wording on pages other than the home page a
 - [x] T2: In `read_meta` (`wrapped.lua`, after `local m = meta.wrapped`), warn once for each unknown key in
       sorted order, naming the three keys, with the `gap` hint for `wrap-gap`. Add the snapshots to
       `tests/verify.py`.
-- [ ] T3: Add a table-cell fixture (for example `tests/cell-options.qmd`) with `wrapped:` width and gap and
+- [x] T3: Add a table-cell fixture (for example `tests/cell-options.qmd`) with `wrapped:` width and gap and
       knitr table cells: class in `#| classes:` with `#| width:` and `#| wrap-gap:`, class in a `#| tbl-cap:`
       block with the same options, and one with no options. Snapshot the four formats and read that the
       summaries carry each width and gap. Extend a summary where it does not show one.
@@ -138,6 +138,7 @@ user's act; the repeated four-format wording on pages other than the home page a
 - 2026-10-31: changelog: none (profile changelog slot is "none"; release notes come from commit subjects).
 - 2026-10-31: implement started on branch m043-launch-prep, cut from main at cae0f85.
 - 2026-10-31: T1-T2 done: `tests/meta-unknown.qmd` (keys `wrap-gap` and `Width`) printed no key warning before the change; `read_meta` now warns once per unknown key in sorted order with the `gap` hint for `wrap-gap`; HTML and EPUB snapshots show both warnings and the 40% and 1em defaults.
+- 2026-10-31: T3 done: `tests/cell-options.qmd` (document `wrapped:` 45% and 20px) snapshots show the classes cell at 30%/3em, the caption-block cell at 35%/2em, and the no-option cell at 45%/20px in HTML, LaTeX (`wrappedtable` options), Typst (`wrapped-width` and `column-gutter`), and Word (box width and text distance); the existing summaries already carry each width and gap, so none was extended.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

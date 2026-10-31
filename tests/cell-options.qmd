@@ -1,0 +1,62 @@
+---
+title: "wrapped fixture: width and gap options on code cells"
+filters:
+  - wrapped
+wrapped:
+  width: 45%
+  gap: 20px
+format:
+  html: default
+  pdf:
+    keep-tex: true
+  typst:
+    keep-typ: true
+    fig-format: png
+  docx: default
+---
+
+A knitr cell's `#| width:` and `#| wrap-gap:` reach its table float, so the
+table takes them over the document's `wrapped:` width and gap. A cell with
+neither takes the document's.
+
+## A table cell with its class in classes
+
+```{r}
+#| label: tbl-cell-opts
+#| tbl-cap: "A table cell with width and wrap-gap."
+#| classes: wrap-right
+#| width: 30%
+#| wrap-gap: 3em
+knitr::kable(head(cars, 3))
+```
+
+The paragraph after the table cell with its class in classes. Lorem ipsum
+dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## A table cell with its class in its caption block
+
+```{r}
+#| label: tbl-cell-cap
+#| tbl-cap: "A table cell with its class in the caption. {.wrap-left}"
+#| width: 35%
+#| wrap-gap: 2em
+knitr::kable(head(cars, 3))
+```
+
+The paragraph after the table cell with its class in its caption block.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+
+## A table cell with no options
+
+```{r}
+#| label: tbl-cell-none
+#| tbl-cap: "A table cell with no width or gap."
+#| classes: wrap-right
+knitr::kable(head(cars, 3))
+```
+
+The paragraph after the table cell with no options. Lorem ipsum dolor sit
+amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua.
