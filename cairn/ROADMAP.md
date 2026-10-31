@@ -1,7 +1,7 @@
 # Roadmap
 
 _The only authority on milestone status. Grouped by status, not ID._
-_Last hygiene check: 2026-10-31 (M042 dropped at its re-plan: M039 row pruned; the Word box-keep row parked with its started token removed)_
+_Last hygiene check: 2026-10-31 (status audit: validate green, no open PRs or issues, no linked-item news; callout row corrected after its plan gate)_
 
 ## Milestones
 
