@@ -8,6 +8,7 @@ format:
   typst:
     keep-typ: true
     fig-format: png
+  docx: default
 ---
 
 ::: {#tbl-meta-column .wrap-right}

@@ -322,3 +322,16 @@ too. A LibreOffice PDF and the user's look in Word check the layout.
 **Consequences:** the non-goal now covers LaTeX only, and the LaTeX
 warning names Word among the formats where a table wraps. The rest of
 D-021 stands.
+
+### D-023: Raw Word XML table floats keep their normal layout in Word (narrows D-022)
+
+2026-10-31, `/milestone-review` M039. **Context:** gt and flextable write a
+Word table as raw openxml. The filter cannot fit such a table's own column
+widths to the box, and its floating cell lost the paragraph that must end
+a cell. That defect would have been the milestone's third review return.
+**Decision:** at the stop, the user chose to narrow the milestone. In Word,
+a table float whose table is raw openxml keeps its normal layout, and the
+render prints a warning that names gt and flextable. **Consequences:**
+D-022 holds for tables that Pandoc writes, such as pipe tables and
+`knitr::kable` output. Wrapping a raw table is the candidate "Wrap gt and
+flextable tables in Word".

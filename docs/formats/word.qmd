@@ -52,25 +52,44 @@ The `width` and `wrap-gap` values change to Word lengths:
   warning of its own.
 
 The text width is the page width less the left and right margins and the
-gutter. A reference doc with more than one column keeps normal figures,
-and the render prints one warning.
+gutter. A reference doc with more than one column keeps normal figures
+and table floats, and the render prints one warning.
 
 ## Images and frames
 
 The image takes the width of the frame and keeps its shape. The extension
-does not use an image's `height` in a wrapped figure in Word, and the
-render prints a warning. The `wrap-lines` attribute does nothing in Word.
+does not use an image's `height` in a wrapped figure or table in Word, and
+the render prints a warning. The `wrap-lines` attribute does nothing in Word.
 
 A list in a figure div goes in the frame with the image and the caption.
 Word cannot put a code block, a table, a heading, a horizontal rule, or
 raw content in a frame. A figure div that holds one keeps its normal
-layout, and the render prints a warning. For the same reason, a wrapped
-[table float](../get-started.qmd#wrap-a-table) keeps its normal layout,
-and the render prints a warning.
+layout, and the render prints a warning. A table float uses a floating
+table in place of a frame (see [Tables](#tables)).
 
 A frame does not break across pages. If a frame does not fit at the bottom
 of a page, Word moves it and the paragraph after it to the next page. The
 rest of the page before it stays blank.
+
+## Tables
+
+A wrapped [table float](../get-started.qmd#wrap-a-table) goes in a
+floating table, the box that Word wraps text around for a table. The box
+has one cell, which holds the caption, the table, and any other content of
+the float. It takes its width and gap as a figure's frame does. The filter
+sets the table to the full width of the box. An image outside the table
+fills the box. An image in a table cell fills its cell, less the cell
+margins (half the cell in a very narrow one), unless its own `width` is
+smaller. A percent `width` is a percent of the text width. The wrap stops
+where a figure's wrap stops.
+
+A table that gt or flextable makes is raw Word XML, which the extension
+cannot fit to a box. A wrapped table float that holds one keeps its
+normal layout in Word, and the render prints a warning.
+
+In LibreOffice 26.8 on macOS, a table wider than its box narrows its
+columns to fit the box, and the column text then breaks inside words. A
+box taller than the rest of the page breaks across pages there.
 
 ## Apps that show frames
 

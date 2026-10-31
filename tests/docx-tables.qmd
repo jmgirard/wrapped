@@ -1,0 +1,190 @@
+---
+title: "wrapped fixture: Word table floats after a table"
+filters:
+  - wrapped
+format: docx
+---
+
+Word joins two tables with nothing between them, so the first two wrapped
+table floats below each follow a block that Word writes as a table. The
+third holds an image above its table, and the fourth holds images in its
+table's cells. The cases after them end with a div, hold a small image
+and uneven columns, hold a raw Word table, end with a block quote, or hold
+images in a narrow box, one over both columns.
+
+| A | B |
+|---|---|
+| 1 | 2 |
+
+::: {#tbl-after-table .wrap-right}
+
+| Condition | Mean |
+|-----------|------|
+| A         | 3.1  |
+
+: A wrapped table right after a plain table.
+
+:::
+
+The paragraph beside the table after a plain table. Lorem ipsum dolor sit
+amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua. See @tbl-after-table.
+
+![A figure float with no wrap class.](plot.png){#fig-before-table width="40%"}
+
+::: {#tbl-after-figure .wrap-left}
+
+| X | Y |
+|---|---|
+| 1 | 2 |
+
+: A wrapped table right after a figure float.
+
+:::
+
+The paragraph beside the table after a figure float. Lorem ipsum dolor sit
+amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua.
+
+## An image in a table float
+
+::: {#tbl-image .wrap-right}
+
+![](plot.png)
+
+| P | Q |
+|---|---|
+| 1 | 2 |
+
+: A table float that holds an image.
+
+:::
+
+The paragraph beside the table float with an image. Lorem ipsum dolor sit
+amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua.
+
+## Images in a table's cells
+
+::: {#tbl-cell-images .wrap-left}
+
+| Before | After |
+|--------|-------|
+| ![](plot.png){height=1in} | ![](plot.png) |
+
+: A table float with an image in each cell.
+
+:::
+
+The paragraph beside the table float with images in its cells. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## A table in a div at the end of the float
+
+::: {#tbl-nested .wrap-right}
+
+A table float whose table sits in a div of its own.
+
+::: {.inner}
+
+| A | B |
+|---|---|
+| 1 | 2 |
+
+:::
+
+:::
+
+The paragraph beside the table float whose table sits in a div. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## A table that ends with an empty div
+
+::: {#tbl-empty-div .wrap-left}
+
+| A | B |
+|---|---|
+| 1 | 2 |
+
+: A table float that ends with an empty div.
+
+::: {.note}
+:::
+
+:::
+
+The paragraph beside the table float that ends with an empty div. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## Small images and uneven columns in a table's cells
+
+::: {#tbl-uneven .wrap-right width="40%"}
+
++-----------------------------+--------------------------------------------------------------+
+| Icon                        | A wide column                                                |
++=============================+==============================================================+
+| ![](plot.png){width=12pt}   | ![](plot.png)                                                |
++-----------------------------+--------------------------------------------------------------+
+
+: A table float with an icon and uneven columns.
+
+:::
+
+The paragraph beside the table float with uneven columns. Lorem ipsum
+dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## A raw Word table
+
+::: {#tbl-raw .wrap-right}
+
+```{=openxml}
+<w:tbl><w:tblPr><w:tblW w:w="0" w:type="auto"/></w:tblPr><w:tblGrid><w:gridCol w:w="2000"/><w:gridCol w:w="2000"/></w:tblGrid><w:tr><w:tc><w:p><w:r><w:t>A</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>B</w:t></w:r></w:p></w:tc></w:tr></w:tbl>
+```
+
+A raw Word table, as gt or flextable write one.
+
+:::
+
+The paragraph after the raw table, which keeps its normal layout.
+
+## A table at the end of a block quote
+
+::: {#tbl-quote .wrap-left}
+
+| A | B |
+|---|---|
+| 1 | 2 |
+
+: A table float that ends with a block quote that holds a table.
+
+> | C | D |
+> |---|---|
+> | 3 | 4 |
+
+:::
+
+The paragraph beside the table float whose table sits in a block quote.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+
+## A spanning image and a narrow box
+
+::: {#tbl-span .wrap-right width="5%"}
+
++-------------------+-------------------+
+| ![](plot.png)                         |
++===================+===================+
+| ![](plot.png)     | b                 |
++-------------------+-------------------+
+
+: A narrow table float with an image over both columns.
+
+:::
+
+The paragraph beside the narrow table float with a spanning image. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.

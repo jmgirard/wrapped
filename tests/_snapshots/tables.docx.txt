@@ -1,14 +1,14 @@
 # warnings
-1x wrapped: the table #tbl-block does not wrap in Word. A table wraps only in HTML and Typst.
 1x wrapped: the table #tbl-callout is in a callout, so it does not wrap.
-1x wrapped: the table #tbl-cell does not wrap in Word. A table wraps only in HTML and Typst.
-1x wrapped: the table #tbl-cell-block does not wrap in Word. A table wraps only in HTML and Typst.
-1x wrapped: the table #tbl-div does not wrap in Word. A table wraps only in HTML and Typst.
 1x wrapped: the table #tbl-margin is in the margin, so it does not wrap.
-1x wrapped: the table #tbl-no-text does not wrap in Word. A table wraps only in HTML and Typst.
-1x wrapped: the table #tbl-page does not wrap in Word. A table wraps only in HTML and Typst.
-1x wrapped: the table #tbl-pipe does not wrap in Word. A table wraps only in HTML and Typst.
-1x wrapped: the table #tbl-wide does not wrap in Word. A table wraps only in HTML and Typst.
 # docx
 image: cx=152400
 # frames
+# floating tables
+table right w=4212 left=480 right=0 anchor=margin/text | before=p keep | tbl-div, caption, table pct 5000, p | p, p, clear | links=- cites=0
+table left w=3276 left=0 right=360 anchor=margin/text | before=p keep | tbl-block, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=2808 left=240 right=0 anchor=margin/text | before=p keep | tbl-pipe, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=3276 left=360 right=0 anchor=margin/text | before=p keep | tbl-cell, caption, table pct 5000, p | p, clear | links=- cites=0
+table left w=3276 left=0 right=360 anchor=margin/text | before=p keep | tbl-cell-block, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=3276 left=360 right=0 anchor=margin/text | before=p keep | tbl-page, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=1872 left=360 right=0 anchor=margin/text | before=p keep | tbl-wide, caption, table pct 5000, p | p, clear | links=- cites=0

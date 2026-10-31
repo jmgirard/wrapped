@@ -27,7 +27,13 @@ external link around it, whether each caption has
 the ImageCaption style, and the kind of each block after the frame up to the
 paragraph with the clearing break, with the link anchors and author-year
 citations in those paragraphs. It also counts framed paragraphs that are
-in no frame. For a fixture in DOCX_UNFRAMED_ALT, it also lists the alt text
+in no frame. When the docx holds a floating table, a wrapped table float's
+box, it lists each one: its side, width, text distances, and anchors, the
+block before it, the parts of its cell (bookmark, caption, images and
+whether each fills the box, the inner table's width and the width of each
+image in it), and the blocks,
+links, and citations after it up to the clearing break, and counts the
+floating tables that it did not list. For a fixture in DOCX_UNFRAMED_ALT, it also lists the alt text
 of each image outside a frame, and for a fixture in DOCX_STYLES the last
 paragraph style of each framed image. The script first writes the reference docs of the docx
 fixtures with tests/reference_narrow.py. A revealjs or dashboard
@@ -102,6 +108,7 @@ RENDERS = [
     ("docx-gap-meta-wide", "docx", True),
     ("docx-overflow", "docx", True),
     ("docx-alt", "docx", True),
+    ("docx-tables", "docx", True),
     ("meta-breakpoint", "html", True),
     ("meta-string", "html", True),
     ("meta-calc-bad", "html", True),
@@ -127,6 +134,7 @@ RENDERS = [
     ("tables-cap-margin-meta", "html", True),
     ("tables-column-meta", "html", True),
     ("tables-column-meta", "typst", True),
+    ("tables-column-meta", "docx", True),
     ("tables-fig-column-meta", "html", True),
     ("tables-fig-column-meta", "typst", True),
     ("tables-cell-columns", "html", True),
@@ -1455,6 +1463,86 @@ def docx_frame(p):
     return None
 
 
+def docx_after(children, i):
+    """The kind of each body block from index i up to and including the
+    paragraph that holds the clearing break ("p" for a paragraph, then
+    "clear"), the anchors of the links in those paragraphs, the number of
+    author-year citations in their text, and the index after the last
+    block read."""
+    after = []
+    links = []
+    cites = 0
+    while i < len(children):
+        el = children[i]
+        i += 1
+        if el.tag in (f"{W}bookmarkStart", f"{W}bookmarkEnd", f"{W}sectPr"):
+            continue
+        if el.tag != f"{W}p":
+            after.append(el.tag.replace(W, ""))
+            continue
+        after.append("p")
+        links += [h.get(f"{W}anchor") for h in el.iter(f"{W}hyperlink") if h.get(f"{W}anchor")]
+        text = "".join(t.text or "" for t in el.iter(f"{W}t"))
+        cites += len(AUTHOR_YEAR.findall(text))
+        if any(br.get(f"{W}clear") == "all" for br in el.iter(f"{W}br")):
+            after.append("clear")
+            break
+    return after, links, cites, i
+
+
+def docx_tables(body):
+    """Each floating table (a w:tbl with a w:tblpPr) at the top level of the
+    body: its side, width, and text distance on each side, the parts of its
+    cells in order (a bookmark's name, "caption" for a paragraph in the
+    ImageCaption style, "image" with whether it fills the box for a paragraph
+    that holds one, "p" for another paragraph, and "table" with its
+    w:tblW and the width in twips of each image in it for a table), the
+    kind of the block before it ("keep" when it keeps with the next), and
+    the kind of
+    each block after it up to the clearing break, with the anchors of the
+    links and the number of author-year citations there, as for a frame."""
+    lines = []
+    children = list(body)
+    i = 0
+    while i < len(children):
+        el = children[i]
+        i += 1
+        pos = el.find(f"{W}tblPr/{W}tblpPr") if el.tag == f"{W}tbl" else None
+        if pos is None:
+            continue
+        width = int(el.find(f"{W}tblPr/{W}tblW").get(f"{W}w"))
+        prev = children[i - 2] if i >= 2 else None
+        before = prev.tag.replace(W, "") if prev is not None else "-"
+        if prev is not None and prev.find(f"{W}pPr/{W}keepNext") is not None:
+            before += " keep"
+        parts = []
+        for row in el.findall(f"{W}tr"):
+            for cell in row.findall(f"{W}tc"):
+                for part in cell:
+                    if part.tag == f"{W}bookmarkStart":
+                        parts.append(part.get(f"{W}name"))
+                    elif part.tag == f"{W}p":
+                        styles = [s.get(f"{W}val") for s in part.iter(f"{W}pStyle")]
+                        extent = part.find(f".//{WP}extent")
+                        if extent is not None:
+                            fills = abs(int(extent.get("cx")) - width * EMU_PER_TWIP) <= EMU_PER_TWIP
+                            parts.append(f"image fills={'yes' if fills else 'no'}")
+                        else:
+                            parts.append("caption" if "ImageCaption" in styles else "p")
+                    elif part.tag == f"{W}tbl":
+                        inner = part.find(f"{W}tblPr/{W}tblW")
+                        widths = [str(int(e.get("cx")) // EMU_PER_TWIP) for e in part.iter(f"{WP}extent")]
+                        parts.append(f"table {inner.get(f'{W}type')} {inner.get(f'{W}w')}"
+                                     + (f" images={','.join(widths)}" if widths else ""))
+        after, links, cites, i = docx_after(children, i)
+        lines.append(f"table {pos.get(f'{W}tblpXSpec')} w={width} "
+                     f"left={pos.get(f'{W}leftFromText')} right={pos.get(f'{W}rightFromText')} "
+                     f"anchor={pos.get(f'{W}horzAnchor')}/{pos.get(f'{W}vertAnchor')} | "
+                     f"before={before} | {', '.join(parts)} | {', '.join(after)} | "
+                     f"links={','.join(links) or '-'} cites={cites}")
+    return lines
+
+
 def docx_frames(body, targets, image_styles=False):
     """Each frame in the body: consecutive top-level paragraphs with the same
     w:framePr. Each frame records its side, width, gap, and anchor, the
@@ -1516,24 +1604,7 @@ def docx_frames(body, targets, image_styles=False):
             else:
                 styles = [s.get(f"{W}val") for s in p.iter(f"{W}pStyle")]
                 parts.append(f"caption style={'ImageCaption' if 'ImageCaption' in styles else '-'}")
-        after = []
-        links = []
-        cites = 0
-        while i < len(children):
-            el = children[i]
-            i += 1
-            if el.tag in (f"{W}bookmarkStart", f"{W}bookmarkEnd", f"{W}sectPr"):
-                continue
-            if el.tag != f"{W}p":
-                after.append(el.tag.replace(W, ""))
-                continue
-            after.append("p")
-            links += [h.get(f"{W}anchor") for h in el.iter(f"{W}hyperlink") if h.get(f"{W}anchor")]
-            text = "".join(t.text or "" for t in el.iter(f"{W}t"))
-            cites += len(AUTHOR_YEAR.findall(text))
-            if any(br.get(f"{W}clear") == "all" for br in el.iter(f"{W}br")):
-                after.append("clear")
-                break
+        after, links, cites, i = docx_after(children, i)
         side = frame.get(f"{W}xAlign")
         gap = frame.get(f"{W}hSpace")
         anchor = frame.get(f"{W}hAnchor")
@@ -1567,6 +1638,15 @@ def docx_summary(path):
     others = sum(1 for p in body.iter(f"{W}p") if docx_frame(p) is not None) - framed
     if others:
         lines.append(f"framed paragraphs outside a frame: {others}")
+    # Floating tables, listed only when the docx has one, so the snapshots
+    # of documents with no wrapped table stay as they were.
+    tables = docx_tables(body)
+    unlisted = len(body.findall(f".//{W}tblpPr")) - len(tables)
+    if tables or unlisted:
+        lines.append("# floating tables")
+        lines += tables
+    if unlisted:
+        lines.append(f"floating tables not listed above: {unlisted}")
     if path.stem in DOCX_UNFRAMED_ALT:
         lines.append("# images outside a frame")
         for p in body.iter(f"{W}p"):

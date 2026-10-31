@@ -15,21 +15,23 @@ install it with `quarto add jmgirard/wrapped`.
 
 - Wrap text to the left or right of one captioned figure. The figure keeps
   its number, caption, and `@fig-` links. A `#tbl-` table float wraps the
-  same way in HTML and PDF through Typst (D-021, corrected M038).
+  same way in HTML, PDF through Typst, and Word, except a raw Word XML
+  table in Word (D-021, D-022, D-023, corrected M038, M039).
 - Wrap text around an uncaptioned image.
 - Use one width value for all formats.
 - In a format or context that cannot wrap, keep a normal figure and warn
   once: once for each render in a format, once for each figure in a
   context, and once for a code cell that makes more than one figure, in a
-  context or not (corrected M003, M014, M018). In LaTeX and Word, also
-  once for each wrapped table float (D-021, corrected M038).
+  context or not (corrected M003, M014, M018). In LaTeX, also once for
+  each wrapped table float (D-021, corrected M038, M039).
 
 **Non-goals for version 1.**
 
-- Tables (`#tbl-` floats) in PDF through LaTeX and in Word. LaTeX
-  `wraptable` conflicts with `longtable`, and Quarto renders every table
-  as `longtable`. A Word frame holds paragraphs, not tables. Table floats
-  wrap in HTML and PDF through Typst (D-021, corrected M038).
+- Tables (`#tbl-` floats) in PDF through LaTeX. LaTeX `wraptable`
+  conflicts with `longtable`, and Quarto renders every table as
+  `longtable`. Table floats wrap in HTML, PDF through Typst, and Word
+  (D-021, D-022, corrected M039). In Word, a raw Word XML table (gt,
+  flextable) keeps its normal layout (D-023).
 - Subfigure panels (`layout-ncol`, `layout`).
 - Code listings and callouts.
 - A figure in the middle of a paragraph. The figure anchors where it appears
@@ -106,7 +108,8 @@ wrapped:
   breakpoint: 576px   # HTML: at this width or narrower, figures stop floating
 ```
 
-Stop rule: the figure, or in HTML and Typst a table float (M038), wraps
+Stop rule: the figure, or in HTML, Typst, and Word a table float (M038,
+M039), wraps
 the paragraphs that follow it. Wrapping stops at
 the first block that is not a paragraph: a heading, list, figure, table, code
 block, callout, or horizontal rule. A paragraph that holds one shortcode
@@ -241,9 +244,9 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    id or image.
 4. In a top-down pass, it carries a code cell's wrap class to that cell's
    floats and moves an image's class to its float. A figure float and a
-   table float wrap (D-021). A table float in LaTeX or Word keeps its
-   normal layout with a warning, and its caption location key is
-   `tbl-cap-location` (corrected M038). A code cell anchors the group of
+   table float wrap (D-021). A table float in LaTeX keeps its normal
+   layout with a warning, and its caption location key is
+   `tbl-cap-location` (corrected M038, M039). A code cell anchors the group of
    a wrapped float inside it, with or without a wrap class of its own,
    since a table float can take its class from its caption block, and a
    cell's `margin-caption` class reaches its floats either way. Quarto
@@ -342,7 +345,8 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    with `columns:` set (corrected M010, corrected M011, corrected M019). Word needs nothing here. Elsewhere it prints
    one format warning.
 
-At `post-render`, `wrapped-docx.lua` turns each Word group into a frame. It
+At `post-render`, `wrapped-docx.lua` turns each Word figure group into a
+frame (a table float's group takes a floating table, below). It
 removes Quarto's one-cell figure table, or turns a Pandoc `Figure` into its
 image and caption paragraphs, and puts the same `w:framePr` in a raw
 `w:pPr` on the image paragraph and each caption paragraph. Word reads the
@@ -357,6 +361,30 @@ repeated spaces (corrected M030). A clearing break,
 `<w:br w:type="textWrapping" w:clear="all"/>`, ends the group's last
 paragraph (corrected M006).
 
+A wrapped table float's group has no frame (D-022). In its place,
+`wrapped-docx.lua` replaces Quarto's one-cell table with a floating table:
+a raw `w:tbl` open tag whose `w:tblpPr` holds the side and the gap toward
+the text, Quarto's float div with its caption, table, and bookmark, and a
+raw close tag. Pandoc writes raw openxml blocks as they are, so the split
+tags hold. The inner table's columns get relative widths, so Pandoc
+writes it at the full width of the box (`w:tblW` of 100%). Its grid
+columns still sum to Pandoc's default of 7920 twips, wider than the box,
+and LibreOffice fits them to the box. The cell has no margins, and an
+image outside the inner table fills the box. An image in an inner-table
+cell takes at most the cell's share of the box (the shares `fit_table`
+gives, summed over a column span; a row span from an earlier row is not
+counted), less the Table style's 108-twip cell
+margins on each side, and keeps a smaller width of its own. A table float
+whose table is raw openxml (gt, flextable) keeps its normal layout with a
+warning, since the filter cannot fit its own column widths (D-023). The
+cell gets a closing paragraph unless its last block, past empty divs, is
+one Pandoc writes as a paragraph (a non-empty paragraph, a heading, a
+code block, or a rule). Word joins two tables with
+nothing between them, so a 1 pt paragraph goes before the floating table.
+It keeps with the next paragraph, so a heading before the table moves
+with it (seen in LibreOffice). The same clearing break ends the group
+(M039).
+
 The grouping pass finds a wrapped float by Quarto's internal
 `__quarto_custom_id` attribute. `tests/verify.py` shows a change there as a
 snapshot difference. The mechanism for each other format is in
@@ -369,6 +397,12 @@ snapshot difference. The mechanism for each other format is in
   narrow box the text of columns side by side can overlap (the
   `tbl-wide` case of `tests/tables.qmd`). The site's
   `docs/formats/typst.qmd`, Limits, states this limit (M038).
+- Word: a wrapped table float keeps to the width of its box. In a
+  LibreOffice PDF, a wide table's column text breaks inside words (the
+  `tbl-wide` case of `tests/tables.qmd`), and a box taller than the rest
+  of the page breaks across pages (`tbl-image` in `tests/docx-tables.qmd`,
+  corrected M039 review). The site's `docs/formats/word.qmd`, Tables,
+  states this limit (M039).
 - PDF through Typst: a wrapped figure whose group does not fit at the bottom
   of a page moves to the next page with the text beside it, and the rest of
   the page stays blank. With `columns:` set, the same holds at the bottom of

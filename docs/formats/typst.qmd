@@ -7,8 +7,8 @@ paragraphs after it in a `wrap-content` call from the Typst package wrap-it
 0.1.1. The extension ships its own copy of wrap-it, so the render does not
 download it. Citations and `@fig-` links in the text beside the figure
 work. A wrapped [table float](../get-started.qmd#wrap-a-table) goes in a
-`wrap-content` call in the same way. Table floats wrap in HTML and PDF
-through Typst. In PDF through LaTeX and in Word they keep their normal
+`wrap-content` call in the same way. Table floats wrap in HTML, PDF
+through Typst, and Word. In PDF through LaTeX they keep their normal
 layout, and the render prints a warning.
 
 ## Width and gap
@@ -49,8 +49,9 @@ If 40% plus the gap is that wide too, the figure keeps 40% and the gap.
 ## Attributes that Typst ignores
 
 The `wrap-lines` attribute does nothing in Typst. Typst does not use an
-image's `height` in a wrapped figure. The image fills the box width and
-keeps its shape, and the render prints a warning.
+image's `height` in a wrapped figure or table. The image fills the box
+width, or its table column, and keeps its shape, and the render prints a
+warning.
 
 ## Right-to-left text
 

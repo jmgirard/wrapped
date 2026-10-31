@@ -1,0 +1,23 @@
+# warnings
+1x wrapped: Word does not use the height of the image plot.png in a wrapped table, so the image keeps its shape, no wider than the box or its column.
+1x wrapped: the table #tbl-raw is raw Word XML, as from gt or flextable, so it does not wrap in Word.
+# docx
+image: cx=2133600
+image: cx=2377440
+image: cx=1051560
+image: cx=1051560
+image: cx=152400
+image: cx=1473363
+image: cx=160020
+image: cx=74295
+# frames
+# floating tables
+table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-after-table, caption, table pct 5000, p | p, clear | links=tbl-after-table cites=0
+table left w=3744 left=0 right=240 anchor=margin/text | before=p keep | tbl-after-figure, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-image, caption, image fills=yes, table pct 5000, p | p, clear | links=- cites=0
+table left w=3744 left=0 right=240 anchor=margin/text | before=p keep | tbl-cell-images, caption, table pct 5000 images=1656,1656, p | p, clear | links=- cites=0
+table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-nested, caption, p, table pct 5000, p | p, clear | links=- cites=0
+table left w=3744 left=0 right=240 anchor=margin/text | before=p keep | tbl-empty-div, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-uneven, caption, table pct 5000 images=240,2320, p | p, clear | links=- cites=0
+table left w=3744 left=0 right=240 anchor=margin/text | before=p keep | tbl-quote, caption, table pct 5000, table pct 5000, p | p, clear | links=- cites=0
+table right w=468 left=240 right=0 anchor=margin/text | before=p keep | tbl-span, caption, table pct 5000 images=252,117, p | p, clear | links=- cites=0

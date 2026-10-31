@@ -1,6 +1,7 @@
 -- wrapped: wrap body text around figures marked .wrap-left or .wrap-right.
--- A #tbl- table float wraps the same way in HTML and Typst and keeps its
--- normal layout in LaTeX and Word (D-021); "figure" below covers it there.
+-- A #tbl- table float wraps the same way in HTML, Typst, and Word and keeps
+-- its normal layout in LaTeX, and in Word when its table is raw Word XML
+-- (D-021, D-022, D-023); "figure" below covers it there.
 --
 -- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output,
 -- revealjs included, floats each wrapped figure inside a .wrap-group div
@@ -16,7 +17,7 @@
 -- wrap-it package. Word output groups each wrapped figure with its
 -- paragraphs as in HTML, and marks the group with the frame's side, width,
 -- and gap in twips; wrapped-docx.lua turns the group into a Word frame at
--- post-render. A LaTeX document with classoption: twocolumn and every other
+-- post-render, or for a table float into a floating table. A LaTeX document with classoption: twocolumn and every other
 -- format keep a normal figure. In LaTeX, wrapped.tex also sets a normal
 -- figure where it finds columns while LaTeX runs. A figure with no wrap
 -- class is left as it is in every format.
@@ -622,7 +623,7 @@ local DOCX_TEXT_WIDTH = 9360
 local docx_text_width = DOCX_TEXT_WIDTH
 
 -- The reference doc's body w:sectPr sets columns, so Word keeps normal
--- figures, as LaTeX does in a two-column document.
+-- figures and table floats, as LaTeX does in a two-column document.
 local docx_columns = false
 -- The reference doc that cannot be read, for a warning when a figure wraps.
 local docx_unread = nil
@@ -752,13 +753,63 @@ local function docx_frame(class, width, gap, where)
 end
 
 -- Sets each image in a list of blocks to the frame's width, so the image
--- fills the frame.
-local function docx_size(blocks, twips)
+-- fills the frame. With `by_column`, for a table float's box, an image in a
+-- table cell takes at most its cell's share of the box, less the 108-twip
+-- cell margins on each side that Pandoc's Table style sets. The shares are
+-- the ones wrapped-docx.lua's fit_table gives the columns: each column's
+-- relative width, or an equal share for a column with none. An image with a
+-- smaller width of its own keeps it, so an icon stays small.
+local function column_shares(tbl)
+  local shares, sum = {}, 0
+  for i, spec in ipairs(tbl.colspecs) do
+    local w = spec[2]
+    shares[i] = (type(w) == "number" and w > 0) and w or 1
+    sum = sum + shares[i]
+  end
+  for i = 1, #shares do shares[i] = shares[i] / sum end
+  return shares
+end
+
+local function docx_size(blocks, twips, by_column)
+  local function size(img, w)
+    img.attributes.width = tex_number(w / 1440) .. "in"
+    return img
+  end
+  local function size_cells(tbl)
+    local shares = column_shares(tbl)
+    local function rows(list)
+      for _, row in ipairs(list) do
+        local col = 1
+        for _, cell in ipairs(row.cells) do
+          local share = 0
+          for c = col, col + cell.col_span - 1 do share = share + (shares[c] or 0) end
+          local cell_w = twips * share
+          local max_w = math.max(cell_w - 216, cell_w / 2)
+          cell.contents = cell.contents:walk({
+            Image = function(img)
+              local own = img.attributes.width and docx_twips(img.attributes.width, true)
+              return size(img, own and math.min(own, max_w) or max_w)
+            end,
+          })
+          col = col + cell.col_span
+        end
+      end
+    end
+    rows(tbl.head.rows)
+    for _, body in ipairs(tbl.bodies) do
+      rows(body.head)
+      rows(body.body)
+    end
+    rows(tbl.foot.rows)
+    return tbl
+  end
   return blocks:walk({
-    Image = function(img)
-      img.attributes.width = tex_number(twips / 1440) .. "in"
-      return img
+    traverse = "topdown",
+    Table = function(tbl)
+      if not by_column then return nil end
+      return size_cells(tbl), false
     end,
+    Image = function(img) return size(img, twips) end,
   })
 end
 
@@ -814,8 +865,10 @@ end
 -- the box width and removes the height, because Typst does not fit an image
 -- with a height in the box: an image wider than the box is cut off at its
 -- edges. Word removes the height in the same way, and docx_size sets the
--- width to the frame width. Elsewhere the image keeps its width.
-local function clean_image(img)
+-- width, to the frame width for a figure. In a table float, an image takes
+-- the width of the box or of its table column (docx_size), so the warning
+-- says so. Elsewhere the image keeps its width.
+local function clean_image(img, in_table)
   drop_wrap(img)
   if is_html then
     img.attributes.width = nil
@@ -823,9 +876,11 @@ local function clean_image(img)
     img.attributes.width = (img.attributes.height == nil) and "100%" or nil
   elseif is_typst or is_docx then
     if img.attributes.height then
+      local why = in_table and "in a wrapped table, so the image keeps its shape, no wider than the box or its column"
+        or "in a wrapped figure, so the image fills the box width"
       quarto.log.warning(string.format(
-        "wrapped: %s does not use the height of the image %s in a wrapped figure, so the image fills the box width.",
-        is_typst and "Typst" or "Word", pandoc.utils.stringify(img.src)))
+        "wrapped: %s does not use the height of the image %s %s.",
+        is_typst and "Typst" or "Word", pandoc.utils.stringify(img.src), why))
     end
     if is_typst then img.attributes.width = "100%" end
     img.attributes.height = nil
@@ -833,8 +888,8 @@ local function clean_image(img)
   return img
 end
 
-local function clean_images(blocks)
-  return blocks:walk({ Image = clean_image })
+local function clean_images(blocks, in_table)
+  return blocks:walk({ Image = function(img) return clean_image(img, in_table) end })
 end
 
 -- Returns the line count of a wrap-lines value, or nil with a warning when
@@ -1479,6 +1534,20 @@ local function drop_caption_wrap(float)
   return class
 end
 
+-- True when a float's content holds a raw openxml table, as gt and
+-- flextable write a table for Word. A float's content can be one block,
+-- which a walk from that block does not visit.
+local function raw_docx_table(content)
+  if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
+  local found = false
+  content:walk({
+    RawBlock = function(raw)
+      if raw.format == "openxml" and raw.text:match("<w:tbl[%s>]") then found = true end
+    end,
+  })
+  return found
+end
+
 -- Gives a float that does not wrap its normal layout: its images lose
 -- their wrap classes, and the float loses its wrap options.
 local function keep_normal(float)
@@ -1558,15 +1627,24 @@ local function float_target(float)
   -- or warns on its own. Quarto numbers such figures
   -- with the cell's label and `-1`, `-2`, and so on.
   local several = carried and cell.several and float.type == "Figure"
-  -- LaTeX and Word wrap no table (D-021): Quarto writes a LaTeX table as
-  -- a longtable, which wrapfig cannot hold, and a Word frame holds
-  -- paragraphs, not tables. The warning comes before the next-block rule,
-  -- so a table with no paragraph after it warns there too.
-  if is_table and (is_latex or is_docx) and not context then
+  -- LaTeX wraps no table (D-021, D-022): Quarto writes a LaTeX table as a
+  -- longtable, which wrapfig cannot hold. The warning comes before the
+  -- next-block rule, so a table with no paragraph after it warns there too.
+  if is_table and is_latex and not context then
     keep_normal(float)
     quarto.log.warning(string.format(
-      "wrapped: the table #%s does not wrap in %s. A table wraps only in HTML and Typst.",
-      float.identifier, is_latex and "LaTeX" or "Word"))
+      "wrapped: the table #%s does not wrap in LaTeX. A table wraps in HTML, Typst, and Word.",
+      float.identifier))
+    return float
+  end
+  -- In Word, a table that is raw openxml, as gt and flextable write it,
+  -- keeps its normal layout: the filter cannot fit its columns to the box
+  -- (D-023). It warns before the next-block rule, as LaTeX does.
+  if is_table and is_docx and not context and raw_docx_table(float.content) then
+    keep_normal(float)
+    quarto.log.warning(string.format(
+      "wrapped: the table #%s is raw Word XML, as from gt or flextable, so it does not wrap in Word.",
+      float.identifier))
     return float
   end
   -- A figure with no paragraph after it keeps a normal figure with no
@@ -1585,7 +1663,7 @@ local function float_target(float)
     end
     return float
   end
-  float.content = clean_images(float.content)
+  float.content = clean_images(float.content, is_table)
   if not wraps() then return float end
   -- knitr writes the plot's pixel size as a unitless image width. That is
   -- not a box width, so a cell figure takes only a width with a unit.
@@ -1608,8 +1686,17 @@ local function float_target(float)
       typst_opens[custom_id] = typst_open(class, width, gap, "#" .. float.identifier)
     end
   elseif is_docx then
+    -- A table float's box is a floating table that wrapped-docx.lua makes
+    -- at post-render (D-022). An image outside its table fills the box, and
+    -- one in the table takes at most its cell's share (docx_size). A float's
+    -- content can be one block, which a walk from that block does not
+    -- visit.
     local frame, w = docx_frame(class, width, gap, "#" .. float.identifier)
-    float.content = docx_size(float.content, w)
+    if is_table and pandoc.utils.type(float.content) == "Block" then
+      float.content = docx_size(pandoc.Blocks({ float.content }), w, true)[1]
+    else
+      float.content = docx_size(float.content, w, is_table)
+    end
     if custom_id then docx_frames[custom_id] = frame end
   else
     float.classes:insert(class)
@@ -1991,7 +2078,8 @@ local function typst_group(members)
   return out
 end
 
--- In Word, a group's .wrap-group div carries its figure's frame, which
+-- In Word, a group's .wrap-group div carries its figure's or table's frame
+-- (for a table, the floating table's side, width, and gap), which
 -- wrapped-docx.lua reads at post-render. A .wrapped-image box gives its
 -- frame to the group, and a code cell or a float gives the frame of its
 -- wrapped float.
