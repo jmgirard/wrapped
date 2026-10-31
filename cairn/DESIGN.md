@@ -433,7 +433,10 @@ snapshot difference. The mechanism for each other format is in
   of the page breaks across pages (`tbl-image` in `tests/docx-tables.qmd`,
   corrected M039 review), in Word 16.114 too (a scratch render of
   `tests/docx-raw-tables.qmd` with its code shown, corrected M041). The site's `docs/formats/word.qmd`, Tables,
-  states this limit (M039).
+  states this limit (M039). Such a box can leave its caption and header
+  row alone at a page's bottom. A `w:cantSplit` box row would keep a short
+  box whole in Word 16.114 but hides rows in LibreOffice 26.8 near a page's
+  bottom, so the box row stays splittable (M042 probe, dropped).
 - PDF through Typst: a wrapped figure whose group does not fit at the bottom
   of a page moves to the next page with the text beside it, and the rest of
   the page stays blank. With `columns:` set, the same holds at the bottom of
