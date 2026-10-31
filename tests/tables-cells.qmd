@@ -60,3 +60,20 @@ A table that Pandoc's HTML reader makes, with a foot.
 :::
 
 Marker foot. The paragraph after the table with a foot sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A table whose cells hold more than one block
+
++--------+----------------------------------+
+| Kind   | Cell                             |
++========+==================================+
+| paras  | PARAONE see [@knuth] ~~struck~~  |
+|        |                                  |
+|        | PARATWO see @tbl-widths          |
++--------+----------------------------------+
+| list   | - LISTITEM see @tbl-cells        |
+|        | - second item                    |
++--------+----------------------------------+
+
+: A table whose cells hold more than one block {#tbl-blocks .wrap-right width="45%"}
+
+Marker blocks. The paragraph after the table whose cells hold more than one block sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

@@ -814,7 +814,7 @@ local function text_shares(tbl)
   return shares
 end
 
--- The document's tbl-colwidths: a list of numbers, a string, or nil. Set in
+-- The document's tbl-colwidths: a list of strings, a string, or nil. Set in
 -- the first pass.
 local meta_tbl_colwidths = nil
 
@@ -822,11 +822,12 @@ local meta_tbl_colwidths = nil
 -- table, as Quarto gives them: each column takes its value, or the last
 -- value past the list's end, a list whose sum passes 100 is scaled to 100,
 -- and each width is a share of the line. Quarto applies the value after
--- pre-quarto filters, and to a table with no spans only, so the filter
+-- pre-quarto filters, and only to a table with no spans that it did not
+-- parse from raw HTML (its quarto-postprocess attribute), so the filter
 -- applies it to a table it rewrites. Any other value, such as true, auto,
 -- or false, gives nil, and the columns take text_shares.
 local function table_colwidths(tbl, value)
-  if value == nil then return nil end
+  if value == nil or tbl.attributes["quarto-postprocess"] then return nil end
   local list = value
   if type(value) == "string" then
     if value:sub(1, 1) ~= "[" then value = "[" .. value .. "]" end
@@ -878,11 +879,15 @@ end
 --
 -- The table is written before Quarto resolves shortcodes, cross-references,
 -- and citations, and in a document of its own, whose template the main one
--- does not see. So each cell that holds one paragraph is written as a token,
--- and the tokens are replaced by the cells' own inlines, between raw pieces
--- of the written tabular. Quarto then processes those inlines, and the main
--- writer writes them, with the packages they need. `float_colwidths` is
--- the float's tbl-colwidths attribute.
+-- does not see. So each cell is written as a token, and the result is the
+-- raw pieces of the written tabular with the cells' own content between
+-- them: a one-paragraph cell's inlines, or another cell's blocks in a
+-- minipage, as Pandoc sets a list in a cell. Quarto then processes that
+-- content, and the main writer writes it, with the packages it needs. The
+-- blank lines that Pandoc writes between blocks fall inside the minipage.
+-- `float_colwidths` is the float's tbl-colwidths attribute.
+local ALIGN_TEX = { AlignRight = "\\raggedleft", AlignCenter = "\\centering" }
+
 local function latex_tabular(tbl, float_colwidths)
   local widths = table_colwidths(tbl, tbl.attributes["tbl-colwidths"] or float_colwidths
     or meta_tbl_colwidths)
@@ -890,15 +895,27 @@ local function latex_tabular(tbl, float_colwidths)
   for i, spec in ipairs(tbl.colspecs) do tbl.colspecs[i] = { spec[1], shares[i] } end
   local held, n = {}, 0
   local function hold(rows)
+    local covered = {}
     for _, row in ipairs(rows) do
+      local col = 1
       for _, cell in ipairs(row.cells) do
+        while (covered[col] or 0) > 0 do col = col + 1 end
         local c = cell.contents
-        if #c == 1 and (c[1].t == "Plain" or c[1].t == "Para") then
+        if #c > 0 then
           n = n + 1
-          held[n] = c[1].content
+          if #c == 1 and (c[1].t == "Plain" or c[1].t == "Para") then
+            held[n] = { inlines = c[1].content }
+          else
+            local align = cell.alignment
+            if align == "AlignDefault" then align = tbl.colspecs[col] and tbl.colspecs[col][1] end
+            held[n] = { blocks = c, align = ALIGN_TEX[align] or "\\raggedright" }
+          end
           cell.contents = pandoc.Blocks({ pandoc.Plain({ pandoc.Str("WRAPPEDCELL" .. n .. "Z") }) })
         end
+        for k = col, col + cell.col_span - 1 do covered[k] = cell.row_span end
+        col = col + cell.col_span
       end
+      for k, left in pairs(covered) do covered[k] = math.max(left - 1, 0) end
     end
   end
   hold(tbl.head.rows)
@@ -928,14 +945,23 @@ local function latex_tabular(tbl, float_colwidths)
   -- Pandoc's template loads multirow only for a table it writes itself.
   if tex:find("\\multirow", 1, true) then quarto.doc.use_latex_package("multirow") end
   local out = "\\begin{tabular}" .. spec .. "\n" .. head .. body .. last .. "\\end{tabular}"
-  local inlines, pos = pandoc.Inlines({}), 1
+  local blocks, inlines, pos = pandoc.Blocks({}), pandoc.Inlines({}), 1
   for s, i, e in out:gmatch("()WRAPPEDCELL(%d+)Z()") do
+    local cell = held[tonumber(i)]
     inlines:insert(pandoc.RawInline("latex", out:sub(pos, s - 1)))
-    inlines:extend(held[tonumber(i)])
+    if cell.inlines then
+      inlines:extend(cell.inlines)
+    else
+      inlines:insert(pandoc.RawInline("latex", "\\begin{minipage}[t]{\\linewidth}" .. cell.align))
+      blocks:insert(pandoc.Plain(inlines))
+      blocks:extend(cell.blocks)
+      inlines = pandoc.Inlines({ pandoc.RawInline("latex", "\\end{minipage}") })
+    end
     pos = e
   end
   inlines:insert(pandoc.RawInline("latex", out:sub(pos)))
-  return pandoc.Plain(inlines)
+  blocks:insert(pandoc.Plain(inlines))
+  return blocks
 end
 
 local function docx_size(blocks, twips, by_column)

@@ -1214,6 +1214,10 @@ def latex_table_cells_cases():
     yield "footnote text", text_case("FNTEXT in a cell.")
     yield "foot", table_case("Table 3:", "FOOTSUM", "Marker foot.", "right")
     yield "foot after body", below_case("BODYROW", "FOOTSUM")
+    yield "blocks", table_case("Table 4:", "second item", "Marker blocks.", "right")
+    yield "paragraphs in a cell", text_case("PARAONE see (Knuth 1984)")
+    yield "second paragraph", text_case("PARATWO see Table 2")
+    yield "list in a cell", text_case("LISTITEM see Table 1")
 
 
 def latex_table_link_cases():

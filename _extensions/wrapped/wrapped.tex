@@ -264,9 +264,10 @@
 \ExplSyntaxOff
 % A tabular sets no footnote text, so a wrappedtable keeps the text of each
 % footnote in its cells and sets it after the environment, with the number
-% of its mark. footnotehyper's \makesavenoteenv, which Quarto's template
-% uses for a longtable, puts a group around the environment, so wrapfig
-% would no longer place the table beside the paragraphs after it.
+% of its mark. The \makesavenoteenv of footnotehyper or footnote, which
+% Quarto's template uses for a longtable, puts a group around the
+% environment (footnote.sty's \savenotes opens one), so wrapfig would no
+% longer place the table beside the paragraphs after it.
 \makeatletter
 \def\wrapped@notes{}
 \newcommand\wrapped@footnote[1]{%

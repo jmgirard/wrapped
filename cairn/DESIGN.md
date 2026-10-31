@@ -255,9 +255,10 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    table, its float, or the document, as Quarto applies it, else
    `text_shares`: by each column's longest cell text when no column has a
    width, else `column_shares`), writes the table with Pandoc, keeps the
-   first head, and sets the foot after the body. Each cell that holds one
-   paragraph is written as a token, which the cell's own inlines replace
-   between raw pieces of the tabular, so Quarto resolves its shortcodes,
+   first head, and sets the foot after the body. Each cell is written as a
+   token, which the cell's own content replaces between raw pieces of the
+   tabular (a one-paragraph cell's inlines, or another cell's blocks in a
+   minipage), so Quarto resolves its shortcodes,
    cross-references, and citations and the main writer loads what its
    formatting needs. `wrapped.tex` sets a wrappedtable's footnote text
    after the environment (M040 review return 1). Its caption location key is `tbl-cap-location`
