@@ -1607,7 +1607,8 @@ def docx_tables(body):
     cells in order (a bookmark's name, "caption" for a paragraph in the
     ImageCaption style, "image" with whether it fills the box for a paragraph
     that holds one, "p" for another paragraph, and "table" with its
-    w:tblW and the width in twips of each image in it for a table), the
+    w:tblW, its w:gridCol widths, the dxa w:tcW widths of its own cells,
+    and the width in twips of each image in it for a table), the
     kind of the block before it ("keep" when it keeps with the next), and
     the kind of
     each block after it up to the clearing break, with the anchors of the
@@ -1643,7 +1644,12 @@ def docx_tables(body):
                     elif part.tag == f"{W}tbl":
                         inner = part.find(f"{W}tblPr/{W}tblW")
                         widths = [str(int(e.get("cx")) // EMU_PER_TWIP) for e in part.iter(f"{WP}extent")]
+                        grid = [g.get(f"{W}w") for g in part.findall(f"{W}tblGrid/{W}gridCol")]
+                        tcw = [c.get(f"{W}w") for c in part.findall(f"{W}tr/{W}tc/{W}tcPr/{W}tcW")
+                               if c.get(f"{W}type") == "dxa"]
                         parts.append(f"table {inner.get(f'{W}type')} {inner.get(f'{W}w')}"
+                                     + (f" grid={','.join(grid)}" if grid else "")
+                                     + (f" tcw={','.join(tcw)}" if tcw else "")
                                      + (f" images={','.join(widths)}" if widths else ""))
         after, links, cites, i = docx_after(children, i)
         lines.append(f"table {pos.get(f'{W}tblpXSpec')} w={width} "

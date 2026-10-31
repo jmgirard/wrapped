@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M041: Wrap gt and flextable tables in Word
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes the filter's Word output, which users install from `main`
-- **Branch/PR:** —
+- **Branch/PR:** m041-word-raw-tables
 
 ## Goal
 
@@ -101,7 +101,7 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
 
 ## Tasks
 
-- [ ] T1: Fixtures first. In `tests/docx-tables.qmd`, rewrite `tbl-raw` with no `w:tblPr`, uneven
+- [x] T1: Fixtures first. In `tests/docx-tables.qmd`, rewrite `tbl-raw` with no `w:tblPr`, uneven
       grid columns (such as 1000 and 3000), and uneven `dxa` `w:tcW` cells, and change its
       after-paragraph's "keeps its normal layout" text; add `tbl-gt`, `tbl-flex` (one column set
       wider), and `tbl-flex-auto`, each a raw openxml block copied from gt 1.4.0 or flextable 0.10.1
@@ -139,6 +139,8 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
 - 2026-10-31: plan chose a `dxa` box width for the raw table's `w:tblW` over `pct` 5000 as Pandoc's inner tables take, because the probe tested `dxa`; falsified by Word or LibreOffice setting a `dxa`-width raw table wider or narrower than its box.
 - 2026-10-31: plan chose fixtures that copy the packages' XML over installing gt and flextable in CI, because that is a dependency change the plan did not ask for; falsified by a gt or flextable release whose XML differs from the copied forms in `w:tblW`, `w:tblGrid`, or `w:tcW`.
 - 2026-10-31: criteria audit (full mode, fresh Opus reader): 9 findings, all fixed. AC1 now states docx properties, not snapshot lines; `tbl-raw` and `tbl-flex` get uneven grids and T3 an equal-columns plant; scaling rounds running edges, so each column stays within 1 twip; AC3 names the one warning at f207fe3; D-025 lands in the plan commit; AC4 measures the lowest text box of the last row, caption excluded; AC5's grep adds `openxml|raw Word`, judges sentences, and drops its catch-all; AC5 limits proportions to the fixed-layout flextable; `tbl-raw` has no `w:tblPr` and AC4 has Word open the `docx-tables` render. AC6 passed.
+- 2026-10-31: implement started on `m041-word-raw-tables`; the uncommitted `tests/.gitignore` lines (`/.quarto/`, `**/*.quarto_ipynb`, from an earlier render) are not this milestone's and stay unstaged.
+- 2026-10-31: T1: `tests/docx-tables.qmd` has `tbl-raw` (no `w:tblPr`, grid and `dxa` cells 1000/3000) and `tbl-gt`, `tbl-flex` (grid 2880/1080/1080, a two-column header cell), and `tbl-flex-auto`, copied with whitespace between tags removed from gt 1.4.0 and flextable 0.10.1 output; `tests/docx-raw-tables.qmd` renders the packages by hand; `docx_tables` records `grid=` and `tcw=`. The fixture inserts went through a Python script, since the copied XML runs to 31 KB. On the current filter all four warn and stay normal.
 
 ## Decisions
 

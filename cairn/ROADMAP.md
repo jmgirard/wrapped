@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-31 (M040 review: M037 row pruned; LaTeX table row g
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M041 | Wrap gt and flextable tables in Word | planned | — | normal | milestones/M041-word-raw-tables.md |
+| M041 | Wrap gt and flextable tables in Word | in-progress | — | normal | milestones/M041-word-raw-tables.md |
 | M040 | Wrap table floats in LaTeX PDFs | done | — | normal | milestones/archive/M040-latex-table-wrap.md |
 | M039 | Wrap table floats in Word | done | — | normal | milestones/archive/M039-word-table-wrap.md |
 | M038 | Wrap table floats in HTML and Typst | done | — | normal | milestones/archive/M038-table-wrap.md |
