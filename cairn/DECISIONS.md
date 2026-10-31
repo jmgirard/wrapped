@@ -366,3 +366,22 @@ width and scales a column grid, where the table has one, to the box in its
 own proportions. The raw-XML warning goes. **Consequences:** D-022 holds
 for raw Word XML tables too. The LaTeX side of D-024 stands, so a raw
 LaTeX table still keeps its normal layout.
+
+### D-026: The audit drops five Word table box edge cases as not worth keeping
+
+2026-10-31, `/milestone` audit. **Context:** the parked row "Fix Word table
+box edge cases" held review findings from M039 and M041, so the audit put
+it to a disposition. Five of its items need input outside common use.
+**Decision:** the user chose to drop them. (a) A `w:tblPrChange` takes the
+new width inside the change record. (b) Single-quoted widths, or an XML
+comment that holds `<w:tbl>`, stop the grid or cell scaling. (c) A column
+under about half a twip over the ratio rounds to 0. (d) A raw table in a
+Pandoc table cell of the float takes the box width, not its cell's. (e)
+Two raw tables in one box, or two Pandoc tables as in `tbl-quote`, have no
+paragraph between them, so Word may join them. Items (a) to (d) need raw
+openxml written by hand, since `fit_raw` fits what gt 1.4.0 and flextable
+0.10.1 write, and (e) needs two tables in one table float. The spacer item
+of the same row stays parked as "Add the Word spacer only after a table",
+because it shifts the text beside every wrapped Word table. **Consequences:**
+a later finding of the same effect is not filed again unless a user reports
+it. Each drop can be reopened by an entry that supersedes this one.
