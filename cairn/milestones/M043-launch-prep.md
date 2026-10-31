@@ -156,6 +156,7 @@ user's act; the repeated four-format wording on pages other than the home page a
 - 2026-10-31: amendment return: AC1 — "A key under `wrapped:` other than `width`, `gap`, and `breakpoint` prints one warning in each format's render of a file. The match is case-sensitive. The warning names the key and the three keys that the map takes, and for the key `wrap-gap` it also says to write `gap`. Warnings for several unknown keys come in byte order of the key (`Gap` before `alpha`). An unknown key changes no width, gap, or breakpoint. A fixture whose header has `wrap-gap`, other unknown keys including `Breakpoint: 900px`, and `width: 30%` shows each warning in its HTML and EPUB snapshots, and width 30% with the default gap and breakpoint in its HTML snapshot. The render log, read by the key-order check in `tests/verify.py`, shows the warnings in that order."
 - 2026-10-31: substantive amendment: Scope Out names the merged row "Check and tidy code cell options" in place of "Check code cell options in Jupyter"; wording only, the deliverable unchanged.
 - 2026-10-31: status review.
+- 2026-10-31: step-7 approval: m043-launch-prep approved for merge
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
