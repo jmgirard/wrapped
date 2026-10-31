@@ -45,27 +45,27 @@ user's act; the repeated four-format wording on pages other than the home page a
      coverage-complete counts AC checkboxes positionally (M107); departures:
      a "Deviations from RR<NN>" table ends this section. -->
 
-- [ ] AC1: A key under `wrapped:` other than `width`, `gap`, and `breakpoint` prints one warning per rendered
+- [x] AC1: A key under `wrapped:` other than `width`, `gap`, and `breakpoint` prints one warning per rendered
       file. The match is case-sensitive. The warning names the key and the three keys that the map takes, and
       for the key `wrap-gap` it also says to write `gap`. Warnings for several unknown keys come in sorted key
       order. An unknown key changes no width, gap, or breakpoint. A fixture with `wrap-gap` and one other
       unknown key in its header shows each warning and the default width and gap in its HTML and EPUB
       snapshots.
-- [ ] AC2: A knitr code cell makes one table float that Pandoc writes, as `knitr::kable` does, and that table
+- [x] AC2: A knitr code cell makes one table float that Pandoc writes, as `knitr::kable` does, and that table
       wraps without cell options. With `#| width:` and `#| wrap-gap:`, it wraps at that width and that gap,
       over any `wrapped:` width and gap. The fixture's snapshots show this in HTML, PDF through LaTeX, PDF
       through Typst, and Word, for a wrap class in `#| classes:` and for one in a block at the end of
       `#| tbl-cap:`, under a document `wrapped:` width and gap.
-- [ ] AC3: A knitr code cell makes one figure that wraps without cell options. With `#| wrap-gap:`, it wraps at
+- [x] AC3: A knitr code cell makes one figure that wraps without cell options. With `#| wrap-gap:`, it wraps at
       that gap, over any `wrapped:` gap, and its width still comes from `#| out-width:` or the default. A
       figure cell's `#| width:` changes nothing and prints one warning that names `#| out-width:`. A cell's
       `#| wrap-gap:` below zero takes the default with the warning a figure's gap below zero prints. The
       fixture's snapshots show each case in the four formats, with and without `#| out-width:`.
-- [ ] AC4: The Get started and Reference pages state the cell options of AC2 and AC3 and say that they are
+- [x] AC4: The Get started and Reference pages state the cell options of AC2 and AC3 and say that they are
       tested with knitr cells. No sentence on those two pages says that a code cell table takes the document
       defaults. The Reference page states the naming rule of D-027. The Document defaults page states that a
       key other than the three is ignored with a warning.
-- [ ] AC5: `docs/index.qmd` keeps its demo box first. Then `docs/index.qmd` and `README.md` each show the
+- [x] AC5: `docs/index.qmd` keeps its demo box first. Then `docs/index.qmd` and `README.md` each show the
       install command, the `filters:` YAML, and one markdown line with `.wrap-right` before any sentence that
       names a format, a place, or a table kind that does not wrap. The demo box and the Quarto version floor
       are not such sentences. Neither file holds its paragraph that today begins "This version wraps figures
@@ -158,3 +158,11 @@ user's act; the repeated four-format wording on pages other than the home page a
      results, review findings + triage. EXEMPT from the 150-line cap (M55),
      as are the work log (D-046) and the decisions section (D-074); evidence
      never scrambles plan-owned content. -->
+
+Review pass 1, 2026-10-31, on `m043-launch-prep` at 67fceb1 (main not moved since cae0f85).
+
+- AC1: `tests/_snapshots/meta-unknown.html.txt` and `.epub.txt` each hold one warning per unknown key (`Width`, `wrap-gap`), the `wrap-gap` one with "Write gap…"; the HTML figure keeps `--wrap-gap: 1em; --wrap-width: 40%` and breakpoint 576px; `read_meta` sorts the keys before warning and compares case-sensitively. Pass.
+- AC2: `tests/_snapshots/cell-options.{html,pdf,typst,docx}.txt` under document `wrapped:` 45%/20px: `tbl-cell-opts` (class in `#| classes:`) at 30%/3em and `tbl-cell-cap` (class in the `#| tbl-cap:` block) at 35%/2em in HTML styles, LaTeX `wrappedtable` options, Typst `wrapped-width`/`column-gutter`, and Word box w=2808/3276 with text distance 720/480; `tbl-cell-none` at 45%/20px as the control. Pass.
+- AC3: same snapshots: `fig-cell-gap` 2.5em at out-width 30%, `fig-cell-gap-only` 1.5em at the 45% default (no out-width), `fig-cell-width` one "sets width, which a figure cell does not read… out-width" warning with width 35% from out-width and gap 20px, `fig-cell-negative` falls back to 20px with the "not a length or a percent" warning that a `-1em` figure attribute gets (`checked_length`), in all four formats (Word frames w=2808/4212/3276/2808, gap 600/360/300/300). Pass.
+- AC4: read `docs/get-started.qmd` and `docs/reference.qmd` whole: cell options at get-started 96-99 and 170-173 and reference 10-16, each naming knitr; the only "document defaults" sentence left (get-started 171-172) says a cell with neither option takes them; the naming rule at reference 43-48; `docs/defaults.qmd` 44-46 states that other keys are ignored with a warning. Pass.
+- AC5: `docs/index.qmd`: demo box 11-33, then install (41), `filters:` (48), the `.wrap-right` line (57), and the only no-wrap sentence after it (61-63); `README.md`: install (17), `filters:` (25), example (35), and no sentence before them names a format, place, or table kind that does not wrap (line 7 points to the documented limits); neither file holds "This version wraps". Each old sentence, checked one by one per file, is on `formats/html.qmd` (slides and dashboards, tables tested on pages), `formats/word.qmd` (gt and flextable), `formats/latex.qmd` 96-98 (raw LaTeX tables), or `normal-layout.qmd` (four-format table floats; the new "Formats that do not wrap" for figures and tables elsewhere). Pass.
