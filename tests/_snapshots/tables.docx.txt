@@ -5,10 +5,10 @@
 image: cx=152400
 # frames
 # floating tables
-table right w=4212 left=480 right=0 anchor=margin/text | before=p keep | tbl-div, caption, table pct 5000, p | p, p, clear | links=- cites=0
-table left w=3276 left=0 right=360 anchor=margin/text | before=p keep | tbl-block, caption, table pct 5000, p | p, clear | links=- cites=0
-table right w=2808 left=240 right=0 anchor=margin/text | before=p keep | tbl-pipe, caption, table pct 5000, p | p, clear | links=- cites=0
-table right w=3276 left=360 right=0 anchor=margin/text | before=p keep | tbl-cell, caption, table pct 5000, p | p, clear | links=- cites=0
-table left w=3276 left=0 right=360 anchor=margin/text | before=p keep | tbl-cell-block, caption, table pct 5000, p | p, clear | links=- cites=0
-table right w=3276 left=360 right=0 anchor=margin/text | before=p keep | tbl-page, caption, table pct 5000, p | p, clear | links=- cites=0
-table right w=1872 left=360 right=0 anchor=margin/text | before=p keep | tbl-wide, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=4212 left=480 right=0 anchor=margin/text | before=p keep | tbl-div, caption, table pct 5000 grid=2640,2640,2640, p | p, p, clear | links=- cites=0
+table left w=3276 left=0 right=360 anchor=margin/text | before=p keep | tbl-block, caption, table pct 5000 grid=3960,3960, p | p, clear | links=- cites=0
+table right w=2808 left=240 right=0 anchor=margin/text | before=p keep | tbl-pipe, caption, table pct 5000 grid=3960,3960, p | p, clear | links=- cites=0
+table right w=3276 left=360 right=0 anchor=margin/text | before=p keep | tbl-cell, caption, table pct 5000 grid=3960,3960, p | p, clear | links=- cites=0
+table left w=3276 left=0 right=360 anchor=margin/text | before=p keep | tbl-cell-block, caption, table pct 5000 grid=3960,3960, p | p, clear | links=- cites=0
+table right w=3276 left=360 right=0 anchor=margin/text | before=p keep | tbl-page, caption, table pct 5000 grid=3960,3960, p | p, clear | links=- cites=0
+table right w=1872 left=360 right=0 anchor=margin/text | before=p keep | tbl-wide, caption, table pct 5000 grid=1980,1980,1980,1980, p | p, clear | links=- cites=0

@@ -115,13 +115,13 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
       `w:tblPr` when the table has none), and scale its first `w:tblGrid` and its `dxa` `w:tcW`
       widths by rounding the running column edges to the nearest twip, so that each column is
       within 1 twip of its share and the sum is exact. Update both files' header comments.
-- [ ] T3: Run `python3 tests/verify.py --update` and read the snapshot diff. Plant each defect in
+- [x] T3: Run `python3 tests/verify.py --update` and read the snapshot diff. Plant each defect in
       turn (no `w:tblW` change, no grid scaling, equal columns in place of scaled ones, no `w:tcW`
       scaling, the raw check restored) and see the `docx-tables` snapshot go red.
-- [ ] T4: Render `tests/docx-raw-tables.qmd` to Word; make its LibreOffice and Word PDFs and read
+- [x] T4: Render `tests/docx-raw-tables.qmd` to Word; make its LibreOffice and Word PDFs and read
       the `pdftohtml -xml` boxes for AC4; save the docx of `tests/docx-tables.qmd` as PDF through
       Word.
-- [ ] T5: Docs: the Tables section of `docs/formats/word.qmd`, `docs/normal-layout.qmd`,
+- [x] T5: Docs: the Tables section of `docs/formats/word.qmd`, `docs/normal-layout.qmd`,
       `docs/get-started.qmd`, `docs/reference.qmd`, `docs/index.qmd`, README.md, DESIGN.md (the
       non-goals, the warnings list, the Word paragraph, the D-023 line near line 251), and the E5
       row of `cairn/references/wrap-mechanisms.md`; then `quarto render docs`.
@@ -146,6 +146,8 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
 - 2026-10-31: T4 (gt and flextable part): `tests/docx-raw-tables.qmd` now sets `echo: false`, since with its code shown the third box broke across pages. Rendered from a scratch folder linked to `_extensions/`; LibreOffice and Word 16.114.3 PDFs, one page each. A `pdftohtml -xml` script (scratchpad `measure.py`, matching cells by digits and short words, since LibreOffice's PDF loses letters) found, for all three tables in both PDFs, the paragraph's first line above the last row's lowest box and no overlap with the cell boxes: Word line tops 362, 567, 851 against row bottoms 487, 790, 1016; LibreOffice 328, 542, 820 against 451, 694, 984. The Word save of `docx-tables.docx` waits for the suite.
 - 2026-10-31: finding outside scope: with the code shown, a box at a page's bottom broke across pages in Word 16.114 and LibreOffice, a limit the site named for LibreOffice only. `docs/formats/word.qmd` and the DESIGN.md Known issue now name Word too; candidate row "Keep Word table boxes on one page" added at normal (search-first: no row held it; the Known issue held the LibreOffice half).
 - 2026-10-31: T5: README.md, `docs/index.qmd`, `docs/get-started.qmd` (two passages), `docs/reference.qmd`, `docs/normal-layout.qmd` (bullet removed), `docs/formats/word.qmd` Tables, DESIGN.md (goals, warnings, non-goals, the pass list near line 251, the Word paragraph), and the E5 row now say gt and flextable tables wrap in Word. The AC5 grep's remaining hits say they wrap, or are about other raw OpenXML. The simple-english hook flags a "would" in `wrap-mechanisms.md` that is a quoted Typst error, left as it is.
+- 2026-10-31: T3: `python3 tests/verify.py --update` passed all 128 renders. Snapshot diff: `docx-tables` drops the raw-XML warning and lists `tbl-raw` `dxa 3744 grid=936,2808 tcw=936,2808`, `tbl-gt` and `tbl-flex-auto` `dxa 3744`, `tbl-flex` `dxa 3744 grid=2139,803,802`; the Pandoc tables in `docx-tables`, `contexts`, `fixture`, and `tables` gain only `grid=` with Pandoc's own widths. Plants (scratchpad `plants.py`, each file restored from git): `pct 5000` in place of `dxa` red on all four; no grid scaling red on `tbl-raw` and `tbl-flex` (1000,3000 and 2880,1080,1080); equal columns red (1872,1872 and 1248,1248,1248); no `w:tcW` scaling red (`tcw=1000,3000`); `main`'s `wrapped.lua` red (four warnings). The restored render matches the snapshot.
+- 2026-10-31: T4 done: `tests/word-pdf.applescript` saved the Word render of `tests/docx-tables.qmd` as a 5-page PDF, exit 0; its text shows each raw table's paragraph beside its caption.
 
 ## Decisions
 
