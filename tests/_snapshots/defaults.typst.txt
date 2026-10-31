@@ -1,5 +1,5 @@
 # warnings
-1x wrapped: Typst does not use the height of the image plot.png in a wrapped figure or table, so the box sets the image's width.
+1x wrapped: Typst does not use the height of the image plot.png in a wrapped figure, so the image fills the box width.
 1x wrapped: wrap-gap "1ex" on #fig-upper is not a length that Typst can use, so it is 30px.
 # typ
 figure: fig-defaults image-width=yes
