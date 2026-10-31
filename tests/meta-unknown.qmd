@@ -10,6 +10,7 @@ wrapped:
   alpha: 2
   margin: 3
   Gap: 4
+  Breakpoint: 900px
 format:
   html: default
   epub: default

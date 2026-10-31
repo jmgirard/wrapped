@@ -1,4 +1,5 @@
 # warnings
+1x wrapped: the key Breakpoint in the wrapped metadata is not width, gap, or breakpoint, so it is ignored.
 1x wrapped: the key Gap in the wrapped metadata is not width, gap, or breakpoint, so it is ignored.
 1x wrapped: the key Width in the wrapped metadata is not width, gap, or breakpoint, so it is ignored.
 1x wrapped: the key alpha in the wrapped metadata is not width, gap, or breakpoint, so it is ignored.

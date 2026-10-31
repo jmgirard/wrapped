@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M043: Prepare the interface and front pages for launch
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -29,7 +29,7 @@ Document defaults page; a home page and a README with the demo, then a short ins
 and with the limits paragraph moved to the format pages and `docs/normal-layout.qmd`.
 
 **Out:** the v0.3.0 release, which the user declares through `/cairn-release`; Jupyter cells, which CI does
-not install, so the docs name knitr (candidate row "Check code cell options in Jupyter"); a `width` inside a
+not install, so the docs name knitr (candidate row "Check and tidy code cell options"); a `width` inside a
 `#| tbl-cap:` caption block, which stays ignored as the docs say; announcing the extension, which is the
 user's act; the repeated four-format wording on pages other than the home page and the README.
 
@@ -45,12 +45,14 @@ user's act; the repeated four-format wording on pages other than the home page a
      coverage-complete counts AC checkboxes positionally (M107); departures:
      a "Deviations from RR<NN>" table ends this section. -->
 
-- [x] AC1: A key under `wrapped:` other than `width`, `gap`, and `breakpoint` prints one warning per rendered
-      file. The match is case-sensitive. The warning names the key and the three keys that the map takes, and
-      for the key `wrap-gap` it also says to write `gap`. Warnings for several unknown keys come in sorted key
-      order. An unknown key changes no width, gap, or breakpoint. A fixture with `wrap-gap` and one other
-      unknown key in its header shows each warning and the default width and gap in its HTML and EPUB
-      snapshots.
+- [ ] AC1: A key under `wrapped:` other than `width`, `gap`, and `breakpoint` prints one warning in each
+      format's render of a file. The match is case-sensitive. The warning names the key and the three keys that
+      the map takes, and for the key `wrap-gap` it also says to write `gap`. Warnings for several unknown keys
+      come in byte order of the key (`Gap` before `alpha`). An unknown key changes no width, gap, or
+      breakpoint. A fixture whose header has `wrap-gap`, other unknown keys including `Breakpoint: 900px`, and
+      `width: 30%` shows each warning in its HTML and EPUB snapshots, and width 30% with the default gap and
+      breakpoint in its HTML snapshot. The render log, read by the key-order check in `tests/verify.py`, shows
+      the warnings in that order.
 - [x] AC2: A knitr code cell makes one table float that Pandoc writes, as `knitr::kable` does, and that table
       wraps without cell options. With `#| width:` and `#| wrap-gap:`, it wraps at that width and that gap,
       over any `wrapped:` width and gap. The fixture's snapshots show this in HTML, PDF through LaTeX, PDF
@@ -150,6 +152,10 @@ user's act; the repeated four-format wording on pages other than the home page a
 - 2026-10-31: status in-progress for the AC1 amendment.
 - 2026-10-31: re-audit: AC1 (full) — 4 findings: the no-effect claim cannot fail while the fixture holds only unknown keys (add a known `width: 30%`); "sorted" names no order (say byte order); the snapshot sorts warnings, so name the key-order check as the order's evidence; the format domain rests on the format-independent loop, no change.
 - 2026-10-31: re-audit: AC1 (full) — 2 findings on the revised wording: "one warning per rendered file" reads as per input file, though a two-format run prints each warning once per format (say "in each format's render of a file"); breakpoint has no unknown look-alike key in the fixture (add `Breakpoint: 900px`, or narrow the breakpoint clause to the fixture); byte order confirmed under both C and en_US collation.
+- 2026-10-31: at the stop after the second re-audit the user chose to close both gaps; `tests/meta-unknown.qmd` gained `width: 30%` and `Breakpoint: 900px`, and its snapshots show seven key warnings, 30%, 1em, and 576px; the key-order check passes for HTML and EPUB.
+- 2026-10-31: amendment return: AC1 — "A key under `wrapped:` other than `width`, `gap`, and `breakpoint` prints one warning in each format's render of a file. The match is case-sensitive. The warning names the key and the three keys that the map takes, and for the key `wrap-gap` it also says to write `gap`. Warnings for several unknown keys come in byte order of the key (`Gap` before `alpha`). An unknown key changes no width, gap, or breakpoint. A fixture whose header has `wrap-gap`, other unknown keys including `Breakpoint: 900px`, and `width: 30%` shows each warning in its HTML and EPUB snapshots, and width 30% with the default gap and breakpoint in its HTML snapshot. The render log, read by the key-order check in `tests/verify.py`, shows the warnings in that order."
+- 2026-10-31: substantive amendment: Scope Out names the merged row "Check and tidy code cell options" in place of "Check code cell options in Jupyter"; wording only, the deliverable unchanged.
+- 2026-10-31: status review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
