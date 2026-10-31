@@ -45,7 +45,7 @@ user's act; the repeated four-format wording on pages other than the home page a
      coverage-complete counts AC checkboxes positionally (M107); departures:
      a "Deviations from RR<NN>" table ends this section. -->
 
-- [ ] AC1: A key under `wrapped:` other than `width`, `gap`, and `breakpoint` prints one warning in each
+- [x] AC1: A key under `wrapped:` other than `width`, `gap`, and `breakpoint` prints one warning in each
       format's render of a file. The match is case-sensitive. The warning names the key and the three keys that
       the map takes, and for the key `wrap-gap` it also says to write `gap`. Warnings for several unknown keys
       come in byte order of the key (`Gap` before `alpha`). An unknown key changes no width, gap, or
@@ -204,3 +204,29 @@ Review pass 1, 2026-10-31, on `m043-launch-prep` at 67fceb1 (main not moved sinc
 - ripple #2: DESIGN's `wrapped:` block and pipeline step 1 omit the unknown-key warning — fix now, fixed e17962f.
 - snapshot: tests/_snapshots/meta-unknown.html.txt, meta-unknown.epub.txt — new; four more key warnings from diff-bug #1's fix, called for by AC1.
 - snapshot: tests/_snapshots/cell-options.{html,pdf,typst,docx}.txt — new; two more figure cells from diff-bug #4's fix, called for by AC3.
+
+Review pass 2, 2026-10-31, on `m043-launch-prep` at 41fbf4b, then 11efc14 (main not moved), after the AC1 amendment return.
+
+- AC1: `python3 tests/verify.py` at 41fbf4b printed "ok order meta-unknown.html: 7 unknown keys in sorted order" and the same for EPUB (the key-order check reads the render log, compared in code-point order, which is byte order for these ASCII keys); `tests/_snapshots/meta-unknown.html.txt` holds each of the seven key warnings once, the `wrap-gap` one with "Write gap…", `--wrap-width: 30%` from the known key, `--wrap-gap: 1em`, and breakpoint 576px despite `Width: 25%`, `Gap: 4`, and `Breakpoint: 900px`; the EPUB snapshot holds the seven key warnings once each beside the format warning; `read_meta` compares names exactly and runs the loop before any format branch. Pass.
+- AC2, AC3 (refresh): the pass-1 evidence stands at this head; the suite matched all four `cell-options` snapshots, which now also show `fig-cell-width-only` (warning, 45% default, 20px) and `fig-cell-negative-only` (20px fallback with the warning) in four formats, so each AC3 case runs with and without `#| out-width:`.
+- AC4, AC5 (refresh): pass-1 evidence stands; since then only `docs/reference.qmd` 40-42 changed, now naming the cell options per cell kind.
+- AC6 (local part): `python3 tests/verify.py` all 134 renders pass at 41fbf4b; `quarto render docs` exit 0 at 11efc14 plus the DESIGN wrap; `docs_layout.py --no-word` 16 ok and `--html` 9 ok. CI waits on the PR; not ticked.
+- D-002 check: a by-hand Jupyter render (scratch venv, Quarto 1.10.20, HTML) gave the table cell 30% and 3em, the figure cell gap 2em at the 40% default, and the figure-cell width warning, as knitr does.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: the key-order comment holds worked arithmetic (7!) and a stale-prone count — fix now: the comment now says the fixture's several keys seldom match sorted order by chance.
+- diff-bug #2: the key-order check runs on EPUB too, on the same code path — reject (planned change): AC1 asks for the order in each format's render.
+- diff-bug #3: `fig-cell-negative-only` runs the same fallback path as `fig-cell-negative` — reject (planned change): AC3 asks for each case with and without `#| out-width:`.
+- diff-bug #4: `width: 30%` beside `Width: 25%` no longer shows by value that `Width` changes nothing under a case-blind read that prefers the exact key — noted: the snapshot's `Width` warning line still catches case-blind matching, and `Gap` and `Breakpoint` show it by value.
+- diff-bug #5: DESIGN line 99 runs to 98 characters, and "sorted order" wording remained — fix now: the line is wrapped; the wording was fixed in 11efc14.
+- diff-bug #6: DESIGN's code cell paragraph leaves out the subfigure parent float that the `cell_div` comment names — noted: harmless, the parent keeps its normal layout.
+- blame-history #1: defaults.qmd and DESIGN state the cell options with no engine limit, while D-002 asks for one by-hand Jupyter check — fix now: the check ran (D-002 check line above) and the candidate row's Jupyter item is narrowed to the formats left unchecked.
+- blame-history #2: the amendment replaced the "default width and gap" clause with `width: 30%` — noted: the user chose it at the stop, and the gap and breakpoint defaults still show.
+- blame-history #3: `table.sort` follows the locale — reject (false): the second AC1 re-audit read byte order under both C and en_US, and the suite's order check passed.
+- prior-review #1: no recorded plant for the key-order check — reject (false): pass 1's diff-bug #1 line records a planted removal of the sort failing 3 of 3 runs.
+- prior-review #2: DESIGN's "a cell's one figure float" sentence and the comment disagree on subfigure parents — reject (false): both say a cell's one figure float gets no options, and the comment adds the parent case.
+- prior-review #3: Reference names a table cell's `#| width:` as first with no new case — reject (false): `tbl-cell-opts` shows 30% over the document's 45%.
+- prior-review #4: the ROADMAP merge keeps both rows' content — noted.
+- ripple #1: the `tests/verify.py` docstring omitted the key-order check — fix now, fixed 11efc14.
+- ripple #2: DESIGN pipeline step 1 said "sorted order" — fix now, fixed 11efc14.
+- ripple #3: the `read_meta` comment said "sorted order" — fix now, fixed 11efc14.
+- snapshot: list unchanged since pass 1 (meta-unknown html and epub, cell-options in four formats, all new files, called for by AC1 and AC3).

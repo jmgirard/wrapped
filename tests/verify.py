@@ -1817,8 +1817,8 @@ def render(fixture, fmt):
 
 # The fixtures whose unknown wrapped keys must warn in sorted key order. The
 # snapshot sorts its warnings, so this check reads the order of the render's
-# own output. With seven keys, an unsorted print order matches sorted order
-# by chance once in 5040 runs.
+# own output. The fixture has several unknown keys, so an unsorted print
+# order seldom matches sorted order by chance.
 KEY_ORDER = {"meta-unknown"}
 UNKNOWN_KEY = re.compile(r"wrapped: the key (\S+) in the wrapped metadata")
 

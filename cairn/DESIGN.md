@@ -96,8 +96,8 @@ class lands on the cell's enclosing div, not on the figure node, and the
 filter carries it to the figure (`references/wrap-mechanisms.md`, S1; D-001).
 knitr puts a cell's `#| width:` and `#| wrap-gap:` on the cell div, and a
 table float gets them too. A cell's one figure float does not, so
-`cell_div` carries the gap to that figure, whose width comes from `#| out-width:`; a figure cell's
-`#| width:` warns (corrected M043).
+`cell_div` carries the gap to that figure, whose width comes from
+`#| out-width:`; a figure cell's `#| width:` warns (corrected M043).
 
 | Attribute | Values | Default | Notes |
 |---|---|---|---|
