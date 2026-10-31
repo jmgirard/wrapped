@@ -95,8 +95,8 @@ image, not on the link:
 Give the cell a `fig-` label and a `fig-cap`, so that Quarto makes a figure.
 Put the class in `#| classes:`, and set the width with `#| out-width:`. To
 set the gap, add `#| wrap-gap:`, as in `#| wrap-gap: 2em`. A figure cell
-does not read `#| width:`, and the render prints a warning when a cell
-sets it. The extension's tests use knitr cells for these options.
+does not read `#| width:`, and the render prints a warning when a wrapped
+figure cell sets it. The extension's tests use knitr cells for these options.
 
 ::: demo
 ```{r}

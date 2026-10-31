@@ -3,8 +3,8 @@
 wrapped is a Quarto filter extension. It lets body text flow beside a
 figure, to the left or right of it. The figure keeps its number, its
 caption, and its `@fig-` links. It works in HTML, in PDF through LaTeX, in
-PDF through Typst, and in Word, for figures and for tables with a `#tbl-`
-label.
+PDF through Typst, and in Word. Tables with a `#tbl-` label wrap too, with
+the limits that the documentation lists for each format.
 
 The documentation is at <https://jmgirard.github.io/wrapped/>.
 

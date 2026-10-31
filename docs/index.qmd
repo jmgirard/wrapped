@@ -58,7 +58,7 @@ flow beside it:
 ```
 
 [Get started](get-started.qmd) shows each kind of figure and table that
-wraps. The [examples](examples/index.qmd) show each one rendered in HTML,
-in PDF through LaTeX, in PDF through Typst, and in Word. Each format page
+wraps. The [examples](examples/index.qmd) show each kind of figure
+rendered in HTML, in PDF through LaTeX, in PDF through Typst, and in Word. Each format page
 says what that format wraps, and [Where a figure keeps its normal
 layout](normal-layout.qmd) lists the places and formats that do not wrap.

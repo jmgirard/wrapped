@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-31 (status audit: validate green, no open PRs or is
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M043 | Prepare the interface and front pages for launch | in-progress | — | normal | milestones/M043-launch-prep.md |
+| M043 | Prepare the interface and front pages for launch | review | — | normal | milestones/M043-launch-prep.md |
 | M042 | Keep short Word table boxes on one page | dropped | — | normal | milestones/archive/M042-word-table-keep.md |
 | M041 | Wrap gt and flextable tables in Word | done | — | normal | milestones/archive/M041-word-raw-tables.md |
 | M040 | Wrap table floats in LaTeX PDFs | done | — | normal | milestones/archive/M040-latex-table-wrap.md |

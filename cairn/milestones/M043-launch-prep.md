@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M043: Prepare the interface and front pages for launch
 
-- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -111,7 +111,7 @@ user's act; the repeated four-format wording on pages other than the home page a
 - [x] T6: Rewrite `docs/index.qmd` after the demo box and the top of `README.md`: install, the `filters:` YAML,
       one `.wrap-right` line, and a link to Get started. Check each sentence of each limits paragraph against
       `docs/formats/` and `docs/normal-layout.qmd`, and add any sentence that no page states.
-- [ ] T7: Run `python3 tests/verify.py` and `quarto render docs`, and run the docs layout checks.
+- [x] T7: Run `python3 tests/verify.py` and `quarto render docs`, and run the docs layout checks.
 
 ## Work log
 <!-- owner: any skill · append-only; one line per entry; absolute dates.
@@ -142,6 +142,9 @@ user's act; the repeated four-format wording on pages other than the home page a
 - 2026-10-31: T4 done: knitr puts `width` and `wrap-gap` on the cell div but not on a figure float (dump filter), so `cell_div` carries both and `float_target` takes a figure's gap from the float, then the cell, then the image; a figure cell's `width` warns once naming `out-width`. Snapshots: 2.5em at out-width 30%, 1.5em at the 45% default with no out-width, the width warning with out-width 35% kept, and `-1em` falling back to 20px with the same "not a length or a percent" warning a figure attribute of `-1em` prints, in all four formats.
 - 2026-10-31: T5 done: Get started (figure cell `#| wrap-gap:` and the `#| width:` warning; table cell `#| width:` and `#| wrap-gap:`), Reference (cell options, the naming rule, the unknown-key rule), and Document defaults (unknown keys warn; cell options come before the defaults) updated, each naming knitr; `quarto render docs` exit 0 re-ran the frozen get-started cell; `docs_layout.py --no-word` and `--html` (scratch venv, playwright 1.64.0) all ok.
 - 2026-10-31: T6 done: the limits paragraph left `docs/index.qmd` (now demo, Install, a "Wrap a figure" line, and links) and `README.md` (now one sentence naming the four formats and `#tbl-` tables); sentence check: slides and dashboards, `#tbl-` tables in four formats, gt and flextable in Word, raw LaTeX tables, and HTML tables tested on pages were already on `formats/html.qmd`, `formats/word.qmd`, `formats/latex.qmd`, and `normal-layout.qmd`; the figure and table sentences for other formats were on no page, so `normal-layout.qmd` gained "Formats that do not wrap" (one warning per document, per the `tables` and `meta-unknown` EPUB snapshots).
+- 2026-10-31: T7 done: `python3 tests/verify.py` all 134 renders pass (run at the T4 code state; later commits touch docs only); `quarto render docs` exit 0 after the claim-audit fixes; `docs_layout.py --no-word` and `--html` all ok.
+- 2026-10-31: claim audit: 41 claims read, 4 corrected — docs/defaults.qmd, docs/get-started.qmd, docs/index.qmd, README.md (cell options named per cell kind; the width warning only for a wrapped figure cell; examples show figures only; the README's table sentence now points to the site's limits); the reader re-read all 4 as holding.
+- 2026-10-31: status review.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
