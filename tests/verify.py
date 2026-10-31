@@ -141,6 +141,7 @@ RENDERS = [
     ("tables-cell-columns", "typst", True),
     ("tables-cell-columns", "pdf", True),
     ("tables-latex", "pdf", True),
+    ("tables-span", "pdf", True),
     ("tables-column-body", "html", True),
     ("tables-column-body", "typst", True),
     ("cap-margin", "html", True),

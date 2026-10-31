@@ -101,10 +101,11 @@ pages, in place of the `longtable` that Quarto writes.
 The places on this page keep a table float's normal layout as they keep a
 figure's. For a table, `tbl-cap-location` takes the place of
 `fig-cap-location`, and `tbl-column` takes the place of `fig-column`, on
-a code cell and in the document metadata. In HTML, PDF through LaTeX, and
-PDF through Typst, a `tbl-column` of `margin` or `page` puts the table in
-the margin or a page-wide column, where it keeps its normal layout. In
-Word, a
+a code cell and in the document metadata. In HTML and PDF through Typst,
+a `tbl-column` of `margin` or `page` puts the table in the margin or a
+page-wide column, where it keeps its normal layout. In PDF through LaTeX,
+Quarto leaves such a table in the text column, where it keeps its normal
+layout. In Word, a
 `tbl-column` of `margin` keeps the table's normal layout, and one of
 `page` leaves it in the body, where it wraps. A document's `fig-column`
 leaves tables in the body, where they wrap.
@@ -123,9 +124,9 @@ prints the same warning there, and the figure wraps in the other formats.
 - A block quote: in PDF through LaTeX.
 - A table float whose table is raw Word XML, as gt and flextable write
   one: in Word, where the warning names gt and flextable.
-- A table float whose table is raw LaTeX, as gt, kableExtra, tinytable,
-  and `knitr::kable(format = "latex")` write one: in PDF through LaTeX,
-  where the warning names gt, kableExtra, and tinytable.
+- A table float that holds raw LaTeX, as a table from gt, kableExtra,
+  tinytable, or `knitr::kable(format = "latex")` does: in PDF through
+  LaTeX, where the warning names gt, kableExtra, and tinytable.
 - A table cell: in Word and in PDF through LaTeX. In PDF through LaTeX, a
   captioned figure in a table cell fails to render, with or without the
   extension, so only an image with no caption renders there.

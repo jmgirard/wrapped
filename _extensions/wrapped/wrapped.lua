@@ -775,7 +775,9 @@ end
 -- no widths: each column's share is in proportion to the length of the
 -- longest text in a cell of that column that spans no other column, and a
 -- column with no such text counts as one character. A table with a width
--- on any column takes column_shares, as in Word.
+-- on any column takes column_shares, as in Word. Pandoc leaves the cells
+-- that a row span covers out of the rows below it, so the walk skips the
+-- columns that a span from a row above still covers.
 local function text_shares(tbl)
   for _, spec in ipairs(tbl.colspecs) do
     local w = spec[2]
@@ -783,15 +785,19 @@ local function text_shares(tbl)
   end
   local shares, sum = {}, 0
   local function weigh(rows)
+    local covered = {}
     for _, row in ipairs(rows) do
       local col = 1
       for _, cell in ipairs(row.cells) do
+        while (covered[col] or 0) > 0 do col = col + 1 end
         if cell.col_span == 1 then
           local n = utf8.len(pandoc.utils.stringify(cell.contents)) or 1
           shares[col] = math.max(shares[col] or 1, n)
         end
+        for c = col, col + cell.col_span - 1 do covered[c] = cell.row_span end
         col = col + cell.col_span
       end
+      for c, n in pairs(covered) do covered[c] = math.max(n - 1, 0) end
     end
   end
   weigh(tbl.head.rows)
@@ -837,6 +843,8 @@ local function latex_tabular(tbl)
   end
   foot, body = split(rows, "\\endlastfoot")
   local _, last = split(foot, "\\endfoot")
+  -- Pandoc's template loads multirow only for a table it writes itself.
+  if tex:find("\\multirow", 1, true) then quarto.doc.use_latex_package("multirow") end
   return pandoc.RawBlock("latex", "\\begin{tabular}" .. spec .. "\n" .. head .. body .. last .. "\\end{tabular}")
 end
 
@@ -1618,9 +1626,9 @@ local function raw_docx_table(content)
   return found
 end
 
--- True when a float's content holds raw LaTeX, as gt, kableExtra, tinytable,
--- and knitr::kable(format = "latex") write a table. The filter cannot
--- rewrite such a table for wraptable (D-024).
+-- True when a float's content holds any raw LaTeX block, as a table from
+-- gt, kableExtra, tinytable, or knitr::kable(format = "latex") does. The
+-- filter cannot rewrite such a table for wraptable (D-024).
 local function raw_latex_table(content)
   if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
   local found = false
@@ -1711,14 +1719,14 @@ local function float_target(float)
   -- or warns on its own. Quarto numbers such figures
   -- with the cell's label and `-1`, `-2`, and so on.
   local several = carried and cell.several and float.type == "Figure"
-  -- In LaTeX, a table that is raw LaTeX, as gt, kableExtra, and tinytable
-  -- write it, keeps its normal layout: the filter cannot rewrite it as a
-  -- tabular for wraptable (D-024). It warns before the next-block rule, as
-  -- Word does.
+  -- In LaTeX, a table float that holds any raw LaTeX block, as a table
+  -- from gt, kableExtra, or tinytable does, keeps its normal layout: the
+  -- filter cannot rewrite such a table as a tabular for wraptable (D-024).
+  -- It warns before the next-block rule, as Word does.
   if is_table and is_latex and not context and raw_latex_table(float.content) then
     keep_normal(float)
     quarto.log.warning(string.format(
-      "wrapped: the table #%s is raw LaTeX, as from gt, kableExtra, or tinytable, so it does not wrap in LaTeX.",
+      "wrapped: the table #%s holds raw LaTeX, as a table from gt, kableExtra, or tinytable does, so it does not wrap in LaTeX.",
       float.identifier))
     return float
   end
