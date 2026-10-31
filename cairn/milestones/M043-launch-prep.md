@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M043: Prepare the interface and front pages for launch
 
-- **Status:** review   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
@@ -145,6 +145,9 @@ user's act; the repeated four-format wording on pages other than the home page a
 - 2026-10-31: T7 done: `python3 tests/verify.py` all 134 renders pass (run at the T4 code state; later commits touch docs only); `quarto render docs` exit 0 after the claim-audit fixes; `docs_layout.py --no-word` and `--html` all ok.
 - 2026-10-31: claim audit: 41 claims read, 4 corrected — docs/defaults.qmd, docs/get-started.qmd, docs/index.qmd, README.md (cell options named per cell kind; the width warning only for a wrapped figure cell; examples show figures only; the README's table sentence now points to the site's limits); the reader re-read all 4 as holding.
 - 2026-10-31: status review.
+- 2026-10-31: review pass 1 merged the follow-up row "Strip code cell options from cell divs" and the plan's "Check code cell options in Jupyter" into "Check and tidy code cell options" (roadmap line cap); the Scope Out item still names the old Jupyter title.
+- 2026-10-31: amendment routed: AC1 — diff-bug #3: AC1 asks the EPUB snapshot to show the default width and gap, which an EPUB snapshot never records, so AC1 as written cannot be met; the fixture now has five unknown keys beside `wrap-gap`, not one.
+- 2026-10-31: status in-progress for the AC1 amendment.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
