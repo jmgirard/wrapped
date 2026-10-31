@@ -117,10 +117,11 @@ HTML, in PDF through LaTeX, in PDF through Typst, and in Word.
 
 ## Wrap a table
 
-A table float wraps in HTML, in PDF through Typst, and in Word. A table
-float is a table with a `#tbl-` label. In PDF through LaTeX it keeps its
-normal layout, and the render prints one warning for each table. Put the
-class and the width on a `#tbl-` div:
+A table float wraps in HTML, in PDF through LaTeX, in PDF through Typst,
+and in Word. A table float is a table with a `#tbl-` label. A table that an
+R package such as gt writes as raw LaTeX or raw Word XML keeps its normal
+layout in that format, and the render prints one warning for each table.
+Put the class and the width on a `#tbl-` div:
 
 ```markdown
 ::: {#tbl-means .wrap-right width="45%"}
@@ -165,4 +166,6 @@ The class can also go in the attribute block at the end of the caption:
   block at the end of `#| tbl-cap:`. A code cell table takes the width and
   gap of the [document defaults](defaults.qmd). In Word, a table from gt
   or flextable keeps its normal layout (see
-  [Word](formats/word.qmd#tables)).
+  [Word](formats/word.qmd#tables)). In PDF through LaTeX, a table from gt,
+  kableExtra, or tinytable keeps its normal layout (see
+  [PDF through LaTeX](formats/latex.qmd#tables)).

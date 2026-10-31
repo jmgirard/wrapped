@@ -771,16 +771,53 @@ local function column_shares(tbl)
   return shares
 end
 
+-- The shares of a LaTeX table float's box for a table whose columns have
+-- no widths: each column's share is in proportion to the length of the
+-- longest text in a cell of that column that spans no other column, and a
+-- column with no such text counts as one character. A table with a width
+-- on any column takes column_shares, as in Word.
+local function text_shares(tbl)
+  for _, spec in ipairs(tbl.colspecs) do
+    local w = spec[2]
+    if type(w) == "number" and w > 0 then return column_shares(tbl) end
+  end
+  local shares, sum = {}, 0
+  local function weigh(rows)
+    for _, row in ipairs(rows) do
+      local col = 1
+      for _, cell in ipairs(row.cells) do
+        if cell.col_span == 1 then
+          local n = utf8.len(pandoc.utils.stringify(cell.contents)) or 1
+          shares[col] = math.max(shares[col] or 1, n)
+        end
+        col = col + cell.col_span
+      end
+    end
+  end
+  weigh(tbl.head.rows)
+  for _, body in ipairs(tbl.bodies) do
+    weigh(body.head)
+    weigh(body.body)
+  end
+  weigh(tbl.foot.rows)
+  for i = 1, #tbl.colspecs do
+    shares[i] = shares[i] or 1
+    sum = sum + shares[i]
+  end
+  for i = 1, #shares do shares[i] = shares[i] / sum end
+  return shares
+end
+
 -- Writes a Pandoc table as a raw tabular for a wrappedtable, since wrapfig's
 -- wraptable cannot hold the longtable that Pandoc writes (D-024). Each
--- column takes its share of the box (column_shares), so Pandoc writes p{}
+-- column takes its share of the box (text_shares), so Pandoc writes p{}
 -- columns that fit it. Pandoc's longtable holds a first head, a head that
 -- repeats on later pages, and a foot before the body. The tabular keeps the
 -- first head and sets the foot after the body. Pandoc puts a longtable with
 -- no caption in a group that keeps the table counter, which a tabular does
 -- not need.
 local function latex_tabular(tbl)
-  local shares = column_shares(tbl)
+  local shares = text_shares(tbl)
   for i, spec in ipairs(tbl.colspecs) do tbl.colspecs[i] = { spec[1], shares[i] } end
   local tex = pandoc.write(pandoc.Pandoc({ tbl }), "latex")
   tex = tex:gsub("^{\\def\\LTcaptype{none}[^\n]*\n(.*)\n}%s*$", "%1")

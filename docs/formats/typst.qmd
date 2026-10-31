@@ -7,9 +7,7 @@ paragraphs after it in a `wrap-content` call from the Typst package wrap-it
 0.1.1. The extension ships its own copy of wrap-it, so the render does not
 download it. Citations and `@fig-` links in the text beside the figure
 work. A wrapped [table float](../get-started.qmd#wrap-a-table) goes in a
-`wrap-content` call in the same way. Table floats wrap in HTML, PDF
-through Typst, and Word. In PDF through LaTeX they keep their normal
-layout, and the render prints a warning.
+`wrap-content` call in the same way.
 
 ## Width and gap
 

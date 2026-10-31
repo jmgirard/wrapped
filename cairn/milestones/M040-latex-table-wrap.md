@@ -61,9 +61,14 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
       attributes, or the document's `wrapped:` keys set. Each environment holds the table's
       `\caption`, its `\label`, and one `tabular`, and no `longtable`. Each column of the six tables
       of `tests/tables.qmd`, whose columns have no widths, is a `p{}` column whose `\real{}` factor
-      is 1/n of the box's line width less its column padding, as Pandoc writes relative widths, for
-      a table of n columns; the columns of `tbl-rel`, whose columns all have relative widths, have
-      `\real{}` factors in the proportion of those widths (evidence: both fixtures' LaTeX snapshots).
+      (the share of the box's line width less its column padding that Pandoc writes) equals that
+      column's length divided by the sum of the table's column lengths, rounded to four decimals,
+      where a column's length is the larger of one and the largest number of characters, spaces
+      included, in the plain text (formatting removed) of a header or body cell of that column
+      that spans no other column; the columns of `tbl-rel`, whose columns all have relative widths,
+      have `\real{}` factors equal to each width that Pandoc's reader gives the column (its dashes'
+      share of the separator line) divided by the sum of the widths, rounded to four decimals
+      (evidence: both fixtures' LaTeX snapshots).
 - [ ] AC3: `tests/tables-latex.qmd`, in which `tbl-rel` is the only Pandoc table and comes before
       `tbl-raw`, renders to PDF
       through LaTeX with exit status 0. Its PDF text shows `tbl-rel`'s caption numbered "Table 1"
@@ -161,6 +166,13 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 - 2026-10-31: T1 done: `wrapped.tex` has `\__wrapped_begin:nn`/`\__wrapped_end:n` taking the kind; `wrappedfigure` and `wrappedtable` (over `\wraptable`) share keys, modes, gap, and `\wrapped@endwrap`. Multicols warning reads "<Kind> in multicols set as normal <kind>", the two-column warning "Two-column text: figures and tables set as normal floats". `tests/verify.py`'s log check matches multicols warnings by line and kind; `multicols`, `twocolumn-switch`, `twocolumn-class` log checks pass.
 - 2026-10-31: T2 in progress (checkpoint): `raw_latex_table` and `latex_tabular` added; a LaTeX table float sets `fig-env` to `wrappedtable` and `tbl-pos` (Quarto reads `<type>-pos`, in 1.9.36 and 1.10.20) to `tex_options`. `tests/tables.qmd` builds with the six tables in `wrappedtable`; two LaTeX-only `\clearpage` blocks (before `tbl-block` and before Form 4) give wrapfig room, since tables 2 and 4 otherwise fell at page ends and were set alone on the next page. No fallback branch for a longtable text `latex_tabular` cannot read: Pandoc's writer shape is fixed for a pinned Pandoc, and the fixtures run under both Quarto versions.
 - 2026-10-31: the plan's falsifier for equal column shares fired: in `tbl-div` (45% box) equal shares break "Condition" as "Condi-tion", though the table's natural width fits. A scratch change giving each column a share in proportion to its longest cell text fit "Condition" on one line; it changes AC2's promised widths, so it waits for the user (stop: an amendment that changes what the user sees).
+- 2026-10-31: stop answered: the user chose "Share by text length" over keeping equal shares; `text_shares` written (any set width falls back to `column_shares`, so the mixed-width Out item stands).
+- 2026-10-31: re-audit: AC2 (full) — 3 findings: "in proportion" clashes with four-decimal factors (state division and rounding); character count must say spaces included and formatting removed ("Speed in mph" is 12 or 10); say header or body cells. No D-entry blocks it; bounded; binds the `.tex`. All three fixed in the wording.
+- 2026-10-31: re-audit: AC2 (full) — 2 wording findings: an all-empty column has text of length 0, so say "the larger of one and"; say `tbl-rel`'s widths are the ones Pandoc's reader gives (each column's dashes' share of the separator line). The 13 factors in the scratch render match the formula. Second re-audit line on AC2, so further wording goes to the user.
+- 2026-10-31: substantive amendment: AC2's column clause, from equal shares to shares by each column's longest cell text (the user's choice at the stop), in the wording below, which the user accepted with both second-reader fixes. Scope In's "gives its columns shares of the box" stands.
+- 2026-10-31: T3 so far: `tex_summary` lists each `wrappedtable` (label, options, caption, tabular and longtable counts, column factors); `table_case` (renamed from `typst_table_case`) serves LaTeX too; LAYOUT gains `tables` (five forms and the `tbl-div` stop) and `tables-latex`; new `tests/tables-latex.qmd` (`tbl-rel` by dashes 0.28/0.14/0.58, `@tbl-rel` link, `tbl-raw` from `kable(format = "latex")`); tables in `multicols.qmd` (in place, log kind "table") and `twocolumn-switch.qmd` (no text beside). Plants: on main's filter the five wrap cases and `tables-latex` relative widths fail ("starts below the table's last row"); synthetic boxes turn the stop, link, and alone checks red; a log edited to name a figure fails the multicols kind check.
+- 2026-10-31: T4 so far: README, `docs/` get-started, normal-layout, reference, index, stopping, formats/latex (new Tables section), html, typst; DESIGN Goals, non-goal, stop rule, steps 4 and 7, Known issues; wrap-mechanisms W2, E5, filter note.
+- 2026-10-31: proposed AC2 column clause for the user: "Each column of the six tables of `tests/tables.qmd`, whose columns have no widths, is a `p{}` column whose `\real{}` factor (the share of the box's line width less its column padding that Pandoc writes) equals that column's length divided by the sum of the table's column lengths, rounded to four decimals, where a column's length is the larger of one and the largest number of characters, spaces included, in the plain text (formatting removed) of a header or body cell of that column that spans no other column; the columns of `tbl-rel`, whose columns all have relative widths, have `\real{}` factors equal to each width that Pandoc's reader gives the column (its dashes' share of the separator line) divided by the sum of the widths, rounded to four decimals (evidence: both fixtures' LaTeX snapshots)."
 
 ## Decisions
 

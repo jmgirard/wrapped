@@ -92,11 +92,11 @@ The list above covers both.
 
 ## Tables
 
-A table float wraps in HTML, in PDF through Typst, and in Word. A `#tbl-`
-div, a pipe table with a `#tbl-` id, or a code cell with a `tbl-` label
-makes a table float. In PDF through LaTeX a wrapped table float keeps its
-normal layout, and the render prints one warning that names it. Quarto
-writes a LaTeX table as a `longtable`, which wrapfig cannot hold.
+A table float wraps in HTML, in PDF through LaTeX, in PDF through Typst,
+and in Word. A `#tbl-` div, a pipe table with a `#tbl-` id, or a code cell
+with a `tbl-` label makes a table float. In PDF through LaTeX the
+extension sets the table as a `tabular`, which does not break across
+pages, in place of the `longtable` that Quarto writes.
 
 The places on this page keep a table float's normal layout as they keep a
 figure's. For a table, `tbl-cap-location` takes the place of
@@ -122,6 +122,9 @@ prints the same warning there, and the figure wraps in the other formats.
 - A block quote: in PDF through LaTeX.
 - A table float whose table is raw Word XML, as gt and flextable write
   one: in Word, where the warning names gt and flextable.
+- A table float whose table is raw LaTeX, as gt, kableExtra, tinytable,
+  and `knitr::kable(format = "latex")` write one: in PDF through LaTeX,
+  where the warning names gt, kableExtra, and tinytable.
 - A table cell: in Word and in PDF through LaTeX. In PDF through LaTeX, a
   captioned figure in a table cell fails to render, with or without the
   extension, so only an image with no caption renders there.
