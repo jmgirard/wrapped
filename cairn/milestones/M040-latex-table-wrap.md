@@ -237,4 +237,6 @@ Pass 2 (at 2e47c4d). spawned: diff-bug, blame-history, prior-review, ripple.
 - blame-history #3: a table float with no paragraph after it no longer warns in LaTeX, which main's comment described — reject, planned change: AC4 asks for no warning for `tbl-no-text`, as for figures.
 - blame-history #4: no LAYOUT case for `tables-span.pdf` — reject: a wrap case there would run the path the six `tables` cases measure; its snapshot pins the row-span factors.
 - blame-history #5: a `#tbl-` float holding no Pandoc table (an image) becomes `wrappedtable` untested — reject, false: pass 1's diff-bug probe rendered a `#tbl-` div holding an image with no problem.
-- prior-review #1 and ripple #1: `wrapped.tex` comments still break at :23 and :141 — fix now (both blocks rewrapped whole; pass 1's "fixed" covered only part).
+- prior-review #1 and ripple #1: `wrapped.tex` comments still break at :23 and :141 — fix now (both blocks rewrapped whole; pass 1's "fixed" covered only part), fixed 252f711.
+- diff-bug #2 and (c) "second paragraph" fixed 252f711.
+- Merge-question head 252f711: `python3 tests/verify.py` all 128 renders pass, 93 layout and 4 log checks ok, 0 FAIL; `quarto render docs` exit 0, no warnings; `tests/docs_layout.py` exit 0 (24 ok); `cairn_validate.py` all checks passed. Changed snapshot files (paths under `_snaps` or `__snapshots__`): none; this repo's `tests/_snapshots/` diffs were each read at implement (work log).
