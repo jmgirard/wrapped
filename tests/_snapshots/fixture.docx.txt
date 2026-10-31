@@ -72,6 +72,6 @@ frame right w=2250 gap=240 anchor=margin | fig-bottom | image plot.png fills=yes
 frame left w=3744 gap=240 anchor=margin | fig-break | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, p, p, clear | links=fig-break cites=0
 frame right w=3744 gap=240 anchor=margin | fig-break-lines | image plot.png fills=yes alt=''; caption style=ImageCaption | p, p, p, p, clear | links=fig-break-lines cites=0
 # floating tables
-table left w=3744 left=0 right=240 anchor=margin/text | before=p keep | tbl-caption-block, caption, table pct 5000 grid=3960,3960, p | p, clear | links=- cites=0
-table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-cell-block, caption, table pct 5000 grid=3960,3960, p | p, clear | links=- cites=0
-table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-cell-both, caption, table pct 5000 grid=3960,3960, p | p, clear | links=- cites=0
+table left w=3744 left=0 right=240 anchor=margin/text | before=p keep | tbl-caption-block, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-cell-block, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-cell-both, caption, table pct 5000, p | p, clear | links=- cites=0
