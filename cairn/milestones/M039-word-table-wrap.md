@@ -93,6 +93,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - 2026-10-31: T10 checks: `python3 tests/verify.py --update` passed all 124 renders; the diff restores the M006 height-warning text in three snapshots and adds the `docx-tables` cases (`#tbl-empty-div`, `#tbl-uneven` with `images=240,2320`, `#tbl-raw`'s warning); a cell-image height then added the table warning to that snapshot. Plants on `docx-tables`, each red: raw detection off (`tbl-raw` floats with no warning), the pass-2 closing rule (`tbl-empty-div` cell ends in `table`), equal shares (`images=240,1656`), own width ignored (`images=991,2320`), table wording off (figure wording on a table image). Restored render matches.
 - 2026-10-31: claim audit: 35 claims read, 7 corrected — cairn/ROADMAP.md, docs/formats/word.qmd, _extensions/wrapped/wrapped.lua, tests/docx-tables.qmd, cairn/DESIGN.md (gt and flextable write their own grid, not 7920 twips; (b) and (d) of the sizing row narrowed; a very narrow cell gives half its width, and a percent width is of the text width; the table warning now says the image is no wider than the box or its column; a comment moved back to `keep_normal`; a stale comment and the fixture's opening; DESIGN.md names the row-span gap). The probe confirmed flextable and gt floats keep their normal layout with the warning in Word.
 - 2026-10-31: claim audit re-read: all corrected claims hold. Status set to review.
+- 2026-10-31: step-7 approval: m039-word-table-wrap approved for merge
 
 ## Decisions
 
