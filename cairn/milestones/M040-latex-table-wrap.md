@@ -52,43 +52,44 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 - [ ] AC1: In the PDF through LaTeX of `tests/tables.qmd`, for each of the five tables `tbl-div`,
       `tbl-block`, `tbl-pipe`, `tbl-cell`, and `tbl-cell-block`, the first line of the paragraph
       after the table starts above the bottom of the table's last row and lies wholly on the side
-      away from the table, and the heading after `tbl-div` starts below that table's last row. A
-      `LAYOUT` case in `tests/verify.py` for each table checks this.
+      away from the table, and the heading after `tbl-div` starts below that table's last row
+      (evidence: a `LAYOUT` case per table in `tests/verify.py`).
 - [ ] AC2: The kept `.tex` of `tests/tables.qmd` sets each of the six tables `tbl-div`,
       `tbl-block`, `tbl-pipe`, `tbl-cell`, `tbl-cell-block`, and `tbl-wide`, and the kept `.tex` of
       the new fixture `tests/tables-latex.qmd` sets its table `tbl-rel`, in a `wrappedtable`
       environment whose options give the side, width, and gap that the table's class, its
       attributes, or the document's `wrapped:` keys set. Each environment holds the table's
       `\caption`, its `\label`, and one `tabular`, and no `longtable`. Each column of the six tables
-      of `tests/tables.qmd`, whose columns have no widths, is a `p{}` column whose width is an equal
-      share of `\linewidth`; each column of `tbl-rel`, whose columns all have relative widths, is a
-      `p{}` column whose share of `\linewidth` is in the proportion of those widths. The LaTeX
-      snapshots of both fixtures record this.
-- [ ] AC3: `tests/tables-latex.qmd`, in which `tbl-rel` is the only Pandoc table, renders to PDF
+      of `tests/tables.qmd`, whose columns have no widths, is a `p{}` column whose `\real{}` factor
+      is 1/n of the box's line width less its column padding, as Pandoc writes relative widths, for
+      a table of n columns; the columns of `tbl-rel`, whose columns all have relative widths, have
+      `\real{}` factors in the proportion of those widths (evidence: both fixtures' LaTeX snapshots).
+- [ ] AC3: `tests/tables-latex.qmd`, in which `tbl-rel` is the only Pandoc table and comes before
+      `tbl-raw`, renders to PDF
       through LaTeX with exit status 0. Its PDF text shows `tbl-rel`'s caption numbered "Table 1"
       and the text's `@tbl-rel` link as "Table 1". Its table float `tbl-raw`, whose table
       `knitr::kable(format = "latex")` writes as raw LaTeX, has no `wrappedtable` environment in the
-      kept `.tex`, and the render prints one warning that names `#tbl-raw` and says that a raw LaTeX
+      kept `.tex`, and the render prints exactly one warning that names `#tbl-raw`, which says that a raw LaTeX
       table, as from gt, kableExtra, or tinytable, does not wrap.
-- [ ] AC4: The LaTeX snapshot of `tests/tables.qmd` lists no warning that a table does not wrap in
-      LaTeX. It keeps the warnings for `tbl-callout` (in a callout), `tbl-margin` (in the margin),
-      and `tbl-page` (page-wide), and lists none for `tbl-no-text`, whose `.tex` has no
-      `wrappedtable` environment.
+- [ ] AC4: The PDF-through-LaTeX render of `tests/tables.qmd` prints no warning that a table does
+      not wrap in LaTeX. It prints the warnings for `tbl-callout` (in a callout), `tbl-margin` (in
+      the margin), and `tbl-page` (page-wide), and none for `tbl-no-text`, which has no
+      `wrappedtable` environment in the `.tex` (evidence: the LaTeX snapshot).
 - [ ] AC5: In `tests/multicols.qmd`, a wrapped table float inside a raw `multicols` is set in place
       in its column, between the paragraphs before and after it; in `tests/twocolumn-switch.qmd`, a
       wrapped table float after a raw `\twocolumn` has no text beside it. Both fixtures render with
       exit status 0. The LaTeX log's multicols warning for the table names a table, and its
       two-column warning names tables as well as figures.
-- [ ] AC6: Each line that
+- [ ] AC6: Of the sentences that hold a line that
       `grep -niE 'table|tbl-' README.md docs/*.qmd docs/formats/*.qmd cairn/DESIGN.md cairn/references/wrap-mechanisms.md`
-      lists and that names LaTeX, PDF, `longtable`, or the four formats states the shipped
-      behavior: a `#tbl-` table float wraps in all four formats, except a raw table in Word and in
-      LaTeX. `docs/formats/latex.qmd` states that a wrapped table does not break across pages, that
+      lists, each that says where a `#tbl-` table float wraps or keeps its normal layout agrees
+      with the shipped behavior (it wraps in all four formats, except a raw table in Word and in
+      LaTeX), and none says that a Pandoc table float does not wrap in PDF through LaTeX.
+      `docs/formats/latex.qmd` states that a wrapped table does not break across pages, that
       a raw LaTeX table keeps its normal layout with a warning, and how a table wider than its box
       renders, as the `tbl-wide` render of `tests/tables.qmd` shows; `cairn/DESIGN.md` Known issues
       states the last two limits.
-- [ ] AC7: `python3 tests/verify.py` passes on the review head, every snapshot change reviewed;
-      `quarto render docs` exits 0; `python3 tests/docs_layout.py` exits 0; the PR's CI is green
+- [ ] AC7: `python3 tests/verify.py` passes on the review head; `quarto render docs` exits 0; `python3 tests/docs_layout.py` exits 0; the PR's CI is green
       under Quarto's release channel and Quarto 1.9.36.
 
 ## Coverage
@@ -120,7 +121,8 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
       `\def\LTcaptype` group, keep the first head, move the foot to the
       end, and write `tabular`. Walk `pandoc.Blocks({ content })`, since
       the content can be one Block. Make sure that a document whose only
-      Pandoc table is wrapped still loads the table packages (probe).
+      Pandoc table is wrapped still loads the table packages, and probe the `fig-env` path and the
+      `\LTcaptype` removal under Quarto 1.9.36 (M035 lesson) before building on them.
 - [ ] T3: Tests: `latex_table_case` LAYOUT cases for the five forms, with
       the `tbl-div` stop below; new `tests/tables-latex.qmd` (LaTeX only:
       `tbl-rel` with relative widths and an `@tbl-rel` link, `tbl-raw`
@@ -152,6 +154,7 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 - 2026-10-31: plan chose column shares of the box over natural `l`/`r`/`c` widths, because a natural-width table wider than its box runs into the text; falsified by a render where the shares break words in a table whose natural width fits the box.
 - 2026-10-31: plan gate chose to keep raw LaTeX tables normal over rewriting them, because each package writes its own LaTeX; falsified by evidence that gt, kableExtra, and tinytable output share one form the filter can rewrite.
 - 2026-10-31: lessons used: 2026-10-30 (M038) one-Block float content; 2026-10-25 (M004) LaTeX and Typst share `fixture.pdf`; 2026-10-26 (M007) pdftohtml boxes; 2026-10-27 (M012) one-fixture check; 2026-10-29 (M034) `/.quarto/` lines in `tests/.gitignore`; 2026-10-29 (M033) caption blocks after pre-quarto.
+- 2026-10-31: criteria audit (full mode, fresh Opus reader): 8 findings, all taken toward the narrower promise — AC2 column widths named as Pandoc's `\real{}` factors over the line width less padding; AC3 orders `tbl-rel` first and says exactly one `#tbl-raw` warning; AC4 binds the render's warnings, not the snapshot; AC1, AC2, AC4 harness clauses made evidence pointers; AC6 narrowed to sentences that say where a table float wraps, with no sentence saying a Pandoc table does not wrap in LaTeX (the grep also lists lines on other subjects); AC7 drops "every snapshot change reviewed" (T3 reads each diff); the unprobed Quarto 1.9.36 risk became a T2 probe. No D-entry blocks any criterion.
 - 2026-10-31: `tests/.gitignore` holds uncommitted `/.quarto/` lines from an earlier render (M034 lesson), left unstaged by the plan commit.
 
 ## Decisions
