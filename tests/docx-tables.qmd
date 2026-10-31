@@ -9,7 +9,8 @@ Word joins two tables with nothing between them, so the first two wrapped
 table floats below each follow a block that Word writes as a table. The
 third holds an image above its table, and the fourth holds images in its
 table's cells. The cases after them end with a div, hold a small image
-and uneven columns, or hold a raw Word table.
+and uneven columns, hold a raw Word table, end with a block quote, or hold
+images in a narrow box, one over both columns.
 
 | A | B |
 |---|---|
@@ -149,3 +150,37 @@ A raw Word table, as gt or flextable write one.
 :::
 
 The paragraph after the raw table, which keeps its normal layout.
+
+## A table at the end of a block quote
+
+::: {#tbl-quote .wrap-left}
+
+> | A | B |
+> |---|---|
+> | 1 | 2 |
+
+: A table float whose table sits in a block quote.
+
+:::
+
+The paragraph beside the table float whose table sits in a block quote.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+
+## A spanning image and a narrow box
+
+::: {#tbl-span .wrap-right width="5%"}
+
++-------------------+-------------------+
+| ![](plot.png)                         |
++===================+===================+
+| ![](plot.png)     | b                 |
++-------------------+-------------------+
+
+: A narrow table float with an image over both columns.
+
+:::
+
+The paragraph beside the narrow table float with a spanning image. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.

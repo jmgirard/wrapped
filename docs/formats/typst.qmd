@@ -49,8 +49,9 @@ If 40% plus the gap is that wide too, the figure keeps 40% and the gap.
 ## Attributes that Typst ignores
 
 The `wrap-lines` attribute does nothing in Typst. Typst does not use an
-image's `height` in a wrapped figure. The image fills the box width and
-keeps its shape, and the render prints a warning.
+image's `height` in a wrapped figure or table. The image fills the box
+width, or its table column, and keeps its shape, and the render prints a
+warning.
 
 ## Right-to-left text
 

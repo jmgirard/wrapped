@@ -163,4 +163,6 @@ The class can also go in the attribute block at the end of the caption:
   Put a `width` or `wrap-gap` for this form on the div.
 - A code cell with a `tbl-` label: the class goes in `#| classes:`, or in a
   block at the end of `#| tbl-cap:`. A code cell table takes the width and
-  gap of the [document defaults](defaults.qmd).
+  gap of the [document defaults](defaults.qmd). In Word, a table from gt
+  or flextable keeps its normal layout (see
+  [Word](formats/word.qmd#tables)).

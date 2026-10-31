@@ -1,6 +1,7 @@
 -- wrapped: wrap body text around figures marked .wrap-left or .wrap-right.
 -- A #tbl- table float wraps the same way in HTML, Typst, and Word and keeps
--- its normal layout in LaTeX (D-021, D-022); "figure" below covers it there.
+-- its normal layout in LaTeX, and in Word when its table is raw Word XML
+-- (D-021, D-022, D-023); "figure" below covers it there.
 --
 -- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output,
 -- revealjs included, floats each wrapped figure inside a .wrap-group div
@@ -1638,7 +1639,7 @@ local function float_target(float)
   end
   -- In Word, a table that is raw openxml, as gt and flextable write it,
   -- keeps its normal layout: the filter cannot fit its columns to the box
-  -- (D-022). It warns before the next-block rule, as LaTeX does.
+  -- (D-023). It warns before the next-block rule, as LaTeX does.
   if is_table and is_docx and not context and raw_docx_table(float.content) then
     keep_normal(float)
     quarto.log.warning(string.format(

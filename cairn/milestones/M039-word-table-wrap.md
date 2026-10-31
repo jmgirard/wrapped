@@ -193,3 +193,32 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - Thrash rule (a): diff-bug #1 would be the third defect return. Stopped for the user's choice.
 - AC4 evidence (2026-10-31): the user opened `tests/tables.docx` and `tests/docx-tables.docx` (rendered at f044ea2) in Microsoft Word on the Mac and reported each wrapped table at its side with body text beside it, its caption inside its box, and the text after each group below the table ("Yes, looks right").
 - Thrash disposition: the user chose to narrow (descope) at the stop; routed to `/milestone-implement` for the scope amendment and the pass-3 fix-now items.
+- Pass-3 fix-now items fixed in aa5bf97, 3aca836, and 79a5cd3.
+- Pass 4, 2026-10-31, review head 70e8dc1, base main 72abe16 (level). Gate: `python3 tests/verify.py` exit 0, all 124 renders pass; `quarto render docs` exit 0 with no warning; `python3 tests/docs_layout.py` exit 0; AC3 reread ok for all seven tables.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a table float whose last block is a block quote holding a table gets no closing paragraph — fix now (close unless the last block writes a paragraph); not load-bearing, since a table in a block quote in a table float is outside common use
+- diff-bug #2: a table followed by an empty paragraph (Pandoc drops it) ends the cell in a table — fix now (same rule)
+- diff-bug #3: `<w:tbl` inside an XML comment of a raw paragraph block trips raw detection — reject, edge: a raw block that comments out a table tag is outside documented and common use, and its effect is a warning and the normal layout
+- diff-bug #4: a table with some column widths and some defaults gives a default column weight 1 against fractions — follow-up: item (f) of "[low] Size images and columns in Word tables"
+- diff-bug #5: a cell below a row span takes a neighbor's share — noted; item (b) of the same row, and DESIGN.md names it
+- diff-bug #6: `column_shares` repeats `fit_table`'s rule in another file — fix now (a comment on `fit_table` names `column_shares`; the two filters run at different stages)
+- diff-bug #7: no case ends a cell in a raw block or nothing, and none covers the span sum or the half-cell floor — fix now (`#tbl-quote` and `#tbl-span` cases; the raw-block branch is gone)
+- diff-bug #8: one case carries two checks — noted
+- blame-history #1: an image in a Pandoc table's own caption is not sized — reject, false: Quarto moves a table float's caption onto the float, so the inner table's caption is empty
+- blame-history #2: D-022 does not record the narrowing — fix now (D-023)
+- blame-history #3: any raw block that ends a cell gets an extra paragraph — fix now (the new rule closes only after a block that writes no paragraph)
+- blame-history #4: row spans — noted (as diff-bug #5)
+- prior-review #1: the user's Word look predates T10 — noted: T10 and the pass-4 fixes leave `tests/_snapshots/tables.docx.txt` as it was at f044ea2, so AC4's evidence holds for `tests/tables.docx`
+- prior-review #2: the figure height warning says the image fills the box width, false for a figure Word declines — reject, planned change: it is the user's M006 wording, restored on purpose
+- prior-review #3: the T10 work-log line quotes an earlier warning text — noted; the claim-audit line records the change
+- prior-review #4: a raw table warns before the next-block rule — reject, planned change: it matches the LaTeX table warning
+- prior-review #5: row spans and nested tables — noted (the sizing row)
+- ripple #1, #2, #5, #8, #9: DESIGN.md, the E5 row, `docs/normal-layout.qmd`, and `docs/get-started.qmd`'s code-cell table name no gt or flextable exception — fix now
+- ripple #3, #7: README, `docs/index.qmd`, `docs/reference.qmd`, `docs/formats/typst.qmd:10`, and `docs/stopping.qmd` state the general rule — reject, planned change: as for figures, the exceptions live on the normal-layout page
+- ripple #4, #11: Lua header comments state the general rule — fix now for the `wrapped.lua` header (names D-023); reject for the floating-table comments, which describe what happens when a table wraps
+- ripple #6: `docs/formats/word.qmd` sentences lead into the exception — reject, false: the exception sits in the same section
+- ripple #10: `docs/formats/typst.qmd` says only a wrapped figure ignores image height — fix now (figure or table)
+- ripple #12: `docs/width-gap.qmd:8` "The image fills the box" — reject, false: it is about figures
+- ripple #13: the Word Known issues entry names a box that a raw table lacks — reject, false: it is about tables that wrap
+- ripple #14: ROADMAP's started row and the mixed-cell row — reject, planned change: hygiene removes the started row, and the other is general
+- ripple #15: the Typst table warning — reject, false: Typst's 100% width is the box or its column, so the image is no wider than either

@@ -15,8 +15,8 @@ install it with `quarto add jmgirard/wrapped`.
 
 - Wrap text to the left or right of one captioned figure. The figure keeps
   its number, caption, and `@fig-` links. A `#tbl-` table float wraps the
-  same way in HTML, PDF through Typst, and Word (D-021, D-022, corrected
-  M038, M039).
+  same way in HTML, PDF through Typst, and Word, except a raw Word XML
+  table in Word (D-021, D-022, D-023, corrected M038, M039).
 - Wrap text around an uncaptioned image.
 - Use one width value for all formats.
 - In a format or context that cannot wrap, keep a normal figure and warn
@@ -30,7 +30,8 @@ install it with `quarto add jmgirard/wrapped`.
 - Tables (`#tbl-` floats) in PDF through LaTeX. LaTeX `wraptable`
   conflicts with `longtable`, and Quarto renders every table as
   `longtable`. Table floats wrap in HTML, PDF through Typst, and Word
-  (D-021, D-022, corrected M039).
+  (D-021, D-022, corrected M039). In Word, a raw Word XML table (gt,
+  flextable) keeps its normal layout (D-023).
 - Subfigure panels (`layout-ncol`, `layout`).
 - Code listings and callouts.
 - A figure in the middle of a paragraph. The figure anchors where it appears
@@ -375,9 +376,10 @@ gives, summed over a column span; a row span from an earlier row is not
 counted), less the Table style's 108-twip cell
 margins on each side, and keeps a smaller width of its own. A table float
 whose table is raw openxml (gt, flextable) keeps its normal layout with a
-warning, since the filter cannot fit its grid (narrowed at the M039
-review). The cell ends with a paragraph after a table, a raw block, or
-nothing, past empty divs. Word joins two tables with
+warning, since the filter cannot fit its own column widths (D-023). The
+cell gets a closing paragraph unless its last block, past empty divs, is
+one Pandoc writes as a paragraph (a non-empty paragraph, a heading, a
+code block, or a rule). Word joins two tables with
 nothing between them, so a 1 pt paragraph goes before the floating table.
 It keeps with the next paragraph, so a heading before the table moves
 with it (seen in LibreOffice). The same clearing break ends the group

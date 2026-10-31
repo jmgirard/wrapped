@@ -168,6 +168,10 @@ end
 -- paragraph there, so a 1 pt paragraph comes before the floating table. It
 -- keeps with the next paragraph, so a heading before it, which keeps with
 -- it, moves to the next page with the table (seen in LibreOffice).
+
+-- Gives each column of a table in the box its relative width, or an equal
+-- share for a column with none, so the table fills the box. wrapped.lua's
+-- column_shares sizes cell images by the same shares; change both together.
 local function fit_table(tbl)
   local shares, sum = {}, 0
   for i, spec in ipairs(tbl.colspecs) do
@@ -190,7 +194,9 @@ local function floating_table(div, frame)
     left, right, frame.side, frame.width, frame.width, frame.width)
   -- The cell's last block, looking into a div that ends the cell and past
   -- an empty one, as Pandoc writes a div's blocks with no element of its
-  -- own. A table or raw block there, or none, takes the closing paragraph.
+  -- own. The closing paragraph goes in unless that block is one Pandoc
+  -- writes as a paragraph; it drops an empty one. A block quote or list
+  -- can end in a table, so it takes the paragraph too.
   local function last_block(blocks)
     for i = #blocks, 1, -1 do
       local b = blocks[i]
@@ -201,7 +207,10 @@ local function floating_table(div, frame)
     return nil
   end
   local last = last_block(div.content)
-  local needs = not last or last.t == "Table" or last.t == "RawBlock"
+  local paragraph = last and (
+    ((last.t == "Para" or last.t == "Plain") and #last.content > 0)
+    or last.t == "Header" or last.t == "CodeBlock" or last.t == "HorizontalRule")
+  local needs = not paragraph
   local close = (needs and "<w:p />" or "") .. "</w:tc></w:tr></w:tbl>"
   return pandoc.Blocks({
     pandoc.RawBlock("openxml", open), div, pandoc.RawBlock("openxml", close),
