@@ -93,7 +93,10 @@ image, not on the link:
 ### A figure from a code cell
 
 Give the cell a `fig-` label and a `fig-cap`, so that Quarto makes a figure.
-Put the class in `#| classes:`, and set the width with `#| out-width:`:
+Put the class in `#| classes:`, and set the width with `#| out-width:`. To
+set the gap, add `#| wrap-gap:`, as in `#| wrap-gap: 2em`. A figure cell
+does not read `#| width:`, and the render prints a warning when a cell
+sets it. The extension's tests use knitr cells for these options.
 
 ::: demo
 ```{r}
@@ -164,8 +167,10 @@ The class can also go in the attribute block at the end of the caption:
 - A block inside a `#tbl-` div, as in `: Mean ratings by condition. {.wrap-right}`.
   Put a `width` or `wrap-gap` for this form on the div.
 - A code cell with a `tbl-` label: the class goes in `#| classes:`, or in a
-  block at the end of `#| tbl-cap:`. A code cell table takes the width and
-  gap of the [document defaults](defaults.qmd). In Word, a table from gt
+  block at the end of `#| tbl-cap:`. Set the width with `#| width:` and
+  the gap with `#| wrap-gap:`, as in `#| width: 45%`. A cell with neither
+  takes the [document defaults](defaults.qmd). The extension's tests use
+  knitr cells for these options. In Word, a table from gt
   or flextable wraps at the full width of its box (see
   [Word](formats/word.qmd#tables)). In PDF through LaTeX, a table from gt,
   kableExtra, or tinytable keeps its normal layout (see
