@@ -252,7 +252,7 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    that wraps takes `fig-env` `wrappedtable` and `tbl-pos` options, and
    `latex_tabular` rewrites each Pandoc table in it as a `tabular`: it
    gives the columns shares of the box (a `tbl-colwidths` list from the
-   table, its float, or the document, as Quarto applies it, else
+   table or its float, as Quarto applies it, else
    `text_shares`: by each column's longest cell text when no column has a
    width, else `column_shares`), writes the table with Pandoc, keeps the
    first head, and sets the foot after the body. Each cell is written as a

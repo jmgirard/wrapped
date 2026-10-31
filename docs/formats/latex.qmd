@@ -88,8 +88,10 @@ above for figures apply to tables too, and a table has three more:
   column takes a share in proportion to its longest cell text. A pipe
   table with any line longer than 72 characters has widths of its own,
   set by the dashes of its separator line, and its columns keep those
-  shares. A `tbl-colwidths` value of percentages sets the shares, as it
-  does for a normal table. In a narrow box, a wide table's column text breaks inside
+  shares. A `tbl-colwidths` value of percentages on the table's `#tbl-`
+  div or code cell sets the shares, as it does for a normal table. A
+  `tbl-colwidths` in the document's metadata does not reach a wrapped
+  table. In a narrow box, a wide table's column text breaks inside
   words, and the text of columns side by side can overlap.
 - A table float that holds raw LaTeX keeps its normal layout, and the
   render prints a warning that names it. gt, kableExtra, tinytable, and

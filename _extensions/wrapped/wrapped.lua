@@ -814,18 +814,17 @@ local function text_shares(tbl)
   return shares
 end
 
--- The document's tbl-colwidths: a list of strings, a string, or nil. Set in
--- the first pass.
-local meta_tbl_colwidths = nil
-
 -- The column widths that a tbl-colwidths value of percentages gives a
 -- table, as Quarto gives them: each column takes its value, or the last
 -- value past the list's end, a list whose sum passes 100 is scaled to 100,
 -- and each width is a share of the line. Quarto applies the value after
 -- pre-quarto filters, and only to a table with no spans that it did not
 -- parse from raw HTML (its quarto-postprocess attribute), so the filter
--- applies it to a table it rewrites. Any other value, such as true, auto,
--- or false, gives nil, and the columns take text_shares.
+-- applies it to a table it rewrites. The filter reads the value on the
+-- table or its float, where a code cell's option lands. Quarto takes a
+-- document's value out of the metadata before filters run, so that value
+-- does not reach the filter. Any other value, such as true, auto, or
+-- false, gives nil, and the columns take text_shares.
 local function table_colwidths(tbl, value)
   if value == nil or tbl.attributes["quarto-postprocess"] then return nil end
   local list = value
@@ -889,8 +888,7 @@ end
 local ALIGN_TEX = { AlignRight = "\\raggedleft", AlignCenter = "\\centering" }
 
 local function latex_tabular(tbl, float_colwidths)
-  local widths = table_colwidths(tbl, tbl.attributes["tbl-colwidths"] or float_colwidths
-    or meta_tbl_colwidths)
+  local widths = table_colwidths(tbl, tbl.attributes["tbl-colwidths"] or float_colwidths)
   local shares = widths or text_shares(tbl)
   for i, spec in ipairs(tbl.colspecs) do tbl.colspecs[i] = { spec[1], shares[i] } end
   local held, n = {}, 0
@@ -1554,12 +1552,6 @@ local function read_meta(meta)
   document_meta = meta
   meta_fig_cap_location = meta_text(meta["fig-cap-location"])
   meta_tbl_cap_location = meta_text(meta["tbl-cap-location"])
-  local colwidths = meta["tbl-colwidths"]
-  if pandoc.utils.type(colwidths) == "List" then
-    meta_tbl_colwidths = colwidths:map(function(w) return pandoc.utils.stringify(w) end)
-  elseif colwidths ~= nil then
-    meta_tbl_colwidths = pandoc.utils.stringify(colwidths)
-  end
   meta_cap_location = meta_text(meta["cap-location"])
   if is_docx then
     docx_text_width, docx_columns = read_docx_text_width()

@@ -20,15 +20,14 @@
 % the block that stops the wrap, so that block starts below the figure.
 % wrapfig holds one figure or table at a time, so a wrappedfigure or
 % wrappedtable also ends an earlier wrap first, in the same way. A figure
-% that moved and still waits
-% for a paragraph is put out there, centered, with no text beside it. A wrap
-% whose text is still narrowed ends: the lines that the figure's height
-% still needs are skipped, and \WFclear ends the wrap. After a wrap-lines
-% value smaller than the height needs, whose narrowed lines have ended, the
-% block that stops the wrap starts below the figure on its page, outside
-% boxes. In a wrappedfigure,
-% \WFclear ends it inside the environment's group, so \wrapped@afterenv
-% ends it again after the group.
+% that moved and still waits for a paragraph is put out there, centered,
+% with no text beside it. A wrap whose text is still narrowed ends: the
+% lines that the figure's height still needs are skipped, and \WFclear ends
+% the wrap. After a wrap-lines value smaller than the height needs, whose
+% narrowed lines have ended, the block that stops the wrap starts below the
+% figure on its page, outside boxes. In a wrappedfigure, \WFclear ends it
+% inside the environment's group, so \wrapped@afterenv ends it again after
+% the group.
 %
 % Where the text runs in columns, inside multicols or where \if@twocolumn
 % is true, a wrappedfigure or wrappedtable does not wrap: it floats as a
@@ -138,8 +137,9 @@
   \fi}
 % Where the text runs in columns, a wrappedfigure or wrappedtable does not
 % wrap. The hooks mark the inside of a multicols environment, where a float
-% is lost, and the mark ends with the environment's group. \if@twocolumn stays true
-% inside multicols in two-column text, so the mark is tested first.
+% is lost, and the mark ends with the environment's group. \if@twocolumn
+% stays true inside multicols in two-column text, so the mark is tested
+% first.
 \newif\ifwrapped@multicols
 \AddToHook{env/multicols/begin}{\wrapped@multicolstrue}
 \AddToHook{env/multicols*/begin}{\wrapped@multicolstrue}
