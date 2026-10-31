@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M041: Wrap gt and flextable tables in Word
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -125,7 +125,7 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
       `docs/get-started.qmd`, `docs/reference.qmd`, `docs/index.qmd`, README.md, DESIGN.md (the
       non-goals, the warnings list, the Word paragraph, the D-023 line near line 251), and the E5
       row of `cairn/references/wrap-mechanisms.md`; then `quarto render docs`.
-- [ ] T6: Run `python3 tests/verify.py`, `quarto render docs`, and `python3 tests/docs_layout.py`.
+- [x] T6: Run `python3 tests/verify.py`, `quarto render docs`, and `python3 tests/docs_layout.py`.
 
 ## Work log
 
@@ -151,6 +151,7 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
 - 2026-10-31: T6 checkpoint: `quarto render docs` exit 0 (it refreshed `docs/_freeze/get-started`, since that page's prose changed); `python3 tests/docs_layout.py` exit 0; `python3 tests/verify.py` running in the background; the claim audit's reader is running.
 - 2026-10-31: T6: `python3 tests/verify.py` passed all 128 renders on 3a15971.
 - 2026-10-31: claim audit: 43 claims read, 4 corrected — _extensions/wrapped/wrapped-docx.lua, docs/formats/word.qmd, cairn/DESIGN.md. Two were code defects outside gt's and flextable's output: `element_end` missed an element with a closing tag and no attributes, so `w:tblW` went before `<w:bidiVisual></w:bidiVisual>`, and a self-closing `<w:tblPr/>` got a second `w:tblPr` and an unscaled grid. Fixed, with regression cases `tbl-raw-bidi` and `tbl-raw-empty-pr` in `tests/docx-tables.qmd` and a `tblW-before=` field in `docx_tables`; on 3a15971's filter they rendered `tblW-before=bidiVisual` and `grid=1000,2000`, and now `grid=1248,2496` with no order field. The comment now says a gridless table keeps its `w:tcW` widths, and the Word page says gt and autofit flextable columns are sized "at the width of the box", not "within" it, since no render had long unbreakable cell text.
+- 2026-10-31: T6 done on a974db8: `python3 tests/verify.py` all 128 renders pass; `quarto render docs` exit 0; `python3 tests/docs_layout.py` exit 0. Status set to review.
 
 ## Decisions
 
