@@ -93,9 +93,9 @@ user's act; the repeated four-format wording on pages other than the home page a
      cites; an insertion, removal, or reorder renumbers the labels and the
      Coverage lines together. -->
 
-- [ ] T1: Write a fixture (for example `tests/meta-unknown.qmd`) with `wrapped: wrap-gap:` and one other
+- [x] T1: Write a fixture (for example `tests/meta-unknown.qmd`) with `wrapped: wrap-gap:` and one other
       unknown key, render it to HTML and EPUB, and see that no warning prints today.
-- [ ] T2: In `read_meta` (`wrapped.lua`, after `local m = meta.wrapped`), warn once for each unknown key in
+- [x] T2: In `read_meta` (`wrapped.lua`, after `local m = meta.wrapped`), warn once for each unknown key in
       sorted order, naming the three keys, with the `gap` hint for `wrap-gap`. Add the snapshots to
       `tests/verify.py`.
 - [ ] T3: Add a table-cell fixture (for example `tests/cell-options.qmd`) with `wrapped:` width and gap and
@@ -137,6 +137,7 @@ user's act; the repeated four-format wording on pages other than the home page a
 - 2026-10-31: plan gate chose the demo box first, then a short install, over a quick start above the demo, because the demo shows the result before the setup; falsified by visitor feedback that the install is hard to find.
 - 2026-10-31: changelog: none (profile changelog slot is "none"; release notes come from commit subjects).
 - 2026-10-31: implement started on branch m043-launch-prep, cut from main at cae0f85.
+- 2026-10-31: T1-T2 done: `tests/meta-unknown.qmd` (keys `wrap-gap` and `Width`) printed no key warning before the change; `read_meta` now warns once per unknown key in sorted order with the `gap` hint for `wrap-gap`; HTML and EPUB snapshots show both warnings and the 40% and 1em defaults.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote

@@ -1583,6 +1583,19 @@ local function read_meta(meta)
       "wrapped: the wrapped metadata is not a map of width, gap, and breakpoint, so it is ignored.")
     return
   end
+  -- Any other key does nothing, so each one warns, in sorted order (D-027).
+  -- An attribute that only this filter reads opens with "wrap-", but a key
+  -- in this map does not, so `wrap-gap` names the key to write.
+  local unknown = {}
+  for key in pairs(m) do
+    if key ~= "width" and key ~= "gap" and key ~= "breakpoint" then unknown[#unknown + 1] = tostring(key) end
+  end
+  table.sort(unknown)
+  for _, key in ipairs(unknown) do
+    quarto.log.warning(string.format(
+      "wrapped: the key %s in the wrapped metadata is not width, gap, or breakpoint, so it is ignored.%s",
+      key, key == "wrap-gap" and " Write gap for the space between a figure and the text." or ""))
+  end
   options.width = checked_length(meta_text(m.width), DEFAULTS.width, "width", "the wrapped metadata")
   options.gap = checked_length(meta_text(m.gap), DEFAULTS.gap, "gap", "the wrapped metadata")
   options.breakpoint = checked_length(meta_text(m.breakpoint), DEFAULTS.breakpoint, "breakpoint",

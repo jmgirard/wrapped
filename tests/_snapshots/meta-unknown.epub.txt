@@ -1,0 +1,4 @@
+# warnings
+1x wrapped: epub output does not wrap figures yet, so wrapped figures render as normal figures.
+1x wrapped: the key Width in the wrapped metadata is not width, gap, or breakpoint, so it is ignored.
+1x wrapped: the key wrap-gap in the wrapped metadata is not width, gap, or breakpoint, so it is ignored. Write gap for the space between a figure and the text.

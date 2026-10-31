@@ -1,0 +1,21 @@
+---
+title: "wrapped fixture: unknown keys under wrapped"
+filters:
+  - wrapped
+wrapped:
+  wrap-gap: 2em
+  Width: 25%
+format:
+  html: default
+  epub: default
+---
+
+The `wrapped:` map takes `width`, `gap`, and `breakpoint`. Each other key
+prints a warning and changes nothing, so the figure takes the default width
+and gap.
+
+![A figure under unknown wrapped keys.](plot.png){#fig-unknown .wrap-right}
+
+The paragraph after the figure. Lorem ipsum dolor sit amet, consectetur
+adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua.

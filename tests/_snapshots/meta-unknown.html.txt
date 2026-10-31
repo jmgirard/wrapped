@@ -1,0 +1,11 @@
+# warnings
+1x wrapped: the key Width in the wrapped metadata is not width, gap, or breakpoint, so it is ignored.
+1x wrapped: the key wrap-gap in the wrapped metadata is not width, gap, or breakpoint, so it is ignored. Write gap for the space between a figure and the text.
+# breakpoint
+576px
+# figures
+fig-unknown: wrap-right style=--wrap-gap: 1em; --wrap-width: 40%
+# images
+plot.png: wrap=- style=- width=-
+# groups
+fig-unknown, p

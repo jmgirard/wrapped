@@ -97,6 +97,8 @@ RENDERS = [
     ("fixture", "pdf", True),
     ("fixture", "typst", True),
     ("fixture", "docx", True),
+    ("meta-unknown", "html", True),
+    ("meta-unknown", "epub", True),
     ("defaults", "html", True),
     ("defaults", "pdf", True),
     ("defaults", "typst", True),
