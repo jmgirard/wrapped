@@ -212,7 +212,7 @@ The table keeps a normal layout, and the render prints a warning for it.
 
 :::
 
-The table wraps in HTML, Typst, and Word, and keeps its striped class in HTML. In LaTeX it keeps a normal layout, and the render prints a warning for it.
+The table wraps in HTML, LaTeX, Typst, and Word, and keeps its striped class in HTML.
 
 ```{r}
 #| label: tbl-cell-block
@@ -220,7 +220,7 @@ The table wraps in HTML, Typst, and Word, and keeps its striped class in HTML. I
 knitr::kable(head(cars, 2))
 ```
 
-The table wraps in HTML, Typst, and Word. In LaTeX it keeps a normal layout, and the render prints a warning for it.
+The table wraps in HTML, LaTeX, Typst, and Word.
 
 ```{r}
 #| label: tbl-cell-both
@@ -229,7 +229,7 @@ The table wraps in HTML, Typst, and Word. In LaTeX it keeps a normal layout, and
 knitr::kable(head(cars, 2))
 ```
 
-The table wraps in HTML, Typst, and Word. In LaTeX it keeps a normal layout, and the render prints one warning for it.
+The table wraps in HTML, LaTeX, Typst, and Word.
 
 ::: {#tbl-striped}
 

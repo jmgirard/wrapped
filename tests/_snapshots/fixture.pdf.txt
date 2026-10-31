@@ -16,10 +16,6 @@
 1x wrapped: the span #span-class-id is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the span with no text is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
 1x wrapped: the table "A table with a wrap class" is not a figure, so it does not wrap. A wrap class goes on an image or a figure.
-1x wrapped: the table #tbl-caption-block does not wrap in LaTeX. A table wraps in HTML, Typst, and Word.
-1x wrapped: the table #tbl-cars does not wrap in LaTeX. A table wraps in HTML, Typst, and Word.
-1x wrapped: the table #tbl-cell-block does not wrap in LaTeX. A table wraps in HTML, Typst, and Word.
-1x wrapped: the table #tbl-cell-both does not wrap in LaTeX. A table wraps in HTML, Typst, and Word.
 1x wrapped: width "banana" on #fig-bad-width is not a length or a percent, so it is 40%.
 1x wrapped: width "clamp(150px, 30%, 400px)" on #fig-clamp is not a length that LaTeX can use, so it is 40%.
 1x wrapped: width "wide" on #logo is not a length or a percent, so it is 40%.
@@ -48,6 +44,12 @@ figure: fig-before-link [-] image=[width=0.2\linewidth,height=\textheight,keepas
 wrappedfigure: - [side=left,width=0.2\linewidth,gap=1em,caption=false] image=[width=1\linewidth,height=\textheight,keepaspectratio] link=https://example.com
 wrappedstop
 wrappedfigure: - [side=right,width=0.2\linewidth,gap=1em,caption=false] image=[width=1\linewidth,height=\textheight,keepaspectratio] link=https://example.org/link-class-both
+wrappedstop
+wrappedtable: tbl-caption-block [side=left,width=0.4\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.4444 0.5556
+wrappedstop
+wrappedtable: tbl-cell-block [side=right,width=0.4\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.5556 0.4444
+wrappedstop
+wrappedtable: tbl-cell-both [side=right,width=0.4\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.5556 0.4444
 wrappedstop
 wrappedfigure: fig-comment [side=right,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
