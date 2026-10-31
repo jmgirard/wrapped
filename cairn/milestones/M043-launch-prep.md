@@ -230,3 +230,4 @@ Review pass 2, 2026-10-31, on `m043-launch-prep` at 41fbf4b, then 11efc14 (main 
 - ripple #2: DESIGN pipeline step 1 said "sorted order" — fix now, fixed 11efc14.
 - ripple #3: the `read_meta` comment said "sorted order" — fix now, fixed 11efc14.
 - snapshot: list unchanged since pass 1 (meta-unknown html and epub, cell-options in four formats, all new files, called for by AC1 and AC3).
+- consistency gate: `cairn_validate` all checks pass; the one version marker (`_extensions/wrapped/_extension.yml`, 0.2.0) is unchanged; verify suite green; `docs_layout.py` green on the Mac; the docs workflow runs on the PR; changelog slot "none".
