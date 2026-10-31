@@ -307,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The classes, attributes, and <code>wrapped:</code> keys that control wrapping. Each name links to the page that gives its full rules.</p>
 <section id="classes-and-attributes" class="level2">
 <h2 class="anchored" data-anchor-id="classes-and-attributes">Classes and attributes</h2>
-<p>These go on a figure, an image, or a table float. On a code cell, the class goes in <code>#| classes:</code>. A code cell figure’s width goes in <code>#| out-width:</code> (see <a href="./get-started.html#a-figure-from-a-code-cell">Get started</a>), and a code cell table takes the document defaults. “All four formats” means HTML, PDF through LaTeX, PDF through Typst, and Word. HTML includes revealjs slides and dashboards. A table float wraps only in HTML and PDF through Typst. In PDF through LaTeX and in Word it keeps its normal layout, and the render prints a warning (see <a href="./get-started.html#wrap-a-table">Get started</a>).</p>
+<p>These go on a figure, an image, or a table float. On a code cell, the class goes in <code>#| classes:</code>. A code cell figure’s width goes in <code>#| out-width:</code> (see <a href="./get-started.html#a-figure-from-a-code-cell">Get started</a>), and a code cell table takes the document defaults. “All four formats” means HTML, PDF through LaTeX, PDF through Typst, and Word. HTML includes revealjs slides and dashboards. A table float wraps in HTML, PDF through Typst, and Word. In PDF through LaTeX it keeps its normal layout, and the render prints a warning (see <a href="./get-started.html#wrap-a-table">Get started</a>).</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 18%">
@@ -331,14 +331,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>class</td>
 <td>none</td>
 <td>none</td>
-<td>All four formats; on a table float, HTML and PDF through Typst</td>
+<td>All four formats; on a table float, all but PDF through LaTeX</td>
 </tr>
 <tr class="even">
 <td><a href="./get-started.html#wrap-a-figure"><code>.wrap-left</code></a></td>
 <td>class</td>
 <td>none</td>
 <td>none</td>
-<td>All four formats; on a table float, HTML and PDF through Typst</td>
+<td>All four formats; on a table float, all but PDF through LaTeX</td>
 </tr>
 <tr class="odd">
 <td><a href="./stopping.html#stop-wrapping-earlier"><code>.wrap-clear</code></a></td>

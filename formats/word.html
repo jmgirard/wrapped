@@ -245,6 +245,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#width-and-gap" id="toc-width-and-gap" class="nav-link active" data-scroll-target="#width-and-gap">Width and gap</a></li>
   <li><a href="#images-and-frames" id="toc-images-and-frames" class="nav-link" data-scroll-target="#images-and-frames">Images and frames</a></li>
+  <li><a href="#tables" id="toc-tables" class="nav-link" data-scroll-target="#tables">Tables</a></li>
   <li><a href="#apps-that-show-frames" id="toc-apps-that-show-frames" class="nav-link" data-scroll-target="#apps-that-show-frames">Apps that show frames</a></li>
   </ul>
 </nav>
@@ -283,13 +284,19 @@ ul.task-list li input[type="checkbox"] {
 <li>A width plus its gap as wide as the text or wider also leaves no room for the text. Examples are <code>5in</code> with a <code>2in</code> gap on a 6.5 in text width, and <code>95%</code> with a <code>2em</code> gap. Such a figure prints a warning, and it takes the document default width. If the document default plus the gap is that wide too, the figure takes the built-in 40%. If 40% plus the gap is that wide too, the figure takes 40% and keeps the gap. This is so even when its own width was narrower than 40%. The extension rounds each value to twips (1/20 pt) before it adds them.</li>
 <li>A <code>wrapped:</code> width that with the gap is as wide as the text or wider prints one warning, and the document default width becomes 40%. A <code>wrapped:</code> width that already printed its own warning prints no second one. A figure that sets neither its own width nor its own gap prints no warning of its own.</li>
 </ul>
-<p>The text width is the page width less the left and right margins and the gutter. A reference doc with more than one column keeps normal figures, and the render prints one warning.</p>
+<p>The text width is the page width less the left and right margins and the gutter. A reference doc with more than one column keeps normal figures and table floats, and the render prints one warning.</p>
 </section>
 <section id="images-and-frames" class="level2">
 <h2 class="anchored" data-anchor-id="images-and-frames">Images and frames</h2>
-<p>The image takes the width of the frame and keeps its shape. The extension does not use an image’s <code>height</code> in a wrapped figure in Word, and the render prints a warning. The <code>wrap-lines</code> attribute does nothing in Word.</p>
-<p>A list in a figure div goes in the frame with the image and the caption. Word cannot put a code block, a table, a heading, a horizontal rule, or raw content in a frame. A figure div that holds one keeps its normal layout, and the render prints a warning. For the same reason, a wrapped <a href="../get-started.html#wrap-a-table">table float</a> keeps its normal layout, and the render prints a warning.</p>
+<p>The image takes the width of the frame and keeps its shape. The extension does not use an image’s <code>height</code> in a wrapped figure or table in Word, and the render prints a warning. The <code>wrap-lines</code> attribute does nothing in Word.</p>
+<p>A list in a figure div goes in the frame with the image and the caption. Word cannot put a code block, a table, a heading, a horizontal rule, or raw content in a frame. A figure div that holds one keeps its normal layout, and the render prints a warning. A table float uses a floating table in place of a frame (see <a href="#tables">Tables</a>).</p>
 <p>A frame does not break across pages. If a frame does not fit at the bottom of a page, Word moves it and the paragraph after it to the next page. The rest of the page before it stays blank.</p>
+</section>
+<section id="tables" class="level2">
+<h2 class="anchored" data-anchor-id="tables">Tables</h2>
+<p>A wrapped <a href="../get-started.html#wrap-a-table">table float</a> goes in a floating table, the box that Word wraps text around for a table. The box has one cell, which holds the caption, the table, and any other content of the float. It takes its width and gap as a figure’s frame does. The filter sets the table to the full width of the box. An image outside the table fills the box. An image in a table cell fills its cell, less the cell margins (half the cell in a very narrow one), unless its own <code>width</code> is smaller. A percent <code>width</code> is a percent of the text width. The wrap stops where a figure’s wrap stops.</p>
+<p>A table that gt or flextable makes is raw Word XML, which the extension cannot fit to a box. A wrapped table float that holds one keeps its normal layout in Word, and the render prints a warning.</p>
+<p>In LibreOffice 26.8 on macOS, a table wider than its box narrows its columns to fit the box, and the column text then breaks inside words. A box taller than the rest of the page breaks across pages there.</p>
 </section>
 <section id="apps-that-show-frames" class="level2">
 <h2 class="anchored" data-anchor-id="apps-that-show-frames">Apps that show frames</h2>
