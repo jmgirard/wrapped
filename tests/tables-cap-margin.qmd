@@ -2,10 +2,15 @@
 title: "A wrapped table with its caption in the margin"
 filters:
   - wrapped
+format:
+  html: default
+  pdf:
+    keep-tex: true
 ---
 
-Quarto 1.10.19 fails a LaTeX build for a table with its caption in the
-margin, with or without the extension, so this fixture renders to HTML only.
+Without the extension, Quarto 1.10.20 fails a LaTeX build for a table with
+its caption in the margin. With it, the wrapped table builds in LaTeX as a
+tabular, and its caption goes to the margin.
 
 ```{r}
 #| label: tbl-cap-margin

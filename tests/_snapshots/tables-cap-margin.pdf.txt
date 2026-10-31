@@ -1,0 +1,4 @@
+# warnings
+# tex
+wrappedtable: tbl-cap-margin [side=right,width=0.4\linewidth,gap=1em] caption=no tabular=1 longtable=0 columns=0.5556 0.4444
+wrappedstop

@@ -131,6 +131,7 @@ RENDERS = [
     ("tables", "docx", True),
     ("tables", "epub", True),
     ("tables-cap-margin", "html", True),
+    ("tables-cap-margin", "pdf", True),
     ("tables-cap-margin-meta", "html", True),
     ("tables-column-meta", "html", True),
     ("tables-column-meta", "typst", True),
