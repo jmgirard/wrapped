@@ -109,44 +109,35 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 
 ## Tasks
 
-- [x] T1: In `_extensions/wrapped/wrapped.tex` (`wrappedfigure` at :193,
-      warnings at :141-147), add `wrappedtable` over `\wraptable`, sharing
-      the key set, the three modes (a `table` float in mode f,
-      `\@captype` table in mode p), the gap record, and `\wrapped@endwrap`
-      with `wrappedfigure`, so one wrap at a time holds across kinds. Make
-      the multicols warning name the float's kind and the two-column
-      warning name figures and tables. Update the file's header comment.
-- [x] T2: In `_extensions/wrapped/wrapped.lua`, replace the LaTeX table
-      return at :1630-1639 with a raw-LaTeX check (`raw_latex_table`,
-      beside `raw_docx_table` at :1537) and its warning. In the
-      `is_latex` branch at :1680, for a table float set `fig-env` to
-      `wrappedtable` and replace the content's Pandoc table with a
-      `latex_tabular` raw block: set each column's width from
-      `column_shares`, `pandoc.write` the table, drop the
-      `\def\LTcaptype` group, keep the first head, move the foot to the
-      end, and write `tabular`. Walk `pandoc.Blocks({ content })`, since
-      the content can be one Block. Make sure that a document whose only
-      Pandoc table is wrapped still loads the table packages, and probe the `fig-env` path and the
-      `\LTcaptype` removal under Quarto 1.9.36 (M035 lesson) before building on them.
-- [x] T3: Tests: `latex_table_case` LAYOUT cases for the five forms, with
-      the `tbl-div` stop below; new `tests/tables-latex.qmd` (LaTeX only:
-      `tbl-rel` with relative widths and an `@tbl-rel` link, `tbl-raw`
-      from `knitr::kable(format = "latex")`) in the render list; a table
-      case in `multicols.qmd` and `twocolumn-switch.qmd`; snapshot
-      updates with `--update`, each diff read.
-- [x] T4: Docs: `docs/get-started.qmd` "Wrap a table",
-      `docs/normal-layout.qmd`, `docs/reference.qmd`, `docs/index.qmd`,
-      `docs/formats/latex.qmd` (Limits: no page break, raw tables, the
-      wide table as rendered), README.md; `cairn/DESIGN.md` Goals,
-      Non-goals, Architecture steps 4 and 7, Known issues;
-      `cairn/references/wrap-mechanisms.md` E5 and the LaTeX row. Run the
-      AC6 grep and fix each line it lists; render the docs and run
-      `tests/docs_layout.py`.
-- [x] T5: Full `python3 tests/verify.py`; revert any `/.quarto/` lines a
-      render adds to `tests/.gitignore`; open the PR at review and wait on
-      CI.
-
-- [x] T6: Review return 1: in `latex_tabular`, keep each one-block cell's content as AST spliced between raw pieces of the written tabular; save footnotes in `wrappedtable`; apply `tbl-colwidths`; reflow the stranded `wrapped.tex` comments; regression cases for strikeout, inline code, citation, cross-reference, shortcode, footnote, `tbl-colwidths`, and a table foot.
+- [x] T1: In `_extensions/wrapped/wrapped.tex` (`wrappedfigure` at :193, warnings at :141-147), add
+      `wrappedtable` over `\wraptable`, sharing the key set, the three modes (a `table` float in mode
+      f, `\@captype` table in mode p), the gap record, and `\wrapped@endwrap` with `wrappedfigure`, so
+      one wrap at a time holds across kinds. Make the multicols warning name the float's kind and the
+      two-column warning name figures and tables. Update the file's header comment.
+- [x] T2: In `_extensions/wrapped/wrapped.lua`, replace the LaTeX table return at :1630-1639 with a
+      raw-LaTeX check (`raw_latex_table`, beside `raw_docx_table` at :1537) and its warning. In the
+      `is_latex` branch at :1680, for a table float set `fig-env` to `wrappedtable` and replace the
+      content's Pandoc table with a `latex_tabular` raw block: set each column's width from
+      `column_shares`, `pandoc.write` the table, drop the `\def\LTcaptype` group, keep the first head,
+      move the foot to the end, and write `tabular`. Walk `pandoc.Blocks({ content })`, since the
+      content can be one Block. Make sure that a document whose only Pandoc table is wrapped still
+      loads the table packages, and probe the `fig-env` path and the `\LTcaptype` removal under Quarto
+      1.9.36 (M035 lesson) before building on them.
+- [x] T3: Tests: `latex_table_case` LAYOUT cases for the five forms, with the `tbl-div` stop below;
+      new `tests/tables-latex.qmd` (LaTeX only: `tbl-rel` with relative widths and an `@tbl-rel` link,
+      `tbl-raw` from `knitr::kable(format = "latex")`) in the render list; a table case in
+      `multicols.qmd` and `twocolumn-switch.qmd`; snapshot updates with `--update`, each diff read.
+- [x] T4: Docs: `docs/get-started.qmd` "Wrap a table", `docs/normal-layout.qmd`, `docs/reference.qmd`,
+      `docs/index.qmd`, `docs/formats/latex.qmd` (Limits: no page break, raw tables, the wide table as
+      rendered), README.md; `cairn/DESIGN.md` Goals, Non-goals, Architecture steps 4 and 7, Known
+      issues; `cairn/references/wrap-mechanisms.md` E5 and the LaTeX row. Run the AC6 grep and fix
+      each line it lists; render the docs and run `tests/docs_layout.py`.
+- [x] T5: Full `python3 tests/verify.py`; revert any `/.quarto/` lines a render adds to
+      `tests/.gitignore`; open the PR at review and wait on CI.
+- [x] T6: Review return 1: in `latex_tabular`, keep each one-block cell's content as AST spliced
+      between raw pieces of the written tabular; save footnotes in `wrappedtable`; apply
+      `tbl-colwidths`; reflow the stranded `wrapped.tex` comments; regression cases for strikeout,
+      inline code, citation, cross-reference, shortcode, footnote, `tbl-colwidths`, and a table foot.
 
 ## Work log
 
