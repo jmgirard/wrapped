@@ -66,3 +66,7 @@ The site covers each part of the extension:
   its source and its result.
 - [Reference](https://jmgirard.github.io/wrapped/reference.html): the
   classes, attributes, and document keys.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
