@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-31 (M039 review: M036 row pruned; Word table row gr
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M040 | Wrap table floats in LaTeX PDFs | in-progress | — | normal | milestones/M040-latex-table-wrap.md |
+| M040 | Wrap table floats in LaTeX PDFs | review | — | normal | milestones/M040-latex-table-wrap.md |
 | M039 | Wrap table floats in Word | done | — | normal | milestones/archive/M039-word-table-wrap.md |
 | M038 | Wrap table floats in HTML and Typst | done | — | normal | milestones/archive/M038-table-wrap.md |
 | M037 | Say LaTeX narrows lines past figures | done | — | normal | milestones/archive/M037-latex-narrow-past.md |

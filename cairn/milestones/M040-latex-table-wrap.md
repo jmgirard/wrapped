@@ -4,7 +4,7 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M040: Wrap table floats in LaTeX PDFs
 
-- **Status:** in-progress
+- **Status:** review
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -146,7 +146,7 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
       render adds to `tests/.gitignore`; open the PR at review and wait on
       CI.
 
-- [ ] T6: Review return 1: in `latex_tabular`, keep each one-block cell's content as AST spliced between raw pieces of the written tabular; save footnotes in `wrappedtable`; apply `tbl-colwidths`; reflow the stranded `wrapped.tex` comments; regression cases for strikeout, inline code, citation, cross-reference, shortcode, footnote, `tbl-colwidths`, and a table foot.
+- [x] T6: Review return 1: in `latex_tabular`, keep each one-block cell's content as AST spliced between raw pieces of the written tabular; save footnotes in `wrappedtable`; apply `tbl-colwidths`; reflow the stranded `wrapped.tex` comments; regression cases for strikeout, inline code, citation, cross-reference, shortcode, footnote, `tbl-colwidths`, and a table foot.
 
 ## Work log
 
@@ -184,6 +184,7 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 - 2026-10-31: review return 1: the pre-quarto `pandoc.write` of a wrapped LaTeX table hides its cells from Quarto: strikeout, underline, and inline code in a cell fail the build; citations, cross-references, and shortcodes in a cell print literally; footnote text in a cell disappears; `tbl-colwidths` is ignored. Fix: keep each one-block cell's content as AST, spliced between raw pieces of the written tabular, so Quarto and the main writer process it; save notes in the table box; read `tbl-colwidths`. Add regression cases (strikeout, inline code, citation, cross-reference, shortcode, footnote, `tbl-colwidths`, a table foot) and the stranded-comment reflow in `wrapped.tex`. Criteria unchanged (no widening after a return).
 - 2026-10-31: return 1 fix (T6): `latex_tabular` writes each one-paragraph cell as a token `WRAPPEDCELL<n>Z` and returns one Plain of raw pieces with the cells' own inlines between them; `table_colwidths` applies a `tbl-colwidths` list (table, float, document `meta_tbl_colwidths`) with Quarto's rounding and its no-span rule; `wrapped.tex` keeps each wrappedtable footnote's text and sets it after the environment, since `\makesavenoteenv{wrappedtable}` adds a group and the tables stopped wrapping (scratch render); comments reflowed. New fixture `tests/tables-cells.qmd` (+ `tests/cells.bib`): ten LaTeX cases ok. Plants on d50e7ea's filter: the full fixture fails the build (exit 1); without the strike, underline, and code rows, the citation, cross-reference, shortcode, and footnote cases fail ("0 lines hold ..."), and `tbl-widths` gets 0.8000/0.2000 against the fixed 0.3000/0.7000.
 - 2026-10-31: claim audit (return 1): 41 claims read, 4 corrected — `docs/formats/latex.qmd` (cells "work as in a normal table" was false for a multi-block cell: a citation stayed literal and `\st` failed the build), `wrapped.lua` (`meta_tbl_colwidths` holds strings; Quarto also skips a `quarto-postprocess` table, now checked in `table_colwidths`), `wrapped.tex` (`\makesavenoteenv` of footnotehyper or footnote; footnote.sty's `\savenotes` opens a group, and the auditor's pdflatex probe lost the wrap inside it). The first was fixed in code, not wording: `latex_tabular` now tokens every cell and splices a multi-block cell's blocks in a minipage. `tables-cells.qmd` gains `tbl-blocks` (two paragraphs with a citation and strikeout; a list with a cross-reference); its four cases fail on fca0343's filter ("0 lines hold ...") and pass now. The auditor's no-extension probe made Quarto update tlmgr and TinyTeX packages on this Mac.
+- 2026-10-31: T6 done: the same reader re-read the four corrections and confirmed them (its two-paragraph probe now builds, "P1 see (Knuth 1984) gone", "P2 see Table 2"). `python3 tests/verify.py` at 48f6dd0: all 128 renders pass, 94 layout and 4 log checks ok; `quarto render docs` exit 0 and `tests/docs_layout.py` exit 0 (24 ok) after the last docs edit. Status review.
 - 2026-10-31: proposed AC2 column clause for the user: "Each column of the six tables of `tests/tables.qmd`, whose columns have no widths, is a `p{}` column whose `\real{}` factor (the share of the box's line width less its column padding that Pandoc writes) equals that column's length divided by the sum of the table's column lengths, rounded to four decimals, where a column's length is the larger of one and the largest number of characters, spaces included, in the plain text (formatting removed) of a header or body cell of that column that spans no other column; the columns of `tbl-rel`, whose columns all have relative widths, have `\real{}` factors equal to each width that Pandoc's reader gives the column (its dashes' share of the separator line) divided by the sum of the widths, rounded to four decimals (evidence: both fixtures' LaTeX snapshots)."
 
 ## Decisions
