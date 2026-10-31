@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M043: Prepare the interface and front pages for launch
 
-- **Status:** planned   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
+- **Status:** in-progress   <!-- owner: transitioning skill · mirror-update; cairn/ROADMAP.md is the authority -->
 - **Priority:** normal   <!-- owner: plan · create/amend-via-gate; high | normal | low -->
 - **Depends on:** —   <!-- owner: plan · create/amend-via-gate; M<xx>, M<yy> or — -->
 - **Driving RR:** —   <!-- owner: plan · create/amend-via-gate; RR<NN> whose Binding criteria bind this milestone's ACs (binding-criteria check), or — -->
 - **Principles touched:** —   <!-- owner: plan · create/amend-via-gate; comma-separated IPn/GPn ids this milestone touches, or — -->
 - **Resolves:** —   <!-- owner: plan · create/amend-via-gate; comma-separated GitHub issues the scope absorbs, each `#N closes` (the PR closes it at merge) or `#N partial` (the remainder gets a candidate row), or — ; skill conduct only — no validate check parses it -->
 - **Surface tier:** user-facing — the filter's options, its warnings, and the documentation site   <!-- owner: plan · create/amend-via-gate; user-facing | internal — <one-clause reason>; skill conduct only — no validate check parses it -->
-- **Branch/PR:** —   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
+- **Branch/PR:** m043-launch-prep   <!-- owner: implement (branch) / review (PR URL) · create; a companion checkout the milestone also works in is one further entry per checkout, `companion: <abs-path> <branch>` (implement), its PR URL appended by review — /milestone-review merges companions first, in listed order -->
 
 ## Goal
 <!-- owner: plan · create; a wrong goal returns to plan, never edited in place -->
@@ -136,6 +136,7 @@ user's act; the repeated four-format wording on pages other than the home page a
 - 2026-10-31: plan gate chose keeping `gap` and warning on an unknown key over accepting both spellings or renaming the key to `wrap-gap`, because the names follow one rule once stated and no user depends on an alias; falsified by user reports of `wrap-gap` under `wrapped:` after the warning ships.
 - 2026-10-31: plan gate chose the demo box first, then a short install, over a quick start above the demo, because the demo shows the result before the setup; falsified by visitor feedback that the install is hard to find.
 - 2026-10-31: changelog: none (profile changelog slot is "none"; release notes come from commit subjects).
+- 2026-10-31: implement started on branch m043-launch-prep, cut from main at cae0f85.
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
