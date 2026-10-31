@@ -814,6 +814,59 @@ local function text_shares(tbl)
   return shares
 end
 
+-- The document's tbl-colwidths: a list of numbers, a string, or nil. Set in
+-- the first pass.
+local meta_tbl_colwidths = nil
+
+-- The column widths that a tbl-colwidths value of percentages gives a
+-- table, as Quarto gives them: each column takes its value, or the last
+-- value past the list's end, a list whose sum passes 100 is scaled to 100,
+-- and each width is a share of the line. Quarto applies the value after
+-- pre-quarto filters, and to a table with no spans only, so the filter
+-- applies it to a table it rewrites. Any other value, such as true, auto,
+-- or false, gives nil, and the columns take text_shares.
+local function table_colwidths(tbl, value)
+  if value == nil then return nil end
+  local list = value
+  if type(value) == "string" then
+    if value:sub(1, 1) ~= "[" then value = "[" .. value .. "]" end
+    local ok, decoded = pcall(quarto.json.decode, value)
+    list = ok and decoded or nil
+  end
+  if type(list) ~= "table" or #list == 0 then return nil end
+  for _, row in ipairs(tbl.head.rows) do
+    for _, cell in ipairs(row.cells) do
+      if cell.col_span ~= 1 or cell.row_span ~= 1 then return nil end
+    end
+  end
+  for _, body in ipairs(tbl.bodies) do
+    for _, rows in ipairs({ body.head, body.body }) do
+      for _, row in ipairs(rows) do
+        for _, cell in ipairs(row.cells) do
+          if cell.col_span ~= 1 or cell.row_span ~= 1 then return nil end
+        end
+      end
+    end
+  end
+  local widths, total = {}, 0
+  for i = 1, #tbl.colspecs do
+    local w = tonumber(list[math.min(i, #list)])
+    if not w then return nil end
+    widths[i] = w + 0.0
+    total = total + widths[i]
+  end
+  -- Quarto rounds a scaled value to one decimal, then a share to two.
+  local function round(x, places)
+    local m = 10 ^ places
+    return math.floor(x * m + 0.5) / m
+  end
+  for i = 1, #widths do
+    if total > 100 then widths[i] = round(widths[i] / total * 100, 1) end
+    widths[i] = round(widths[i] / 100, 2)
+  end
+  return widths
+end
+
 -- Writes a Pandoc table as a raw tabular for a wrappedtable, since wrapfig's
 -- wraptable cannot hold the longtable that Pandoc writes (D-024). Each
 -- column takes its share of the box (text_shares), so Pandoc writes p{}
@@ -822,9 +875,38 @@ end
 -- first head and sets the foot after the body. Pandoc puts a longtable with
 -- no caption in a group that keeps the table counter, which a tabular does
 -- not need.
-local function latex_tabular(tbl)
-  local shares = text_shares(tbl)
+--
+-- The table is written before Quarto resolves shortcodes, cross-references,
+-- and citations, and in a document of its own, whose template the main one
+-- does not see. So each cell that holds one paragraph is written as a token,
+-- and the tokens are replaced by the cells' own inlines, between raw pieces
+-- of the written tabular. Quarto then processes those inlines, and the main
+-- writer writes them, with the packages they need. `float_colwidths` is
+-- the float's tbl-colwidths attribute.
+local function latex_tabular(tbl, float_colwidths)
+  local widths = table_colwidths(tbl, tbl.attributes["tbl-colwidths"] or float_colwidths
+    or meta_tbl_colwidths)
+  local shares = widths or text_shares(tbl)
   for i, spec in ipairs(tbl.colspecs) do tbl.colspecs[i] = { spec[1], shares[i] } end
+  local held, n = {}, 0
+  local function hold(rows)
+    for _, row in ipairs(rows) do
+      for _, cell in ipairs(row.cells) do
+        local c = cell.contents
+        if #c == 1 and (c[1].t == "Plain" or c[1].t == "Para") then
+          n = n + 1
+          held[n] = c[1].content
+          cell.contents = pandoc.Blocks({ pandoc.Plain({ pandoc.Str("WRAPPEDCELL" .. n .. "Z") }) })
+        end
+      end
+    end
+  end
+  hold(tbl.head.rows)
+  for _, body in ipairs(tbl.bodies) do
+    hold(body.head)
+    hold(body.body)
+  end
+  hold(tbl.foot.rows)
   local tex = pandoc.write(pandoc.Pandoc({ tbl }), "latex")
   tex = tex:gsub("^{\\def\\LTcaptype{none}[^\n]*\n(.*)\n}%s*$", "%1")
   local spec, rows = tex:match("\\begin{longtable}%[[^%]]*%](%b{})\n?(.*)\\end{longtable}")
@@ -845,7 +927,15 @@ local function latex_tabular(tbl)
   local _, last = split(foot, "\\endfoot")
   -- Pandoc's template loads multirow only for a table it writes itself.
   if tex:find("\\multirow", 1, true) then quarto.doc.use_latex_package("multirow") end
-  return pandoc.RawBlock("latex", "\\begin{tabular}" .. spec .. "\n" .. head .. body .. last .. "\\end{tabular}")
+  local out = "\\begin{tabular}" .. spec .. "\n" .. head .. body .. last .. "\\end{tabular}"
+  local inlines, pos = pandoc.Inlines({}), 1
+  for s, i, e in out:gmatch("()WRAPPEDCELL(%d+)Z()") do
+    inlines:insert(pandoc.RawInline("latex", out:sub(pos, s - 1)))
+    inlines:extend(held[tonumber(i)])
+    pos = e
+  end
+  inlines:insert(pandoc.RawInline("latex", out:sub(pos)))
+  return pandoc.Plain(inlines)
 end
 
 local function docx_size(blocks, twips, by_column)
@@ -1438,6 +1528,12 @@ local function read_meta(meta)
   document_meta = meta
   meta_fig_cap_location = meta_text(meta["fig-cap-location"])
   meta_tbl_cap_location = meta_text(meta["tbl-cap-location"])
+  local colwidths = meta["tbl-colwidths"]
+  if pandoc.utils.type(colwidths) == "List" then
+    meta_tbl_colwidths = colwidths:map(function(w) return pandoc.utils.stringify(w) end)
+  elseif colwidths ~= nil then
+    meta_tbl_colwidths = pandoc.utils.stringify(colwidths)
+  end
   meta_cap_location = meta_text(meta["cap-location"])
   if is_docx then
     docx_text_width, docx_columns = read_docx_text_width()
@@ -1781,7 +1877,8 @@ local function float_target(float)
     if is_table then
       local content = float.content
       if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
-      float.content = content:walk({ Table = latex_tabular })
+      local colwidths = float.attributes["tbl-colwidths"]
+      float.content = content:walk({ Table = function(tbl) return latex_tabular(tbl, colwidths) end })
     end
   elseif is_typst then
     if custom_id then

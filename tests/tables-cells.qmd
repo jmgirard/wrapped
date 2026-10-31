@@ -1,0 +1,62 @@
+---
+title: "wrapped fixture: LaTeX table floats whose cells hold markup"
+filters:
+  - at: pre-quarto
+    path: html-table.lua
+  - wrapped
+bibliography: cells.bib
+cellkey: KEYVAL
+format:
+  pdf:
+    keep-tex: true
+---
+
+This page has a wrapped table whose cells hold markup that Quarto and the main LaTeX writer must process, a wrapped table with `tbl-colwidths`, and a wrapped table with a foot.
+
+| Kind      | Cell                        |
+|-----------|-----------------------------|
+| strike    | ~~gone~~                    |
+| underline | [under]{.underline}         |
+| code      | `x <- 1`{.r}                |
+| cite      | see [@knuth]                |
+| xref      | see @tbl-widths             |
+| meta      | M{{< meta cellkey >}}M      |
+| note      | note[^1]                    |
+
+: A table whose cells hold markup {#tbl-cells .wrap-right width="45%"}
+
+[^1]: FNTEXT in a cell.
+
+Marker cells. The paragraph after the table with markup sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+## A table with set widths
+
+::: {#tbl-widths .wrap-left width="45%" tbl-colwidths="[30,70]"}
+
+| Name | N |
+|------|---|
+| a    | 1 |
+
+: A table with tbl-colwidths
+
+:::
+
+Marker widths. The paragraph after the table with set widths sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## A table with a foot
+
+::: {#tbl-foot .wrap-right width="40%"}
+
+```{.html-table}
+<table>
+<thead><tr><th>Item</th><th>Count</th></tr></thead>
+<tbody><tr><td>apple</td><td>BODYROW</td></tr></tbody>
+<tfoot><tr><td>Total</td><td>FOOTSUM</td></tr></tfoot>
+</table>
+```
+
+A table that Pandoc's HTML reader makes, with a foot.
+
+:::
+
+Marker foot. The paragraph after the table with a foot sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

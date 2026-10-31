@@ -143,6 +143,7 @@ RENDERS = [
     ("tables-cell-columns", "pdf", True),
     ("tables-latex", "pdf", True),
     ("tables-span", "pdf", True),
+    ("tables-cells", "pdf", True),
     ("tables-column-body", "html", True),
     ("tables-column-body", "typst", True),
     ("cap-margin", "html", True),
@@ -1188,6 +1189,33 @@ def latex_table_cases():
     yield "cell caption block", table_case("Table 5:", "3.35", "Marker five.", "left")
 
 
+def text_case(words):
+    """One line of the PDF, its boxes joined, holds `words`."""
+    return lambda bx, e, lh: find_words(join_lines(bx), words)
+
+
+def below_case(upper, lower):
+    """The line that holds `lower` starts below the line that holds `upper`."""
+    def case(boxes, edges, lh):
+        a, b = find_words(boxes, upper), find_words(boxes, lower)
+        if (b.page, b.top) <= (a.page, a.top):
+            raise LayoutError(f"{lower!r} does not start below {upper!r}")
+    return case
+
+
+def latex_table_cells_cases():
+    yield "cells", table_case("Table 1:", "MKEYVALM", "Marker cells.", "right")
+    yield "strikeout", text_case("strike gone")
+    yield "underline", text_case("underline under")
+    yield "inline code", text_case("code x <- 1")
+    yield "citation", text_case("cite see (Knuth 1984)")
+    yield "cross-reference", text_case("xref see Table 2")
+    yield "shortcode", text_case("meta MKEYVALM")
+    yield "footnote text", text_case("FNTEXT in a cell.")
+    yield "foot", table_case("Table 3:", "FOOTSUM", "Marker foot.", "right")
+    yield "foot after body", below_case("BODYROW", "FOOTSUM")
+
+
 def latex_table_link_cases():
     yield "relative widths", table_case("Table 1:", "largest share.", "Marker rel.", "right")
     # pdftohtml writes a link's number as a box of its own.
@@ -1340,6 +1368,7 @@ LAYOUT = {
     "twocolumn-switch": twocolumn_switch_cases,
     "tables": latex_table_cases,
     "tables-latex": latex_table_link_cases,
+    "tables-cells": latex_table_cells_cases,
 }
 
 # The fixtures whose PDF through Typst the layout check reads, with their cases.

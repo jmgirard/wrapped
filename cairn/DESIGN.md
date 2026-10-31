@@ -251,10 +251,16 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    one that holds raw openxml does in Word (D-023). A LaTeX table float
    that wraps takes `fig-env` `wrappedtable` and `tbl-pos` options, and
    `latex_tabular` rewrites each Pandoc table in it as a `tabular`: it
-   gives the columns shares of the box (`text_shares`: by each column's
-   longest cell text when no column has a width, else `column_shares`),
-   writes the table with Pandoc, keeps the first head, and sets the foot
-   after the body. Its caption location key is `tbl-cap-location`
+   gives the columns shares of the box (a `tbl-colwidths` list from the
+   table, its float, or the document, as Quarto applies it, else
+   `text_shares`: by each column's longest cell text when no column has a
+   width, else `column_shares`), writes the table with Pandoc, keeps the
+   first head, and sets the foot after the body. Each cell that holds one
+   paragraph is written as a token, which the cell's own inlines replace
+   between raw pieces of the tabular, so Quarto resolves its shortcodes,
+   cross-references, and citations and the main writer loads what its
+   formatting needs. `wrapped.tex` sets a wrappedtable's footnote text
+   after the environment (M040 review return 1). Its caption location key is `tbl-cap-location`
    (corrected M038, M039, M040). A code cell anchors the group of
    a wrapped float inside it, with or without a wrap class of its own,
    since a table float can take its class from its caption block, and a
