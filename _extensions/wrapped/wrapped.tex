@@ -1,6 +1,9 @@
-% wrapped: the wrappedfigure environment, a key-value front end for wrapfig's
-% wrapfigure. The filter writes
-% \begin{wrappedfigure}[side=right,width=0.4\linewidth,gap=1em,lines=12].
+% wrapped: the wrappedfigure and wrappedtable environments, key-value front
+% ends for wrapfig's wrapfigure and wraptable. The filter writes
+% \begin{wrappedfigure}[side=right,width=0.4\linewidth,gap=1em,lines=12],
+% and \begin{wrappedtable}[...] with the same keys for a table float, whose
+% table it writes as a tabular, since wraptable cannot hold a longtable.
+% Below, "figure" means either kind unless it names a figure alone.
 %
 % The sides are wrapfig's floating placements, R and L: a figure that does
 % not fit on the page moves to the start of a paragraph on the next page.
@@ -15,22 +18,23 @@
 %
 % The filter writes \wrappedstop after the paragraphs beside a figure, at
 % the block that stops the wrap, so that block starts below the figure.
-% wrapfig holds one figure at a time, so a wrappedfigure also ends an
-% earlier wrap first, in the same way. A figure that moved and still waits
-% for a paragraph is put out there, centered, with no text beside it. A wrap
-% whose text is still narrowed ends: the lines that the figure's height
-% still needs are skipped, and \WFclear ends the wrap. After a wrap-lines
-% value smaller than the height needs, whose narrowed lines have ended, the
-% block that stops the wrap starts below the figure on its page, outside
-% boxes. In a wrappedfigure,
-% \WFclear ends it inside the environment's group, so \wrapped@afterenv
-% ends it again after the group.
+% wrapfig holds one figure or table at a time, so a wrappedfigure or
+% wrappedtable also ends an earlier wrap first, in the same way. A figure
+% that moved and still waits for a paragraph is put out there, centered,
+% with no text beside it. A wrap whose text is still narrowed ends: the
+% lines that the figure's height still needs are skipped, and \WFclear ends
+% the wrap. After a wrap-lines value smaller than the height needs, whose
+% narrowed lines have ended, the block that stops the wrap starts below the
+% figure on its page, outside boxes. In a wrappedfigure, \WFclear ends it
+% inside the environment's group, so \wrapped@afterenv ends it again after
+% the group.
 %
 % Where the text runs in columns, inside multicols or where \if@twocolumn
-% is true, a wrappedfigure does not wrap: it floats as a normal figure, or
-% it is set in place inside multicols, or in two-column text inside a box
-% or when it has no caption. LaTeX writes a warning to its log: once for
-% two-column text, and once for each figure in multicols.
+% is true, a wrappedfigure or wrappedtable does not wrap: it floats as a
+% normal figure or table, or it is set in place inside multicols, or in
+% two-column text inside a box or when it has no caption. LaTeX writes a
+% warning to its log: once for two-column text, and once for each figure
+% or table in multicols, which names its kind.
 \usepackage{wrapfig}
 \makeatletter
 \def\wrapped@gap{\columnsep}
@@ -131,20 +135,26 @@
   \ifnum\currentgrouplevel=\wrapped@level\relax
     \expandafter\wrapped@floathand
   \fi}
-% Where the text runs in columns, a wrappedfigure does not wrap. The
-% hooks mark the inside of a multicols environment, where a float is lost,
-% and the mark ends with the environment's group. \if@twocolumn stays true
-% inside multicols in two-column text, so the mark is tested first.
+% Where the text runs in columns, a wrappedfigure or wrappedtable does not
+% wrap. The hooks mark the inside of a multicols environment, where a float
+% is lost, and the mark ends with the environment's group. \if@twocolumn
+% stays true inside multicols in two-column text, so the mark is tested
+% first.
 \newif\ifwrapped@multicols
 \AddToHook{env/multicols/begin}{\wrapped@multicolstrue}
 \AddToHook{env/multicols*/begin}{\wrapped@multicolstrue}
 \newif\ifwrapped@twowarned
-\newcommand*\wrapped@warnmulticols{%
-  \PackageWarning{wrapped}{Figure in multicols set as normal figure}}
+% The multicols warning names the float's kind, figure or table.
+\def\wrapped@kind@figure{Figure}
+\def\wrapped@kind@table{Table}
+\newcommand*\wrapped@warnmulticols[1]{%
+  \PackageWarning{wrapped}{\csname wrapped@kind@#1\endcsname\space in
+    multicols set as normal #1}}
 \newcommand*\wrapped@warntwocolumn{%
   \ifwrapped@twowarned\else
     \global\wrapped@twowarnedtrue
-    \PackageWarningNoLine{wrapped}{Two-column text: figures set as normal figures}%
+    \PackageWarningNoLine{wrapped}{Two-column text: figures and tables set as
+      normal floats}%
   \fi}
 \makeatother
 \ExplSyntaxOn
@@ -166,16 +176,16 @@
     caption .bool_set:N = \l__wrapped_caption_bool,
     caption .initial:n = true,
   }
-% The mode of a wrappedfigure: w wraps, f is a figure float in two-column
-% text, and p sets the figure in place: inside multicols, and in two-column
-% text inside a box, where a float is lost, or for an image with no
-% caption.
-\cs_new_protected:Npn \__wrapped_set_mode:
+% The mode of a wrappedfigure or a wrappedtable: w wraps, f is a figure or
+% table float in two-column text, and p sets the float in place: inside
+% multicols, and in two-column text inside a box, where a float is lost, or
+% for an image with no caption. The argument is the kind, figure or table.
+\cs_new_protected:Npn \__wrapped_set_mode:n #1
   {
     \legacy_if:nTF { wrapped@multicols }
       {
         \tl_set:Nn \l__wrapped_mode_tl { p }
-        \use:c { wrapped@warnmulticols }
+        \use:c { wrapped@warnmulticols } {#1}
       }
       {
         \legacy_if:nTF { @twocolumn }
@@ -190,11 +200,14 @@
           { \tl_set:Nn \l__wrapped_mode_tl { w } }
       }
   }
-\NewDocumentEnvironment { wrappedfigure } { O{} }
+% The start and the end of a wrappedfigure or a wrappedtable: #1 is the
+% kind, figure or table, and #2 the options. wrapfig's wrapfigure and
+% wraptable differ only in the kind of their caption.
+\cs_new_protected:Npn \__wrapped_begin:nn #1#2
   {
-    \keys_set:nn { wrapped } { #1 }
+    \keys_set:nn { wrapped } { #2 }
     \use:c { wrapped@endwrap }
-    \__wrapped_set_mode:
+    \__wrapped_set_mode:n {#1}
     \exp_args:NV \str_case:nn \l__wrapped_mode_tl
       {
         { w }
@@ -205,7 +218,7 @@
               { \captionsetup { format = plain, justification = raggedright } }
             \use:e
               {
-                \exp_not:N \wrapfigure
+                \exp_not:c { wrap #1 }
                 \tl_if_empty:NF \l__wrapped_lines_tl
                   { [ \exp_not:V \l__wrapped_lines_tl ] }
                 { \exp_not:V \l__wrapped_side_tl }
@@ -214,7 +227,7 @@
           }
         { f }
           {
-            \begin { figure }
+            \begin {#1}
             \centering
             \begin { minipage } { \l__wrapped_width_tl }
           }
@@ -222,23 +235,45 @@
           {
             \begin { center }
             \begin { minipage } { \l__wrapped_width_tl }
-            \cs_set:cpn { @captype } { figure }
+            \cs_set:cpn { @captype } {#1}
             % No float begins here, so the caption package has no anchor
             % to move a link to; the link goes to the caption.
             \cs_if_exist:NT \captionsetup { \captionsetup { hypcap = false } }
           }
       }
   }
+\cs_new_protected:Npn \__wrapped_end:n #1
   {
     \exp_args:NV \str_case:nn \l__wrapped_mode_tl
       {
         { w }
           {
-            \endwrapfigure
+            \use:c { endwrap #1 }
             \use:c { wrapped@setgap } { \l__wrapped_gap_tl }
           }
-        { f } { \end { minipage } \end { figure } }
+        { f } { \end { minipage } \end {#1} }
         { p } { \end { minipage } \end { center } }
       }
   }
+\NewDocumentEnvironment { wrappedfigure } { O{} }
+  { \__wrapped_begin:nn { figure } {#1} }
+  { \__wrapped_end:n { figure } }
+\NewDocumentEnvironment { wrappedtable } { O{} }
+  { \__wrapped_begin:nn { table } {#1} }
+  { \__wrapped_end:n { table } }
 \ExplSyntaxOff
+% A tabular sets no footnote text, so a wrappedtable keeps the text of each
+% footnote in its cells and sets it after the environment, with the number
+% of its mark. The \makesavenoteenv of footnotehyper or footnote, which
+% Quarto's template uses for a longtable, puts a group around the
+% environment (footnote.sty's \savenotes opens one), so wrapfig would no
+% longer place the table beside the paragraphs after it.
+\makeatletter
+\def\wrapped@notes{}
+\newcommand\wrapped@footnote[1]{%
+  \footnotemark
+  \xdef\wrapped@notes{\unexpanded\expandafter{\wrapped@notes}%
+    \noexpand\footnotetext[\the\c@footnote]{\unexpanded{#1}}}}
+\AddToHook{env/wrappedtable/begin}{\let\footnote\wrapped@footnote}
+\AddToHook{env/wrappedtable/after}{\wrapped@notes\gdef\wrapped@notes{}}
+\makeatother

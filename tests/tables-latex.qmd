@@ -1,0 +1,29 @@
+---
+title: "wrapped fixture: table floats in LaTeX"
+filters:
+  - wrapped
+format:
+  pdf:
+    keep-tex: true
+---
+
+This page has a table with relative column widths, which is its only Pandoc table, and a table that knitr writes as raw LaTeX. @tbl-rel wraps, and @tbl-raw keeps its normal layout.
+
+| Item       | Count | Note                                            |
+|----------------------------|--------------|----------------------------------------------------------|
+| alpha      | 3     | The note column holds the most text.            |
+| beta       | 12    | Its dashes give it the largest share.           |
+
+: A table with relative widths {#tbl-rel .wrap-right width="45%"}
+
+Marker rel. The paragraph after the table with relative widths sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{r}
+#| label: tbl-raw
+#| echo: false
+#| tbl-cap: "A table that knitr writes as raw LaTeX."
+#| classes: wrap-right
+knitr::kable(data.frame(x = c("a", "b"), y = c(1, 2)), format = "latex", booktabs = TRUE)
+```
+
+Marker raw. The paragraph after the raw LaTeX table. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

@@ -64,9 +64,9 @@ pages are in two columns, it also checks which column holds each figure.
 
 For a fixture in LOGS, rendered with latex-clean: false so its LaTeX log
 stays, the script also reads the warnings that wrapped.tex writes to that
-log: the count of two-column warnings, and the line of each multicols
-warning against the lines of the wrappedfigure environments inside
-multicols in the kept .tex.
+log: the count of two-column warnings, and the line and kind of each
+multicols warning against the wrappedfigure and wrappedtable environments
+inside multicols in the kept .tex.
 """
 
 import difflib
@@ -131,6 +131,7 @@ RENDERS = [
     ("tables", "docx", True),
     ("tables", "epub", True),
     ("tables-cap-margin", "html", True),
+    ("tables-cap-margin", "pdf", True),
     ("tables-cap-margin-meta", "html", True),
     ("tables-column-meta", "html", True),
     ("tables-column-meta", "typst", True),
@@ -140,6 +141,9 @@ RENDERS = [
     ("tables-cell-columns", "html", True),
     ("tables-cell-columns", "typst", True),
     ("tables-cell-columns", "pdf", True),
+    ("tables-latex", "pdf", True),
+    ("tables-span", "pdf", True),
+    ("tables-cells", "pdf", True),
     ("tables-column-body", "html", True),
     ("tables-column-body", "typst", True),
     ("cap-margin", "html", True),
@@ -444,7 +448,7 @@ def xref_summary(path):
 def tex_summary(path):
     # The body only: the preamble holds the wrapper and its comments.
     tex = path.read_text(encoding="utf-8").split("\\begin{document}", 1)[-1]
-    found = re.finditer(r"\\begin\{(figure|wrappedfigure|marginfigure)\}(?:\[([^\]]*)\])?(.*?)\\end\{\1\}|\\wrappedstop\b", tex, re.S)
+    found = re.finditer(r"\\begin\{(figure|wrappedfigure|marginfigure|wrappedtable)\}(?:\[([^\]]*)\])?(.*?)\\end\{\1\}|\\wrappedstop\b", tex, re.S)
     lines = []
     for m in found:
         if m.group(1) is None:
@@ -452,6 +456,19 @@ def tex_summary(path):
             continue
         kind, options, body = m.groups()
         label = re.search(r"\\label\{([^}]*)\}", body)
+        if kind == "wrappedtable":
+            # The column factors of the first tabular, or its column letters
+            # when it has none.
+            spec = re.search(r"\\begin\{tabular\}(\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\})", body)
+            factors = re.findall(r"\\real\{([0-9.]+)\}", spec.group(1)) if spec else []
+            columns = " ".join(factors) if factors else (re.sub(r"\s+", "", spec.group(1)) if spec else "(none)")
+            caption = "yes" if "\\caption" in body else "no"
+            tabular, longtable = body.count("\\begin{tabular}"), body.count("\\begin{longtable}")
+            lines.append(
+                f"{kind}: {label.group(1) if label else '-'} [{options or '-'}] caption={caption} "
+                f"tabular={tabular} longtable={longtable} columns={columns}"
+            )
+            continue
         image = re.search(r"\\includegraphics(?:\[([^\]]*)\])?", body)
         # The target of an external link around the image.
         href = re.search(r"\\href\{([^}]*)\}\{(?:\\pandocbounded\{)?\\includegraphics", body)
@@ -939,9 +956,14 @@ def column_lines(boxes, fig, edges):
 
 
 def check_alone(boxes, fig, edges):
-    """No text line of the image's column sits beside the image."""
+    """No text line of the image's column sits beside the image. For a
+    table (find_table), its own text lies within its span and is not
+    beside it."""
+    def own(b):
+        return (fig.image.kind == "table" and b.left >= fig.image.left - NEAR
+                and b.right <= fig.image.right + NEAR)
     beside = [b for b in column_lines(boxes, fig, edges)
-              if b.top < fig.image.bottom and b.bottom > fig.image.top]
+              if b.top < fig.image.bottom and b.bottom > fig.image.top and not own(b)]
     if beside:
         raise LayoutError(f"{beside[0].text!r} is beside the image")
 
@@ -968,12 +990,32 @@ def normal_case(caption, para):
     return case
 
 
-def in_place_case(caption, before, after_words):
+def find_table(boxes, caption, last):
+    """A table float by its caption words and the words of its last row, as
+    a Figure whose image is a "table" box that spans both."""
+    cap = find_words(boxes, caption)
+    row = find_words(boxes, last)
+    if cap.page != row.page or row.bottom < cap.top:
+        raise LayoutError(f"the last row {last!r} is not below the caption {caption!r} on its page")
+    span = Box(cap.page, "table", cap.top, min(cap.left, row.left), row.bottom, max(cap.right, row.right), caption)
+    return Figure(span, row.bottom, cap)
+
+
+def table_alone_case(caption, last):
+    """A wrapped table float that keeps its normal layout: no text of its
+    column beside it."""
+    def case(boxes, edges, lh):
+        check_alone(boxes, find_table(boxes, caption, last), edges)
+    return case
+
+
+def in_place_case(caption, before, after_words, last=None):
     """A figure in multicols sits in its column between the paragraph
-    before it and the paragraph after it, with no text beside it."""
+    before it and the paragraph after it, with no text beside it. With
+    `last`, the words of a table float's last row, it is a table."""
     def case(boxes, edges, lh):
         end = find_text(boxes, before)
-        fig = find_figure(boxes, caption, end)
+        fig = find_table(boxes, caption, last) if last else find_figure(boxes, caption, end)
         nxt = find_text(boxes, after_words)
         if not (end.page == fig.page == nxt.page):
             raise LayoutError(f"the paragraphs and the figure are on pages {end.page}, {fig.page}, {nxt.page}")
@@ -994,6 +1036,7 @@ def multicols_cases():
     yield "wide gap right", wide_gap_case("right")
     yield "figure in multicols", in_place_case("In multicols.", "Before figure M.", "After figure M.")
     yield "image in multicols", in_place_case(None, "Before image M.", "After image M.")
+    yield "table in multicols", in_place_case("In multicols table.", "Before table M.", "After table M.", "7.77")
 
 
 def twocolumn_class_cases():
@@ -1007,6 +1050,7 @@ def twocolumn_switch_cases():
         find_figure(bx, "Before twocolumn.", None),
         find_text(bx, "A short paragraph beside the figure before twocolumn."), "right", e, lh)
     yield "in two columns", normal_case("Fig T.", "After figure T.")
+    yield "table in two columns", table_alone_case("Table 1: Table T.", "8.88")
     yield "after onecolumn", lambda bx, e, lh: check_beside(
         find_figure(bx, "After onecolumn.", None),
         find_text(bx, "A short paragraph beside the figure after onecolumn."), "left", e, lh)
@@ -1090,12 +1134,12 @@ def typst_gap_meta_cases():
     yield "default with gap too wide", typst_width_case("Fig MDefault.", "Marker fallback", TYPST_40)
 
 
-def typst_table_case(caption, last, para, side):
-    """A Typst table float whose paragraph's first line starts above the
-    bottom of the table's last row and lies wholly on the side away from
-    the table. The table's boxes are the text boxes from its caption's
-    first line down to its last row, less the lines of the paragraph,
-    which start where the first line starts."""
+def table_case(caption, last, para, side):
+    """A table float, in the PDF through Typst or LaTeX, whose paragraph's
+    first line starts above the bottom of the table's last row and lies
+    wholly on the side away from the table. The table's boxes are the text
+    boxes from its caption's first line down to its last row, less the
+    lines of the paragraph, which start where the first line starts."""
     def case(boxes, edges, lh):
         cap = find_words(boxes, caption)
         row = find_words(boxes, last)
@@ -1117,12 +1161,68 @@ def typst_table_case(caption, last, para, side):
 
 
 def typst_table_cases():
-    yield "div", typst_table_case("Table 1:", "2.81", "Marker one.", "right")
-    yield "caption block in a div", typst_table_case("Table 2:", "2.82", "Marker two.", "left")
-    yield "pipe table", typst_table_case("Table 3:", "2.83", "Marker three.", "right")
-    yield "cell class", typst_table_case("Table 4:", "4.45", "Marker four.", "right")
-    yield "cell caption block", typst_table_case("Table 5:", "3.35", "Marker five.", "left")
-    yield "table wider than its box", typst_table_case("Table 10:", "cious", "Marker wide.", "right")
+    yield "div", table_case("Table 1:", "2.81", "Marker one.", "right")
+    yield "caption block in a div", table_case("Table 2:", "2.82", "Marker two.", "left")
+    yield "pipe table", table_case("Table 3:", "2.83", "Marker three.", "right")
+    yield "cell class", table_case("Table 4:", "4.45", "Marker four.", "right")
+    yield "cell caption block", table_case("Table 5:", "3.35", "Marker five.", "left")
+    yield "table wider than its box", table_case("Table 10:", "cious", "Marker wide.", "right")
+
+
+def table_stop_case(last, heading):
+    """The heading that stops a table float's group starts below the
+    table's last row."""
+    def case(boxes, edges, lh):
+        row = find_words(boxes, last)
+        head = find_words(boxes, heading)
+        if head.page < row.page or (head.page == row.page and head.top < row.bottom):
+            raise LayoutError(f"the heading {heading!r} starts above the table's last row")
+    return case
+
+
+def latex_table_cases():
+    yield "div", table_case("Table 1:", "2.81", "Marker one.", "right")
+    yield "div stop", table_stop_case("2.81", "Form 2: a caption block inside a div")
+    yield "caption block in a div", table_case("Table 2:", "2.82", "Marker two.", "left")
+    yield "pipe table", table_case("Table 3:", "2.83", "Marker three.", "right")
+    yield "cell class", table_case("Table 4:", "4.45", "Marker four.", "right")
+    yield "cell caption block", table_case("Table 5:", "3.35", "Marker five.", "left")
+
+
+def text_case(words):
+    """One line of the PDF, its boxes joined, holds `words`."""
+    return lambda bx, e, lh: find_words(join_lines(bx), words)
+
+
+def below_case(upper, lower):
+    """The line that holds `lower` starts below the line that holds `upper`."""
+    def case(boxes, edges, lh):
+        a, b = find_words(boxes, upper), find_words(boxes, lower)
+        if (b.page, b.top) <= (a.page, a.top):
+            raise LayoutError(f"{lower!r} does not start below {upper!r}")
+    return case
+
+
+def latex_table_cells_cases():
+    yield "cells", table_case("Table 1:", "MKEYVALM", "Marker cells.", "right")
+    yield "strikeout", text_case("strike gone")
+    yield "underline", text_case("underline under")
+    yield "inline code", text_case("code x <- 1")
+    yield "citation", text_case("cite see (Knuth 1984)")
+    yield "cross-reference", text_case("xref see Table 2")
+    yield "shortcode", text_case("meta MKEYVALM")
+    yield "footnote text", text_case("FNTEXT in a cell.")
+    yield "foot", table_case("Table 3:", "FOOTSUM", "Marker foot.", "right")
+    yield "foot after body", below_case("BODYROW", "FOOTSUM")
+    yield "blocks", table_case("Table 4:", "second item", "Marker blocks.", "right")
+    yield "paragraphs in a cell", text_case("PARAONE see (Knuth 1984)")
+    yield "list in a cell", text_case("LISTITEM see Table 1")
+
+
+def latex_table_link_cases():
+    yield "relative widths", table_case("Table 1:", "largest share.", "Marker rel.", "right")
+    # pdftohtml writes a link's number as a box of its own.
+    yield "link", lambda bx, e, lh: find_words(join_lines(bx), "Table 1 wraps, and Table 2 keeps")
 
 
 def join_lines(boxes):
@@ -1269,6 +1369,9 @@ LAYOUT = {
     "multicols": multicols_cases,
     "twocolumn-class": twocolumn_class_cases,
     "twocolumn-switch": twocolumn_switch_cases,
+    "tables": latex_table_cases,
+    "tables-latex": latex_table_link_cases,
+    "tables-cells": latex_table_cells_cases,
 }
 
 # The fixtures whose PDF through Typst the layout check reads, with their cases.
@@ -1310,35 +1413,42 @@ def layout_check(fixture, cases):
 
 # The fixtures whose LaTeX log the log check reads, rendered with
 # latex-clean: false so the log stays: the number of two-column warnings
-# and the number of wrapped figures inside multicols.
+# and the number of wrapped figures and tables inside multicols.
 LOGS = {
     "twocolumn-class": (1, 0),
     "twocolumn-switch": (1, 0),
-    "multicols": (0, 2),
+    "multicols": (0, 3),
     "stop-latex": (0, 0),
 }
-TWO_COLUMN_WARNING = "Two-column text: figures set as normal figures"
-MULTICOLS_WARNING = "Figure in multicols set as normal figure"
+TWO_COLUMN_WARNING = "Two-column text: figures and tables set as normal floats"
+MULTICOLS_WARNINGS = {
+    "Figure in multicols set as normal figure": "figure",
+    "Table in multicols set as normal table": "table",
+}
 LOG_WARNING = re.compile(r"Package wrapped Warning: (.*?)(?: on input line (\d+))?\.")
+WRAPPED_ENV = re.compile(r"\\begin\{wrapped(figure|table)\}")
 
 
 def multicols_figures(tex):
-    """The line numbers of the wrappedfigure environments inside multicols."""
+    """The line number and the kind, figure or table, of each wrappedfigure
+    and wrappedtable environment inside multicols."""
     depth, found = 0, []
     for n, line in enumerate(tex.read_text(encoding="utf-8").splitlines(), 1):
+        env = WRAPPED_ENV.match(line)
         if line.startswith("\\begin{multicols"):
             depth += 1
         elif line.startswith("\\end{multicols"):
             depth -= 1
-        elif line.startswith("\\begin{wrappedfigure}") and depth > 0:
-            found.append(n)
+        elif env and depth > 0:
+            found.append((n, env.group(1)))
     return found
 
 
 def log_check(fixture):
     """Checks the wrapped warnings in a fixture's LaTeX log: the two-column
-    warning, and a multicols warning that names the line of each wrapped
-    figure inside multicols. Returns the names of the failed checks."""
+    warning, and a multicols warning that names the line and the kind of
+    each wrapped figure or table inside multicols. Returns the names of the
+    failed checks."""
     two_column, in_multicols = LOGS[fixture]
     path = TESTS / f"{fixture}.log"
     if not path.exists():
@@ -1350,12 +1460,13 @@ def log_check(fixture):
     log = path.read_text(encoding="utf-8", errors="replace").replace("\n", "")
     found = LOG_WARNING.findall(log)
     two = [w for w in found if w[0] == TWO_COLUMN_WARNING]
-    multi = sorted(int(n) if n else 0 for msg, n in found if msg == MULTICOLS_WARNING)
-    other = [msg for msg, n in found if msg not in (TWO_COLUMN_WARNING, MULTICOLS_WARNING)]
+    multi = sorted((int(n) if n else 0, MULTICOLS_WARNINGS[msg])
+                   for msg, n in found if msg in MULTICOLS_WARNINGS)
+    other = [msg for msg, n in found if msg != TWO_COLUMN_WARNING and msg not in MULTICOLS_WARNINGS]
     want = multicols_figures(TESTS / f"{fixture}.tex")
     problems = []
     if len(want) != in_multicols:
-        problems.append(f"the .tex has {len(want)} wrapped figures in multicols, not {in_multicols}")
+        problems.append(f"the .tex has {len(want)} wrapped floats in multicols, not {in_multicols}")
     if len(two) != two_column:
         problems.append(f"{len(two)} two-column warnings, not {two_column}")
     if multi != want:

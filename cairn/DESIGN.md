@@ -15,23 +15,26 @@ install it with `quarto add jmgirard/wrapped`.
 
 - Wrap text to the left or right of one captioned figure. The figure keeps
   its number, caption, and `@fig-` links. A `#tbl-` table float wraps the
-  same way in HTML, PDF through Typst, and Word, except a raw Word XML
-  table in Word (D-021, D-022, D-023, corrected M038, M039).
+  same way in all four formats, except a raw Word XML table in Word and a
+  raw LaTeX table in LaTeX (D-021, D-022, D-023, D-024, corrected M038,
+  M039, M040).
 - Wrap text around an uncaptioned image.
 - Use one width value for all formats.
 - In a format or context that cannot wrap, keep a normal figure and warn
   once: once for each render in a format, once for each figure in a
   context, and once for a code cell that makes more than one figure, in a
-  context or not (corrected M003, M014, M018). In LaTeX, also once for
-  each wrapped table float (D-021, corrected M038, M039).
+  context or not (corrected M003, M014, M018). In Word and LaTeX, also
+  once for each wrapped table float whose table is raw Word XML or raw
+  LaTeX (D-023, D-024, corrected M038, M039, M040).
 
 **Non-goals for version 1.**
 
-- Tables (`#tbl-` floats) in PDF through LaTeX. LaTeX `wraptable`
-  conflicts with `longtable`, and Quarto renders every table as
-  `longtable`. Table floats wrap in HTML, PDF through Typst, and Word
-  (D-021, D-022, corrected M039). In Word, a raw Word XML table (gt,
-  flextable) keeps its normal layout (D-023).
+- Raw tables from R packages: a raw Word XML table (gt, flextable) in
+  Word and a raw LaTeX table (gt, kableExtra, tinytable) in LaTeX keep
+  their normal layout (D-023, D-024). Table floats that Pandoc writes wrap
+  in all four formats; in LaTeX the filter rewrites Quarto's `longtable`
+  as a `tabular`, since `wraptable` cannot hold a `longtable` (corrected
+  M039, M040).
 - Subfigure panels (`layout-ncol`, `layout`).
 - Code listings and callouts.
 - A figure in the middle of a paragraph. The figure anchors where it appears
@@ -108,8 +111,7 @@ wrapped:
   breakpoint: 576px   # HTML: at this width or narrower, figures stop floating
 ```
 
-Stop rule: the figure, or in HTML, Typst, and Word a table float (M038,
-M039), wraps
+Stop rule: the figure, or a table float (M038, M039, M040), wraps
 the paragraphs that follow it. Wrapping stops at
 the first block that is not a paragraph: a heading, list, figure, table, code
 block, callout, or horizontal rule. A paragraph that holds one shortcode
@@ -244,9 +246,23 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    id or image.
 4. In a top-down pass, it carries a code cell's wrap class to that cell's
    floats and moves an image's class to its float. A figure float and a
-   table float wrap (D-021). A table float in LaTeX keeps its normal
-   layout with a warning, and its caption location key is
-   `tbl-cap-location` (corrected M038, M039). A code cell anchors the group of
+   table float wrap (D-021). A table float that holds raw LaTeX keeps its
+   normal layout in LaTeX with a warning (`raw_latex_table`, D-024), as
+   one that holds raw openxml does in Word (D-023). A LaTeX table float
+   that wraps takes `fig-env` `wrappedtable` and `tbl-pos` options, and
+   `latex_tabular` rewrites each Pandoc table in it as a `tabular`: it
+   gives the columns shares of the box (a `tbl-colwidths` list from the
+   table or its float, as Quarto applies it, else
+   `text_shares`: by each column's longest cell text when no column has a
+   width, else `column_shares`), writes the table with Pandoc, keeps the
+   first head, and sets the foot after the body. Each cell is written as a
+   token, which the cell's own content replaces between raw pieces of the
+   tabular (a one-paragraph cell's inlines, or another cell's blocks in a
+   minipage), so Quarto resolves its shortcodes,
+   cross-references, and citations and the main writer loads what its
+   formatting needs. `wrapped.tex` sets a wrappedtable's footnote text
+   after the environment (M040 review return 1). Its caption location key is `tbl-cap-location`
+   (corrected M038, M039, M040). A code cell anchors the group of
    a wrapped float inside it, with or without a wrap class of its own,
    since a table float can take its class from its caption block, and a
    cell's `margin-caption` class reaches its floats either way. Quarto
@@ -329,12 +345,14 @@ passes, two in step 1 (corrected M003, and by the page-break hotfix):
    them to the float (corrected M034, M038).
 7. In HTML it adds the stylesheet and the breakpoint rule when a figure
    or table float wraps (corrected M038). In LaTeX it adds wrapfig and `wrapped.tex`, which defines
-   `wrappedfigure` over wrapfig's floating placements and `\wrappedstop`,
+   `wrappedfigure` and `wrappedtable` over wrapfig's floating placements
+   (`wrapfigure` and `wraptable`, M040) and `\wrappedstop`,
    which ends a wrap (corrected M007). Where the text runs in columns,
-   inside `multicols` or where `\if@twocolumn` is true, `wrappedfigure`
-   sets a normal figure and writes a warning to the LaTeX log: a `figure`
-   float, or the figure in place inside `multicols`, or in two-column text
-   inside a box or with no caption. It sets the
+   inside `multicols` or where `\if@twocolumn` is true, either environment
+   sets a normal float and writes a warning to the LaTeX log: a `figure`
+   or `table` float, or the float in place inside `multicols`, or in
+   two-column text inside a box or with no caption. The multicols warning
+   names the float's kind (corrected M040). It sets the
    gap as `\columnsep` only inside wrapfig's placement of the figure
    (corrected M009). In Typst it imports
    `wrap-content` from `@preview/wrap-it:0.1.1`, which Quarto loads from the
@@ -392,6 +410,13 @@ snapshot difference. The mechanism for each other format is in
 
 ## Known issues
 
+- PDF through LaTeX: a wrapped table float is a `tabular`, which does not
+  break across pages, and keeps to the width of its box. In a narrow box a
+  wide table's column text breaks inside words, and the text of columns
+  side by side can overlap (the `tbl-wide` case of `tests/tables.qmd`). A
+  raw LaTeX table (gt, kableExtra, tinytable) keeps its normal layout with
+  a warning (D-024). The site's `docs/formats/latex.qmd`, Tables, states
+  these limits (M040).
 - PDF through Typst: a wrapped table float keeps to the width of its box.
   Typst narrows a wide table's columns and breaks its words, and in a
   narrow box the text of columns side by side can overlap (the

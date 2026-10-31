@@ -1,0 +1,42 @@
+---
+title: "wrapped fixture: LaTeX table floats with a row span"
+filters:
+  - at: pre-quarto
+    path: html-table.lua
+  - wrapped
+format:
+  pdf:
+    keep-tex: true
+---
+
+This page has two wrapped tables whose first cell spans two rows, so the long text of each one's last row sits in its second column.
+
++-------+------------------------------+
+| Group | Note                         |
++=======+==============================+
+| one   | short                        |
+|       +------------------------------+
+|       | averyveryverylongwordincolB  |
++-------+------------------------------+
+
+: A grid table with a row span {#tbl-span .wrap-right width="45%"}
+
+Marker span. The paragraph after the grid table sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+## A table with a row span and no widths
+
+::: {#tbl-html .wrap-right width="45%"}
+
+```{.html-table}
+<table>
+<tr><th>Group</th><th>Note</th></tr>
+<tr><td rowspan="2">one</td><td>short</td></tr>
+<tr><td>averyveryverylongwordincolB</td></tr>
+</table>
+```
+
+A table that Pandoc's HTML reader makes, with a row span.
+
+:::
+
+Marker html. The paragraph after the HTML table sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.

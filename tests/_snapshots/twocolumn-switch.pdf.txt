@@ -4,5 +4,7 @@ wrappedfigure: fig-before [side=right,width=0.3\linewidth,gap=1em] image=[width=
 wrappedstop
 wrappedfigure: fig-two-columns [side=right,width=0.4\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+wrappedtable: tbl-two-columns [side=right,width=0.4\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.3750 0.6250
+wrappedstop
 wrappedfigure: fig-after [side=left,width=0.3\linewidth,gap=1em] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop

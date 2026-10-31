@@ -6,8 +6,7 @@ The figure wraps the paragraphs that follow it. Wrapping stops at the first
 block that is not a paragraph, and that block starts below the figure.
 Examples of blocks that are not paragraphs are a heading, a list, a table,
 a code block, a callout, another figure, and a horizontal rule. A wrapped
-[table float](get-started.qmd#wrap-a-table) stops at the same blocks in
-HTML, PDF through Typst, and Word.
+[table float](get-started.qmd#wrap-a-table) stops at the same blocks.
 
 ::: demo
 ![Mean ratings by condition.](images/ratings.png){#fig-list .wrap-right width="35%"}

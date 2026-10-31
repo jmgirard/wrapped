@@ -10,3 +10,5 @@ wrappedfigure: fig-multicols [side=right,width=0.6\linewidth,gap=1em] image=[wid
 wrappedstop
 wrappedfigure: - [side=left,width=0.6\linewidth,gap=1em,caption=false] image=[width=1\linewidth,height=\textheight,keepaspectratio]
 wrappedstop
+wrappedtable: tbl-multicols [side=right,width=0.6\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.3750 0.6250
+wrappedstop

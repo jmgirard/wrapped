@@ -27,6 +27,18 @@ A short paragraph beside the figure before twocolumn.
 
 After figure T. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
+::: {#tbl-two-columns .wrap-right width="40%"}
+
+| Key | Value |
+|-----|-------|
+| t   | 8.88  |
+
+: Table T.
+
+:::
+
+After table T. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
 ```{=latex}
 \onecolumn
 ```

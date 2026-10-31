@@ -1,7 +1,7 @@
 -- wrapped: wrap body text around figures marked .wrap-left or .wrap-right.
--- A #tbl- table float wraps the same way in HTML, Typst, and Word and keeps
--- its normal layout in LaTeX, and in Word when its table is raw Word XML
--- (D-021, D-022, D-023); "figure" below covers it there.
+-- A #tbl- table float wraps the same way in all four formats and keeps its
+-- normal layout when its table is raw Word XML in Word or raw LaTeX in
+-- LaTeX (D-021, D-022, D-023, D-024); "figure" below covers it there.
 --
 -- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output,
 -- revealjs included, floats each wrapped figure inside a .wrap-group div
@@ -11,7 +11,8 @@
 -- The float pass also keeps the figures of a code cell that makes more than
 -- one figure normal (D-010).
 -- LaTeX output puts each wrapped figure in the wrappedfigure environment of
--- wrapped.tex, which calls wrapfig, and writes \wrappedstop after the
+-- wrapped.tex, which calls wrapfig, and a table float, its table rewritten
+-- as a tabular, in wrappedtable, and writes \wrappedstop after the
 -- paragraphs of its group. Typst output puts each wrapped figure
 -- and the paragraphs of its group in a wrap-content call from the bundled
 -- wrap-it package. Word output groups each wrapped figure with its
@@ -768,6 +769,197 @@ local function column_shares(tbl)
   end
   for i = 1, #shares do shares[i] = shares[i] / sum end
   return shares
+end
+
+-- The shares of a LaTeX table float's box for a table whose columns have
+-- no widths: each column's share is in proportion to the length of the
+-- longest text in a cell of that column that spans no other column, and a
+-- column with no such text counts as one character. A table with a width
+-- on any column takes column_shares, as in Word. Pandoc leaves the cells
+-- that a row span covers out of the rows below it, so the walk skips the
+-- columns that a span from a row above still covers.
+local function text_shares(tbl)
+  for _, spec in ipairs(tbl.colspecs) do
+    local w = spec[2]
+    if type(w) == "number" and w > 0 then return column_shares(tbl) end
+  end
+  local shares, sum = {}, 0
+  local function weigh(rows)
+    local covered = {}
+    for _, row in ipairs(rows) do
+      local col = 1
+      for _, cell in ipairs(row.cells) do
+        while (covered[col] or 0) > 0 do col = col + 1 end
+        if cell.col_span == 1 then
+          local n = utf8.len(pandoc.utils.stringify(cell.contents)) or 1
+          shares[col] = math.max(shares[col] or 1, n)
+        end
+        for c = col, col + cell.col_span - 1 do covered[c] = cell.row_span end
+        col = col + cell.col_span
+      end
+      for c, n in pairs(covered) do covered[c] = math.max(n - 1, 0) end
+    end
+  end
+  weigh(tbl.head.rows)
+  for _, body in ipairs(tbl.bodies) do
+    weigh(body.head)
+    weigh(body.body)
+  end
+  weigh(tbl.foot.rows)
+  for i = 1, #tbl.colspecs do
+    shares[i] = shares[i] or 1
+    sum = sum + shares[i]
+  end
+  for i = 1, #shares do shares[i] = shares[i] / sum end
+  return shares
+end
+
+-- The column widths that a tbl-colwidths value of percentages gives a
+-- table, as Quarto gives them: each column takes its value, or the last
+-- value past the list's end, a list whose sum passes 100 is scaled to 100,
+-- and each width is a share of the line. Quarto applies the value after
+-- pre-quarto filters, and only to a table with no spans that it did not
+-- parse from raw HTML (its quarto-postprocess attribute), so the filter
+-- applies it to a table it rewrites. The filter reads the value on the
+-- table or its float, where a code cell's option lands. Quarto takes a
+-- document's value out of the metadata before filters run, so that value
+-- does not reach the filter. Any other value, such as true, auto, or
+-- false, gives nil, and the columns take text_shares.
+local function table_colwidths(tbl, value)
+  if value == nil or tbl.attributes["quarto-postprocess"] then return nil end
+  local list = value
+  if type(value) == "string" then
+    if value:sub(1, 1) ~= "[" then value = "[" .. value .. "]" end
+    local ok, decoded = pcall(quarto.json.decode, value)
+    list = ok and decoded or nil
+  end
+  if type(list) ~= "table" or #list == 0 then return nil end
+  for _, row in ipairs(tbl.head.rows) do
+    for _, cell in ipairs(row.cells) do
+      if cell.col_span ~= 1 or cell.row_span ~= 1 then return nil end
+    end
+  end
+  for _, body in ipairs(tbl.bodies) do
+    for _, rows in ipairs({ body.head, body.body }) do
+      for _, row in ipairs(rows) do
+        for _, cell in ipairs(row.cells) do
+          if cell.col_span ~= 1 or cell.row_span ~= 1 then return nil end
+        end
+      end
+    end
+  end
+  local widths, total = {}, 0
+  for i = 1, #tbl.colspecs do
+    local w = tonumber(list[math.min(i, #list)])
+    if not w then return nil end
+    widths[i] = w + 0.0
+    total = total + widths[i]
+  end
+  -- Quarto rounds a scaled value to one decimal, then a share to two.
+  local function round(x, places)
+    local m = 10 ^ places
+    return math.floor(x * m + 0.5) / m
+  end
+  for i = 1, #widths do
+    if total > 100 then widths[i] = round(widths[i] / total * 100, 1) end
+    widths[i] = round(widths[i] / 100, 2)
+  end
+  return widths
+end
+
+-- Writes a Pandoc table as a raw tabular for a wrappedtable, since wrapfig's
+-- wraptable cannot hold the longtable that Pandoc writes (D-024). Each
+-- column takes its share of the box (text_shares), so Pandoc writes p{}
+-- columns that fit it. Pandoc's longtable holds a first head, a head that
+-- repeats on later pages, and a foot before the body. The tabular keeps the
+-- first head and sets the foot after the body. Pandoc puts a longtable with
+-- no caption in a group that keeps the table counter, which a tabular does
+-- not need.
+--
+-- The table is written before Quarto resolves shortcodes, cross-references,
+-- and citations, and in a document of its own, whose template the main one
+-- does not see. So each cell is written as a token, and the result is the
+-- raw pieces of the written tabular with the cells' own content between
+-- them: a one-paragraph cell's inlines, or another cell's blocks in a
+-- minipage, as Pandoc sets a list in a cell. Quarto then processes that
+-- content, and the main writer writes it, with the packages it needs. The
+-- blank lines that Pandoc writes between blocks fall inside the minipage.
+-- `float_colwidths` is the float's tbl-colwidths attribute.
+local ALIGN_TEX = { AlignRight = "\\raggedleft", AlignCenter = "\\centering" }
+
+local function latex_tabular(tbl, float_colwidths)
+  local widths = table_colwidths(tbl, tbl.attributes["tbl-colwidths"] or float_colwidths)
+  local shares = widths or text_shares(tbl)
+  for i, spec in ipairs(tbl.colspecs) do tbl.colspecs[i] = { spec[1], shares[i] } end
+  local held, n = {}, 0
+  local function hold(rows)
+    local covered = {}
+    for _, row in ipairs(rows) do
+      local col = 1
+      for _, cell in ipairs(row.cells) do
+        while (covered[col] or 0) > 0 do col = col + 1 end
+        local c = cell.contents
+        if #c > 0 then
+          n = n + 1
+          if #c == 1 and (c[1].t == "Plain" or c[1].t == "Para") then
+            held[n] = { inlines = c[1].content }
+          else
+            local align = cell.alignment
+            if align == "AlignDefault" then align = tbl.colspecs[col] and tbl.colspecs[col][1] end
+            held[n] = { blocks = c, align = ALIGN_TEX[align] or "\\raggedright" }
+          end
+          cell.contents = pandoc.Blocks({ pandoc.Plain({ pandoc.Str("WRAPPEDCELL" .. n .. "Z") }) })
+        end
+        for k = col, col + cell.col_span - 1 do covered[k] = cell.row_span end
+        col = col + cell.col_span
+      end
+      for k, left in pairs(covered) do covered[k] = math.max(left - 1, 0) end
+    end
+  end
+  hold(tbl.head.rows)
+  for _, body in ipairs(tbl.bodies) do
+    hold(body.head)
+    hold(body.body)
+  end
+  hold(tbl.foot.rows)
+  local tex = pandoc.write(pandoc.Pandoc({ tbl }), "latex")
+  tex = tex:gsub("^{\\def\\LTcaptype{none}[^\n]*\n(.*)\n}%s*$", "%1")
+  local spec, rows = tex:match("\\begin{longtable}%[[^%]]*%](%b{})\n?(.*)\\end{longtable}")
+  local function split(text, mark)
+    local at = text:find(mark, 1, true)
+    if not at then return "", text end
+    return text:sub(1, at - 1), text:sub(at + #mark):gsub("^\n", "")
+  end
+  local head, body, foot
+  if rows:find("\\endfirsthead", 1, true) then
+    head = split(rows, "\\endfirsthead")
+    local _, rest = split(rows, "\\endhead")
+    rows = rest
+  else
+    head, rows = split(rows, "\\endhead")
+  end
+  foot, body = split(rows, "\\endlastfoot")
+  local _, last = split(foot, "\\endfoot")
+  -- Pandoc's template loads multirow only for a table it writes itself.
+  if tex:find("\\multirow", 1, true) then quarto.doc.use_latex_package("multirow") end
+  local out = "\\begin{tabular}" .. spec .. "\n" .. head .. body .. last .. "\\end{tabular}"
+  local blocks, inlines, pos = pandoc.Blocks({}), pandoc.Inlines({}), 1
+  for s, i, e in out:gmatch("()WRAPPEDCELL(%d+)Z()") do
+    local cell = held[tonumber(i)]
+    inlines:insert(pandoc.RawInline("latex", out:sub(pos, s - 1)))
+    if cell.inlines then
+      inlines:extend(cell.inlines)
+    else
+      inlines:insert(pandoc.RawInline("latex", "\\begin{minipage}[t]{\\linewidth}" .. cell.align))
+      blocks:insert(pandoc.Plain(inlines))
+      blocks:extend(cell.blocks)
+      inlines = pandoc.Inlines({ pandoc.RawInline("latex", "\\end{minipage}") })
+    end
+    pos = e
+  end
+  inlines:insert(pandoc.RawInline("latex", out:sub(pos)))
+  blocks:insert(pandoc.Plain(inlines))
+  return blocks
 end
 
 local function docx_size(blocks, twips, by_column)
@@ -1548,6 +1740,20 @@ local function raw_docx_table(content)
   return found
 end
 
+-- True when a float's content holds any raw LaTeX block, as a table from
+-- gt, kableExtra, tinytable, or knitr::kable(format = "latex") does. The
+-- filter cannot rewrite such a table for wraptable (D-024).
+local function raw_latex_table(content)
+  if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
+  local found = false
+  content:walk({
+    RawBlock = function(raw)
+      if raw.format == "latex" or raw.format == "tex" then found = true end
+    end,
+  })
+  return found
+end
+
 -- Gives a float that does not wrap its normal layout: its images lose
 -- their wrap classes, and the float loses its wrap options.
 local function keep_normal(float)
@@ -1627,13 +1833,14 @@ local function float_target(float)
   -- or warns on its own. Quarto numbers such figures
   -- with the cell's label and `-1`, `-2`, and so on.
   local several = carried and cell.several and float.type == "Figure"
-  -- LaTeX wraps no table (D-021, D-022): Quarto writes a LaTeX table as a
-  -- longtable, which wrapfig cannot hold. The warning comes before the
-  -- next-block rule, so a table with no paragraph after it warns there too.
-  if is_table and is_latex and not context then
+  -- In LaTeX, a table float that holds any raw LaTeX block, as a table
+  -- from gt, kableExtra, or tinytable does, keeps its normal layout: the
+  -- filter cannot rewrite such a table as a tabular for wraptable (D-024).
+  -- It warns before the next-block rule, as Word does.
+  if is_table and is_latex and not context and raw_latex_table(float.content) then
     keep_normal(float)
     quarto.log.warning(string.format(
-      "wrapped: the table #%s does not wrap in LaTeX. A table wraps in HTML, Typst, and Word.",
+      "wrapped: the table #%s holds raw LaTeX, as a table from gt, kableExtra, or tinytable does, so it does not wrap in LaTeX.",
       float.identifier))
     return float
   end
@@ -1678,9 +1885,19 @@ local function float_target(float)
   float.attributes["wrap-lines"] = nil
   placed = true
   if is_latex then
-    -- Quarto writes \begin{<fig-env>}[<fig-pos>] for the float.
-    float.attributes["fig-env"] = "wrappedfigure"
-    float.attributes["fig-pos"] = tex_options(class, width, gap, lines, "#" .. float.identifier)
+    -- Quarto writes \begin{<fig-env>}[<fig-pos>] for the float, and for a
+    -- table float, once its table is a tabular and not a longtable,
+    -- \begin{<fig-env>}[<tbl-pos>]. A float's content can be one block,
+    -- which a walk from that block does not visit.
+    float.attributes["fig-env"] = is_table and "wrappedtable" or "wrappedfigure"
+    float.attributes[is_table and "tbl-pos" or "fig-pos"] =
+      tex_options(class, width, gap, lines, "#" .. float.identifier)
+    if is_table then
+      local content = float.content
+      if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
+      local colwidths = float.attributes["tbl-colwidths"]
+      float.content = content:walk({ Table = function(tbl) return latex_tabular(tbl, colwidths) end })
+    end
   elseif is_typst then
     if custom_id then
       typst_opens[custom_id] = typst_open(class, width, gap, "#" .. float.identifier)

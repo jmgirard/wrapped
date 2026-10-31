@@ -38,6 +38,12 @@ A second paragraph beside the first table. Excepteur sint occaecat cupidatat non
 
 The heading above ends the first table's group.
 
+<!-- In LaTeX, a new page gives wrapfig room to place the next table beside its paragraph. -->
+
+```{=latex}
+\clearpage
+```
+
 ::: {#tbl-block}
 
 | Condition | Mean |
@@ -63,6 +69,10 @@ Marker two. The paragraph after the second table sits beside it. Lorem ipsum dol
 : Table three, a pipe table {#tbl-pipe .wrap-right width="30%" wrap-gap="1em"}
 
 Marker three. The paragraph after the third table sits beside it. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+```{=latex}
+\clearpage
+```
 
 ## Form 4: a code cell with the class
 

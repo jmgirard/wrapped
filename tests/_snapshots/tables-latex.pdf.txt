@@ -1,0 +1,5 @@
+# warnings
+1x wrapped: the table #tbl-raw holds raw LaTeX, as a table from gt, kableExtra, or tinytable does, so it does not wrap in LaTeX.
+# tex
+wrappedtable: tbl-rel [side=right,width=0.45\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.2800 0.1400 0.5800
+wrappedstop

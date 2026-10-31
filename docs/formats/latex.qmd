@@ -3,8 +3,9 @@ title: "PDF through LaTeX"
 ---
 
 In PDF through LaTeX, the extension puts each wrapped figure in a
-`wrapfigure` from the LaTeX package wrapfig. Where the text runs in
-columns, it does not (see [Columns](#columns)). If your TeX distribution
+`wrapfigure` from the LaTeX package wrapfig, and each wrapped
+[table float](#tables) in a `wraptable`. Where the text runs in columns,
+it does not (see [Columns](#columns)). If your TeX distribution
 does not have wrapfig, install it, for example with `tlmgr install wrapfig`.
 
 ## Width and gap
@@ -70,15 +71,37 @@ wrapfig has limits, and the extension keeps some of them:
   figure that moved to the next page waits for one of its own paragraphs.
   A heading or the end of a callout does not take it.
 - A figure in a list keeps its normal layout, as in HTML.
-- A [table float](../get-started.qmd#wrap-a-table) does not wrap. Quarto
-  writes a table as a `longtable`, which wrapfig cannot hold. A wrapped
-  table float keeps its normal layout, and the render prints a warning.
+
+## Tables
+
+Quarto writes a table as a `longtable`, which wrapfig cannot hold. For a
+wrapped [table float](../get-started.qmd#wrap-a-table), the extension
+writes the table as a `tabular` in a `wraptable`, with its caption, its
+number, and its `@tbl-` links. Citations, cross-references, shortcodes,
+formatting, and footnotes in a cell work as in a normal table. The limits
+above for figures apply to tables too, and a table has three more:
+
+- A wrapped table does not break across pages. A table that does not fit
+  at the bottom of a page moves to the next page, as a figure does.
+- The columns share the width of the box, and a table's column text
+  wraps inside its cells. In a table where no column has a width, each
+  column takes a share in proportion to its longest cell text. A pipe
+  table with any line longer than 72 characters has widths of its own,
+  set by the dashes of its separator line, and its columns keep those
+  shares. A `tbl-colwidths` value of percentages on the table's `#tbl-`
+  div or code cell sets the shares, as it does for a normal table. A
+  `tbl-colwidths` in the document's metadata does not reach a wrapped
+  table. In a narrow box, a wide table's column text breaks inside
+  words, and the text of columns side by side can overlap.
+- A table float that holds raw LaTeX keeps its normal layout, and the
+  render prints a warning that names it. gt, kableExtra, tinytable, and
+  `knitr::kable(format = "latex")` write a table as raw LaTeX.
 
 ## Columns
 
 - Where the text runs in columns, set by `classoption: twocolumn`, a class
   default, `\twocolumn`, or `multicols`, wrapped figures render as normal
-  figures: they do not wrap. A percent width is a share of the column, or
+  figures and wrapped tables as normal tables: they do not wrap. A percent width is a share of the column, or
   of the box that holds the figure. With `classoption: twocolumn`, the
   filter writes Quarto's normal figure, and the render prints one warning.
 - In other documents, a class that sets two columns by default, such as
@@ -86,8 +109,8 @@ wrapfig has limits, and the extension keeps some of them:
   only while LaTeX runs. In two-column text, a captioned figure floats as a
   normal figure does. An image with no caption, or a figure inside a box
   such as a `minipage`, stays in place. Inside `multicols`, where LaTeX
-  loses floats, each figure stays in place. After `\onecolumn`, figures
-  wrap again.
+  loses floats, each figure stays in place. A wrapped table does what a
+  captioned figure does. After `\onecolumn`, figures wrap again.
 - In those cases the render prints no warning. LaTeX writes the warning to
   its log, and Quarto keeps the log with `latex-clean: false`. A column
   layout from a LaTeX class or package that neither turns on LaTeX's

@@ -1,0 +1,6 @@
+# warnings
+# tex
+wrappedtable: tbl-span [side=right,width=0.45\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.2051 0.7949
+wrappedstop
+wrappedtable: tbl-html [side=right,width=0.45\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.1562 0.8438
+wrappedstop
