@@ -155,11 +155,15 @@ The paragraph after the raw table, which keeps its normal layout.
 
 ::: {#tbl-quote .wrap-left}
 
-> | A | B |
-> |---|---|
-> | 1 | 2 |
+| A | B |
+|---|---|
+| 1 | 2 |
 
-: A table float whose table sits in a block quote.
+: A table float that ends with a block quote that holds a table.
+
+> | C | D |
+> |---|---|
+> | 3 | 4 |
 
 :::
 
