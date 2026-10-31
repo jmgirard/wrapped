@@ -49,12 +49,12 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 
 ## Acceptance criteria
 
-- [ ] AC1: In the PDF through LaTeX of `tests/tables.qmd`, for each of the five tables `tbl-div`,
+- [x] AC1: In the PDF through LaTeX of `tests/tables.qmd`, for each of the five tables `tbl-div`,
       `tbl-block`, `tbl-pipe`, `tbl-cell`, and `tbl-cell-block`, the first line of the paragraph
       after the table starts above the bottom of the table's last row and lies wholly on the side
       away from the table, and the heading after `tbl-div` starts below that table's last row
       (evidence: a `LAYOUT` case per table in `tests/verify.py`).
-- [ ] AC2: The kept `.tex` of `tests/tables.qmd` sets each of the six tables `tbl-div`,
+- [x] AC2: The kept `.tex` of `tests/tables.qmd` sets each of the six tables `tbl-div`,
       `tbl-block`, `tbl-pipe`, `tbl-cell`, `tbl-cell-block`, and `tbl-wide`, and the kept `.tex` of
       the new fixture `tests/tables-latex.qmd` sets its table `tbl-rel`, in a `wrappedtable`
       environment whose options give the side, width, and gap that the table's class, its
@@ -69,23 +69,23 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
       have `\real{}` factors equal to each width that Pandoc's reader gives the column (its dashes'
       share of the separator line) divided by the sum of the widths, rounded to four decimals
       (evidence: both fixtures' LaTeX snapshots).
-- [ ] AC3: `tests/tables-latex.qmd`, in which `tbl-rel` is the only Pandoc table and comes before
+- [x] AC3: `tests/tables-latex.qmd`, in which `tbl-rel` is the only Pandoc table and comes before
       `tbl-raw`, renders to PDF
       through LaTeX with exit status 0. Its PDF text shows `tbl-rel`'s caption numbered "Table 1"
       and the text's `@tbl-rel` link as "Table 1". Its table float `tbl-raw`, whose table
       `knitr::kable(format = "latex")` writes as raw LaTeX, has no `wrappedtable` environment in the
       kept `.tex`, and the render prints exactly one warning that names `#tbl-raw`, which says that a raw LaTeX
       table, as from gt, kableExtra, or tinytable, does not wrap.
-- [ ] AC4: The PDF-through-LaTeX render of `tests/tables.qmd` prints no warning that a table does
+- [x] AC4: The PDF-through-LaTeX render of `tests/tables.qmd` prints no warning that a table does
       not wrap in LaTeX. It prints the warnings for `tbl-callout` (in a callout), `tbl-margin` (in
       the margin), and `tbl-page` (page-wide), and none for `tbl-no-text`, which has no
       `wrappedtable` environment in the `.tex` (evidence: the LaTeX snapshot).
-- [ ] AC5: In `tests/multicols.qmd`, a wrapped table float inside a raw `multicols` is set in place
+- [x] AC5: In `tests/multicols.qmd`, a wrapped table float inside a raw `multicols` is set in place
       in its column, between the paragraphs before and after it; in `tests/twocolumn-switch.qmd`, a
       wrapped table float after a raw `\twocolumn` has no text beside it. Both fixtures render with
       exit status 0. The LaTeX log's multicols warning for the table names a table, and its
       two-column warning names tables as well as figures.
-- [ ] AC6: Of the sentences that hold a line that
+- [x] AC6: Of the sentences that hold a line that
       `grep -niE 'table|tbl-' README.md docs/*.qmd docs/formats/*.qmd cairn/DESIGN.md cairn/references/wrap-mechanisms.md`
       lists, each that says where a `#tbl-` table float wraps or keeps its normal layout agrees
       with the shipped behavior (it wraps in all four formats, except a raw table in Word and in
@@ -184,3 +184,14 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 ## Decisions
 
 ## Review
+
+Evidence run: `python3 tests/verify.py` at 0532352 (no change outside `cairn/` since), all 126 renders pass, 80 layout and 4 log checks ok; branch contains origin/main.
+
+- AC1: LaTeX layout cases ok: `tables div`, `div stop`, `caption block in a div`, `pipe table`, `cell class`, `cell caption block` (each: the paragraph's first line starts above the table's last row, wholly on the side away from it; the Form 2 heading starts below `tbl-div`'s last row). Plants: on main's filter the five wrap cases fail "the paragraph's first line starts below the table's last row"; synthetic boxes turn the stop case red.
+- AC2: `tests/_snapshots/tables.pdf.txt` and `tables-latex.pdf.txt` list `wrappedtable` for `tbl-div` [right, 0.45, 2em], `tbl-block` [left, 0.35, 1.5em], `tbl-pipe` [right, 0.3, 1em], `tbl-cell` [right, 0.35, 1.5em], `tbl-cell-block` [left, 0.35, 1.5em], `tbl-wide` [right, 0.2, 1.5em], `tbl-rel` [right, 0.45, 1em], each `caption=yes tabular=1 longtable=0` with its `\label`; these match the classes, attributes, and `wrapped:` keys (35%, 1.5em in `tables.qmd`; none in `tables-latex.qmd`, so 1em). Factors recomputed apart from the code from the cell texts (header and body, spaces counted; kable's "1.50" read in `tables.tex`): 0.5625 0.2500 0.1875; 0.6923 0.3077 (twice); 0.2000 0.8000 (twice); 0.1702 0.2553 0.1489 0.4255; `tbl-rel` from dashes 28/14/58: 0.2800 0.1400 0.5800. All equal the snapshots.
+- AC3: `tables-latex.pdf` renders (`ok tables-latex.pdf`, exit 0), with `tbl-rel` the only Pandoc table and first. Layout cases `tables-latex relative widths` (caption "Table 1:") and `tables-latex link` (joined line "Table 1 wraps, and Table 2 keeps") ok. The snapshot lists no `wrappedtable` for `tbl-raw` and exactly one warning naming it: "1x wrapped: the table #tbl-raw holds raw LaTeX, as a table from gt, kableExtra, or tinytable does, so it does not wrap in LaTeX." (the summary counts each warning, `found.count(w)`).
+- AC4: `tests/_snapshots/tables.pdf.txt` warnings are exactly the `tbl-callout` (in a callout), `tbl-margin` (in the margin), and `tbl-page` (page-wide) lines, each 1x; no "does not wrap in LaTeX" line; no warning and no `wrappedtable` line for `tbl-no-text`.
+- AC5: `ok multicols.pdf`, `ok twocolumn-switch.pdf`; layout cases `multicols table in multicols` (between "Before table M." and "After table M.", in their column, nothing beside) and `twocolumn-switch table in two columns` (nothing beside) ok; `log multicols` and `log twocolumn-switch` ok. Logs read with line breaks removed: multicols has "Table in multicols set as normal table" for the table (and two figure lines); twocolumn-switch has "Two-column text: figures and tables set as normal floats". Plants: a synthetic line beside the table fails the alone case; a log edited to name a figure fails the kind check.
+- AC6: the grep lists 177 lines; read by sentence at the review head. Each sentence that says where a `#tbl-` table float wraps or keeps its normal layout agrees (all four formats; raw Word XML in Word and a float holding raw LaTeX in LaTeX stay normal): README:10, get-started:120-124 and 168-172, normal-layout:95-99, 101-110, 123-129, reference:15-18 and the class rows ("All four formats"), index:38-40, stopping:9, formats/latex:6-8 and 75-94, formats/html:13, formats/typst:9, DESIGN:17-19, 26-28, 32-37, 114, 249-258, 340-347, 406-412, wrap-mechanisms W2 and E5. No sentence says a Pandoc table float does not wrap in PDF through LaTeX (normal-layout:181-183 is a table with no `#tbl-` id). `docs/formats/latex.qmd` Tables states no page break, raw LaTeX kept normal with a warning, and the wide-table overlap seen in the `tbl-wide` render ("Vari-abletionRange" in `tables.pdf`); DESIGN.md Known issues states the last two. The claim audit (68 claims, 5 corrected, re-read) covers the same pages.
+- AC7 (partial, box open until PR CI): verify passes at 0532352 (126 renders); `quarto render docs` exit 0 with no warnings; `python3 tests/docs_layout.py` exit 0 (24 ok). PR CI under the release channel and Quarto 1.9.36 runs at step 8.
+- Consistency gate: `cairn_validate.py` all checks passed; `_extensions/wrapped/_extension.yml` unchanged (the one version marker); verify passes on the review head; the diff touches `docs/` and `_extensions/`, so the docs workflow runs on the PR and `tests/docs_layout.py` passed on the Mac; changelog slot "none". No DESIGN principle changed, so no `cairn_impact` run.
