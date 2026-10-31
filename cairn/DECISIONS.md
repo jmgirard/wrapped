@@ -335,3 +335,20 @@ render prints a warning that names gt and flextable. **Consequences:**
 D-022 holds for tables that Pandoc writes, such as pipe tables and
 `knitr::kable` output. Wrapping a raw table is the candidate "Wrap gt and
 flextable tables in Word".
+
+### D-024: Table floats wrap in LaTeX as tabulars (supersedes part of D-021 and D-022)
+
+2026-10-31, `/milestone-plan` M040. **Context:** D-021 and D-022 kept a
+wrapped table float normal in PDF through LaTeX, because Quarto writes a
+table as a `longtable`, which wrapfig cannot hold. A plan probe showed that
+a table float whose table is a raw `tabular`, in an environment that the
+float's `fig-env` names, builds inside wrapfig's `wraptable` and keeps its
+"Table N" number and its `@tbl-` link. **Decision:** at the plan gate the
+user chose to wrap `#tbl-` table floats in LaTeX. The filter writes a
+Pandoc table as a `tabular` in a `wrappedtable` environment, so a wrapped
+table does not break across pages. A table float that holds raw LaTeX, as
+gt, kableExtra, and tinytable write, keeps its normal layout with a
+warning, at the user's choice. **Consequences:** the LaTeX non-goal for
+tables ends. A table float wraps in all four formats, except a raw table
+in Word (D-023) and in LaTeX. Wrapping a raw LaTeX table is the candidate
+"Wrap raw LaTeX tables from R packages".
