@@ -9,7 +9,7 @@ _Last hygiene check: 2026-10-30 (M038 review: M035 row pruned; candidate links m
 |---|---|---|---|---|---|
 <!-- rows grouped by status, not sorted by ID; keep only the 3 most recent
      terminal (done or dropped) rows — older ones live in milestones/archive/ + git -->
-| M039 | Wrap table floats in Word | review | — | normal | milestones/M039-word-table-wrap.md |
+| M039 | Wrap table floats in Word | in-progress | — | normal | milestones/M039-word-table-wrap.md |
 | M038 | Wrap table floats in HTML and Typst | done | — | normal | milestones/archive/M038-table-wrap.md |
 | M037 | Say LaTeX narrows lines past figures | done | — | normal | milestones/archive/M037-latex-narrow-past.md |
 | M036 | List margin figures in the test summaries | done | — | normal | milestones/archive/M036-margin-summaries.md |

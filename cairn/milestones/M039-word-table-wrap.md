@@ -1,6 +1,6 @@
 # M039: Wrap table floats in Word
 
-- **Status:** review
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
@@ -26,7 +26,7 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - [x] AC1: This criterion covers the Word renders of `tests/tables.qmd`, `tests/fixture.qmd`, and `tests/contexts.qmd`. In them, eleven table floats are floating tables (`w:tblpPr`): `#tbl-div`, `#tbl-block`, `#tbl-pipe`, `#tbl-cell`, `#tbl-cell-block`, `#tbl-page`, and `#tbl-wide` in `tables.qmd`, `#tbl-caption-block`, `#tbl-cell-block`, and `#tbl-cell-both` in `fixture.qmd`, and `#tbl-wrapped` in `contexts.qmd`. Each one is on the side that its class names. Its `w:tblW` width and its text distance on the text side equal the width and gap that `docx_frame` gives a figure with the same class, width, and gap. Its one cell holds the table's caption paragraph, the table, and the `#tbl-` bookmark. A clearing break after the group's last paragraph ends its wrap. `#tbl-no-text` in `tables.qmd` and `#tbl-cars` in `fixture.qmd` keep their normal layout with no warning. `python3 tests/verify.py` passes on the Word snapshots of the three fixtures.
 - [x] AC2: `grep -rn 'A table wraps only in HTML and Typst' _extensions tests/_snapshots` finds nothing. No Word snapshot `tests/_snapshots/*.docx.txt` holds a warning that starts with "wrapped: the table #" and says "does not wrap in Word". In `tables.pdf.txt`, `fixture.pdf.txt`, `contexts.pdf.txt`, and `tables-cell-columns.pdf.txt`, the table warning reads "the table #<id> does not wrap in LaTeX. A table wraps in HTML, Typst, and Word."
 - [x] AC3: This criterion covers a LibreOffice PDF of `tests/tables.docx`, made with `soffice --headless --convert-to pdf`. A table's box spans across the page from the text margin on its side out to its `w:tblW` width. For each floating table, at least one line of the paragraph after it lies outside the box's span, at a height within the table's rows. The first block after the group's clearing break starts below the table's lowest text. The text of each cell of `#tbl-wide` lies inside its box's span.
-- [ ] AC4: The user opens `tests/tables.docx` in Microsoft Word on the Mac. The user finds each floating table at its side, with body text beside it and its caption inside its box. The user finds the text after each group's clearing break below the table.
+- [x] AC4: The user opens `tests/tables.docx` in Microsoft Word on the Mac. The user finds each floating table at its side, with body text beside it and its caption inside its box. The user finds the text after each group's clearing break below the table.
 - [x] AC5: Two searches find the candidate lines: `grep -rn -i 'table' docs --include='*.qmd'` outside `docs/_site` and `docs/_freeze`, and `grep -n -i 'table' README.md`. No paragraph that holds a found line says that a table float keeps its normal layout in Word, or that a table float wraps only in HTML and Typst. `docs/formats/word.qmd` says that a wrapped table float sits in a floating table with its caption inside it. The page also states how a table wider than its box renders, and names the app whose render shows it.
 - [x] AC6: `python3 tests/verify.py` exits 0 with each render passing, and `quarto render docs` exits 0.
 
@@ -85,6 +85,8 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - 2026-10-30: claim audit: 24 claims read, 2 corrected — _extensions/wrapped/wrapped.lua, docs/formats/word.qmd, tests/docx-tables.qmd (cell images take an equal share per column, not their column's own width; the image in `#tbl-image` sits above its table, not beside it). The heading claim now names LibreOffice, the only app observed. DESIGN.md's Word table paragraph gains the cell-image and keep-with-next sentences.
 - 2026-10-30: T9 shape: equal column shares, not each column's own width, since `fit_table` gives default-width columns equal shares; a table with explicit uneven widths can still clip a wide image in its narrow column (no fixture).
 - 2026-10-30: claim audit re-read: all six corrected claims hold. It noted that the 144-twip floor in `docx_size` can make an image wider than its cell in a box under about 0.5 in for two columns; left as is, since only an asked-for box that narrow reaches it. Status set to review.
+- 2026-10-31: thrash stop (a) at review pass 3: the user chose "Narrow it". A table float whose table is raw openxml (gt, flextable) keeps its normal layout in Word with a warning, and wrapping it moves to a candidate row (split from M039). The empty-div close and the pass-3 fix-now items land with the narrowing, then one review pass checks the narrowed milestone. Defect returns stay at 2; this route is the descope the rule offers, not a retry.
+- 2026-10-31: question set (thrash stop): the user's look at `tests/tables.docx` and `tests/docx-tables.docx` in Microsoft Word — "Yes, looks right".
 
 ## Decisions
 
@@ -183,3 +185,5 @@ A probe on 2026-10-30 showed three facts. Pandoc 3.10 passes split raw table tag
 - ripple #7: the `verify.py` module docstring says table cell images report whether each fills the box — fix now (they report widths)
 - ripple #8: README states Word table wrapping with no multi-column exception — reject, planned change: the figure sentence beside it has the same form
 - Thrash rule (a): diff-bug #1 would be the third defect return. Stopped for the user's choice.
+- AC4 evidence (2026-10-31): the user opened `tests/tables.docx` and `tests/docx-tables.docx` (rendered at f044ea2) in Microsoft Word on the Mac and reported each wrapped table at its side with body text beside it, its caption inside its box, and the text after each group below the table ("Yes, looks right").
+- Thrash disposition: the user chose to narrow (descope) at the stop; routed to `/milestone-implement` for the scope amendment and the pass-3 fix-now items.
