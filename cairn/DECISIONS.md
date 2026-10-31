@@ -385,3 +385,18 @@ of the same row stays parked as "Add the Word spacer only after a table",
 because it shifts the text beside every wrapped Word table. **Consequences:**
 a later finding of the same effect is not filed again unless a user reports
 it. Each drop can be reopened by an entry that supersedes this one.
+
+### D-027: Option names keep their forms, and an unknown `wrapped:` key warns
+
+2026-10-31, `/milestone-plan` M043. **Context:** before the extension is
+advertised, the figure attribute `wrap-gap` and the document key
+`wrapped: gap` looked like a mismatch, and `read_meta` ignored an unknown
+key such as `wrapped: wrap-gap:` with no warning. **Decision:** at the plan
+question set the user chose to keep both names and to warn. The rule is
+that an attribute that only this extension reads opens with `wrap-`
+(`wrap-gap`, `wrap-lines`), and a key under `wrapped:` does not, since the
+map already names the extension. An unknown key under `wrapped:` prints a
+warning that names the keys the map takes, and `wrap-gap` gets a hint to
+write `gap`. Accepting both spellings and renaming the key lost.
+**Consequences:** the Reference page states the rule. A later rename needs
+an entry that supersedes this one and a deprecation period.
