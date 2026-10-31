@@ -6,7 +6,9 @@ wrapped:
 ---
 
 The `wrapped` key in the YAML header sets the defaults for a document. A
-figure's own `width` or `wrap-gap` attribute comes first.
+figure's own `width` or `wrap-gap` attribute comes first, and so does a
+code cell's `#| wrap-gap:`, a figure cell's `#| out-width:`, or a table
+cell's `#| width:`.
 
 ```yaml
 wrapped:
@@ -38,6 +40,10 @@ In a window as wide as `breakpoint` or narrower, figures stop floating and
 take the full width of the text column. The default breakpoint is `576px`.
 
 ## Rules for the keys
+
+The `wrapped` key takes `width`, `gap`, and `breakpoint`. Any other key,
+such as `wrap-gap`, is ignored, and the render prints a warning that names
+it. For `wrap-gap`, the warning says to write `gap`.
 
 The keys follow the rules of the attributes. A `width` of zero prints a
 warning, and the built-in 40% applies. A `gap` or `breakpoint` of zero stays

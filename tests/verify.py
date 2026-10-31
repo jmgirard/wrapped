@@ -47,8 +47,11 @@ column-margin div around each named figure has the same classes in both
 renders. For a fixture in TABLE_IDS, the HTML snapshot also holds the
 wrap classes on each named table float's table, table-striped where its
 caption block sets .striped, and its caption text, and the PDF snapshot
-holds each one's LaTeX caption and whether it ends in white space. The script exits with status 1 on a failed render, a snapshot
-difference, or a failed layout case or log check.
+holds each one's LaTeX caption and whether it ends in white space. For a
+fixture in KEY_ORDER, the script also checks that the render printed its
+unknown-key warnings in byte order of the key, since a snapshot sorts its
+warnings. The script exits with status 1 on a failed render, a snapshot
+difference, or a failed layout case, log check, or key-order check.
 
 Some fixtures exist only for the browser checks in tests/layout.js, which
 measure layout. Those fixtures are rendered here, so their HTML is current,
@@ -97,6 +100,12 @@ RENDERS = [
     ("fixture", "pdf", True),
     ("fixture", "typst", True),
     ("fixture", "docx", True),
+    ("meta-unknown", "html", True),
+    ("meta-unknown", "epub", True),
+    ("cell-options", "html", True),
+    ("cell-options", "pdf", True),
+    ("cell-options", "typst", True),
+    ("cell-options", "docx", True),
     ("defaults", "html", True),
     ("defaults", "pdf", True),
     ("defaults", "typst", True),
@@ -1806,6 +1815,28 @@ def render(fixture, fmt):
     return result.returncode, log
 
 
+# The fixtures whose unknown wrapped keys must warn in sorted key order. The
+# snapshot sorts its warnings, so this check reads the order of the render's
+# own output. The fixture has several unknown keys, so an unsorted print
+# order seldom matches sorted order by chance.
+KEY_ORDER = {"meta-unknown"}
+UNKNOWN_KEY = re.compile(r"wrapped: the key (\S+) in the wrapped metadata")
+
+
+def key_order_check(name, log):
+    """Checks that a render printed its unknown-key warnings in sorted key
+    order. Returns the names of the failed checks."""
+    keys = UNKNOWN_KEY.findall(log)
+    if len(keys) < 2:
+        print(f"FAIL order {name}: fewer than two unknown-key warnings")
+        return [f"order {name}"]
+    if keys != sorted(keys):
+        print(f"FAIL order {name}: unknown-key warnings in the order {keys}")
+        return [f"order {name}"]
+    print(f"ok   order {name}: {len(keys)} unknown keys in sorted order")
+    return []
+
+
 def summary(fixture, fmt, log):
     found = [m.group(1).strip() for m in WARNING.finditer(log)]
     warnings = sorted(set(found))
@@ -1854,6 +1885,8 @@ def main():
             failed += layout_check(fixture, TYPST_LAYOUT)
         if fmt == "pdf" and fixture in LOGS:
             failed += log_check(fixture)
+        if fixture in KEY_ORDER:
+            failed += key_order_check(name, log)
         if not compare:
             print(f"ok   {name} (rendered, no snapshot)")
             continue

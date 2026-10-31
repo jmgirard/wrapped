@@ -161,6 +161,14 @@ prints the same warning there, and the figure wraps in the other formats.
   figure itself does, except on a code cell figure. It does not apply to a
   captioned image with no id, which stays in the body.
 
+## Formats that do not wrap
+
+The extension wraps in HTML, revealjs slides and dashboards included, in
+PDF through LaTeX, in PDF through Typst, and in Word. In every other
+format, such as EPUB, a wrapped figure renders as a normal figure, and a
+table float with a wrap class keeps its normal layout. The render prints
+one warning for the document.
+
 ## Other notes
 
 - A captioned image with no `#fig-` id wraps too, unless a place on this
