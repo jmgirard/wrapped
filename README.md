@@ -2,17 +2,9 @@
 
 wrapped is a Quarto filter extension. It lets body text flow beside a
 figure, to the left or right of it. The figure keeps its number, its
-caption, and its `@fig-` links.
-
-This version wraps figures in HTML output, revealjs slides and dashboards
-included, in PDF through LaTeX, in PDF through Typst, and in Word. In
-every other format, a wrapped figure renders as a normal figure, and the
-render prints one warning. A table with a `#tbl-` label wraps in the same
-four formats, tables from gt and flextable in Word included. A table that
-an R package such as gt writes as raw LaTeX does not wrap in PDF through
-LaTeX. In the other formats a table keeps its normal
-layout, and the render prints a warning. In HTML, wrapped tables are
-tested on pages, not in slides or dashboards.
+caption, and its `@fig-` links. It works in HTML, in PDF through LaTeX, in
+PDF through Typst, and in Word, for figures and for tables with a `#tbl-`
+label.
 
 The documentation is at <https://jmgirard.github.io/wrapped/>.
 

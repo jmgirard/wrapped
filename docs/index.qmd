@@ -32,16 +32,6 @@ narrower, the figure stops floating and takes the full width of the text
 column.
 :::
 
-This version wraps figures in HTML output, revealjs slides and dashboards
-included, in PDF through LaTeX, in PDF through Typst, and in Word. In
-every other format, a wrapped figure renders as a normal figure, and the
-render prints one warning. A table with a `#tbl-` label wraps in the same
-four formats, tables from gt and flextable in Word included. In every
-other format, a table keeps its normal layout, and the render prints a
-warning. In PDF through LaTeX, a table that an R package such as gt
-writes as raw LaTeX does not wrap. In HTML, wrapped tables are
-tested on pages, not in slides or dashboards.
-
 ## Install
 
 The extension asks for Quarto 1.9.36 or later. Each change to it is tested
@@ -58,6 +48,17 @@ filters:
   - wrapped
 ```
 
-[Get started](get-started.qmd) shows each kind of figure that wraps. The
-[examples](examples/index.qmd) show each one rendered in HTML, in PDF
-through LaTeX, in PDF through Typst, and in Word.
+## Wrap a figure
+
+Add `.wrap-right` or `.wrap-left` to a figure, and the paragraphs after it
+flow beside it:
+
+```markdown
+![Mean ratings by condition.](ratings.png){#fig-ratings .wrap-right width="40%"}
+```
+
+[Get started](get-started.qmd) shows each kind of figure and table that
+wraps. The [examples](examples/index.qmd) show each one rendered in HTML,
+in PDF through LaTeX, in PDF through Typst, and in Word. Each format page
+says what that format wraps, and [Where a figure keeps its normal
+layout](normal-layout.qmd) lists the places and formats that do not wrap.

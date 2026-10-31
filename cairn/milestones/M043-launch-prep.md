@@ -108,7 +108,7 @@ user's act; the repeated four-format wording on pages other than the home page a
 - [x] T5: Update `docs/get-started.qmd` ("A figure from a code cell" and "Wrap a table"),
       `docs/reference.qmd` (lines 10 to 18 and the naming rule), and `docs/defaults.qmd` (the unknown-key
       rule). Render the pages with R, since their frozen cells re-run after a prose edit.
-- [ ] T6: Rewrite `docs/index.qmd` after the demo box and the top of `README.md`: install, the `filters:` YAML,
+- [x] T6: Rewrite `docs/index.qmd` after the demo box and the top of `README.md`: install, the `filters:` YAML,
       one `.wrap-right` line, and a link to Get started. Check each sentence of each limits paragraph against
       `docs/formats/` and `docs/normal-layout.qmd`, and add any sentence that no page states.
 - [ ] T7: Run `python3 tests/verify.py` and `quarto render docs`, and run the docs layout checks.
@@ -141,6 +141,7 @@ user's act; the repeated four-format wording on pages other than the home page a
 - 2026-10-31: T3 done: `tests/cell-options.qmd` (document `wrapped:` 45% and 20px) snapshots show the classes cell at 30%/3em, the caption-block cell at 35%/2em, and the no-option cell at 45%/20px in HTML, LaTeX (`wrappedtable` options), Typst (`wrapped-width` and `column-gutter`), and Word (box width and text distance); the existing summaries already carry each width and gap, so none was extended.
 - 2026-10-31: T4 done: knitr puts `width` and `wrap-gap` on the cell div but not on a figure float (dump filter), so `cell_div` carries both and `float_target` takes a figure's gap from the float, then the cell, then the image; a figure cell's `width` warns once naming `out-width`. Snapshots: 2.5em at out-width 30%, 1.5em at the 45% default with no out-width, the width warning with out-width 35% kept, and `-1em` falling back to 20px with the same "not a length or a percent" warning a figure attribute of `-1em` prints, in all four formats.
 - 2026-10-31: T5 done: Get started (figure cell `#| wrap-gap:` and the `#| width:` warning; table cell `#| width:` and `#| wrap-gap:`), Reference (cell options, the naming rule, the unknown-key rule), and Document defaults (unknown keys warn; cell options come before the defaults) updated, each naming knitr; `quarto render docs` exit 0 re-ran the frozen get-started cell; `docs_layout.py --no-word` and `--html` (scratch venv, playwright 1.64.0) all ok.
+- 2026-10-31: T6 done: the limits paragraph left `docs/index.qmd` (now demo, Install, a "Wrap a figure" line, and links) and `README.md` (now one sentence naming the four formats and `#tbl-` tables); sentence check: slides and dashboards, `#tbl-` tables in four formats, gt and flextable in Word, raw LaTeX tables, and HTML tables tested on pages were already on `formats/html.qmd`, `formats/word.qmd`, `formats/latex.qmd`, and `normal-layout.qmd`; the figure and table sentences for other formats were on no page, so `normal-layout.qmd` gained "Formats that do not wrap" (one warning per document, per the `tables` and `meta-unknown` EPUB snapshots).
 
 ## Decisions
 <!-- owner: implement / review · append-only; milestone-local; promote
