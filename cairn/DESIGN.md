@@ -395,9 +395,10 @@ counted), less the Table style's 108-twip cell
 margins on each side, and keeps a smaller width of its own. In a raw
 openxml table (gt, flextable), `fit_raw` sets the first table's `w:tblW`
 to the box width in twips, adding a `w:tblPr` where there is none, and
-scales its `w:tblGrid` and its own cells' twip `w:tcW` widths to the box
-in their own proportions; a gt table or an autofit flextable has no grid,
-so Word sizes its columns (D-025, corrected M041). The
+scales its `w:tblGrid` to the box in its own proportions, and then its
+own cells' twip `w:tcW` widths by the same ratio; a gt table or an
+autofit flextable has no grid, so Word sizes its columns (D-025,
+corrected M041). The
 cell gets a closing paragraph unless its last block, past empty divs, is
 one Pandoc writes as a paragraph (a non-empty paragraph, a heading, a
 code block, or a rule). Word joins two tables with

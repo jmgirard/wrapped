@@ -192,11 +192,12 @@ local BEFORE_TBLW = {
   "tblStyleColBandSize",
 }
 
--- The end of the element `name` (empty or with a closing tag) in `pr`, or
--- nil when `pr` has none.
+-- The end of the element `name` (self-closing or with a closing tag, with
+-- or without attributes) in `pr`, or nil when `pr` has none.
 local function element_end(pr, name)
-  local s, e = pr:find("<w:" .. name .. "[%s/>][^>]*>")
+  local s, e, after = pr:find("<w:" .. name .. "([%s/>])")
   if not s then return nil end
+  if after ~= ">" then e = pr:find(">", e, true) end
   if pr:sub(e - 1, e) == "/>" then return e end
   local _, close = pr:find("</w:" .. name .. ">", e + 1, true)
   return close
@@ -207,8 +208,9 @@ end
 -- added when it has none. A w:tblGrid, as flextable's fixed layout writes,
 -- scales to the box in its own proportions, each column the difference of
 -- its rounded edges, so the sum is the box width; each dxa w:tcW of the
--- table's own cells scales by the same ratio. Only the block's first table
--- is fitted, and a table nested in its cells keeps its widths.
+-- table's own cells then scales by the same ratio. A table with no grid,
+-- as gt writes, keeps its w:tcW widths. Only the block's first table is
+-- fitted, and a table nested in its cells keeps its widths.
 local function fit_raw(raw, width)
   if raw.format ~= "openxml" then return nil end
   local text = raw.text
@@ -217,6 +219,10 @@ local function fit_raw(raw, width)
   if s2 and (not start or s2 < start) then start, open_end = s2, e2 end
   if not start then return nil end
   local tblw = string.format('<w:tblW w:type="dxa" w:w="%d"/>', width)
+  local empty_s, empty_e = text:find("^%s*<w:tblPr%s*/>", open_end + 1)
+  if empty_s then
+    text = text:sub(1, empty_s - 1) .. "<w:tblPr></w:tblPr>" .. text:sub(empty_e + 1)
+  end
   local pr_s, pr_e = text:find("^%s*<w:tblPr>", open_end + 1)
   if pr_s then
     local close_s, close_e = text:find("</w:tblPr>", pr_e + 1, true)

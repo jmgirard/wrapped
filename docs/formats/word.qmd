@@ -86,7 +86,7 @@ where a figure's wrap stops.
 A table that gt or flextable makes is raw Word XML. The filter sets it to
 the full width of the box too. A flextable with its default fixed layout
 keeps its columns' proportions, and a gt table or an autofit flextable
-lets Word size its columns within the box. An image in a flextable cell
+lets Word size its columns at the width of the box. An image in a flextable cell
 does not show in a Quarto Word document, with or without the extension.
 
 In LibreOffice 26.8 on macOS, a table wider than its box narrows its

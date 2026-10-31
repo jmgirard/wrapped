@@ -1601,13 +1601,19 @@ def docx_after(children, i):
     return after, links, cites, i
 
 
+# The w:tblPr children that the schema puts before w:tblW.
+TBLW_BEFORE = {"tblStyle", "tblpPr", "tblOverlap", "bidiVisual", "tblStyleRowBandSize",
+               "tblStyleColBandSize"}
+
+
 def docx_tables(body):
     """Each floating table (a w:tbl with a w:tblpPr) at the top level of the
     body: its side, width, and text distance on each side, the parts of its
     cells in order (a bookmark's name, "caption" for a paragraph in the
     ImageCaption style, "image" with whether it fills the box for a paragraph
     that holds one, "p" for another paragraph, and "table" with its
-    w:tblW, its w:gridCol widths, the dxa w:tcW widths of its own cells,
+    w:tblW, the w:tblPr children after its w:tblW that the schema puts
+    before it, its w:gridCol widths, the dxa w:tcW widths of its own cells,
     and the width in twips of each image in it for a table), the
     kind of the block before it ("keep" when it keeps with the next), and
     the kind of
@@ -1647,7 +1653,10 @@ def docx_tables(body):
                         grid = [g.get(f"{W}w") for g in part.findall(f"{W}tblGrid/{W}gridCol")]
                         tcw = [c.get(f"{W}w") for c in part.findall(f"{W}tr/{W}tc/{W}tcPr/{W}tcW")
                                if c.get(f"{W}type") == "dxa"]
+                        names = [c.tag.replace(W, "") for c in part.find(f"{W}tblPr")]
+                        late = [n for n in names[names.index("tblW") + 1:] if n in TBLW_BEFORE]
                         parts.append(f"table {inner.get(f'{W}type')} {inner.get(f'{W}w')}"
+                                     + (f" tblW-before={','.join(late)}" if late else "")
                                      + (f" grid={','.join(grid)}" if grid else "")
                                      + (f" tcw={','.join(tcw)}" if tcw else "")
                                      + (f" images={','.join(widths)}" if widths else ""))
