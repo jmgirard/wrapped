@@ -116,7 +116,7 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
       with `wrappedfigure`, so one wrap at a time holds across kinds. Make
       the multicols warning name the float's kind and the two-column
       warning name figures and tables. Update the file's header comment.
-- [ ] T2: In `_extensions/wrapped/wrapped.lua`, replace the LaTeX table
+- [x] T2: In `_extensions/wrapped/wrapped.lua`, replace the LaTeX table
       return at :1630-1639 with a raw-LaTeX check (`raw_latex_table`,
       beside `raw_docx_table` at :1537) and its warning. In the
       `is_latex` branch at :1680, for a table float set `fig-env` to
@@ -128,13 +128,13 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
       the content can be one Block. Make sure that a document whose only
       Pandoc table is wrapped still loads the table packages, and probe the `fig-env` path and the
       `\LTcaptype` removal under Quarto 1.9.36 (M035 lesson) before building on them.
-- [ ] T3: Tests: `latex_table_case` LAYOUT cases for the five forms, with
+- [x] T3: Tests: `latex_table_case` LAYOUT cases for the five forms, with
       the `tbl-div` stop below; new `tests/tables-latex.qmd` (LaTeX only:
       `tbl-rel` with relative widths and an `@tbl-rel` link, `tbl-raw`
       from `knitr::kable(format = "latex")`) in the render list; a table
       case in `multicols.qmd` and `twocolumn-switch.qmd`; snapshot
       updates with `--update`, each diff read.
-- [ ] T4: Docs: `docs/get-started.qmd` "Wrap a table",
+- [x] T4: Docs: `docs/get-started.qmd` "Wrap a table",
       `docs/normal-layout.qmd`, `docs/reference.qmd`, `docs/index.qmd`,
       `docs/formats/latex.qmd` (Limits: no page break, raw tables, the
       wide table as rendered), README.md; `cairn/DESIGN.md` Goals,
@@ -174,6 +174,7 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 - 2026-10-31: T4 so far: README, `docs/` get-started, normal-layout, reference, index, stopping, formats/latex (new Tables section), html, typst; DESIGN Goals, non-goal, stop rule, steps 4 and 7, Known issues; wrap-mechanisms W2, E5, filter note.
 - 2026-10-31: `python3 tests/verify.py --update`: all 125 renders pass. Snapshot diffs read: LaTeX `tables`, `fixture`, `contexts`, `tables-cell-columns` trade each "does not wrap in LaTeX" warning for a `wrappedtable` line; `multicols` and `twocolumn-switch` add their table; new `tables-latex`. `tbl-cars` in `fixture.qmd` keeps no warning, since a figure follows it (next-block rule). The fixture's one `Overfull \vbox` is page 4's `fig-unwrapped-cell` beside the `tbl-cars` longtable, the parked "Fix the overfull LaTeX fixture page" clash. `fixture.qmd`'s three table sentences that said LaTeX keeps a normal layout now say it wraps.
 - 2026-10-31: observed for docs: in LaTeX a document `tbl-column` of `margin` or `page` keeps `tables-column-meta`'s table normal with the "in the margin" or "page-wide" warning (scratch renders), so normal-layout names LaTeX beside HTML and Typst.
+- 2026-10-31: T2, T3, T4 done: `quarto render docs` exit 0 (only `docs/_freeze/get-started` changed); `python3 tests/docs_layout.py` exit 0 (LaTeX, Typst, Word; `--html` left to CI).
 - 2026-10-31: proposed AC2 column clause for the user: "Each column of the six tables of `tests/tables.qmd`, whose columns have no widths, is a `p{}` column whose `\real{}` factor (the share of the box's line width less its column padding that Pandoc writes) equals that column's length divided by the sum of the table's column lengths, rounded to four decimals, where a column's length is the larger of one and the largest number of characters, spaces included, in the plain text (formatting removed) of a header or body cell of that column that spans no other column; the columns of `tbl-rel`, whose columns all have relative widths, have `\real{}` factors equal to each width that Pandoc's reader gives the column (its dashes' share of the separator line) divided by the sum of the widths, rounded to four decimals (evidence: both fixtures' LaTeX snapshots)."
 
 ## Decisions
