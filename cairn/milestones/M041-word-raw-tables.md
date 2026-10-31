@@ -172,21 +172,21 @@ Review pass 1 on d91f006 (2026-10-31).
 - diff-bug #2: a `w:tcW` with no `w:type`, which the schema reads as twips, is not scaled while the grid is — fix now, fixed 93761e9
 - diff-bug #3: a `w:tblPr` whose close tag sits in a later raw block raises a Lua error — reject, edge: a raw table split across raw blocks is outside documented and common use (gt and flextable write one block), and the effect is a render error
 - diff-bug #4: `<w:tblPr >` or `<w:tblGrid >` with a space, or range markup such as a bookmark before `w:tblPr`, gets a second `w:tblPr` or an unscaled grid — fix now, fixed 93761e9
-- diff-bug #5: a `w:tblPrChange` in `w:tblPr` takes the new width inside the change record — follow-up, new row "Harden the Word raw table fit" [parked], since no documented or common use writes tracked table changes in a raw table
-- diff-bug #6: the walk fits a raw table inside a Pandoc table cell of the float to the box width, not its cell's — follow-up, "Harden the Word raw table fit" [parked]
-- diff-bug #7: single-quoted widths, or an XML comment holding `<w:tbl>`, stop the grid or cell scaling — follow-up, "Harden the Word raw table fit" [parked]
-- diff-bug #8: a column narrower than about half a twip over the ratio rounds to width 0 — follow-up, "Harden the Word raw table fit" [parked]
+- diff-bug #5: a `w:tblPrChange` in `w:tblPr` takes the new width inside the change record — follow-up, new row "Fix Word table box edge cases", merged at the line cap with "Write the Word table spacer only after a table", [parked], since no documented or common use writes tracked table changes in a raw table
+- diff-bug #6: the walk fits a raw table inside a Pandoc table cell of the float to the box width, not its cell's — follow-up, "Fix Word table box edge cases" [parked]
+- diff-bug #7: single-quoted widths, or an XML comment holding `<w:tbl>`, stop the grid or cell scaling — follow-up, "Fix Word table box edge cases" [parked]
+- diff-bug #8: a column narrower than about half a twip over the ratio rounds to width 0 — follow-up, "Fix Word table box edge cases" [parked]
 - diff-bug #9: `wrapped.lua`'s header cites D-025 among the reasons a table keeps its normal layout — fix now, fixed 93761e9
 - diff-bug #10: a raw-table float with no paragraph after it no longer warns — reject, planned change: it now takes the next-block rule like every other Word table float, which keeps it normal with no warning
 - diff-bug #11: the new `grid=` field changes the `contexts`, `fixture`, and `tables` snapshots only to record Pandoc's grids, which this milestone does not change — fix now (record `grid=` for `dxa` inner tables only), fixed 93761e9
 - diff-bug #12: gt's own `w:tblCellMar` before `w:tblW` and `w:jc` after `w:tblLook` stay out of schema order — reject, false as a defect of this diff: it is gt's output, and Word opens it (AC4)
 - blame-history #1: same as diff-bug #10 — reject, planned change
 - blame-history #2: the only Word case of a raw table kept normal with its warning is gone, and no case covers a raw table in a context or with no paragraph after it — reject, planned change: D-025 removes that behavior, and a raw table in a context or with no paragraph after it runs the same context and next-block code as a Pandoc table, which other cases cover
-- blame-history #3: same as diff-bug #6 — follow-up, "Harden the Word raw table fit" [parked]
+- blame-history #3: same as diff-bug #6 — follow-up, "Fix Word table box edge cases" [parked]
 - blame-history #4: the removal of `raw_docx_table` reverses the M039 narrowing on purpose — noted (D-025)
 - prior-review #1: same as diff-bug #1 — reject, false (the `wide2/` probe)
-- prior-review #2: two raw tables in one box have no paragraph between them, so Word may join them — follow-up, "Harden the Word raw table fit" [parked]
-- prior-review #3: the two Pandoc tables of `tbl-quote` sit in one box with no paragraph between them, as on `main` — follow-up, "Harden the Word raw table fit" [parked], marked as predating M041
+- prior-review #2: two raw tables in one box have no paragraph between them, so Word may join them — follow-up, "Fix Word table box edge cases" [parked]
+- prior-review #3: the two Pandoc tables of `tbl-quote` sit in one box with no paragraph between them, as on `main` — follow-up, "Fix Word table box edge cases" [parked], marked as predating M041
 - ripple #1: `tests/verify.py`'s top-of-file description of the Word table summary leaves out the new fields — fix now, fixed 93761e9
 - Fix-now regression cases, each red on f492b31's filter and green after 93761e9: `tbl-raw-empty-pr` now has cell widths with no `w:type` (`tcw=1000,2000` before, `1248,2496` after); new `tbl-raw-spaced` has a bookmark before `<w:tblPr >` and a `<w:tblGrid >` (`grid=1000,2000` before, `1248,2496` after, one `w:tblPr` with `w:tblW` before `w:tblLook`). The DESIGN.md Known issue and `docs/formats/word.qmd` now say Word 16.114 breaks a wide gt or flextable table's cell text inside words.
 - Re-verification on a3c8375: `python3 tests/verify.py` all 128 renders pass (run with `--update`, which changed only the snapshots in a3c8375); `quarto render docs` exit 0; `python3 tests/docs_layout.py` exit 0. AC1 to AC3 lines in the `docx-tables` snapshot are unchanged by the fixes.
