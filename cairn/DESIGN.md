@@ -207,7 +207,7 @@ version marker, runs `wrapped.lua` at `pre-quarto`, and runs
 passes, two in step 1 (corrected M003, and by the page-break hotfix):
 
 1. It reads the `wrapped:` metadata, checks each length, and warns for each
-   unknown key in sorted order (corrected M043). In LaTeX it
+   unknown key in byte order of the key (corrected M043). In LaTeX it
    reads `classoption`, and a two-column document keeps normal figures.
    Columns that a class, `\twocolumn`, or `multicols` sets are found only
    while LaTeX runs, by the check in `wrapped.tex` at each figure (step 7)

@@ -47,8 +47,11 @@ column-margin div around each named figure has the same classes in both
 renders. For a fixture in TABLE_IDS, the HTML snapshot also holds the
 wrap classes on each named table float's table, table-striped where its
 caption block sets .striped, and its caption text, and the PDF snapshot
-holds each one's LaTeX caption and whether it ends in white space. The script exits with status 1 on a failed render, a snapshot
-difference, or a failed layout case or log check.
+holds each one's LaTeX caption and whether it ends in white space. For a
+fixture in KEY_ORDER, the script also checks that the render printed its
+unknown-key warnings in byte order of the key, since a snapshot sorts its
+warnings. The script exits with status 1 on a failed render, a snapshot
+difference, or a failed layout case, log check, or key-order check.
 
 Some fixtures exist only for the browser checks in tests/layout.js, which
 measure layout. Those fixtures are rendered here, so their HTML is current,

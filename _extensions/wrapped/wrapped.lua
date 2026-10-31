@@ -1583,7 +1583,8 @@ local function read_meta(meta)
       "wrapped: the wrapped metadata is not a map of width, gap, and breakpoint, so it is ignored.")
     return
   end
-  -- Any other key does nothing, so each one warns, in sorted order (D-027).
+  -- Any other key does nothing, so each one warns, in byte order of the key
+  -- (D-027).
   -- An attribute that only this filter reads opens with "wrap-", but a key
   -- in this map does not, so `wrap-gap` names the key to write.
   local unknown = {}
