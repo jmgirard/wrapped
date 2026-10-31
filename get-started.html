@@ -393,7 +393,7 @@ Figure&nbsp;2: Ratings by group.
 </section>
 <section id="a-figure-from-a-code-cell" class="level3">
 <h3 class="anchored" data-anchor-id="a-figure-from-a-code-cell">A figure from a code cell</h3>
-<p>Give the cell a <code>fig-</code> label and a <code>fig-cap</code>, so that Quarto makes a figure. Put the class in <code>#| classes:</code>, and set the width with <code>#| out-width:</code>:</p>
+<p>Give the cell a <code>fig-</code> label and a <code>fig-cap</code>, so that Quarto makes a figure. Put the class in <code>#| classes:</code>, and set the width with <code>#| out-width:</code>. To set the gap, add <code>#| wrap-gap:</code>, as in <code>#| wrap-gap: 2em</code>. A figure cell does not read <code>#| width:</code>, and the render prints a warning when a wrapped figure cell sets it. The extension’s tests use knitr cells for these options.</p>
 <div class="demo">
 <div class="wrap-group">
 <div class="cell">
@@ -477,7 +477,7 @@ Table&nbsp;1: Mean ratings by condition.
 <ul>
 <li>A pipe table with its id in the block, as in <code>: Mean ratings by condition. {#tbl-means .wrap-right width="45%"}</code>. The block can also hold <code>width</code> and <code>wrap-gap</code>.</li>
 <li>A block inside a <code>#tbl-</code> div, as in <code>: Mean ratings by condition. {.wrap-right}</code>. Put a <code>width</code> or <code>wrap-gap</code> for this form on the div.</li>
-<li>A code cell with a <code>tbl-</code> label: the class goes in <code>#| classes:</code>, or in a block at the end of <code>#| tbl-cap:</code>. A code cell table takes the width and gap of the <a href="./defaults.html">document defaults</a>. In Word, a table from gt or flextable wraps at the full width of its box (see <a href="./formats/word.html#tables">Word</a>). In PDF through LaTeX, a table from gt, kableExtra, or tinytable keeps its normal layout (see <a href="./formats/latex.html#tables">PDF through LaTeX</a>).</li>
+<li>A code cell with a <code>tbl-</code> label: the class goes in <code>#| classes:</code>, or in a block at the end of <code>#| tbl-cap:</code>. Set the width with <code>#| width:</code> and the gap with <code>#| wrap-gap:</code>, as in <code>#| width: 45%</code>. A cell with neither takes the <a href="./defaults.html">document defaults</a>. The extension’s tests use knitr cells for these options. In Word, a table from gt or flextable wraps at the full width of its box (see <a href="./formats/word.html#tables">Word</a>). In PDF through LaTeX, a table from gt, kableExtra, or tinytable keeps its normal layout (see <a href="./formats/latex.html#tables">PDF through LaTeX</a>).</li>
 </ul>
 
 

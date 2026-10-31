@@ -323,7 +323,6 @@ Figure&nbsp;1: Mean ratings by condition.
 <p>One markdown syntax gives this layout in HTML, in PDF through LaTeX, in PDF through Typst, and in Word. The figure keeps its number and its caption, and the text can point to it with a <code>@fig-</code> link, as the paragraph before this one does. Its width is 40% of the text column, which is the default. Each format draws the layout with its own tools: CSS in HTML, wrapfig in LaTeX, wrap-it in Typst, and a frame in Word. The text is not split into two columns. It flows beside the figure, and the last lines of this paragraph run under the figure, at the full width of the text. Wrapping stops at the next block that is not a paragraph, such as a heading or a list. In a window 576px wide or narrower, the figure stops floating and takes the full width of the text column.</p>
 </div>
 </div>
-<p>This version wraps figures in HTML output, revealjs slides and dashboards included, in PDF through LaTeX, in PDF through Typst, and in Word. In every other format, a wrapped figure renders as a normal figure, and the render prints one warning. A table with a <code>#tbl-</code> label wraps in the same four formats, tables from gt and flextable in Word included. In every other format, a table keeps its normal layout, and the render prints a warning. In PDF through LaTeX, a table that an R package such as gt writes as raw LaTeX does not wrap. In HTML, wrapped tables are tested on pages, not in slides or dashboards.</p>
 <section id="install" class="level2">
 <h2 class="anchored" data-anchor-id="install">Install</h2>
 <p>The extension asks for Quarto 1.9.36 or later. Each change to it is tested with Quarto 1.9.36 and with Quarto’s current release. In the folder of your project, run:</p>
@@ -331,7 +330,12 @@ Figure&nbsp;1: Mean ratings by condition.
 <p>Then add the filter to the document’s YAML header:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filters</span><span class="kw">:</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> wrapped</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="./get-started.html">Get started</a> shows each kind of figure that wraps. The <a href="./examples/index.html">examples</a> show each one rendered in HTML, in PDF through LaTeX, in PDF through Typst, and in Word.</p>
+</section>
+<section id="wrap-a-figure" class="level2">
+<h2 class="anchored" data-anchor-id="wrap-a-figure">Wrap a figure</h2>
+<p>Add <code>.wrap-right</code> or <code>.wrap-left</code> to a figure, and the paragraphs after it flow beside it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="al">![Mean ratings by condition.](ratings.png)</span>{#fig-ratings .wrap-right width="40%"}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="./get-started.html">Get started</a> shows each kind of figure and table that wraps. The <a href="./examples/index.html">examples</a> show each kind of figure rendered in HTML, in PDF through LaTeX, in PDF through Typst, and in Word. Each format page says what that format wraps, and <a href="./normal-layout.html">Where a figure keeps its normal layout</a> lists the places and formats that do not wrap.</p>
 
 
 </section>
