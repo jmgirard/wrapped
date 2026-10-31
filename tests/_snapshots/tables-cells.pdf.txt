@@ -1,0 +1,8 @@
+# warnings
+# tex
+wrappedtable: tbl-cells [side=right,width=0.45\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.2750 0.7250
+wrappedstop
+wrappedtable: tbl-widths [side=left,width=0.45\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.3000 0.7000
+wrappedstop
+wrappedtable: tbl-foot [side=right,width=0.4\linewidth,gap=1em] caption=yes tabular=1 longtable=0 columns=0.4167 0.5833
+wrappedstop
