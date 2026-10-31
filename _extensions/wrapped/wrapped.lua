@@ -1,7 +1,7 @@
 -- wrapped: wrap body text around figures marked .wrap-left or .wrap-right.
--- A #tbl- table float wraps the same way in HTML, Typst, and Word and keeps
--- its normal layout in LaTeX, and in Word when its table is raw Word XML
--- (D-021, D-022, D-023); "figure" below covers it there.
+-- A #tbl- table float wraps the same way in all four formats and keeps its
+-- normal layout when its table is raw Word XML in Word or raw LaTeX in
+-- LaTeX (D-021, D-022, D-023, D-024); "figure" below covers it there.
 --
 -- Runs at pre-quarto, after Quarto creates FloatRefTarget nodes. HTML output,
 -- revealjs included, floats each wrapped figure inside a .wrap-group div
@@ -11,7 +11,8 @@
 -- The float pass also keeps the figures of a code cell that makes more than
 -- one figure normal (D-010).
 -- LaTeX output puts each wrapped figure in the wrappedfigure environment of
--- wrapped.tex, which calls wrapfig, and writes \wrappedstop after the
+-- wrapped.tex, which calls wrapfig, and a table float, its table rewritten
+-- as a tabular, in wrappedtable, and writes \wrappedstop after the
 -- paragraphs of its group. Typst output puts each wrapped figure
 -- and the paragraphs of its group in a wrap-content call from the bundled
 -- wrap-it package. Word output groups each wrapped figure with its
@@ -768,6 +769,38 @@ local function column_shares(tbl)
   end
   for i = 1, #shares do shares[i] = shares[i] / sum end
   return shares
+end
+
+-- Writes a Pandoc table as a raw tabular for a wrappedtable, since wrapfig's
+-- wraptable cannot hold the longtable that Pandoc writes (D-024). Each
+-- column takes its share of the box (column_shares), so Pandoc writes p{}
+-- columns that fit it. Pandoc's longtable holds a first head, a head that
+-- repeats on later pages, and a foot before the body. The tabular keeps the
+-- first head and sets the foot after the body. Pandoc puts a longtable with
+-- no caption in a group that keeps the table counter, which a tabular does
+-- not need.
+local function latex_tabular(tbl)
+  local shares = column_shares(tbl)
+  for i, spec in ipairs(tbl.colspecs) do tbl.colspecs[i] = { spec[1], shares[i] } end
+  local tex = pandoc.write(pandoc.Pandoc({ tbl }), "latex")
+  tex = tex:gsub("^{\\def\\LTcaptype{none}[^\n]*\n(.*)\n}%s*$", "%1")
+  local spec, rows = tex:match("\\begin{longtable}%[[^%]]*%](%b{})\n?(.*)\\end{longtable}")
+  local function split(text, mark)
+    local at = text:find(mark, 1, true)
+    if not at then return "", text end
+    return text:sub(1, at - 1), text:sub(at + #mark):gsub("^\n", "")
+  end
+  local head, body, foot
+  if rows:find("\\endfirsthead", 1, true) then
+    head = split(rows, "\\endfirsthead")
+    local _, rest = split(rows, "\\endhead")
+    rows = rest
+  else
+    head, rows = split(rows, "\\endhead")
+  end
+  foot, body = split(rows, "\\endlastfoot")
+  local _, last = split(foot, "\\endfoot")
+  return pandoc.RawBlock("latex", "\\begin{tabular}" .. spec .. "\n" .. head .. body .. last .. "\\end{tabular}")
 end
 
 local function docx_size(blocks, twips, by_column)
@@ -1548,6 +1581,20 @@ local function raw_docx_table(content)
   return found
 end
 
+-- True when a float's content holds raw LaTeX, as gt, kableExtra, tinytable,
+-- and knitr::kable(format = "latex") write a table. The filter cannot
+-- rewrite such a table for wraptable (D-024).
+local function raw_latex_table(content)
+  if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
+  local found = false
+  content:walk({
+    RawBlock = function(raw)
+      if raw.format == "latex" or raw.format == "tex" then found = true end
+    end,
+  })
+  return found
+end
+
 -- Gives a float that does not wrap its normal layout: its images lose
 -- their wrap classes, and the float loses its wrap options.
 local function keep_normal(float)
@@ -1627,13 +1674,14 @@ local function float_target(float)
   -- or warns on its own. Quarto numbers such figures
   -- with the cell's label and `-1`, `-2`, and so on.
   local several = carried and cell.several and float.type == "Figure"
-  -- LaTeX wraps no table (D-021, D-022): Quarto writes a LaTeX table as a
-  -- longtable, which wrapfig cannot hold. The warning comes before the
-  -- next-block rule, so a table with no paragraph after it warns there too.
-  if is_table and is_latex and not context then
+  -- In LaTeX, a table that is raw LaTeX, as gt, kableExtra, and tinytable
+  -- write it, keeps its normal layout: the filter cannot rewrite it as a
+  -- tabular for wraptable (D-024). It warns before the next-block rule, as
+  -- Word does.
+  if is_table and is_latex and not context and raw_latex_table(float.content) then
     keep_normal(float)
     quarto.log.warning(string.format(
-      "wrapped: the table #%s does not wrap in LaTeX. A table wraps in HTML, Typst, and Word.",
+      "wrapped: the table #%s is raw LaTeX, as from gt, kableExtra, or tinytable, so it does not wrap in LaTeX.",
       float.identifier))
     return float
   end
@@ -1678,9 +1726,18 @@ local function float_target(float)
   float.attributes["wrap-lines"] = nil
   placed = true
   if is_latex then
-    -- Quarto writes \begin{<fig-env>}[<fig-pos>] for the float.
-    float.attributes["fig-env"] = "wrappedfigure"
-    float.attributes["fig-pos"] = tex_options(class, width, gap, lines, "#" .. float.identifier)
+    -- Quarto writes \begin{<fig-env>}[<fig-pos>] for the float, and for a
+    -- table float, once its table is a tabular and not a longtable,
+    -- \begin{<fig-env>}[<tbl-pos>]. A float's content can be one block,
+    -- which a walk from that block does not visit.
+    float.attributes["fig-env"] = is_table and "wrappedtable" or "wrappedfigure"
+    float.attributes[is_table and "tbl-pos" or "fig-pos"] =
+      tex_options(class, width, gap, lines, "#" .. float.identifier)
+    if is_table then
+      local content = float.content
+      if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
+      float.content = content:walk({ Table = latex_tabular })
+    end
   elseif is_typst then
     if custom_id then
       typst_opens[custom_id] = typst_open(class, width, gap, "#" .. float.identifier)
