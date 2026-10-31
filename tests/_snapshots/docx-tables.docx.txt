@@ -8,6 +8,8 @@ image: cx=1051560
 image: cx=1051560
 image: cx=152400
 image: cx=1473363
+image: cx=160020
+image: cx=74295
 # frames
 # floating tables
 table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-after-table, caption, table pct 5000, p | p, clear | links=tbl-after-table cites=0
@@ -17,3 +19,5 @@ table left w=3744 left=0 right=240 anchor=margin/text | before=p keep | tbl-cell
 table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-nested, caption, p, table pct 5000, p | p, clear | links=- cites=0
 table left w=3744 left=0 right=240 anchor=margin/text | before=p keep | tbl-empty-div, caption, table pct 5000, p | p, clear | links=- cites=0
 table right w=3744 left=240 right=0 anchor=margin/text | before=p keep | tbl-uneven, caption, table pct 5000 images=240,2320, p | p, clear | links=- cites=0
+table left w=3744 left=0 right=240 anchor=margin/text | before=p keep | tbl-quote, caption, table pct 5000, p | p, clear | links=- cites=0
+table right w=468 left=240 right=0 anchor=margin/text | before=p keep | tbl-span, caption, table pct 5000 images=252,117, p | p, clear | links=- cites=0
