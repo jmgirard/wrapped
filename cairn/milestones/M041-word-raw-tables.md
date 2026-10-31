@@ -55,7 +55,7 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
 
 ## Acceptance criteria
 
-- [ ] AC1: In the docx of `tests/docx-tables.qmd`, each of four table floats whose table is a raw
+- [x] AC1: In the docx of `tests/docx-tables.qmd`, each of four table floats whose table is a raw
       openxml block is a floating table (`w:tblpPr`) on its class's side, whose `w:tblW` is the box
       width that its class sets, whose inner table has a `w:tblW` of type `dxa` equal to that box
       width, and whose next paragraph comes before the clearing break that ends its wrap. The four
@@ -64,13 +64,13 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
       with one column set wider (`w:tblLayout` `fixed`, a `w:tblGrid` of uneven widths, a header
       cell that spans two columns); and `tbl-flex-auto`, in the form flextable 0.10.1 writes with
       `layout = "autofit", width = 1` (`w:tblW` `pct` 5000, no grid).
-- [ ] AC2: In the docx of `tests/docx-tables.qmd`, for `tbl-raw` and `tbl-flex`, whose source grids
+- [x] AC2: In the docx of `tests/docx-tables.qmd`, for `tbl-raw` and `tbl-flex`, whose source grids
       have uneven widths, the `w:gridCol` widths of the inner table sum to exactly the box width, and
       each is within 1 twip of the box width times that column's share of the grid sum in the
       fixture's source. Each `w:tcW` of type `dxa` in `tbl-raw`, whose source gives its cells
       uneven ones, is within 1 twip of its source width times the ratio of the box width to the
       source grid sum.
-- [ ] AC3: The Word render of `tests/docx-tables.qmd` prints one warning, the image-height warning
+- [x] AC3: The Word render of `tests/docx-tables.qmd` prints one warning, the image-height warning
       for `plot.png` that it printed at commit f207fe3, and no other.
 - [x] AC4: In a LibreOffice PDF (`soffice --headless --convert-to pdf`) and in a Microsoft Word PDF
       (`tests/word-pdf.applescript`) of the Word render of `tests/docx-raw-tables.qmd`, which wraps a
@@ -86,7 +86,7 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
       layout in Word or makes the render warn in Word. The Tables section of
       `docs/formats/word.qmd` says that a gt or flextable table is set to the full width of its box
       and that a flextable with its default fixed layout keeps its columns' proportions.
-- [ ] AC6: `python3 tests/verify.py` passes every render, snapshot, layout case, and log check;
+- [x] AC6: `python3 tests/verify.py` passes every render, snapshot, layout case, and log check;
       `quarto render docs` exits with status 0; and `python3 tests/docs_layout.py` exits with
       status 0.
 
@@ -159,5 +159,32 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
 
 Review pass 1 on d91f006 (2026-10-31).
 
-- AC4 evidence: a fresh render of `tests/docx-raw-tables.qmd` (gt 1.4.0, flextable 0.10.1) from a scratch folder linked to `_extensions/`; LibreOffice and Word 16.114.3 PDFs, one page each. The scratchpad `measure.py` reading of `pdftohtml -xml` boxes: Word, first-line tops 362, 567, 851 against last-row bottoms 487, 790, 1016; LibreOffice 328, 542, 820 against 451, 694, 984. No first-line box overlaps the table's cell boxes in either PDF. The Word save of `docx-tables.docx` is under AC1.
+- AC1 evidence: `tests/docx-tables.docx` from the review's suite run, read by the scratchpad `ac123.py`: `tbl-raw` right, `tbl-gt` left, `tbl-flex` right, `tbl-flex-auto` left, each matching its class; each box `w:tblW` 3744 (the default width) and each inner `w:tblW` `dxa` 3744; the next top-level block is a paragraph that ends in the clearing break.
+- AC2 evidence: same docx and the fixture's source. `tbl-raw` grid 1000,3000 to 936,2808 (sum 3744, largest deviation from the exact share 0.00 twip) and its `dxa` `w:tcW` 1000,3000 to 936,2808 (0.00); `tbl-flex` grid 2880,1080,1080 to 2139,803,802 (sum 3744, largest deviation 0.71 twip).
+- AC3 evidence: the `docx-tables` snapshot, which the suite matched, lists one warning, the `plot.png` image-height warning; at f207fe3 the snapshot lists that warning and the `#tbl-raw` raw-XML warning.
+- AC6 evidence: `python3 tests/verify.py` on d91f006, all 128 renders pass (exit 0); `quarto render docs` and `python3 tests/docs_layout.py` exit 0 on a974db8, whose `docs/` and `_extensions/` match d91f006.
+
+- AC4 evidence: a fresh render of `tests/docx-raw-tables.qmd` (gt 1.4.0, flextable 0.10.1) from a scratch folder linked to `_extensions/`; LibreOffice and Word 16.114.3 PDFs, one page each. The scratchpad `measure.py` reading of `pdftohtml -xml` boxes: Word, first-line tops 362, 567, 851 against last-row bottoms 487, 790, 1016; LibreOffice 328, 542, 820 against 451, 694, 984. No first-line box overlaps the table's cell boxes in either PDF. `tests/word-pdf.applescript` saved the suite's `tests/docx-tables.docx` (rendered at d91f006) as a 5-page PDF, exit 0.
 - AC5 evidence: the criterion's grep finds 17 lines in README.md, `docs/`, DESIGN.md, and `wrap-mechanisms.md`. Read in their sentences, each says a gt or flextable table wraps in Word, or is about raw OpenXML in another sense (DESIGN.md:386 split tags; `wrap-mechanisms.md`:64 and :231 on images and frames); none says such a table keeps its normal layout or warns in Word. `docs/formats/word.qmd` Tables says the filter sets it to the full width of the box and that a flextable with its default fixed layout keeps its columns' proportions.
+- Consistency gate: `cairn_validate.py` all checks passed; the one version marker (`_extension.yml`, 0.2.0) is unchanged; the verify command passed (AC6); `quarto render docs` and `tests/docs_layout.py` passed on the Mac, and the docs workflow runs on the PR; the changelog slot is "none". No principle changed.
+- spawned: diff-bug, blame-history, prior-review, ripple
+- diff-bug #1: a wide gt or autofit table could grow past its box in Word with no warning — reject, false: a probe (scratchpad `wide2/`) wrapped an 8-column gt table, an autofit flextable, and a fixed flextable in the default box, and Word 16.114 and LibreOffice both kept each at the box width and broke cell text inside words; fix now in the docs, which named those word breaks for LibreOffice only
+- diff-bug #2: a `w:tcW` with no `w:type`, which the schema reads as twips, is not scaled while the grid is — fix now
+- diff-bug #3: a `w:tblPr` whose close tag sits in a later raw block raises a Lua error — reject, edge: a raw table split across raw blocks is outside documented and common use (gt and flextable write one block), and the effect is a render error
+- diff-bug #4: `<w:tblPr >` or `<w:tblGrid >` with a space, or range markup such as a bookmark before `w:tblPr`, gets a second `w:tblPr` or an unscaled grid — fix now
+- diff-bug #5: a `w:tblPrChange` in `w:tblPr` takes the new width inside the change record — follow-up, new row "Harden the Word raw table fit" [parked], since no documented or common use writes tracked table changes in a raw table
+- diff-bug #6: the walk fits a raw table inside a Pandoc table cell of the float to the box width, not its cell's — follow-up, "Harden the Word raw table fit" [parked]
+- diff-bug #7: single-quoted widths, or an XML comment holding `<w:tbl>`, stop the grid or cell scaling — follow-up, "Harden the Word raw table fit" [parked]
+- diff-bug #8: a column narrower than about half a twip over the ratio rounds to width 0 — follow-up, "Harden the Word raw table fit" [parked]
+- diff-bug #9: `wrapped.lua`'s header cites D-025 among the reasons a table keeps its normal layout — fix now
+- diff-bug #10: a raw-table float with no paragraph after it no longer warns — reject, planned change: it now takes the next-block rule like every other Word table float, which keeps it normal with no warning
+- diff-bug #11: the new `grid=` field changes the `contexts`, `fixture`, and `tables` snapshots only to record Pandoc's grids, which this milestone does not change — fix now (record `grid=` for `dxa` inner tables only)
+- diff-bug #12: gt's own `w:tblCellMar` before `w:tblW` and `w:jc` after `w:tblLook` stay out of schema order — reject, false as a defect of this diff: it is gt's output, and Word opens it (AC4)
+- blame-history #1: same as diff-bug #10 — reject, planned change
+- blame-history #2: the only Word case of a raw table kept normal with its warning is gone, and no case covers a raw table in a context or with no paragraph after it — reject, planned change: D-025 removes that behavior, and a raw table in a context or with no paragraph after it runs the same context and next-block code as a Pandoc table, which other cases cover
+- blame-history #3: same as diff-bug #6 — follow-up, "Harden the Word raw table fit" [parked]
+- blame-history #4: the removal of `raw_docx_table` reverses the M039 narrowing on purpose — noted (D-025)
+- prior-review #1: same as diff-bug #1 — reject, false (the `wide2/` probe)
+- prior-review #2: two raw tables in one box have no paragraph between them, so Word may join them — follow-up, "Harden the Word raw table fit" [parked]
+- prior-review #3: the two Pandoc tables of `tbl-quote` sit in one box with no paragraph between them, as on `main` — follow-up, "Harden the Word raw table fit" [parked], marked as predating M041
+- ripple #1: `tests/verify.py`'s top-of-file description of the Word table summary leaves out the new fields — fix now
