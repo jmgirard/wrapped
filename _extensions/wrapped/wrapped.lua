@@ -1676,8 +1676,9 @@ local function cell_div(div)
     -- Quarto turns a cell's caption-margin class into the cap-location of
     -- its figure, but not its margin-caption class, so that one is carried.
     -- knitr puts a cell's `width` and `wrap-gap` options on the cell div. A
-    -- table float gets them too, but a figure float does not, so a figure
-    -- reads its gap from here.
+    -- table float gets them too, and so does the parent float of a cell's
+    -- subfigure panels, which keeps its normal layout. A cell's one figure
+    -- float gets neither, so that figure reads its gap from here.
     carry = { class = c, remaining = n, token = token, several = count_top_floats(div) > 1,
       margin_caption = div.classes:includes("margin-caption"),
       gap = div.attributes["wrap-gap"], width = div.attributes.width }

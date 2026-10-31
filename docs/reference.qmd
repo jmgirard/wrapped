@@ -38,7 +38,8 @@ through LaTeX, as R packages such as gt write it (see
 
 These go under the `wrapped` key in the YAML header of a document or a
 project. A figure's own `width` or `wrap-gap` attribute comes first, and
-so does a code cell's option.
+so does a code cell's `#| wrap-gap:`, a figure cell's `#| out-width:`, or
+a table cell's `#| width:`.
 
 The names follow one rule. An attribute that only this extension reads
 starts with `wrap-`, as `wrap-gap` and `wrap-lines` do. A key under

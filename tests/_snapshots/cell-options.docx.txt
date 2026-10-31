@@ -1,16 +1,22 @@
 # warnings
 1x wrapped: the code cell of the figure #fig-cell-width sets width, which a figure cell does not read. Set the figure's width with out-width.
+1x wrapped: the code cell of the figure #fig-cell-width-only sets width, which a figure cell does not read. Set the figure's width with out-width.
 1x wrapped: wrap-gap "-1em" on #fig-cell-negative is not a length or a percent, so it is 20px.
+1x wrapped: wrap-gap "-1em" on #fig-cell-negative-only is not a length or a percent, so it is 20px.
 # docx
 image: cx=1783080
 image: cx=2674620
 image: cx=2080259
 image: cx=1783080
+image: cx=2674620
+image: cx=2674620
 # frames
 frame right w=2808 gap=600 anchor=margin | fig-cell-gap | image fig-cell-gap-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame left w=4212 gap=360 anchor=margin | fig-cell-gap-only | image fig-cell-gap-only-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame right w=3276 gap=300 anchor=margin | fig-cell-width | image fig-cell-width-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 frame left w=2808 gap=300 anchor=margin | fig-cell-negative | image fig-cell-negative-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame right w=4212 gap=300 anchor=margin | fig-cell-width-only | image fig-cell-width-only-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
+frame left w=4212 gap=300 anchor=margin | fig-cell-negative-only | image fig-cell-negative-only-1.png fills=yes alt=''; caption style=ImageCaption | p, clear | links=- cites=0
 # floating tables
 table right w=2808 left=720 right=0 anchor=margin/text | before=p keep | tbl-cell-opts, caption, table pct 5000, p | p, clear | links=- cites=0
 table left w=3276 left=0 right=480 anchor=margin/text | before=p keep | tbl-cell-cap, caption, table pct 5000, p | p, clear | links=- cites=0

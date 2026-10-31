@@ -5,6 +5,10 @@ filters:
 wrapped:
   wrap-gap: 2em
   Width: 25%
+  zeta: 1
+  alpha: 2
+  margin: 3
+  Gap: 4
 format:
   html: default
   epub: default

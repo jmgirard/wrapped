@@ -119,3 +119,31 @@ plot(1:3)
 The paragraph after the figure cell with a gap below zero. Lorem ipsum dolor
 sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
 labore et dolore magna aliqua.
+
+## A figure cell with width and no out-width
+
+```{r}
+#| label: fig-cell-width-only
+#| fig-cap: "A figure cell with width and no out-width."
+#| classes: wrap-right
+#| width: 25%
+plot(1:3)
+```
+
+The paragraph after the figure cell with width and no out-width. Lorem ipsum
+dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## A figure cell with a gap below zero and no out-width
+
+```{r}
+#| label: fig-cell-negative-only
+#| fig-cap: "A figure cell with a gap below zero and no out-width."
+#| classes: wrap-left
+#| wrap-gap: -1em
+plot(1:3)
+```
+
+The paragraph after the figure cell with a gap below zero and no out-width.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
