@@ -94,6 +94,10 @@ paragraph, wraps and keeps its link:
 Figure from a code cell: `#| classes: wrap-right` beside `#| fig-cap:`. The
 class lands on the cell's enclosing div, not on the figure node, and the
 filter carries it to the figure (`references/wrap-mechanisms.md`, S1; D-001).
+knitr puts a cell's `#| width:` and `#| wrap-gap:` on the cell div, and a
+table float gets them too. A figure float does not, so `cell_div` carries
+the gap to a figure, whose width comes from `#| out-width:`; a figure cell's
+`#| width:` warns (corrected M043).
 
 | Attribute | Values | Default | Notes |
 |---|---|---|---|
@@ -110,6 +114,9 @@ wrapped:
   gap: 0.75em
   breakpoint: 576px   # HTML: at this width or narrower, figures stop floating
 ```
+
+Any other key under `wrapped:` is ignored with a warning, and `wrap-gap`
+there names `gap` (D-027, corrected M043).
 
 Stop rule: the figure, or a table float (M038, M039, M040), wraps
 the paragraphs that follow it. Wrapping stops at
@@ -199,7 +206,8 @@ version marker, runs `wrapped.lua` at `pre-quarto`, and runs
 `wrapped-docx.lua` at `post-render` (corrected M006). The filter makes eight
 passes, two in step 1 (corrected M003, and by the page-break hotfix):
 
-1. It reads the `wrapped:` metadata and checks each length. In LaTeX it
+1. It reads the `wrapped:` metadata, checks each length, and warns for each
+   unknown key in sorted order (corrected M043). In LaTeX it
    reads `classoption`, and a two-column document keeps normal figures.
    Columns that a class, `\twocolumn`, or `multicols` sets are found only
    while LaTeX runs, by the check in `wrapped.tex` at each figure (step 7)
