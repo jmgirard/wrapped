@@ -72,7 +72,7 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
       source grid sum.
 - [ ] AC3: The Word render of `tests/docx-tables.qmd` prints one warning, the image-height warning
       for `plot.png` that it printed at commit f207fe3, and no other.
-- [ ] AC4: In a LibreOffice PDF (`soffice --headless --convert-to pdf`) and in a Microsoft Word PDF
+- [x] AC4: In a LibreOffice PDF (`soffice --headless --convert-to pdf`) and in a Microsoft Word PDF
       (`tests/word-pdf.applescript`) of the Word render of `tests/docx-raw-tables.qmd`, which wraps a
       gt 1.4.0 table, a default flextable 0.10.1 table, and an autofit flextable 0.10.1 table, each
       followed by a paragraph, the `pdftohtml -xml` text boxes show, for each of the three tables,
@@ -80,7 +80,7 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
       last row, and none of that line's text boxes overlapping the horizontal span of the table's
       cell text boxes (its caption excluded). `tests/word-pdf.applescript` also saves the Word
       render of `tests/docx-tables.qmd` as PDF with exit status 0.
-- [ ] AC5: No sentence that holds a line found by
+- [x] AC5: No sentence that holds a line found by
       `grep -rn -i -E 'flextable|Word XML|openxml|raw Word' README.md docs cairn/DESIGN.md cairn/references/wrap-mechanisms.md --include='*.qmd' --include='*.md'`
       says that a gt or flextable table, or a raw Word XML or openxml table, keeps its normal
       layout in Word or makes the render warn in Word. The Tables section of
@@ -156,3 +156,8 @@ and in Word. Tests, the site pages, README.md, DESIGN.md, and
 ## Decisions
 
 ## Review
+
+Review pass 1 on d91f006 (2026-10-31).
+
+- AC4 evidence: a fresh render of `tests/docx-raw-tables.qmd` (gt 1.4.0, flextable 0.10.1) from a scratch folder linked to `_extensions/`; LibreOffice and Word 16.114.3 PDFs, one page each. The scratchpad `measure.py` reading of `pdftohtml -xml` boxes: Word, first-line tops 362, 567, 851 against last-row bottoms 487, 790, 1016; LibreOffice 328, 542, 820 against 451, 694, 984. No first-line box overlaps the table's cell boxes in either PDF. The Word save of `docx-tables.docx` is under AC1.
+- AC5 evidence: the criterion's grep finds 17 lines in README.md, `docs/`, DESIGN.md, and `wrap-mechanisms.md`. Read in their sentences, each says a gt or flextable table wraps in Word, or is about raw OpenXML in another sense (DESIGN.md:386 split tags; `wrap-mechanisms.md`:64 and :231 on images and frames); none says such a table keeps its normal layout or warns in Word. `docs/formats/word.qmd` Tables says the filter sets it to the full width of the box and that a flextable with its default fixed layout keeps its columns' proportions.
