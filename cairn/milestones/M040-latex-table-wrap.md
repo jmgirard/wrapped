@@ -4,14 +4,14 @@
      cairn_validate's <150 over the plan-owned body. -->
 # M040: Wrap table floats in LaTeX PDFs
 
-- **Status:** planned
+- **Status:** in-progress
 - **Priority:** normal
 - **Depends on:** —
 - **Driving RR:** —
 - **Principles touched:** —
 - **Resolves:** —
 - **Surface tier:** user-facing — it changes the filter's LaTeX output, which users install from `main`
-- **Branch/PR:** —
+- **Branch/PR:** m040-latex-table-wrap
 
 ## Goal
 
@@ -104,7 +104,7 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 
 ## Tasks
 
-- [ ] T1: In `_extensions/wrapped/wrapped.tex` (`wrappedfigure` at :193,
+- [x] T1: In `_extensions/wrapped/wrapped.tex` (`wrappedfigure` at :193,
       warnings at :141-147), add `wrappedtable` over `\wraptable`, sharing
       the key set, the three modes (a `table` float in mode f,
       `\@captype` table in mode p), the gap record, and `\wrapped@endwrap`
@@ -156,6 +156,9 @@ warning. Tests, the site pages, README.md, DESIGN.md, and
 - 2026-10-31: lessons used: 2026-10-30 (M038) one-Block float content; 2026-10-25 (M004) LaTeX and Typst share `fixture.pdf`; 2026-10-26 (M007) pdftohtml boxes; 2026-10-27 (M012) one-fixture check; 2026-10-29 (M034) `/.quarto/` lines in `tests/.gitignore`; 2026-10-29 (M033) caption blocks after pre-quarto.
 - 2026-10-31: criteria audit (full mode, fresh Opus reader): 8 findings, all taken toward the narrower promise — AC2 column widths named as Pandoc's `\real{}` factors over the line width less padding; AC3 orders `tbl-rel` first and says exactly one `#tbl-raw` warning; AC4 binds the render's warnings, not the snapshot; AC1, AC2, AC4 harness clauses made evidence pointers; AC6 narrowed to sentences that say where a table float wraps, with no sentence saying a Pandoc table does not wrap in LaTeX (the grep also lists lines on other subjects); AC7 drops "every snapshot change reviewed" (T3 reads each diff); the unprobed Quarto 1.9.36 risk became a T2 probe. No D-entry blocks any criterion.
 - 2026-10-31: `tests/.gitignore` holds uncommitted `/.quarto/` lines from an earlier render (M034 lesson), left unstaged by the plan commit.
+- 2026-10-31: /milestone-implement: branch m040-latex-table-wrap cut from origin/main at fca6c41; status in-progress; `tests/.gitignore`'s `/.quarto/` lines stay unstaged.
+- 2026-10-31: T2 probe first: the plan's scratch probe (a `\wraptable` env named by `fig-env`, the table as raw `tabular`, the `\LTcaptype` group dropped) builds and wraps under Quarto 1.9.36 as under 1.10.20, captions "Table 1"/"Table 2" and both `@tbl-` links resolved; with every table rewritten, both versions' preambles still load `longtable,booktabs,array` and `calc`, so no package call is needed.
+- 2026-10-31: T1 done: `wrapped.tex` has `\__wrapped_begin:nn`/`\__wrapped_end:n` taking the kind; `wrappedfigure` and `wrappedtable` (over `\wraptable`) share keys, modes, gap, and `\wrapped@endwrap`. Multicols warning reads "<Kind> in multicols set as normal <kind>", the two-column warning "Two-column text: figures and tables set as normal floats". `tests/verify.py`'s log check matches multicols warnings by line and kind; `multicols`, `twocolumn-switch`, `twocolumn-class` log checks pass.
 
 ## Decisions
 

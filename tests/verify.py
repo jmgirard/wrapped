@@ -64,9 +64,9 @@ pages are in two columns, it also checks which column holds each figure.
 
 For a fixture in LOGS, rendered with latex-clean: false so its LaTeX log
 stays, the script also reads the warnings that wrapped.tex writes to that
-log: the count of two-column warnings, and the line of each multicols
-warning against the lines of the wrappedfigure environments inside
-multicols in the kept .tex.
+log: the count of two-column warnings, and the line and kind of each
+multicols warning against the wrappedfigure and wrappedtable environments
+inside multicols in the kept .tex.
 """
 
 import difflib
@@ -1310,35 +1310,42 @@ def layout_check(fixture, cases):
 
 # The fixtures whose LaTeX log the log check reads, rendered with
 # latex-clean: false so the log stays: the number of two-column warnings
-# and the number of wrapped figures inside multicols.
+# and the number of wrapped figures and tables inside multicols.
 LOGS = {
     "twocolumn-class": (1, 0),
     "twocolumn-switch": (1, 0),
     "multicols": (0, 2),
     "stop-latex": (0, 0),
 }
-TWO_COLUMN_WARNING = "Two-column text: figures set as normal figures"
-MULTICOLS_WARNING = "Figure in multicols set as normal figure"
+TWO_COLUMN_WARNING = "Two-column text: figures and tables set as normal floats"
+MULTICOLS_WARNINGS = {
+    "Figure in multicols set as normal figure": "figure",
+    "Table in multicols set as normal table": "table",
+}
 LOG_WARNING = re.compile(r"Package wrapped Warning: (.*?)(?: on input line (\d+))?\.")
+WRAPPED_ENV = re.compile(r"\\begin\{wrapped(figure|table)\}")
 
 
 def multicols_figures(tex):
-    """The line numbers of the wrappedfigure environments inside multicols."""
+    """The line number and the kind, figure or table, of each wrappedfigure
+    and wrappedtable environment inside multicols."""
     depth, found = 0, []
     for n, line in enumerate(tex.read_text(encoding="utf-8").splitlines(), 1):
+        env = WRAPPED_ENV.match(line)
         if line.startswith("\\begin{multicols"):
             depth += 1
         elif line.startswith("\\end{multicols"):
             depth -= 1
-        elif line.startswith("\\begin{wrappedfigure}") and depth > 0:
-            found.append(n)
+        elif env and depth > 0:
+            found.append((n, env.group(1)))
     return found
 
 
 def log_check(fixture):
     """Checks the wrapped warnings in a fixture's LaTeX log: the two-column
-    warning, and a multicols warning that names the line of each wrapped
-    figure inside multicols. Returns the names of the failed checks."""
+    warning, and a multicols warning that names the line and the kind of
+    each wrapped figure or table inside multicols. Returns the names of the
+    failed checks."""
     two_column, in_multicols = LOGS[fixture]
     path = TESTS / f"{fixture}.log"
     if not path.exists():
@@ -1350,12 +1357,13 @@ def log_check(fixture):
     log = path.read_text(encoding="utf-8", errors="replace").replace("\n", "")
     found = LOG_WARNING.findall(log)
     two = [w for w in found if w[0] == TWO_COLUMN_WARNING]
-    multi = sorted(int(n) if n else 0 for msg, n in found if msg == MULTICOLS_WARNING)
-    other = [msg for msg, n in found if msg not in (TWO_COLUMN_WARNING, MULTICOLS_WARNING)]
+    multi = sorted((int(n) if n else 0, MULTICOLS_WARNINGS[msg])
+                   for msg, n in found if msg in MULTICOLS_WARNINGS)
+    other = [msg for msg, n in found if msg != TWO_COLUMN_WARNING and msg not in MULTICOLS_WARNINGS]
     want = multicols_figures(TESTS / f"{fixture}.tex")
     problems = []
     if len(want) != in_multicols:
-        problems.append(f"the .tex has {len(want)} wrapped figures in multicols, not {in_multicols}")
+        problems.append(f"the .tex has {len(want)} wrapped floats in multicols, not {in_multicols}")
     if len(two) != two_column:
         problems.append(f"{len(two)} two-column warnings, not {two_column}")
     if multi != want:
