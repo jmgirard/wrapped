@@ -97,3 +97,54 @@ A table float whose table sits in a div of its own.
 The paragraph beside the table float whose table sits in a div. Lorem
 ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 incididunt ut labore et dolore magna aliqua.
+
+## A table that ends with an empty div
+
+::: {#tbl-empty-div .wrap-left}
+
+| A | B |
+|---|---|
+| 1 | 2 |
+
+: A table float that ends with an empty div.
+
+::: {.note}
+:::
+
+:::
+
+The paragraph beside the table float that ends with an empty div. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## Small images and uneven columns in a table's cells
+
+::: {#tbl-uneven .wrap-right width="40%"}
+
++-----------------------------+--------------------------------------------------------------+
+| Icon                        | A wide column                                                |
++=============================+==============================================================+
+| ![](plot.png){width=12pt}   | ![](plot.png)                                                |
++-----------------------------+--------------------------------------------------------------+
+
+: A table float with an icon and uneven columns.
+
+:::
+
+The paragraph beside the table float with uneven columns. Lorem ipsum
+dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+## A raw Word table
+
+::: {#tbl-raw .wrap-right}
+
+```{=openxml}
+<w:tbl><w:tblPr><w:tblW w:w="0" w:type="auto"/></w:tblPr><w:tblGrid><w:gridCol w:w="2000"/><w:gridCol w:w="2000"/></w:tblGrid><w:tr><w:tc><w:p><w:r><w:t>A</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>B</w:t></w:r></w:p></w:tc></w:tr></w:tbl>
+```
+
+A raw Word table, as gt or flextable write one.
+
+:::
+
+The paragraph after the raw table, which keeps its normal layout.

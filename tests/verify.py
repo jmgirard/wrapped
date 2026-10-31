@@ -30,7 +30,8 @@ citations in those paragraphs. It also counts framed paragraphs that are
 in no frame. When the docx holds a floating table, a wrapped table float's
 box, it lists each one: its side, width, text distances, and anchors, the
 block before it, the parts of its cell (bookmark, caption, images and
-whether each fills the box, the inner table's width), and the blocks,
+whether each fills the box, the inner table's width and the width of each
+image in it), and the blocks,
 links, and citations after it up to the clearing break, and counts the
 floating tables that it did not list. For a fixture in DOCX_UNFRAMED_ALT, it also lists the alt text
 of each image outside a frame, and for a fixture in DOCX_STYLES the last

@@ -188,11 +188,21 @@ local function floating_table(div, frame)
   local open = string.format(
     '<w:p><w:pPr><w:keepNext /><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact" /></w:pPr></w:p><w:tbl><w:tblPr><w:tblStyle w:val="Table" /><w:tblpPr w:leftFromText="%s" w:rightFromText="%s" w:vertAnchor="text" w:horzAnchor="margin" w:tblpXSpec="%s" /><w:tblW w:type="dxa" w:w="%s" /><w:tblLayout w:type="fixed" /><w:tblCellMar><w:left w:w="0" w:type="dxa" /><w:right w:w="0" w:type="dxa" /></w:tblCellMar><w:tblLook w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="0" w:val="0000" /></w:tblPr><w:tblGrid><w:gridCol w:w="%s" /></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="%s" /></w:tcPr>',
     left, right, frame.side, frame.width, frame.width, frame.width)
-  -- The cell's last block, looking into a div that ends the cell, as
-  -- Pandoc writes a div's blocks with no element of its own.
-  local last = div.content[#div.content]
-  while last and last.t == "Div" do last = last.content[#last.content] end
-  local close = (last and last.t == "Table" and "<w:p />" or "") .. "</w:tc></w:tr></w:tbl>"
+  -- The cell's last block, looking into a div that ends the cell and past
+  -- an empty one, as Pandoc writes a div's blocks with no element of its
+  -- own. A table or raw block there, or none, takes the closing paragraph.
+  local function last_block(blocks)
+    for i = #blocks, 1, -1 do
+      local b = blocks[i]
+      if b.t ~= "Div" then return b end
+      local inner = last_block(b.content)
+      if inner then return inner end
+    end
+    return nil
+  end
+  local last = last_block(div.content)
+  local needs = not last or last.t == "Table" or last.t == "RawBlock"
+  local close = (needs and "<w:p />" or "") .. "</w:tc></w:tr></w:tbl>"
   return pandoc.Blocks({
     pandoc.RawBlock("openxml", open), div, pandoc.RawBlock("openxml", close),
   })

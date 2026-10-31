@@ -58,8 +58,8 @@ and table floats, and the render prints one warning.
 ## Images and frames
 
 The image takes the width of the frame and keeps its shape. The extension
-does not use an image's `height` in a wrapped figure in Word, and the
-render prints a warning. The `wrap-lines` attribute does nothing in Word.
+does not use an image's `height` in a wrapped figure or table in Word, and
+the render prints a warning. The `wrap-lines` attribute does nothing in Word.
 
 A list in a figure div goes in the frame with the image and the caption.
 Word cannot put a code block, a table, a heading, a horizontal rule, or
@@ -78,9 +78,13 @@ floating table, the box that Word wraps text around for a table. The box
 has one cell, which holds the caption, the table, and any other content of
 the float. It takes its width and gap as a figure's frame does. The filter
 sets the table to the full width of the box. An image outside the table
-fills the box. An image in a table cell takes the box width divided by
-the number of columns, less the cell margins, so it fills its cell when
-the columns are equal. The wrap stops where a figure's wrap stops.
+fills the box. An image in a table cell fills its cell, less the cell
+margins, unless its own `width` is smaller. The wrap stops where a
+figure's wrap stops.
+
+A table that gt or flextable makes is raw Word XML, which the extension
+cannot fit to a box. A wrapped table float that holds one keeps its
+normal layout in Word, and the render prints a warning.
 
 In LibreOffice 26.8 on macOS, a table wider than its box narrows its
 columns to fit the box, and the column text then breaks inside words. A

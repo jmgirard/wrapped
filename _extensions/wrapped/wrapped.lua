@@ -622,7 +622,7 @@ local DOCX_TEXT_WIDTH = 9360
 local docx_text_width = DOCX_TEXT_WIDTH
 
 -- The reference doc's body w:sectPr sets columns, so Word keeps normal
--- figures, as LaTeX does in a two-column document.
+-- figures and table floats, as LaTeX does in a two-column document.
 local docx_columns = false
 -- The reference doc that cannot be read, for a warning when a figure wraps.
 local docx_unread = nil
@@ -753,19 +753,60 @@ end
 
 -- Sets each image in a list of blocks to the frame's width, so the image
 -- fills the frame. With `by_column`, for a table float's box, an image in a
--- table takes the box's equal share per column, less the 108-twip cell
--- margins on each side that Pandoc's Table style sets.
+-- table cell takes at most its cell's share of the box, less the 108-twip
+-- cell margins on each side that Pandoc's Table style sets. The shares are
+-- the ones wrapped-docx.lua's fit_table gives the columns: each column's
+-- relative width, or an equal share for a column with none. An image with a
+-- smaller width of its own keeps it, so an icon stays small.
+local function column_shares(tbl)
+  local shares, sum = {}, 0
+  for i, spec in ipairs(tbl.colspecs) do
+    local w = spec[2]
+    shares[i] = (type(w) == "number" and w > 0) and w or 1
+    sum = sum + shares[i]
+  end
+  for i = 1, #shares do shares[i] = shares[i] / sum end
+  return shares
+end
+
 local function docx_size(blocks, twips, by_column)
   local function size(img, w)
     img.attributes.width = tex_number(w / 1440) .. "in"
     return img
   end
+  local function size_cells(tbl)
+    local shares = column_shares(tbl)
+    local function rows(list)
+      for _, row in ipairs(list) do
+        local col = 1
+        for _, cell in ipairs(row.cells) do
+          local share = 0
+          for c = col, col + cell.col_span - 1 do share = share + (shares[c] or 0) end
+          local cell_w = twips * share
+          local max_w = math.max(cell_w - 216, cell_w / 2)
+          cell.contents = cell.contents:walk({
+            Image = function(img)
+              local own = img.attributes.width and docx_twips(img.attributes.width, true)
+              return size(img, own and math.min(own, max_w) or max_w)
+            end,
+          })
+          col = col + cell.col_span
+        end
+      end
+    end
+    rows(tbl.head.rows)
+    for _, body in ipairs(tbl.bodies) do
+      rows(body.head)
+      rows(body.body)
+    end
+    rows(tbl.foot.rows)
+    return tbl
+  end
   return blocks:walk({
     traverse = "topdown",
     Table = function(tbl)
       if not by_column then return nil end
-      local share = math.max(twips / math.max(#tbl.colspecs, 1) - 216, 144)
-      return tbl:walk({ Image = function(img) return size(img, share) end }), false
+      return size_cells(tbl), false
     end,
     Image = function(img) return size(img, twips) end,
   })
@@ -823,8 +864,10 @@ end
 -- the box width and removes the height, because Typst does not fit an image
 -- with a height in the box: an image wider than the box is cut off at its
 -- edges. Word removes the height in the same way, and docx_size sets the
--- width to the frame width. Elsewhere the image keeps its width.
-local function clean_image(img)
+-- width, to the frame width for a figure. In a table float, an image takes
+-- the width of the box or of its table column (docx_size), so the warning
+-- says so. Elsewhere the image keeps its width.
+local function clean_image(img, in_table)
   drop_wrap(img)
   if is_html then
     img.attributes.width = nil
@@ -832,9 +875,11 @@ local function clean_image(img)
     img.attributes.width = (img.attributes.height == nil) and "100%" or nil
   elseif is_typst or is_docx then
     if img.attributes.height then
+      local why = in_table and "in a wrapped table, so the box or its column sets the image's width"
+        or "in a wrapped figure, so the image fills the box width"
       quarto.log.warning(string.format(
-        "wrapped: %s does not use the height of the image %s in a wrapped figure or table, so the box sets the image's width.",
-        is_typst and "Typst" or "Word", pandoc.utils.stringify(img.src)))
+        "wrapped: %s does not use the height of the image %s %s.",
+        is_typst and "Typst" or "Word", pandoc.utils.stringify(img.src), why))
     end
     if is_typst then img.attributes.width = "100%" end
     img.attributes.height = nil
@@ -842,8 +887,8 @@ local function clean_image(img)
   return img
 end
 
-local function clean_images(blocks)
-  return blocks:walk({ Image = clean_image })
+local function clean_images(blocks, in_table)
+  return blocks:walk({ Image = function(img) return clean_image(img, in_table) end })
 end
 
 -- Returns the line count of a wrap-lines value, or nil with a warning when
@@ -1490,6 +1535,20 @@ end
 
 -- Gives a float that does not wrap its normal layout: its images lose
 -- their wrap classes, and the float loses its wrap options.
+-- True when a float's content holds a raw openxml table, as gt and
+-- flextable write a table for Word. A float's content can be one block,
+-- which a walk from that block does not visit.
+local function raw_docx_table(content)
+  if pandoc.utils.type(content) == "Block" then content = pandoc.Blocks({ content }) end
+  local found = false
+  content:walk({
+    RawBlock = function(raw)
+      if raw.format == "openxml" and raw.text:match("<w:tbl[%s>]") then found = true end
+    end,
+  })
+  return found
+end
+
 local function keep_normal(float)
   float.content = float.content:walk({ Image = drop_wrap })
   float.attributes["wrap-gap"] = nil
@@ -1577,6 +1636,16 @@ local function float_target(float)
       float.identifier))
     return float
   end
+  -- In Word, a table that is raw openxml, as gt and flextable write it,
+  -- keeps its normal layout: the filter cannot fit its columns to the box
+  -- (D-022). It warns before the next-block rule, as LaTeX does.
+  if is_table and is_docx and not context and raw_docx_table(float.content) then
+    keep_normal(float)
+    quarto.log.warning(string.format(
+      "wrapped: the table #%s is raw Word XML, as from gt or flextable, so it does not wrap in Word.",
+      float.identifier))
+    return float
+  end
   -- A figure with no paragraph after it keeps a normal figure with no
   -- warning (the next-block rule).
   if context or no_text[custom_id or ""] or several then
@@ -1593,7 +1662,7 @@ local function float_target(float)
     end
     return float
   end
-  float.content = clean_images(float.content)
+  float.content = clean_images(float.content, is_table)
   if not wraps() then return float end
   -- knitr writes the plot's pixel size as a unitless image width. That is
   -- not a box width, so a cell figure takes only a width with a unit.
