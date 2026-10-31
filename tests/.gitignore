@@ -10,3 +10,6 @@ out/
 _book/
 *.log
 *.aux
+
+/.quarto/
+**/*.quarto_ipynb
