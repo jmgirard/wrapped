@@ -7,8 +7,9 @@ format: docx
 
 Word joins two tables with nothing between them, so the first two wrapped
 table floats below each follow a block that Word writes as a table. The
-third holds an image above its table, the fourth holds images in its
-table's cells, and the last ends with a div that holds its table.
+third holds an image above its table, and the fourth holds images in its
+table's cells. The cases after them end with a div, hold a small image
+and uneven columns, or hold a raw Word table.
 
 | A | B |
 |---|---|

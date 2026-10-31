@@ -371,7 +371,8 @@ columns still sum to Pandoc's default of 7920 twips, wider than the box,
 and LibreOffice fits them to the box. The cell has no margins, and an
 image outside the inner table fills the box. An image in an inner-table
 cell takes at most the cell's share of the box (the shares `fit_table`
-gives, summed over a column span), less the Table style's 108-twip cell
+gives, summed over a column span; a row span from an earlier row is not
+counted), less the Table style's 108-twip cell
 margins on each side, and keeps a smaller width of its own. A table float
 whose table is raw openxml (gt, flextable) keeps its normal layout with a
 warning, since the filter cannot fit its grid (narrowed at the M039

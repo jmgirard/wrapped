@@ -875,7 +875,7 @@ local function clean_image(img, in_table)
     img.attributes.width = (img.attributes.height == nil) and "100%" or nil
   elseif is_typst or is_docx then
     if img.attributes.height then
-      local why = in_table and "in a wrapped table, so the box or its column sets the image's width"
+      local why = in_table and "in a wrapped table, so the image keeps its shape, no wider than the box or its column"
         or "in a wrapped figure, so the image fills the box width"
       quarto.log.warning(string.format(
         "wrapped: %s does not use the height of the image %s %s.",
@@ -1533,8 +1533,6 @@ local function drop_caption_wrap(float)
   return class
 end
 
--- Gives a float that does not wrap its normal layout: its images lose
--- their wrap classes, and the float loses its wrap options.
 -- True when a float's content holds a raw openxml table, as gt and
 -- flextable write a table for Word. A float's content can be one block,
 -- which a walk from that block does not visit.
@@ -1549,6 +1547,8 @@ local function raw_docx_table(content)
   return found
 end
 
+-- Gives a float that does not wrap its normal layout: its images lose
+-- their wrap classes, and the float loses its wrap options.
 local function keep_normal(float)
   float.content = float.content:walk({ Image = drop_wrap })
   float.attributes["wrap-gap"] = nil
@@ -1687,7 +1687,7 @@ local function float_target(float)
   elseif is_docx then
     -- A table float's box is a floating table that wrapped-docx.lua makes
     -- at post-render (D-022). An image outside its table fills the box, and
-    -- one in the table takes the box's equal share per column. A float's
+    -- one in the table takes at most its cell's share (docx_size). A float's
     -- content can be one block, which a walk from that block does not
     -- visit.
     local frame, w = docx_frame(class, width, gap, "#" .. float.identifier)

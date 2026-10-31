@@ -79,8 +79,9 @@ has one cell, which holds the caption, the table, and any other content of
 the float. It takes its width and gap as a figure's frame does. The filter
 sets the table to the full width of the box. An image outside the table
 fills the box. An image in a table cell fills its cell, less the cell
-margins, unless its own `width` is smaller. The wrap stops where a
-figure's wrap stops.
+margins (half the cell in a very narrow one), unless its own `width` is
+smaller. A percent `width` is a percent of the text width. The wrap stops
+where a figure's wrap stops.
 
 A table that gt or flextable makes is raw Word XML, which the extension
 cannot fit to a box. A wrapped table float that holds one keeps its
