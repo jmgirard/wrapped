@@ -352,3 +352,17 @@ warning, at the user's choice. **Consequences:** the LaTeX non-goal for
 tables ends. A table float wraps in all four formats, except a raw table
 in Word (D-023) and in LaTeX. Wrapping a raw LaTeX table is the candidate
 "Wrap raw LaTeX tables from R packages".
+
+### D-025: Raw Word XML table floats wrap in Word (supersedes D-023)
+
+2026-10-31, `/milestone-plan` M041. **Context:** D-023 kept a table float
+whose table is raw openxml, as gt and flextable write it, normal in Word
+with a warning, because the filter could not fit such a table's own
+column widths to the box. A plan probe showed that a rewrite of the raw
+XML text sets such a table in its box with text beside it in LibreOffice
+and in Word. **Decision:** at the plan question set the user chose to wrap
+these tables. The post-render pass sets the raw table's width to the box
+width and scales a column grid, where the table has one, to the box in its
+own proportions. The raw-XML warning goes. **Consequences:** D-022 holds
+for raw Word XML tables too. The LaTeX side of D-024 stands, so a raw
+LaTeX table still keeps its normal layout.
